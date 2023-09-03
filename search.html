@@ -30,14 +30,19 @@
         text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
         margin: 0; /* No margin */
         }
+
+        .highlighted {
+            background-color: yellow;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <h1>Dicionário de tupi antigo</h1>
     <h2>a língua indígena clássica do Brasil</h2>
     <h3>por Eduardo De Almeida Navarro</h3>
-    <input type="text" id="searchInput" placeholder="Entre uma palavra">
-    <button id="searchButton">Busce</button>
+    <input type="text" id="searchInput" placeholder="">
+    <button id="searchButton">Pesquisa</button>
     <div id="results"></div>
 
     <script>
@@ -49,6 +54,9 @@
     <script>
         function searchByFirstWord(data, query) {
             return data.filter(item => item.first_word.toLowerCase() === query.toLowerCase());
+        }
+        function searchAllDefinitions(data, query) {
+            return data.filter(item => (item.first_word.toLowerCase() !== query.toLowerCase()) && item.definition.toLowerCase().includes(query.toLowerCase()));
         }
 
         const searchButton = document.getElementById("searchButton");
@@ -63,20 +71,38 @@
         });
 
         function performSearch() {
-            const query = searchInput.value.trim();
-            const results = searchByFirstWord(jsonData, query);
+            const query = searchInput.value.trim().toLowerCase(); // Convert query to lowercase
+            const verbete_results = searchByFirstWord(jsonData, query);
+            const def_results = searchAllDefinitions(jsonData, query);
+            const results = verbete_results.concat(def_results);
 
             resultsDiv.innerHTML = ""; // Clear previous results
 
             if (results.length > 0) {
                 results.forEach(result => {
                     const resultDiv = document.createElement("div");
-                    resultDiv.innerHTML = `<strong>${result.first_word}</strong> (${result.part_of_speech}): ${result.definition}`;
+
+                    // Case-insensitive highlighting of query word
+                    const definition = result.definition.replace(new RegExp(`(${query})`, "ig"), '<span class="highlighted">$1</span>');
+
+                    resultDiv.innerHTML = `<strong>${result.first_word}</strong> (${result.part_of_speech}): ${definition}`;
                     resultsDiv.appendChild(resultDiv);
                 });
+                const newUrl = `${window.location.pathname}?query=${encodeURIComponent(query)}`;
+                history.pushState(null, null, newUrl);
             } else {
                 resultsDiv.innerHTML = "Não encontrou nada.";
             }
+        }
+
+        // Read query parameter from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const queryParam = urlParams.get('query');
+
+        if (queryParam) {
+            // Preload results based on the query parameter
+            searchInput.value = queryParam;
+            performSearch();
         }
     </script>
 </body>
