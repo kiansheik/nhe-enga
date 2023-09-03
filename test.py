@@ -57,8 +57,8 @@ if __name__ == "__main__":
             # print("=" * 20)
             result = parse_verbete(occurrence.encode("utf-8").decode("utf-8"))
             if result:
-                if result[0] == target_string:
-                    print(f"{result[0]} {result[1] if result[1] else ''} ({result[2]}) - {result[3]}")
+                # if result[0] == target_string:
+                print(f"{result[0]} {result[1] if result[1] else ''} ({result[2]}) - {result[3]}")
                     # break
     else:
         print("No occurrences found.")
