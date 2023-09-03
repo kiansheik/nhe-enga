@@ -31,6 +31,32 @@
         text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
         margin: 0; /* No margin */
         }
+        /* Styles for search input */
+        #searchInput {
+            width: 100%; /* Make the input span the full width */
+            padding: 10px;
+            font-size: 1.2rem; /* Increase the font size for better visibility */
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        /* Styles for search button */
+        #searchButton {
+            background-color: #007BFF; /* Striking blue color */
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        #searchButton:hover {
+            background-color: #0056b3; /* Darker blue shade on hover */
+        }
 
         .highlighted {
             background-color: yellow;
@@ -88,6 +114,10 @@
                 performSearch();
             }
         });
+        window.addEventListener("load", function() {
+            searchInput.focus();
+        });
+
 
         function performSearch() {
             const query = searchInput.value.trim().toLowerCase(); // Convert query to lowercase
