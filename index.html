@@ -134,8 +134,14 @@
 
                     // Case-insensitive highlighting of query word
                     const definition = result.definition.replace(new RegExp(`(${query})`, "ig"), '<span class="highlighted">$1</span>');
+                    // Create a link with query parameter
+                    const link = document.createElement("a");
+                    link.href = `${window.location.pathname}?query=${encodeURIComponent(result.first_word)}`;
+                    link.innerText = result.first_word;
+                    link.classList.add("search-link");
 
-                    resultDiv.innerHTML = `<strong>${result.first_word}</strong> (${result.part_of_speech}): ${definition}`;
+                    resultDiv.appendChild(link);
+                    resultDiv.innerHTML += ` (${result.part_of_speech}): ${definition}`;
                     resultsDiv.appendChild(resultDiv);
                 });
                 const newUrl = `${window.location.pathname}?query=${encodeURIComponent(query)}`;
