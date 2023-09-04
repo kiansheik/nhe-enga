@@ -1,7 +1,7 @@
 from docx import Document
 import sys, re, json
 
-def find_string_in_docx(docx_file, target_string):
+def find_string_in_docx(docx_file):
     doc = Document(docx_file)
     occurrences = []
 
@@ -11,7 +11,8 @@ def find_string_in_docx(docx_file, target_string):
     lines_count = 0
 
     for para in doc.paragraphs:
-        parsed = parse_verbete(para.text.encode("utf-8").decode("utf-8"))
+        raw_text = para.text.encode("utf-8").decode("utf-8")
+        parsed = parse_verbete(raw_text)
         if parsed:
             occurrences.append(parsed)
         
@@ -23,7 +24,7 @@ def find_string_in_docx(docx_file, target_string):
     return occurrences
 
 def parse_verbete(line):
-    pattern = r"([\w']+?)(\d*)\s+\(([\w.]+)\)\s+-\s+(.*)"
+    pattern = r"([\w']+?)(\d*)\s+\(([\w\s.]+)\)\s+-\s+(.*)"
 
     match = re.search(pattern, line)
     out = dict()
@@ -36,12 +37,7 @@ def parse_verbete(line):
     return None
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python script_name.py <target_string>")
-        sys.exit(1)
-
     docx_file_path = "docs/tupi-dic-cop.docx"
-    target_string = sys.argv[1]
 
-    found_occurrences = find_string_in_docx(docx_file_path, target_string)
+    found_occurrences = find_string_in_docx(docx_file_path)
     print(json.dumps(found_occurrences))
