@@ -80,6 +80,16 @@
             width: 90%; /* Adjust as needed */
             margin: 0 auto;
         }
+
+        .exact-match {
+            background-color: #d1f3da; /* Light green for exact matches */
+            border: 1px solid #8fd39b; /* Border color for exact matches */
+        }
+
+        .approximate-match {
+            background-color: #ffe1b4; /* Light orange for approximate matches */
+            border: 1px solid #ffbf00; /* Border color for approximate matches */
+        }
     </style>
 </head>
 <body>
@@ -104,6 +114,21 @@
             return data.filter(item => (item.first_word.toLowerCase() !== query.toLowerCase()) && item.definition.toLowerCase().includes(query.toLowerCase()));
         }
 
+        // Function to remove diacritics from a string
+        function removeDiacritics(str) {
+            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        }
+
+        function searchByFirstWordNoAccent(data, query) {
+            const queryNormalized = removeDiacritics(query.toLowerCase());
+            return data.filter(item => removeDiacritics(item.first_word.toLowerCase()) === queryNormalized);
+        }
+
+        function searchAllDefinitionsNoAccent(data, query) {
+            const queryNormalized = removeDiacritics(query.toLowerCase());
+            return data.filter(item => (removeDiacritics(item.first_word.toLowerCase()) !== queryNormalized) && removeDiacritics(item.definition.toLowerCase()).includes(queryNormalized));
+        }
+
         const searchButton = document.getElementById("searchButton");
         const searchInput = document.getElementById("searchInput");
         const resultsDiv = document.getElementById("results");
@@ -122,10 +147,23 @@
 
         function performSearch() {
             const query = searchInput.value.trim().toLowerCase(); // Convert query to lowercase
-            const verbete_results = searchByFirstWord(jsonData, query);
-            const def_results = searchAllDefinitions(jsonData, query);
-            const results = verbete_results.concat(def_results);
-
+            const verbete_results_exact = searchByFirstWord(jsonData, query);
+            const def_results_exact = searchAllDefinitions(jsonData, query);
+            
+            // Perform diacritic-insensitive searches
+            const verbete_results_diacritic = searchByFirstWordNoAccent(jsonData, query);
+            const def_results_diacritic = searchAllDefinitionsNoAccent(jsonData, query);
+            
+            // Combine and prioritize results
+            const combinedResults = Array.from(new Set([...verbete_results_exact, ...verbete_results_diacritic, ...def_results_exact, ...def_results_diacritic]));
+            // Add the 'exact_match' property based on source
+            const results = combinedResults.map(result => {
+                const sourceIsVerbete = verbete_results_exact.includes(result) || def_results_exact.includes(result);
+                return {
+                    ...result,
+                    exact_match: sourceIsVerbete
+                };
+            });
             resultsDiv.innerHTML = ""; // Clear previous results
 
             if (results.length > 0) {
@@ -134,7 +172,6 @@
 
                     // Case-insensitive highlighting of query word
                     const definition = result.definition.replace(new RegExp(`(${query})`, "ig"), '<span class="highlighted">$1</span>');
-                    
                     // Create a link with query parameter
                     const link = document.createElement("a");
                     link.href = `${window.location.pathname}?query=${encodeURIComponent(result.first_word)}`;
@@ -148,6 +185,11 @@
 
                     resultDiv.appendChild(link);
                     resultDiv.innerHTML += ` (${result.part_of_speech}): ${definition}`;
+                    if (result.exact_match) {
+                        resultDiv.classList.add("exact-match");
+                    } else {
+                        resultDiv.classList.add("approximate-match");
+                    }
                     resultsDiv.appendChild(resultDiv);
 
                     // Add a divider between entries
