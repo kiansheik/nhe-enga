@@ -1,0 +1,173 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Righteous&display=swap');
+
+/* Reset CSS */
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/* Done Reset */
+* {
+	transition: all 0.2s ease-out;
+}
+html, body {
+    font-family: 'Poppins', sans-serif;
+
+
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #22c55e;
+  opacity: 1; /* Firefox */
+	text-align: center;
+}
+
+div.credits {
+	text-align: center;
+	font-size: 12px;
+	height: 10px;
+	background-color: #ffffff;
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	padding: 10px;
+}
+
+main {
+    text-align: center;
+	min-height: 100%;
+	margin-top: 20px;
+	display: inline-flex;
+	flex-wrap: wrap;
+	width: 100%;
+	align-items: center;
+	justify-content: space-around;
+	justify-items: center;
+}
+main > div.content {
+	width: 100%;
+}
+main > div.content > div.title > h1 {
+	font-size:35px;
+	width: 100%;
+	font-family: 'Righteous', cursive;
+}
+main > div.content > div.subtitle > h2 {
+	font-size:20px;
+	padding: 20px 0;
+	color: #999;
+}
+main > div.content > div.search_input > input {
+	width: 90%;
+	margin: 20px 0;
+	border-radius: 20px;
+	border: 1px solid #22c55e;
+	background-color: #bbf7d0;
+	padding: 10px 20px;
+	font-size: 16px;
+	max-width: 400px;
+}
+
+main > div.content > div.actions > .search {
+	font-size: 16px;
+	background-color: #ffd700;
+	border: 1px solid #ffb700;
+	padding: 10px 20px;
+	border-radius: 5px;
+}
+
+main > div.content > div.actions > .search:hover {
+	background-color: #eab308;
+	color: #fff;
+	border: 1px solid #ca8a04;
+	cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) {
+	main > div.content > div.title > h1 {
+	  	font-size:30px;
+	}
+	main > div.content > div.subtitle > h2 {
+		font-size:18px;
+	}
+}
+
+.results {
+	border-radius: 20px;
+	border: 1px solid #ccc;
+	width: 90%;
+	margin: auto;
+	margin-top: 20px;
+	padding: 20px;
+	text-align: justify;
+	margin-bottom: 30px;
+}
+.results > div {
+	font-size: 16px;
+	line-height: 25px;
+	font-family: "Arial";
+
+	padding: 10px;
+}
+
+.results > div:nth-of-type(odd) {
+	background-color: #fff;
+}
+.results > div:nth-of-type(even) {
+	background-color: #fef9c3;
+	border-radius: 20px;
+}
+
+.highlighted {
+	background-color: #7dd3fc;
+}
+
+.results > div > a {
+	color: #14532d;
+	padding: 4px;
+}
+.results > div > a:hover {
+	background-color: #14532d;
+	color: #fff;
+	text-decoration: none;
+
+}
