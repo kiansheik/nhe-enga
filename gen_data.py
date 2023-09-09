@@ -21,7 +21,6 @@ def parse_verbete(line):
     if match:
         out['first_word'] = match.group(1)
         out['optional_number'] = match.group(2)
-        out['part_of_speech'] = ""
         out['definition'] = match.group(3)
         return out
     return None
@@ -30,4 +29,4 @@ if __name__ == "__main__":
     docx_file_path = "docs/tupi-dic-cop.docx"
 
     found_occurrences = find_string_in_docx(docx_file_path)
-    print(json.dumps(found_occurrences))
+    print(f"window.jsonData = {json.dumps(found_occurrences)};")

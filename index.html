@@ -20,13 +20,8 @@
         </div>
     </main>
     <div class='credits'>Dicionário por Eduardo de Almeida Navarro</div>
+    <script src="docs/tupi_dict_navarro.js"></script>
     <script>
-
-        window.onload = async() => {
-            resultsDiv.style.display = "none";
-            const response = await fetch('docs/tupi_dict_navarro.json')
-            window.jsonData = await response.json()
-        }
         function searchByFirstWord(data, query) {
             return data.filter(item => item.first_word.toLowerCase() === query.toLowerCase());
         }

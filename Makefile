@@ -13,3 +13,6 @@ push:
 	git add .
 	git commit
 	git push origin HEAD
+
+gen_data:
+	python3 gen_data.py > docs/tupi_dict_navarro.js
