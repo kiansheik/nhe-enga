@@ -24,7 +24,7 @@
 
         window.onload = async() => {
             resultsDiv.style.display = "none";
-            const response = await fetch('dictionary.json')
+            const response = await fetch('docs/tupi_dict_navarro.json')
             window.jsonData = await response.json()
         }
         function searchByFirstWord(data, query) {
