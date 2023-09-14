@@ -23,7 +23,8 @@
     <script src="docs/tupi_dict_navarro.js"></script>
     <script>
         function searchByFirstWord(data, query) {
-            return data.filter(item => item.first_word.toLowerCase() === query.toLowerCase());
+            const clean_query = removePunctuation(query)
+            return data.filter(item => removePunctuation(item.first_word).toLowerCase() === clean_query.toLowerCase());
         }
 
         function searchAllDefinitions(data, query) {
@@ -32,7 +33,13 @@
 
         // Function to remove diacritics from a string
         function removeDiacritics(str) {
-            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+            return removePunctuation(str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
+        }
+        function removePunctuation(str) {
+                return str
+                .replace(/[.,\/#!$%?^&*;:{}=\-_`~()]/g, "")
+                .replace(/\s{2,}/g, " ")
+                .trim();
         }
 
         function searchByFirstWordNoAccent(data, query) {
