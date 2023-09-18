@@ -14,7 +14,7 @@ def find_string_in_docx(docx_file):
     return occurrences
 
 def parse_verbete(line):
-    pattern = r"^([\w'!?.,;:-]+?)(\d*)\s+(.*)"
+    pattern = r"^([\w'!?.,();:-]+?)(\d*)\s+(.*)"
 
     match = re.search(pattern, line)
     out = dict()
