@@ -118,7 +118,7 @@
                     const definition = result.definition.replace(new RegExp(`(${query})`, "ig"), '<span class="highlighted">$1</span>');
                     // Create a link with query parameter
                     const link = document.createElement("a");
-                    link.href = `javascript:void(0);`; // link.href = `${window.location.pathname}?query=${encodeURIComponent(result.first_word)}`;
+                    link.href = `${window.location.pathname}?query=${encodeURIComponent(result.first_word)}`;
                     link.innerText = result.first_word;
                     link.classList.add("search-link");
                     
