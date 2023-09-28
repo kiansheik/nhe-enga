@@ -1,19 +1,20 @@
 {
-  "name": "Dicionário de Tupi Antigo",
-  "short_name": "Nhe-enga",
-  "description": "Buscador do Dicionário de tupi antigo: A língua indígena clássica do Brasil",
-  "start_url": "/index.html", // Replace with your actual start URL
-  "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000",
-  "icons": [
-    {
-      "src": "icon.png", // Replace with the path to your app's icon
-      "sizes": "192x192",
-      "type": "image/png"
-    }
-  ],
-  "offline_enabled": true,
-  "scope": "/",
-  "manifest_version": 3
-}
+    "name": "Dicionário de Tupi Antigo",
+    "short_name": "Nhe-enga",
+    "description": "Buscador do Dicionário de tupi antigo: A língua indígena clássica do Brasil",
+    "start_url": "/nhe-enga/index.html", // Updated start URL with the subdirectory
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#000000",
+    "icons": [
+      {
+        "src": "icon.png", // Replace with the path to your app's icon
+        "sizes": "192x192",
+        "type": "image/png"
+      }
+    ],
+    "offline_enabled": true,
+    "scope": "/nhe-enga/", // Updated scope to match the subdirectory
+    "manifest_version": 3
+  }
+  
