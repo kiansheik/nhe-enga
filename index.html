@@ -125,13 +125,9 @@
                     // Create superscript for optional_number
                     const optionalNumberSup = document.createElement("sup");
                     optionalNumberSup.innerText = result.optional_number;
-                    link.appendChild(optionalNumberSup);
-                    // Attach an event listener to the link to update the search bar and trigger search
-                    link.addEventListener("click", () => {
-                        searchInput.value = result.first_word; // Set the search bar value
-                        performSearch(); // Trigger the search function
-                    });
+
                     resultDiv.appendChild(link);
+                    resultDiv.appendChild(optionalNumberSup);
                     resultDiv.innerHTML += ` ${definition}`;
                     if (result.exact_match) {
                         resultDiv.classList.add("exact-match");
@@ -170,9 +166,21 @@
                 performSearch();
             }
         }
-
         // Attach the popstate event listener
         window.addEventListener('popstate', handlePopstate);
+        document.addEventListener('click', function(event) {
+        // Check if the clicked element has the "search-link" class
+        if (event.target.classList.contains('search-link')) {
+            // Prevent the default link behavior
+            event.preventDefault();
+            // Get the innerHTML of the clicked link and set it as the search input value
+            searchInput.value = event.target.innerText;
+            // Call the performSearch() function (assuming it's defined)
+            performSearch();
+            // return to top to see results
+            window.scrollTo(0, 0);
+        }
+        });
     </script>
 </body>
 </html>
