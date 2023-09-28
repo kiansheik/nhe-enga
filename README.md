@@ -1,5 +1,5 @@
 # nhe-enga
-Digital Version of Tupi Dictionary by Eduardo Navarro
+An academic paper written in HTML which cites a Tupi Dictionary by Eduardo Navarro tĩ explore the dictionary using technology.
 
 This is an attempt to make studying Tupi more acceisible to the Brazilian populace.
 
