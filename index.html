@@ -118,7 +118,7 @@
                     const definition = result.definition.replace(new RegExp(`(${query})`, "ig"), '<span class="highlighted">$1</span>');
                     // Create a link with query parameter
                     const link = document.createElement("a");
-                    link.href = `${window.location.pathname}?query=${encodeURIComponent(result.first_word)}`;
+                    link.href = `javascript:void(0);`; // link.href = `${window.location.pathname}?query=${encodeURIComponent(result.first_word)}`;
                     link.innerText = result.first_word;
                     link.classList.add("search-link");
                     
@@ -126,7 +126,11 @@
                     const optionalNumberSup = document.createElement("sup");
                     optionalNumberSup.innerText = result.optional_number;
                     link.appendChild(optionalNumberSup);
-
+                    // Attach an event listener to the link to update the search bar and trigger search
+                    link.addEventListener("click", () => {
+                        searchInput.value = result.first_word; // Set the search bar value
+                        performSearch(); // Trigger the search function
+                    });
                     resultDiv.appendChild(link);
                     resultDiv.innerHTML += ` ${definition}`;
                     if (result.exact_match) {
@@ -153,6 +157,22 @@
             searchInput.value = queryParam;
             performSearch();
         }
+
+        // Function to handle the popstate event
+        function handlePopstate(event) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const queryParam = urlParams.get('query');
+
+            if (queryParam) {
+                // Update the search bar with the query parameter
+                searchInput.value = queryParam;
+                // Trigger the search function
+                performSearch();
+            }
+        }
+
+        // Attach the popstate event listener
+        window.addEventListener('popstate', handlePopstate);
     </script>
 </body>
 </html>
