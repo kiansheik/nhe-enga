@@ -16,7 +16,7 @@ if match:
     optional_number = match.group(2)
     part_of_speech = match.group(3)
     definition = match.group(4)
-    
+
     print(f"First word: {first_word}")
     print(f"Optional number: {optional_number}")
     print(f"Part of speech: {part_of_speech}")
