@@ -79,6 +79,7 @@ verb_types = [
     "(t) (v. intr. compl. posp. irreg.)",
     "ger. d",
     "(-îo-) (v.tr.)",
+    "(-îo- ou -nho-) (v.tr.)",
     "(v. tr. compl. posp.)",
     "3ª p. do indic. d",
     "3ª p. do gerúndio d",
@@ -121,6 +122,8 @@ for vbt in tupi_only:
         found = False
         for vt in verb_types:
             if vt in vbt["definition"]:
+                if vt == "(v.tr.)" and '(s)' in vbt["definition"][:50]:
+                    vt = "(s) (v.tr.)"
                 word = vbt['first_word'].strip().replace('-', '')
                 verbs[vt].append(vbt)
                 all_verbs.add(word)
@@ -183,9 +186,13 @@ for neighbors, frequency in result:
     print(f"{neighbors[0]}{neighbors[1]}: {frequency} occurrences")
 
 vobjs = []
-for vbt in verbs['adj.: ']:
-    verb_obj = tupi.Verb(vbt['first_word'], 'adj.: ', False, vbt['definition'])
-    vobjs.append(verb_obj)
+for vclass in verbs.keys():
+    for vbt in verbs[vclass]:
+        verb_obj = tupi.Verb(vbt['first_word'], vclass, False, vbt['definition'])
+        vobjs.append(verb_obj)
 
-for v in vobjs:
-    print(v.conjugate(), v.raw_definition)
+for v in [x for x in vobjs if x.verb_class == '(v.tr.)']:
+    print(v.conjugate(person_tense='1ps', object_tense='3p', mode='indicativo', pos='anteposto', pro_drop=False), v.raw_definition[:50])
+    print(v.conjugate(person_tense='1ps', object_tense='3p', mode='indicativo', pos='incorporado', pro_drop=True), v.raw_definition[:50])
+    print(v.conjugate(person_tense='1ps', object_tense='3p', mode='indicativo', pos='posposto', pro_drop=False), v.raw_definition[:50])
+    # break
