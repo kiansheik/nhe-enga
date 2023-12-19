@@ -192,7 +192,11 @@ for vclass in verbs.keys():
         vobjs.append(verb_obj)
 
 for v in [x for x in vobjs if x.verb_class == '(v.tr.)']:
-    print(v.conjugate(person_tense='1ps', object_tense='3p', mode='indicativo', pos='anteposto', pro_drop=False), v.raw_definition[:50])
-    print(v.conjugate(person_tense='1ps', object_tense='3p', mode='indicativo', pos='incorporado', pro_drop=True), v.raw_definition[:50])
-    print(v.conjugate(person_tense='1ps', object_tense='3p', mode='indicativo', pos='posposto', pro_drop=False), v.raw_definition[:50])
-    # break
+    print(v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='anteposto', pro_drop=False), v.raw_definition[:50])
+    print(v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='anteposto', pro_drop=False, dir_obj_raw='kunumin'), v.raw_definition[:50])
+    print(v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='incorporado', pro_drop=False, dir_obj_raw='kunumin'), v.raw_definition[:50])
+    print(v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='incorporado', pro_drop=True), v.raw_definition[:50])
+    print(v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='posposto', pro_drop=False), v.raw_definition[:50])
+    print(v.conjugate(subject_tense='1ps', object_tense='1ps', mode='indicativo', pos='posposto', pro_drop=False), v.raw_definition[:50])
+    print(v.conjugate(subject_tense='1ps', object_tense='1ps', mode='indicativo', pos='posposto', pro_drop=True), v.raw_definition[:50])
+    break
