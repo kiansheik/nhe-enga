@@ -191,12 +191,39 @@ for vclass in verbs.keys():
         verb_obj = tupi.Verb(vbt['first_word'], vclass, False, vbt['definition'])
         vobjs.append(verb_obj)
 
-for v in [x for x in vobjs if x.verb_class == '(v.tr.)']:
-    print(v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='anteposto', pro_drop=False), v.raw_definition[:50])
-    print(v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='anteposto', pro_drop=False, dir_obj_raw='kunumin'), v.raw_definition[:50])
-    print(v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='incorporado', pro_drop=False, dir_obj_raw='kunumin'), v.raw_definition[:50])
-    print(v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='incorporado', pro_drop=True), v.raw_definition[:50])
-    print(v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='posposto', pro_drop=False), v.raw_definition[:50])
-    print(v.conjugate(subject_tense='1ps', object_tense='1ps', mode='indicativo', pos='posposto', pro_drop=False), v.raw_definition[:50])
-    print(v.conjugate(subject_tense='1ps', object_tense='1ps', mode='indicativo', pos='posposto', pro_drop=True), v.raw_definition[:50])
-    break
+from itertools import product
+
+def generate_permutations(input_list):
+    # Use itertools.product to generate all possible pairs
+    pairs = list(product(input_list, repeat=2))
+    return pairs
+
+# Example usage with your provided input
+input_list = list(set(tupi.TupiAntigo.personal_inflections.keys()))
+all_pairs = generate_permutations(input_list)
+
+for v in [x for x in vobjs if x.verb_class == '(v.tr.)' if x.verbete == 'kuab'][:10]:
+    # Print the result
+    for subj, obj in all_pairs:
+        try:
+            v.conjugate(subject_tense=subj, object_tense=obj, mode='indicativo', pos='anteposto', pro_drop=False)
+        except:
+            print(f'({subj} -> {obj}):\tainda não desenvolvida')
+
+    # v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='anteposto', pro_drop=False)
+    # v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='anteposto', pro_drop=False, dir_obj_raw='kunumin')
+    # v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='incorporado', pro_drop=False, dir_obj_raw='kunumin')
+    # v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='incorporado', pro_drop=True)
+    # v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='posposto', pro_drop=False)
+    # v.conjugate(subject_tense='1ps', object_tense='1ps', mode='indicativo', pos='posposto', pro_drop=False)
+    # v.conjugate(subject_tense='1ps', object_tense='1ps', mode='indicativo', pos='posposto', pro_drop=True)
+    # v.conjugate(subject_tense='1ps', object_tense='2ps', mode='indicativo', pos='posposto', pro_drop=True)
+    # v.conjugate(subject_tense='1ps', object_tense='2pp', mode='indicativo', pos='posposto', pro_drop=False)
+    # v.conjugate(subject_tense='3p', object_tense='2pp', mode='indicativo', pos='posposto', pro_drop=False)
+    # v.conjugate(subject_tense='3p', object_tense='1ps', mode='indicativo', pos='posposto', pro_drop=False, dir_obj_raw='îandé îara')
+    # v.conjugate(subject_tense='2pp', object_tense='1ppi', mode='indicativo', pos='posposto', pro_drop=False)
+    # v.conjugate(subject_tense='2ps', object_tense='1ps', mode='indicativo', pos='posposto', pro_drop=False)
+    # v.conjugate(subject_tense='2pp', object_tense='2pp', mode='indicativo', pos='posposto', pro_drop=False)
+    # v.conjugate(subject_tense='2pp', object_tense='2pp', mode='indicativo', pos='posposto', pro_drop=False, io_pref=True)
+    # v.conjugate(subject_tense='3p', object_tense='3p', mode='indicativo', pos='posposto', pro_drop=False, io_pref=True)
+    # break
