@@ -1,8 +1,9 @@
 import sys
+
 from docx import Document
-from docx.shared import Pt
-from docx.oxml.ns import nsdecls
 from docx.oxml import parse_xml
+from docx.oxml.ns import nsdecls
+from docx.shared import Pt
 
 
 def find_string_in_docx(docx_file, target_string):
