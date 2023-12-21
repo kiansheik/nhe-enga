@@ -12,6 +12,15 @@ class TupiAntigo(spacy.language.Language):
         # "4p": ["asé", "asé", "o"],
     }
 
+    permissivo = {
+        "1ps":  ["t'",     "ta "],
+        "1ppi": ["t'",    "t'"],
+        "1ppe": ["t'",   "t'"],
+        "2ps":  ["t'",   "ta "],
+        "2pp":  ["ta ",      "ta "],
+        "3p":   ["t'",       "ta "],
+    }
+
     sound_graf = {
         "ipa": "p pʷ pʲ β t s sʷ k kʷ ʔ m mʷ n r ɲ ŋ mb mbʷ nd ndʷ ŋɡ ŋɡʷ w w j a ˈa e ˈɛ i ˈi ɨ ˈɨ o ˈɔ u ˈu ã ɛ̃ ĩ ɨ̃ ɔ̃ ũ ʃ".split(
             " "
@@ -49,7 +58,8 @@ class Verb(TupiAntigo):
             "v.tr." in verb_class
         )  # Whether the verb is transitive (boolean)
         self.raw_definition = raw_definition  # Raw definition of the verb (string)
-        self.pluriforme = "(s)" in self.verb_class
+        self.pluriforme = "(s)" in self.verb_class or '(r, s)' in self.verb_class
+        self.segunda_classe = '2ª classe' in self.verb_class or 'adj.' in self.verb_class
 
     def ipa(self, inp=None):
         if inp is None:
@@ -97,10 +107,17 @@ class Verb(TupiAntigo):
         pro_drop=False,
         io_pref=False,
     ):
+        perm_suf = ['','']
+        if mode == 'permissivo':
+            mode = 'indicativo'
+            # pro_drop = True
+            perm_suf = self.permissivo[subject_tense]
         if "2p" not in subject_tense and mode == "circunstancial":
             subj = self.personal_inflections[subject_tense][1]
             obj = ""
             if self.transitive:
+                if '3p' in subject_tense:
+                    subj = self.personal_inflections[subject_tense][0]
                 if subject_tense == object_tense:
                     obj = "îe"
                 else:
@@ -126,15 +143,17 @@ class Verb(TupiAntigo):
             result = f"{subj} {obj}{self.verbete}{circ}"
         # A simple conjugation function (you can expand this based on language rules)
         elif self.verb_class in ["adj.: "]:
-            result = f"{self.personal_inflections[subject_tense][1]} {self.verbete}"
+            subj = self.personal_inflections[subject_tense][1]
+            result = f"{perm_suf[1]}{subj} {self.verbete}"
         elif "v. intr." in self.verb_class:
             subj = self.personal_inflections[subject_tense][0] if not pro_drop else ""
+            conj = self.personal_inflections[subject_tense][2]
             result = (
-                f"{subj} {self.personal_inflections[subject_tense][2]}-{self.verbete}"
+                f"{subj} {perm_suf[0]}{conj}-{self.verbete}"
             )
         elif self.verb_class in ["(v.tr.)", "(s) (v.tr.)"]:
             if pos not in ["posposto", "incorporado", "anteposto"]:
-                raise Error("Postposition Not Valid")
+                raise Exception("Position Not Valid")
             if object_tense in self.personal_inflections.keys():
                 if object_tense == subject_tense:
                     subj = (
@@ -142,14 +161,16 @@ class Verb(TupiAntigo):
                         if not pro_drop
                         else ""
                     )
-                    result = f"{subj} {self.personal_inflections[subject_tense][2]}-{'îe' if not io_pref else 'îo'}-{self.verbete}"
+                    conj = self.personal_inflections[subject_tense][2]
+                    obj = 'îe' if not io_pref else 'îo'
+                    result = f"{subj} {perm_suf[0]}{conj}-{obj}-{self.verbete}"
                 elif "3p" in object_tense:
                     subj = (
                         self.personal_inflections[subject_tense][0]
                         if not pro_drop
                         else ""
                     )
-                    pref = self.personal_inflections[subject_tense][2]
+                    conj = self.personal_inflections[subject_tense][2]
                     dir_obj = (
                         self.personal_inflections["3p"][0]
                         if dir_obj_raw is None
@@ -157,11 +178,11 @@ class Verb(TupiAntigo):
                     )
                     pluriforme = "s" if self.pluriforme else "î"
                     if pos == "posposto":
-                        result = f"{subj} {pref}-{pluriforme}-{self.verbete} {dir_obj}"
+                        result = f"{subj} {perm_suf[0]}{conj}-{pluriforme}-{self.verbete} {dir_obj}"
                     elif pos == "anteposto":
-                        result = f"{subj} {dir_obj} {pref}-{pluriforme}-{self.verbete}"
+                        result = f"{subj} {dir_obj} {perm_suf[0]}{conj}-{pluriforme}-{self.verbete}"
                     elif pos == "incorporado":
-                        result = f"{subj} {pref}-{pluriforme if dir_obj_raw is None else dir_obj}-{self.verbete}"
+                        result = f"{subj} {perm_suf[0]}{conj}-{pluriforme if dir_obj_raw is None else dir_obj}-{self.verbete}"
                 if "2p" in object_tense:
                     if "1p" in subject_tense:
                         subj = (
@@ -170,15 +191,16 @@ class Verb(TupiAntigo):
                             else ""
                         )
                         obj = self.personal_inflections[object_tense][3]
-                        result = f"{subj} {obj}-{self.verbete}"
+                        result = f"{subj} {perm_suf[0]}{obj}-{self.verbete}"
                 if "1p" in object_tense:
                     if "2p" in subject_tense:
                         subj = self.personal_inflections[subject_tense][4]
                         obj = self.personal_inflections[object_tense][1]
                         pluriforme = "r-" if self.pluriforme else ""
-                        result = f"{obj} {pluriforme}{self.verbete} {subj}"
+                        perm_suf = self.permissivo[object_tense]
+                        result = f"{perm_suf[1]}{obj} {pluriforme}{self.verbete} {subj}"
                 if "2p" in object_tense or "1p" in object_tense:
-                    if "3p" in subject_tense or "4p" in subject_tense:
+                    if "3p" in subject_tense:
                         subj = (
                             self.personal_inflections[subject_tense][0]
                             if dir_obj_raw is None
@@ -186,7 +208,8 @@ class Verb(TupiAntigo):
                         )
                         obj = self.personal_inflections[object_tense][1]
                         pluriforme = "r-" if self.pluriforme else ""
-                        result = f"{obj} {pluriforme}{self.verbete} {subj}"
+                        perm_suf = self.permissivo[object_tense]
+                        result = f"{perm_suf[1]}{obj} {pluriforme}{self.verbete} {subj}"
         else:
             return "Invalid/Unimplemented tense"
         print(
