@@ -98,11 +98,10 @@ class Verb(TupiAntigo):
         io_pref=False,
     ):
         if "2p" not in subject_tense and mode == "circunstancial":
-            subj = self.personal_inflections[subject_tense][0]
+            subj = self.personal_inflections[subject_tense][1]
             obj = ""
             if self.transitive:
                 if subject_tense == object_tense:
-                    subj = self.personal_inflections[subject_tense][1]
                     obj = "îe"
                 else:
                     obj = (
