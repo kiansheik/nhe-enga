@@ -1,5 +1,7 @@
 import json
 from collections import Counter
+from itertools import product
+from tqdm import tqdm
 import matplotlib.pyplot as plt
 import tupi
 
@@ -190,9 +192,6 @@ tr = {
 }
 
 
-from collections import Counter
-
-
 def neighbor_letter_frequencies(word_list):
     all_neighbors = []
 
@@ -216,12 +215,10 @@ for neighbors, frequency in result:
     print(f"{neighbors[0]}{neighbors[1]}: {frequency} occurrences")
 
 vobjs = []
-for vclass in verbs.keys():
+for vclass in tqdm([x for x in verbs.keys()]):
     for vbt in verbs[vclass]:
-        verb_obj = tupi.Verb(vbt["first_word"], vclass, False, vbt["definition"])
+        verb_obj = tupi.Verb(vbt["first_word"], vclass, vbt["definition"])
         vobjs.append(verb_obj)
-
-from itertools import product
 
 
 def generate_permutations(input_list):
@@ -234,19 +231,48 @@ def generate_permutations(input_list):
 input_list = list(set(tupi.TupiAntigo.personal_inflections.keys()))
 all_pairs = generate_permutations(input_list)
 
-for v in [x for x in vobjs if x.verb_class == "(v.tr.)" if x.verbete == "kuab"][:10]:
+for v in sorted([
+    x for x in vobjs if x.verbete in ["pytá", "potar", "aûsub", "nhan", "nhe'eng"]
+], key=lambda x:x.verbete):
+    test_cases = [
+        ("1ps", "1ps"),
+        ("1ps", "2ps"),
+        ("1ps", "3p"),
+        ("2ps", "1ps"),
+        ("2ps", "2ps"),
+        ("2ps", "3p"),
+        ("3p", "1ps"),
+        ("3p", "2ps"),
+        ("3p", "3p"),
+    ]
+    modo = "circunstancial"
+    print(f"{v.verbete} - {v.verb_class} ({modo})")
     # Print the result
-    for subj, obj in all_pairs:
-        try:
-            v.conjugate(
-                subject_tense=subj,
-                object_tense=obj,
-                mode="indicativo",
-                pos="anteposto",
-                pro_drop=False,
-            )
-        except:
-            print(f"({subj} -> {obj}):\tainda não desenvolvida")
+    if v.transitive:
+        for subj, obj in test_cases:
+            try:
+                v.conjugate(
+                    subject_tense=subj,
+                    object_tense=obj,
+                    mode=modo,
+                )
+                v.conjugate(
+                    subject_tense=subj,
+                    object_tense=obj,
+                    dir_obj_raw="kurumim",
+                    mode=modo,
+                )
+            except Exception as e:
+                print(f"\t({subj} -> {obj}):\tainda não desenvolvida", e)
+    else:
+        for subj in sorted({x[1] for x in test_cases}):
+            try:
+                v.conjugate(
+                    subject_tense=subj,
+                    mode=modo,
+                )
+            except Exception as e:
+                print(f"\t({subj} -> {obj}):\tainda não desenvolvida", e)
 
     # v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='anteposto', pro_drop=False)
     # v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='anteposto', pro_drop=False, dir_obj_raw='kunumin')
