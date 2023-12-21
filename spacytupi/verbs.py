@@ -235,15 +235,24 @@ for v in sorted([
     x for x in vobjs if x.verbete in ["pytá", "potar", "aûsub", "nhan", "nhe'eng"]
 ], key=lambda x:x.verbete):
     test_cases = [
+        ("1ppi", "1ppi"),
+        ("1ppi", "2ps"),
+        ("1ppi", "2pp"),
+        ("1ppi", "3p"),
+        ("1ppe", "1ppe"),
+        ("1ppe", "2ps"),
+        ("1ppe", "2pp"),
+        ("1ppe", "3p"),
         ("1ps", "1ps"),
         ("1ps", "2ps"),
         ("1ps", "3p"),
-        ("2ps", "1ps"),
-        ("2ps", "2ps"),
-        ("2ps", "3p"),
+        ("1ps", "2pp"),
         ("3p", "1ps"),
         ("3p", "2ps"),
         ("3p", "3p"),
+        ("3p", "1ppi"),
+        ("3p", "1ppe"),
+        ("3p", "2pp"),
     ]
     modo = "circunstancial"
     print(f"{v.verbete} - {v.verb_class} ({modo})")
@@ -256,12 +265,12 @@ for v in sorted([
                     object_tense=obj,
                     mode=modo,
                 )
-                v.conjugate(
-                    subject_tense=subj,
-                    object_tense=obj,
-                    dir_obj_raw="kurumim",
-                    mode=modo,
-                )
+                # v.conjugate(
+                #     subject_tense=subj,
+                #     object_tense=obj,
+                #     dir_obj_raw="kurumim",
+                #     mode=modo,
+                # )
             except Exception as e:
                 print(f"\t({subj} -> {obj}):\tainda não desenvolvida", e)
     else:
