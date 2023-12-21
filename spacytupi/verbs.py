@@ -232,7 +232,7 @@ input_list = list(set(tupi.TupiAntigo.personal_inflections.keys()))
 all_pairs = generate_permutations(input_list)
 
 for v in sorted([
-    x for x in vobjs if x.verbete in ["pytá", "potar", "aûsub", "nhan", "nhe'eng"]
+    x for x in vobjs if x.verbete in ["pytá", "potar", "aûsub", "nhan", "nhe'eng", "porang"]
 ], key=lambda x:x.verbete):
     test_cases = [
         ("1ppi", "1ppi"),
@@ -254,34 +254,34 @@ for v in sorted([
         ("3p", "1ppe"),
         ("3p", "2pp"),
     ]
-    modo = "circunstancial"
-    print(f"{v.verbete} - {v.verb_class} ({modo})")
-    # Print the result
-    if v.transitive:
-        for subj, obj in test_cases:
-            try:
-                v.conjugate(
-                    subject_tense=subj,
-                    object_tense=obj,
-                    mode=modo,
-                )
-                # v.conjugate(
-                #     subject_tense=subj,
-                #     object_tense=obj,
-                #     dir_obj_raw="kurumim",
-                #     mode=modo,
-                # )
-            except Exception as e:
-                print(f"\t({subj} -> {obj}):\tainda não desenvolvida", e)
-    else:
-        for subj in sorted({x[1] for x in test_cases}):
-            try:
-                v.conjugate(
-                    subject_tense=subj,
-                    mode=modo,
-                )
-            except Exception as e:
-                print(f"\t({subj} -> {obj}):\tainda não desenvolvida", e)
+    for modo in ["circunstancial", 'indicativo', 'permissivo']:
+        print(f"{v.verbete} - {v.verb_class} ({modo})")
+        # Print the result
+        if v.transitive:
+            for subj, obj in test_cases:
+                try:
+                    v.conjugate(
+                        subject_tense=subj,
+                        object_tense=obj,
+                        mode=modo,
+                    )
+                    # v.conjugate(
+                    #     subject_tense=subj,
+                    #     object_tense=obj,
+                    #     dir_obj_raw="kurumim",
+                    #     mode=modo,
+                    # )
+                except Exception as e:
+                    print(f"\t({subj} -> {obj}):\tainda não desenvolvida", e)
+        else:
+            for subj in sorted({x[1] for x in test_cases}):
+                try:
+                    v.conjugate(
+                        subject_tense=subj,
+                        mode=modo,
+                    )
+                except Exception as e:
+                    print(f"\t({subj} -> {obj}):\tainda não desenvolvida", e)
 
     # v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='anteposto', pro_drop=False)
     # v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='anteposto', pro_drop=False, dir_obj_raw='kunumin')
