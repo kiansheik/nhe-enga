@@ -20,8 +20,8 @@ function startQuiz() {
 
             // Populate dropdown options
             populateDropdown('mode', ['indicativo', 'permissivo', 'circunstancial', 'gerundio', 'imperativo']);
-            populateDropdown('subject', ['ixé', 'oré', 'îandé', 'endé', "pe'ẽ", "a'e"]);
-            populateDropdown('object', ['xé', 'oré', 'îandé', 'nde', "pe", "i"]);
+            populateDropdown('subject', ['ger.', 'ixé', 'oré', 'îandé', 'endé', "pe'ẽ", "a'e"]);
+            populateDropdown('object', ['intr.', 'xé', 'oré', 'îandé', 'nde', "pe", "i"]);
 
             showQuestion();
         })
@@ -81,6 +81,7 @@ function resetDropdowns() {
 }
 
 let subj_pref_map = {
+    'ger.': null,
     'ixé': '1ps',
     'oré': '1ppe',
     'îandé': '1ppi',
@@ -89,6 +90,7 @@ let subj_pref_map = {
     "a'e": '3p'
 }
 let obj_pref_map = {
+    'intr.': null,
     'xé': '1ps',
     'oré': '1ppe',
     'îandé': '1ppi',
@@ -107,6 +109,7 @@ function checkDropdownAnswer(part, selectedValue) {
     } else if (part === 'object' && obj_pref_map[selectedValue] === currentQuestion.o) {
         score++;
     }
+    console.log(score, currentQuestion);
 }
 
 function showResult() {
