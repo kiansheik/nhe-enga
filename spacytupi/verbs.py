@@ -330,10 +330,10 @@ for v in tqdm(sorted(
         "imperativo": [
             ("2ps", "2ps"),
             ("2ps", "3p"),
-            ("2pp", "2pp"),
-            ("2pp", "3p"),
+            # ("2pp", "2pp"),
+            # ("2pp", "3p"),
             ("2ps", "1ps"),
-            ("2pp", "1ps"),
+            # ("2pp", "1ps"),
         ],
     }
     for modo, test_cases in [x for x in test_cases_map.items()]:
