@@ -6,7 +6,7 @@ let dataset = [
 let currentQuestionIndex = 0;
 let score = 0;
 let question_count = 5;
-
+let modes = ['indicativo', 'permissivo', 'circunstancial', 'gerundio', 'imperativo'];
 function startQuiz() {
     // Load the dataset from 'verbs.json'
     fetch('quiz.json')
@@ -19,7 +19,7 @@ function startQuiz() {
             shuffleDataset();
 
             // Populate dropdown options
-            populateDropdown('mode', ['indicativo', 'permissivo', 'circunstancial', 'gerundio', 'imperativo']);
+            populateDropdown('mode', modes);
             populateDropdown('subject', ['ø', 'endé', 'ixé', 'oré', 'îandé', "pe'ẽ", "a'e"]);
             populateDropdown('object', ['ø', 'xé', 'nde', 'oré', 'îandé', "pe", "i"]);
 
@@ -67,6 +67,8 @@ function showQuestion() {
         const currentQuestion = dataset[currentQuestionIndex];
         document.getElementById('question').innerText = currentQuestion.f;
         document.getElementById('definition').innerText = currentQuestion.d;
+        mode_val = modes.find(option => option.slice(0, 2) === currentQuestion.m)
+        document.getElementById('response').innerText = 'Mode: '+mode_val + '; Subject: ' + reverseSubjPrefMap[currentQuestion.s] + '; Object: ' + reverseObjPrefMap[currentQuestion.o] + ';';
     } else {
         showResult();
     }
@@ -123,6 +125,24 @@ let obj_pref_map = {
     "pe": '2pp',
     "i": '3p'
 } 
+
+// Function to create a reverse map
+function createReverseMap(inputMap) {
+    let reverseMap = {};
+    for (let key in inputMap) {
+        if (inputMap.hasOwnProperty(key)) {
+            let value = inputMap[key];
+            if (value !== null) {
+                reverseMap[value] = key;
+            }
+        }
+    }
+    return reverseMap;
+}
+
+// Create reverse maps
+let reverseSubjPrefMap = createReverseMap(subj_pref_map);
+let reverseObjPrefMap = createReverseMap(obj_pref_map);
 
 function checkDropdownAnswer(part, dropdownElement) {
     selectedValue = dropdownElement.value;
