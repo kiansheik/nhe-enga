@@ -34,6 +34,15 @@ def table_indicativo( verbo_tupi, show_subj = True ):
                                 index = ['obj 1ps','obj 1ppi','obj 1ppe',
                                          'obj 2ps','obj 2pp','obj 3p'] )
     
+    pref_tr_ero_df = pd.DataFrame( {'1ps': ['aîe', '', '', 'orogûe', 'opogûe', 'a'] ,
+                                    '1ppi':['', 'îaîe','', 'orogûe', 'opogûe','îa'],
+                                    '1ppe':['','', 'oroîe','orogûe', 'opogûe','orogûe'],
+                                    '2ps': ['xe re', 'îandé re','oré re', 'ereîe', '','ere'],
+                                    '2pp': ['xe re', 'îandé re','oré re', '', 'peîe','pe'] ,
+                                    '3p':  ['xe re', 'îandé re', 'oré re', 'nde re', 'pe re','ogûe'] },
+                                    index = ['obj 1ps','obj 1ppi','obj 1ppe',
+                                            'obj 2ps','obj 2pp','obj 3p'] )
+    
     suf_tr_df =   pd.DataFrame( {'1ps':['', '', '', '', '', ''] ,
                                 '1ppi':['', '', '', '', '', ''],
                                 '1ppe':['', '', '', '', '', ''],
@@ -60,6 +69,8 @@ def table_indicativo( verbo_tupi, show_subj = True ):
             type = 4
         else:
             type = 3
+    elif( "ero" in verbo_tupi.verb_class ):
+        type = 5
 
     print(show_subj)
 
@@ -75,6 +86,9 @@ def table_indicativo( verbo_tupi, show_subj = True ):
         df_table = second_class_prefix_df + verbo_tupi.verbete
     elif type == 4:
         df_table = second_class_plr_prefix_df + verbo_tupi.verbete
+    elif type == 5:
+        df_table = show_subj*subject_tr_df + pref_tr_ero_df + verbo_tupi.verbete[1:]+' '+suf_tr_df
+        df_table = df_table.replace(verbo_tupi.verbete[1:]+' ', "--//--")
 
     return df_table
 
@@ -109,8 +123,10 @@ def table_permissivo( verbo_tupi ):
             type = 4
         else:
             type = 3
+    elif( "ero" in verbo_tupi.verb_class ):
+        type = 5
     
-    if type == 1 or type == 2:
+    if type == 1 or type == 2 or type ==5:
         return pref_tr_df + table_indicativo( verbo_tupi, False )
     elif type == 0:
         return pref_intr_t_df + table_indicativo( verbo_tupi, False )
@@ -119,3 +135,16 @@ def table_permissivo( verbo_tupi ):
     elif type == 4:
         return second_class_plr_t_df + table_indicativo( verbo_tupi, False )
 
+def table_gerundio( verbo_tupi ):
+    gerudio_intr_df = pd.DataFrame( { '1ps':['gûi'] ,'1ppi':['îa'],'1ppe':['oro'],
+                                   '2ps':['e'],'2pp':['pe'] ,'3p':['o'] },
+                                index = ['conjugacao'] )
+    
+    pref_tr_df = pd.DataFrame( {'1ps': ['gûinhe', 'îandé ','oré ' , 'nde ', 'pe ',  'i '],
+                                '1ppi':['xe '   , 'îaîe'  ,'oré ' , 'nde ', 'pe ',  'i '],
+                                '1ppe':['xe '   , 'îandé ','oroîe', 'nde ', 'pe ',  'i '],
+                                '2ps': ['xe '   , 'îandé ','oré ' , 'eîe' , 'pe ',  'i '],
+                                '2pp': ['xe '   , 'îandé ','oré ' , 'nde ', 'peîe','peî'],
+                                '3p':  ['xe '   , 'îandé ','oré ' , 'nde ', 'pe ',  'i '] },
+                                index = ['obj 1ps','obj 1ppi','obj 1ppe',
+                                         'obj 2ps','obj 2pp','obj 3p'] )
