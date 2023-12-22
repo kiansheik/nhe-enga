@@ -13,12 +13,17 @@ class TupiAntigo(spacy.language.Language):
     }
 
     permissivo = {
-        "1ps":  ["t'",     "ta "],
-        "1ppi": ["t'",    "t'"],
-        "1ppe": ["t'",   "t'"],
-        "2ps":  ["t'",   "ta "],
-        "2pp":  ["ta ",      "ta "],
-        "3p":   ["t'",       "ta "],
+        "1ps": ["t'", "ta "],
+        "1ppi": ["t'", "t'"],
+        "1ppe": ["t'", "t'"],
+        "2ps": ["t'", "ta "],
+        "2pp": ["ta ", "ta "],
+        "3p": ["t'", "ta "],
+    }
+
+    imperativo = {
+        "2ps": ["e-", "nde "],
+        "2pp": ["pe-", "pe "],
     }
 
     sound_graf = {
@@ -42,6 +47,14 @@ class TupiAntigo(spacy.language.Language):
             key=lambda x: len(x[0]),
             reverse=True,
         )
+        self.siliba_map = sorted(
+            [
+                (self.sound_graf["navarro"][i], 'V' if self.sound_graf["navarro"][i] in self.vogais else 'C')
+                for i in range(len(self.sound_graf["navarro"]))
+            ],
+            key=lambda x: len(x[0]),
+            reverse=True,
+        )
 
     def inflect_verb(self, verb, inflection):
         inf = self.personal_inflections[inflection]
@@ -58,8 +71,62 @@ class Verb(TupiAntigo):
             "v.tr." in verb_class
         )  # Whether the verb is transitive (boolean)
         self.raw_definition = raw_definition  # Raw definition of the verb (string)
-        self.pluriforme = "(s)" in self.verb_class or '(r, s)' in self.verb_class
-        self.segunda_classe = '2ª classe' in self.verb_class or 'adj.' in self.verb_class
+        self.pluriforme = "(s)" in self.verb_class or "(r, s)" in self.verb_class
+        self.segunda_classe = (
+            "2ª classe" in self.verb_class or "adj." in self.verb_class
+        )
+
+    def silibas(self):
+        silibas = self.siliba_string()
+        patterns = ["CVC", "CV", "VC", "V"]
+        num = 0
+        while silibas != '':
+            for pattern in patterns:
+                if silibas[:len(pattern)] == pattern:
+                    num +=1
+                    silibas = silibas[len(pattern):]
+                    break
+        return num
+    
+    def monosilibica(self):
+        return self.silibas() > 1
+
+
+    def siliba_string(self, inp=None):
+        if inp is None:
+            inp = self.verbete
+        sorted_clusters = [x[0] for x in self.siliba_map]
+        result_string = inp.replace("-", "")
+        cluster_mapping = dict(self.siliba_map)
+        replaced_positions = set()
+
+        for cluster in sorted_clusters:
+            replacement = cluster_mapping[cluster]
+            start = 0
+
+            while start < len(result_string):
+                position = result_string.find(cluster, start)
+
+                if position == -1:
+                    break
+
+                # Check for collisions with previous replacements
+                if any(
+                    pos in replaced_positions
+                    for pos in range(position, position + len(cluster))
+                ):
+                    start = position + 1
+                    continue
+
+                result_string = (
+                    result_string[:position]
+                    + replacement
+                    + result_string[position + len(cluster) :]
+                )
+                replaced_positions.update(range(position, position + len(replacement)))
+                start = position + len(replacement)
+
+        return result_string
 
     def ipa(self, inp=None):
         if inp is None:
@@ -107,16 +174,14 @@ class Verb(TupiAntigo):
         pro_drop=False,
         io_pref=False,
     ):
-        perm_suf = ['','']
-        if mode == 'permissivo':
-            mode = 'indicativo'
-            # pro_drop = True
+        perm_suf = ["", ""]
+        if mode == "permissivo":
             perm_suf = self.permissivo[subject_tense]
         if "2p" not in subject_tense and mode == "circunstancial":
             subj = self.personal_inflections[subject_tense][1]
             obj = ""
             if self.transitive:
-                if '3p' in subject_tense:
+                if "3p" in subject_tense:
                     subj = self.personal_inflections[subject_tense][0]
                 if subject_tense == object_tense:
                     obj = "îe"
@@ -141,17 +206,18 @@ class Verb(TupiAntigo):
                 else "i"
             )
             result = f"{subj} {obj}{self.verbete}{circ}"
-        # A simple conjugation function (you can expand this based on language rules)
-        elif self.verb_class in ["adj.: "]:
+        elif self.segunda_classe:
             subj = self.personal_inflections[subject_tense][1]
             result = f"{perm_suf[1]}{subj} {self.verbete}"
-        elif "v. intr." in self.verb_class:
+        elif not self.segunda_classe and not self.transitive:
             subj = self.personal_inflections[subject_tense][0] if not pro_drop else ""
-            conj = self.personal_inflections[subject_tense][2]
-            result = (
-                f"{subj} {perm_suf[0]}{conj}-{self.verbete}"
+            conj = (
+                self.imperativo[subject_tense][0]
+                if (mode == "imperativo" and "2p" in subject_tense)
+                else self.personal_inflections[subject_tense][2]
             )
-        elif self.verb_class in ["(v.tr.)", "(s) (v.tr.)"]:
+            result = f"{subj} {perm_suf[0]}{conj}-{self.verbete}"
+        elif self.transitive:
             if pos not in ["posposto", "incorporado", "anteposto"]:
                 raise Exception("Position Not Valid")
             if object_tense in self.personal_inflections.keys():
@@ -161,8 +227,12 @@ class Verb(TupiAntigo):
                         if not pro_drop
                         else ""
                     )
-                    conj = self.personal_inflections[subject_tense][2]
-                    obj = 'îe' if not io_pref else 'îo'
+                    conj = (
+                        self.imperativo[subject_tense][0]
+                        if (mode == "imperativo" and "2p" in subject_tense)
+                        else self.personal_inflections[subject_tense][2]
+                    )
+                    obj = "îe" if not io_pref else "îo"
                     result = f"{subj} {perm_suf[0]}{conj}-{obj}-{self.verbete}"
                 elif "3p" in object_tense:
                     subj = (
@@ -170,13 +240,17 @@ class Verb(TupiAntigo):
                         if not pro_drop
                         else ""
                     )
-                    conj = self.personal_inflections[subject_tense][2]
+                    conj = (
+                        self.imperativo[subject_tense][0]
+                        if (mode == "imperativo" and "2p" in subject_tense)
+                        else self.personal_inflections[subject_tense][2]
+                    )
                     dir_obj = (
                         self.personal_inflections["3p"][0]
                         if dir_obj_raw is None
                         else dir_obj_raw
                     )
-                    pluriforme = "s" if self.pluriforme else "î"
+                    pluriforme = "s" if self.pluriforme else 'îo' if self.monosilibica() else "î"
                     if pos == "posposto":
                         result = f"{subj} {perm_suf[0]}{conj}-{pluriforme}-{self.verbete} {dir_obj}"
                     elif pos == "anteposto":
@@ -197,7 +271,7 @@ class Verb(TupiAntigo):
                         subj = self.personal_inflections[subject_tense][4]
                         obj = self.personal_inflections[object_tense][1]
                         pluriforme = "r-" if self.pluriforme else ""
-                        perm_suf = self.permissivo[object_tense]
+                        perm_suf = self.permissivo[object_tense] if mode == "permissivo" else ["", ""] 
                         result = f"{perm_suf[1]}{obj} {pluriforme}{self.verbete} {subj}"
                 if "2p" in object_tense or "1p" in object_tense:
                     if "3p" in subject_tense:
@@ -208,7 +282,7 @@ class Verb(TupiAntigo):
                         )
                         obj = self.personal_inflections[object_tense][1]
                         pluriforme = "r-" if self.pluriforme else ""
-                        perm_suf = self.permissivo[object_tense]
+                        perm_suf = self.permissivo[object_tense] if mode == "permissivo" else ["", ""] 
                         result = f"{perm_suf[1]}{obj} {pluriforme}{self.verbete} {subj}"
         else:
             return "Invalid/Unimplemented tense"
