@@ -140,11 +140,71 @@ def table_gerundio( verbo_tupi ):
                                    '2ps':['e'],'2pp':['pe'] ,'3p':['o'] },
                                 index = ['conjugacao'] )
     
-    pref_tr_df = pd.DataFrame( {'1ps': ['gûinhe', 'îandé ','oré ' , 'nde ', 'pe ',  'i '],
+    gerudio_tr_df = pd.DataFrame( {'1ps': ['gûinhe', 'îandé ','oré ' , 'nde ', 'pe ',  'i '],
                                 '1ppi':['xe '   , 'îaîe'  ,'oré ' , 'nde ', 'pe ',  'i '],
                                 '1ppe':['xe '   , 'îandé ','oroîe', 'nde ', 'pe ',  'i '],
                                 '2ps': ['xe '   , 'îandé ','oré ' , 'eîe' , 'pe ',  'i '],
-                                '2pp': ['xe '   , 'îandé ','oré ' , 'nde ', 'peîe','peî'],
+                                '2pp': ['xe '   , 'îandé ','oré ' , 'nde ', 'peîe', 'i '],
                                 '3p':  ['xe '   , 'îandé ','oré ' , 'nde ', 'pe ',  'i '] },
                                 index = ['obj 1ps','obj 1ppi','obj 1ppe',
                                          'obj 2ps','obj 2pp','obj 3p'] )
+    
+    gerudio_tr_plr_df = pd.DataFrame( {'1ps': ['gûinhe', 'îandé r','oré r' , 'nde r', 'pe r',  's'],
+                                '1ppi':['xe r'   , 'îaîe'  ,'oré r' , 'nde r', 'pe r',  's'],
+                                '1ppe':['xe r'   , 'îandé r','oroîe', 'nde r', 'pe r',  's'],
+                                '2ps': ['xe r'   , 'îandé r','oré r', 'eîe'  , 'pe r',  's'],
+                                '2pp': ['xe r'   , 'îandé r','oré r', 'nde r', 'peîe',  's'],
+                                '3p':  ['xe r'   , 'îandé r','oré r', 'nde r', 'pe r',  's'] },
+                                index = ['obj 1ps','obj 1ppi','obj 1ppe',
+                                         'obj 2ps','obj 2pp','obj 3p'] )
+    gerundio_second_class_df = pd.DataFrame( { '1ps':['xe '] ,'1ppi':['îandé '],'1ppe':['oré '],
+                                   '2ps':['nde '],'2pp':['pe '] ,'3p':['o '] },
+                                index = ['conjugacao'] )
+    
+    gerundio_second_class_plr_df = pd.DataFrame( { '1ps':['xe r'] ,'1ppi':['îandé r'],'1ppe':['oré r'],
+                                   '2ps':['nde r'],'2pp':['pe r'] ,'3p':['o '] },
+                                index = ['conjugacao'] )
+    gerundio = verbo_tupi.verbete #ú ã ẽ ĩ ỹ õ ũ
+    print(gerundio)
+
+    type = 0
+    if ( "v" in verbo_tupi.verb_class ):
+        if verbo_tupi.transitivo:
+            type = 1
+    elif ( "adj" in verbo_tupi.verb_class ):
+        if verbo_tupi.pluriforme:
+            type = 4
+        else:
+            type = 3
+    elif( "ero" in verbo_tupi.verb_class ):
+        type = 5
+
+    if type == 4 or type == 3:
+        gerundio = gerundio + "amo"
+    elif gerundio[-1] in ['á','é','ó','e','a','o']:
+        gerundio = gerundio+"bo"
+    elif gerundio[-1] == 'i':
+        gerundio = gerundio[:-1]+"îabo"
+    elif gerundio[-1] == 'u':
+        gerundio = gerundio[:-1]+"ûabo"
+    elif gerundio[-1] == 'y':
+        gerundio = gerundio[:-1]+"yabo"
+    elif gerundio[-1] in ['ã','ê','õ',"ẽ","ũ","ỹ","ĩ" ]:
+        gerundio = gerundio + "mo"
+    elif  gerundio[-1] == 'r':
+        gerundio = gerundio[:-1]
+    elif  gerundio[-1] == 'b':
+        gerundio = gerundio[:-1]+"pa"
+    else:
+        gerundio = gerundio+"a"
+
+    if type == 0:
+        return gerudio_intr_df + gerundio
+    elif type == 1:
+        return gerudio_tr_df + gerundio
+    elif type == 2:
+        return gerudio_tr_plr_df + gerundio
+    elif type == 3:
+        return gerundio_second_class_df + gerundio
+    elif type == 4:
+        return gerundio_second_class_plr_df + gerundio
