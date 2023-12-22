@@ -60,7 +60,7 @@ function populateDropdown(id, options) {
 
 function showQuestion() {
     const progressFeedback = document.getElementById('progress-feedback');
-    progressFeedback.innerText = `Question: ${currentQuestionIndex+1}/${question_count}`;
+    progressFeedback.innerText = `Perguntas: ${currentQuestionIndex+1}/${question_count}`;
 
     resetDropdowns();
     if (currentQuestionIndex < question_count) {
@@ -68,7 +68,7 @@ function showQuestion() {
         document.getElementById('question').innerText = currentQuestion.f;
         document.getElementById('definition').innerText = currentQuestion.d;
         mode_val = modes.find(option => option.slice(0, 2) === currentQuestion.m)
-        document.getElementById('response').innerText = 'Mode: '+mode_val + '; Subject: ' + reverseSubjPrefMap[currentQuestion.s] + '; Object: ' + reverseObjPrefMap[currentQuestion.o] + ';';
+        document.getElementById('response').innerText = 'Modo: '+mode_val + '; Sujeito: ' + reverseSubjPrefMap[currentQuestion.s] + '; Objeto: ' + reverseObjPrefMap[currentQuestion.o] + ';';
     } else {
         showResult();
     }
