@@ -73,6 +73,10 @@ function showQuestion() {
 }
 
 function submitAnswer() {
+    answers = document.querySelectorAll('.answer-container');
+    answers.forEach(answer => {
+        answer.style.display = 'block';
+    });
     const mode = document.getElementById('mode');
     const subject = document.getElementById('subject');
     const object = document.getElementById('object');
@@ -83,11 +87,13 @@ function submitAnswer() {
 
     // Move to the next question
     currentQuestionIndex++;
-    // showQuestion();
-    setTimeout(showQuestion, 1000);
 }
 
 function resetDropdowns() {
+    answers = document.querySelectorAll('.answer-container');
+    answers.forEach(answer => {
+        answer.style.display = 'none';
+    });
     // Reset dropdowns to their default values
     document.getElementById('mode').value = '';
     document.getElementById('subject').value = '';
