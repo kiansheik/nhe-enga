@@ -30,6 +30,15 @@ function startQuiz() {
         });
 }
 
+function restartQuiz() {
+    currentQuestionIndex = 0;
+    score = 0;
+    shuffleDataset();
+    showQuestion();
+    document.getElementById('result-container').style.display = 'none';
+    document.getElementById('quiz-container').style.display = 'block';
+}
+
 function shuffleDataset() {
     for (let i = dataset.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -53,6 +62,7 @@ function showQuestion() {
     if (currentQuestionIndex < question_count) {
         const currentQuestion = dataset[currentQuestionIndex];
         document.getElementById('question').innerText = currentQuestion.f;
+        document.getElementById('definition').innerText = currentQuestion.d;
     } else {
         showResult();
     }
@@ -116,7 +126,7 @@ function showResult() {
     document.getElementById('quiz-container').style.display = 'none';
     const resultContainer = document.getElementById('result-container');
     resultContainer.style.display = 'block';
-    resultContainer.innerHTML = `<p>Your score is: ${score} out of ${question_count*3}</p>`;
+    document.getElementById('score').innerText = `Your score is: ${score} out of ${question_count*3}`;
 }
 
 document.addEventListener("DOMContentLoaded", function () {

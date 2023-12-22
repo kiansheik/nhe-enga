@@ -8,8 +8,11 @@
 </head>
 <body>
     <div id="quiz-container">
+        <div id="definition-container">
+            <p id="definition"></p>
+        </div>
         <div id="question-container">
-            <p id="question"></p>
+            <b><p id="question"></p></b>
         </div>
         <div id="options-container">
             <label for="mode">Mode:</label>
@@ -33,6 +36,7 @@
 
     <div id="result-container" style="display: none;">
         <p id="score"></p>
+        <button onclick="restartQuiz()">Restart Quiz</button>
     </div>
 
     <script src="quiz.js"></script>
