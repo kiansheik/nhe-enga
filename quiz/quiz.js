@@ -20,7 +20,7 @@ function startQuiz() {
 
             // Populate dropdown options
             populateDropdown('mode', ['indicativo', 'permissivo', 'circunstancial', 'gerundio', 'imperativo']);
-            populateDropdown('subject', ['ger.', 'endé', 'ixé', 'oré', 'îandé', "pe'ẽ", "a'e"]);
+            populateDropdown('subject', ['ø', 'endé', 'ixé', 'oré', 'îandé', "pe'ẽ", "a'e"]);
             populateDropdown('object', ['ø', 'xé', 'nde', 'oré', 'îandé', "pe", "i"]);
 
             showQuestion();
@@ -106,7 +106,7 @@ function resetDropdowns() {
 }
 
 let subj_pref_map = {
-    'ger.': null,
+    'ø': null,
     'ixé': '1ps',
     'oré': '1ppe',
     'îandé': '1ppi',
