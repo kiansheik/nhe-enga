@@ -59,6 +59,9 @@ function populateDropdown(id, options) {
 
 
 function showQuestion() {
+    const progressFeedback = document.getElementById('progress-feedback');
+    progressFeedback.innerText = `Question: ${currentQuestionIndex+1}/${question_count}`;
+
     resetDropdowns();
     if (currentQuestionIndex < question_count) {
         const currentQuestion = dataset[currentQuestionIndex];
