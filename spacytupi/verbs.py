@@ -217,8 +217,9 @@ for neighbors, frequency in result:
 vobjs = []
 for vclass in tqdm([x for x in verbs.keys()]):
     for vbt in verbs[vclass]:
-        verb_obj = tupi.Verb(vbt["first_word"], vclass, vbt["definition"])
-        vobjs.append(verb_obj)
+        if vbt["first_word"] in ["pytá", "potar", "aûsub", "nhan", "nhe'eng", "porang", 'syb']:
+            verb_obj = tupi.Verb(vbt["first_word"], vclass, vbt["definition"])
+            vobjs.append(verb_obj)
 
 
 def generate_permutations(input_list):
@@ -231,30 +232,93 @@ def generate_permutations(input_list):
 input_list = list(set(tupi.TupiAntigo.personal_inflections.keys()))
 all_pairs = generate_permutations(input_list)
 
-for v in sorted([
-    x for x in vobjs if x.verbete in ["pytá", "potar", "aûsub", "nhan", "nhe'eng", "porang"]
-], key=lambda x:x.verbete):
-    test_cases = [
-        ("1ppi", "1ppi"),
-        ("1ppi", "2ps"),
-        ("1ppi", "2pp"),
-        ("1ppi", "3p"),
-        ("1ppe", "1ppe"),
-        ("1ppe", "2ps"),
-        ("1ppe", "2pp"),
-        ("1ppe", "3p"),
-        ("1ps", "1ps"),
-        ("1ps", "2ps"),
-        ("1ps", "3p"),
-        ("1ps", "2pp"),
-        ("3p", "1ps"),
-        ("3p", "2ps"),
-        ("3p", "3p"),
-        ("3p", "1ppi"),
-        ("3p", "1ppe"),
-        ("3p", "2pp"),
-    ]
-    for modo in ["circunstancial", 'indicativo', 'permissivo']:
+for v in sorted(
+    [
+        x
+        for x in vobjs
+        # if x.verbete in ["pytá", "potar", "aûsub", "nhan", "nhe'eng", "porang"]
+    ],
+    key=lambda x: x.verbete,
+):
+    test_cases_map = {
+        "indicativo": [
+            ("1ppi", "1ppi"),
+            ("1ppi", "2ps"),
+            ("1ppi", "2pp"),
+            ("1ppi", "3p"),
+            ("1ppe", "1ppe"),
+            ("1ppe", "2ps"),
+            ("1ppe", "2pp"),
+            ("1ppe", "3p"),
+            ("1ps", "1ps"),
+            ("1ps", "2ps"),
+            ("1ps", "3p"),
+            ("1ps", "2pp"),
+            ("3p", "1ps"),
+            ("3p", "2ps"),
+            ("3p", "3p"),
+            ("3p", "1ppi"),
+            ("3p", "1ppe"),
+            ("3p", "2pp"),
+            ("2ps", "1ps"),
+            ("2ps", "1ppi"),
+            ("2ps", "1ppe"),
+            ("2ps", "3p"),
+            ("2pp", "1ps"),
+            ("2pp", "1ppi"),
+            ("2pp", "1ppe"),
+            ("2pp", "3p"),
+        ],
+        "permissivo": [
+            ("1ppi", "1ppi"),
+            ("1ppi", "2ps"),
+            ("1ppi", "2pp"),
+            ("1ppi", "3p"),
+            ("1ppe", "1ppe"),
+            ("1ppe", "2ps"),
+            ("1ppe", "2pp"),
+            ("1ppe", "3p"),
+            ("1ps", "1ps"),
+            ("1ps", "2ps"),
+            ("1ps", "3p"),
+            ("1ps", "2pp"),
+            ("3p", "1ps"),
+            ("3p", "2ps"),
+            ("3p", "3p"),
+            ("3p", "1ppi"),
+            ("3p", "1ppe"),
+            ("3p", "2pp"),
+        ],
+        "circunstancial": [
+            ("1ppi", "1ppi"),
+            ("1ppi", "2ps"),
+            ("1ppi", "2pp"),
+            ("1ppi", "3p"),
+            ("1ppe", "1ppe"),
+            ("1ppe", "2ps"),
+            ("1ppe", "2pp"),
+            ("1ppe", "3p"),
+            ("1ps", "1ps"),
+            ("1ps", "2ps"),
+            ("1ps", "3p"),
+            ("1ps", "2pp"),
+            ("3p", "1ps"),
+            ("3p", "2ps"),
+            ("3p", "3p"),
+            ("3p", "1ppi"),
+            ("3p", "1ppe"),
+            ("3p", "2pp"),
+        ],
+        "imperativo": [
+            ("2ps", "2ps"),
+            ("2ps", "3p"),
+            ("2pp", "2pp"),
+            ("2pp", "3p"),
+            ("2ps", "1ps"),
+            ("2pp", "1ps"),
+        ],
+    }
+    for modo, test_cases in test_cases_map.items():
         print(f"{v.verbete} - {v.verb_class} ({modo})")
         # Print the result
         if v.transitive:
@@ -274,7 +338,7 @@ for v in sorted([
                 except Exception as e:
                     print(f"\t({subj} -> {obj}):\tainda não desenvolvida", e)
         else:
-            for subj in sorted({x[1] for x in test_cases}):
+            for subj in sorted({x[0] for x in test_cases}):
                 try:
                     v.conjugate(
                         subject_tense=subj,
