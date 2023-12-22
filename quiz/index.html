@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Sentence Quiz</title>
+</head>
+<body>
+    <div id="quiz-container">
+        <div id="question-container">
+            <p id="question"></p>
+        </div>
+        <div id="options-container">
+            <label for="mode">Mode:</label>
+            <select id="mode" class="option" onchange="checkDropdownAnswer('mode', this.value)">
+                <!-- Add options dynamically using JavaScript -->
+            </select>
+
+            <label for="subject">Subject:</label>
+            <select id="subject" class="option" onchange="checkDropdownAnswer('subject', this.value)">
+                <!-- Add options dynamically using JavaScript -->
+            </select>
+
+            <label for="object">Object:</label>
+            <select id="object" class="option" onchange="checkDropdownAnswer('object', this.value)">
+                <!-- Add options dynamically using JavaScript -->
+            </select>
+
+            <button onclick="submitAnswer()">Submit Answer</button>
+        </div>
+    </div>
+
+    <div id="result-container" style="display: none;">
+        <p id="score"></p>
+    </div>
+
+    <script src="quiz.js"></script>
+</body>
+</html>

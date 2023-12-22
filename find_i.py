@@ -1,6 +1,8 @@
 import json
+
 from tqdm import tqdm
 from unidecode import unidecode
+
 
 # Function to normalize words by removing diacritics and replacing 'y' with 'i'
 def normalize_word(word):

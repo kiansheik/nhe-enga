@@ -1,5 +1,7 @@
+import re
+import sys
+
 from docx import Document
-import sys, re
 
 
 def find_string_in_docx(docx_file, target_string):
