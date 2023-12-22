@@ -59,3 +59,7 @@ body {
         width: 90%;
     }
 }
+
+.answer-container {
+    display: none; /* Initially hide the answer container */
+}

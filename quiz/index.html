@@ -10,7 +10,7 @@
     <div id="quiz-container">
         <!-- Add this element where you want to display the progress feedback -->
         <h2 id="progress-feedback"></h2>
-        <div id="definition-container">
+        <div class="answer-container">
             <p id="definition"></p>
         </div>
         <div id="question-container">
@@ -33,6 +33,10 @@
             </select>
 
             <button onclick="submitAnswer()">Submit Answer</button>
+            <div class="answer-container">
+                <!-- The container for displaying the answer -->
+                <button onclick="showQuestion()">Next</button>
+            </div>
         </div>
     </div>
 
