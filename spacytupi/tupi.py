@@ -9,7 +9,6 @@ class TupiAntigo(spacy.language.Language):
         "2ps": ["endé", "nde", "ere", "oro", "îepé"],
         "2pp": ["pe'ẽ", "pe", "pe", "opo", "peîepé"],
         "3p": ["a'e", "i", "o"],
-        # "4p": ["asé", "asé", "o"],
     }
 
     gerundio = {
@@ -90,6 +89,7 @@ class Verb(TupiAntigo):
         self.segunda_classe = (
             "2ª classe" in self.verb_class or "adj." in self.verb_class
         )
+        self.ero = self.verbete.startswith('ero')
 
     def silibas(self):
         silibas = self.siliba_string()
@@ -179,7 +179,7 @@ class Verb(TupiAntigo):
         return result_string
 
     def object_marker(self):
-        return "s" if self.pluriforme else "îo" if self.monosilibica() else "î"
+        return '' if self.ero else "s" if self.pluriforme else "îo" if self.monosilibica() else "î"
 
     def accent_last_vowel(self, input_string):
         vowels = "aeiyou"
@@ -191,7 +191,7 @@ class Verb(TupiAntigo):
         return input_string
 
     def fix_phonetics(self, input_str):
-        replacements = {"is": "ix", "i s": "i x", "nn": "n"}
+        replacements = {"is": "ix", "i s": "i x", "nn": "n", "oer":"ogûer","îeer": "îer"}
         new_str = input_str
         for b4, aft in replacements.items():
             new_str = new_str.replace(b4, aft)
@@ -245,7 +245,7 @@ class Verb(TupiAntigo):
                             elif self.monosilibica():
                                 dir_obj = "îo-"
                         else:
-                            dir_obj += f' {"r-" if self.pluriforme else ""}'
+                            dir_obj += f' {"r-" if self.pluriforme or self.ero else ""}'
                     pref = dir_obj
                 # TODO: modify last sound of verbete in accordance with gerundio
                 result = f"{pref}{vbt}{suf}"
@@ -336,13 +336,14 @@ class Verb(TupiAntigo):
                         if dir_obj_raw is None
                         else dir_obj_raw
                     )
+                    vbt = self.verbete[1:] if self.ero and subject_tense in ['1ps', '1ppi', '2ps', '2pp'] else self.verbete
                     pluriforme = self.object_marker()
                     if pos == "posposto":
-                        result = f"{subj} {perm_suf[0]}{conj}-{pluriforme}-{self.verbete} {dir_obj}"
+                        result = f"{subj} {perm_suf[0]}{conj}-{pluriforme}-{vbt} {dir_obj}"
                     elif pos == "anteposto":
-                        result = f"{subj} {dir_obj} {perm_suf[0]}{conj}-{pluriforme}-{self.verbete}"
+                        result = f"{subj} {dir_obj} {perm_suf[0]}{conj}-{pluriforme}-{vbt}"
                     elif pos == "incorporado":
-                        result = f"{subj} {perm_suf[0]}{conj}-{pluriforme if dir_obj_raw is None else dir_obj}-{self.verbete}"
+                        result = f"{subj} {perm_suf[0]}{conj}-{pluriforme if dir_obj_raw is None else dir_obj}-{vbt}"
                 if "2p" in object_tense:
                     if "1p" in subject_tense:
                         subj = (
@@ -356,7 +357,7 @@ class Verb(TupiAntigo):
                     if "2p" in subject_tense:
                         subj = self.personal_inflections[subject_tense][4]
                         obj = self.personal_inflections[object_tense][1]
-                        pluriforme = "r-" if self.pluriforme else ""
+                        pluriforme = "r-" if self.pluriforme or self.ero else ""
                         perm_suf = (
                             self.permissivo[object_tense]
                             if mode == "permissivo"
@@ -371,7 +372,7 @@ class Verb(TupiAntigo):
                             else dir_obj_raw
                         )
                         obj = self.personal_inflections[object_tense][1]
-                        pluriforme = "r-" if self.pluriforme else ""
+                        pluriforme = "r-" if self.pluriforme or self.ero else ""
                         perm_suf = (
                             self.permissivo[object_tense]
                             if mode == "permissivo"
@@ -381,12 +382,12 @@ class Verb(TupiAntigo):
         # else:
         #     return "Invalid/Unimplemented tense"
         result = self.fix_phonetics(result.strip().replace("-", ""))
-        # print(
-        #     f"({subject_tense} -> {object_tense}):",
-        #     f"\t",
-        #     result.strip().replace("-", ""),
-        #     "\t",
-        # )
+        print(
+            f"({subject_tense} -> {object_tense}):",
+            f"\t",
+            result.strip().replace("-", ""),
+            "\t",
+        )
         # self.ipa(result.strip().replace("-", ""))
         return result.strip()
 
