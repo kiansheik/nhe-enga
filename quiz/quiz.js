@@ -20,8 +20,8 @@ function startQuiz() {
 
             // Populate dropdown options
             populateDropdown('mode', ['indicativo', 'permissivo', 'circunstancial', 'gerundio', 'imperativo']);
-            populateDropdown('subject', ['ger.', 'ixé', 'oré', 'îandé', 'endé', "pe'ẽ", "a'e"]);
-            populateDropdown('object', ['intr.', 'xé', 'oré', 'îandé', 'nde', "pe", "i"]);
+            populateDropdown('subject', ['ger.', 'endé', 'ixé', 'oré', 'îandé', "pe'ẽ", "a'e"]);
+            populateDropdown('object', ['intr.', 'xé', 'nde', 'oré', 'îandé', "pe", "i"]);
 
             showQuestion();
         })
@@ -59,6 +59,7 @@ function populateDropdown(id, options) {
 
 
 function showQuestion() {
+    resetDropdowns();
     if (currentQuestionIndex < question_count) {
         const currentQuestion = dataset[currentQuestionIndex];
         document.getElementById('question').innerText = currentQuestion.f;
@@ -69,9 +70,9 @@ function showQuestion() {
 }
 
 function submitAnswer() {
-    const mode = document.getElementById('mode').value;
-    const subject = document.getElementById('subject').value;
-    const object = document.getElementById('object').value;
+    const mode = document.getElementById('mode');
+    const subject = document.getElementById('subject');
+    const object = document.getElementById('object');
 
     checkDropdownAnswer('mode', mode);
     checkDropdownAnswer('subject', subject);
@@ -79,8 +80,8 @@ function submitAnswer() {
 
     // Move to the next question
     currentQuestionIndex++;
-    resetDropdowns();
-    showQuestion();
+    // showQuestion();
+    setTimeout(showQuestion, 1000);
 }
 
 function resetDropdowns() {
@@ -88,6 +89,11 @@ function resetDropdowns() {
     document.getElementById('mode').value = '';
     document.getElementById('subject').value = '';
     document.getElementById('object').value = '';
+    // Reset the border color of all dropdowns to default
+    dropdowns = document.querySelectorAll('.option');
+    dropdowns.forEach(dropdown => {
+        dropdown.style.backgroundColor = '#4caf50'; // Set your default border color
+    });
 }
 
 let subj_pref_map = {
@@ -109,15 +115,23 @@ let obj_pref_map = {
     "i": '3p'
 } 
 
-function checkDropdownAnswer(part, selectedValue) {
+function checkDropdownAnswer(part, dropdownElement) {
+    selectedValue = dropdownElement.value;
     const currentQuestion = dataset[currentQuestionIndex];
+    is_correct = false;
     // console.log(part, selectedValue, selectedValue.substring(0, 2), currentQuestion.m)
     if (part === 'mode' && selectedValue.substring(0, 2) === currentQuestion.m) {
         score++;
+        is_correct = true;
     } else if (part === 'subject' && subj_pref_map[selectedValue] === currentQuestion.s) {
+        is_correct = true;
         score++;
     } else if (part === 'object' && obj_pref_map[selectedValue] === currentQuestion.o) {
+        is_correct = true;
         score++;
+    }
+    if(!is_correct) {
+        dropdownElement.style.backgroundColor = 'red';
     }
     console.log(score, currentQuestion);
 }
