@@ -260,11 +260,6 @@ for v in tqdm(sorted(
             ("1ps", "2pp"),
             ("1ps", "3p"),
             ("1ps", "1ps"),
-            ("2ps", "2ps"),
-            ("1ppi", "1ppi"),
-            ("1ppe", "1ppe"),
-            ("2pp", "2pp"),
-            ("3p", "3p"),
         ],
         "indicativo": [
             ("1ps", "1ps"),
@@ -352,7 +347,7 @@ for v in tqdm(sorted(
                         object_tense=obj,
                         mode=modo,
                     )
-                    quiz.append({'f': res, 's':subj, 'o': obj, 'm': modo[:2]})
+                    quiz.append({'f': res, 's':subj if modo[:2] != 'ge' else None, 'o': obj, 'm': modo[:2]})
                 except Exception as e:
                     pass
                     # print(f"\t({subj} -> {obj}):\tainda não desenvolvida", e)
@@ -363,7 +358,7 @@ for v in tqdm(sorted(
                         subject_tense=subj,
                         mode=modo,
                     )
-                    quiz.append({'f': res, 's':subj, 'o': obj, 'm': modo[:2]})
+                    quiz.append({'f': res, 's':subj, 'o': None, 'm': modo[:2]})
                 except Exception as e:
                     pass
                     # print(f"\t({subj} -> {obj}):\tainda não desenvolvida", e)
