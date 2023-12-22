@@ -240,7 +240,7 @@ class Verb(TupiAntigo):
                         dir_obj = "îe-"
                     else:
                         if dir_obj == "i":
-                            if self.pluriforme:
+                            if self.pluriforme or self.ero:
                                 dir_obj = "s-"
                             elif self.monosilibica():
                                 dir_obj = "îo-"
@@ -277,7 +277,7 @@ class Verb(TupiAntigo):
                         if dir_obj_raw is None
                         else f"{dir_obj_raw}"
                     )
-                    if self.pluriforme:
+                    if self.pluriforme or self.ero:
                         if obj == "i":
                             obj = "s-"
                         else:
