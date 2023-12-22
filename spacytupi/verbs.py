@@ -217,7 +217,7 @@ for neighbors, frequency in result:
 vobjs = []
 for vclass in tqdm([x for x in verbs.keys()]):
     for vbt in verbs[vclass]:
-        if vbt["first_word"] in ["pytá", "potar", "aûsub", "nhan", "nhe'eng", "porang", 'syb']:
+        if vbt["first_word"] in ["pytá", "potar", "aûsub", "nhan", "nhe'eng", "porang", 'syb', 'ekar', "'u", 'abõ']:
             verb_obj = tupi.Verb(vbt["first_word"], vclass, vbt["definition"])
             vobjs.append(verb_obj)
 
@@ -241,6 +241,34 @@ for v in sorted(
     key=lambda x: x.verbete,
 ):
     test_cases_map = {
+        "gerundio": [
+            ("1ppi", "1ppi"),
+            ("1ppi", "2ps"),
+            ("1ppi", "2pp"),
+            ("1ppi", "3p"),
+            ("1ppe", "1ppe"),
+            ("1ppe", "2ps"),
+            ("1ppe", "2pp"),
+            ("1ppe", "3p"),
+            ("1ps", "1ps"),
+            ("1ps", "2ps"),
+            ("1ps", "3p"),
+            ("1ps", "2pp"),
+            ("3p", "1ps"),
+            ("3p", "2ps"),
+            ("3p", "3p"),
+            ("3p", "1ppi"),
+            ("3p", "1ppe"),
+            ("3p", "2pp"),
+            ("2ps", "1ps"),
+            ("2ps", "1ppi"),
+            ("2ps", "1ppe"),
+            ("2ps", "3p"),
+            ("2pp", "1ps"),
+            ("2pp", "1ppi"),
+            ("2pp", "1ppe"),
+            ("2pp", "3p"),
+        ],
         "indicativo": [
             ("1ppi", "1ppi"),
             ("1ppi", "2ps"),
@@ -318,10 +346,10 @@ for v in sorted(
             ("2pp", "1ps"),
         ],
     }
-    for modo, test_cases in test_cases_map.items():
+    for modo, test_cases in [x for x in test_cases_map.items() if x[0] == 'gerundio']:
         print(f"{v.verbete} - {v.verb_class} ({modo})")
         # Print the result
-        if v.transitive:
+        if v.transitivo:
             for subj, obj in test_cases:
                 try:
                     v.conjugate(
