@@ -338,7 +338,7 @@ for v in tqdm(sorted(
     }
     for modo, test_cases in [x for x in test_cases_map.items()]:
         deff = f"{v.verbete} - {v.raw_definition}"[:200]
-        # print(f"{v.verbete} - {v.verb_class} ({modo})")
+        print(f"{v.verbete} - {v.verb_class} ({modo})")
         # Print the result
         if v.transitivo:
             for subj, obj in test_cases:
