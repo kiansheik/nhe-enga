@@ -66,8 +66,11 @@ function showQuestion() {
     if (currentQuestionIndex < question_count) {
         const currentQuestion = dataset[currentQuestionIndex];
         document.getElementById('question').innerText = currentQuestion.f;
-        document.getElementById('definition').innerText = currentQuestion.d;
+        partsArray = currentQuestion.d.split(' -');
         mode_val = modes.find(option => option.slice(0, 2) === currentQuestion.m)
+        document.getElementById('definition').href = `${window.location.pathname}../?query=${encodeURIComponent(partsArray[0])}`
+        document.getElementById('definition').innerText = partsArray[0]
+        document.getElementById('definition-text').innerText = partsArray.slice(1).join(' -');
         document.getElementById('response').innerText = 'Modo: '+mode_val + '; Sujeito: ' + reverseSubjPrefMap[currentQuestion.s] + '; Objeto: ' + reverseObjPrefMap[currentQuestion.o] + ';';
     } else {
         showResult();
