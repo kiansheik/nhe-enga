@@ -12,6 +12,15 @@ class TupiAntigo(spacy.language.Language):
         # "4p": ["asé", "asé", "o"],
     }
 
+    gerundio = {
+        "1ps": ["gûi"],
+        "1ppi": ["îa"],
+        "1ppe": ["oro"],
+        "2ps": ["e"],
+        "2pp": ["pe"],
+        "3p": ["o",]
+    }
+
     permissivo = {
         "1ps": ["t'", "ta "],
         "1ppi": ["t'", "t'"],
@@ -30,12 +39,13 @@ class TupiAntigo(spacy.language.Language):
         "ipa": "p pʷ pʲ β t s sʷ k kʷ ʔ m mʷ n r ɲ ŋ mb mbʷ nd ndʷ ŋɡ ŋɡʷ w w j a ˈa e ˈɛ i ˈi ɨ ˈɨ o ˈɔ u ˈu ã ɛ̃ ĩ ɨ̃ ɔ̃ ũ ʃ".split(
             " "
         ),
-        "navarro": "p pû pî b t s sû k kû ' m mû n r nh ng mb mbû nd ndû ng ngû gû û î a á e é i í y ý o ó u ú ã ẽ ĩ ỹ õ ũ x".split(
+        "navarro": "p pû pî b t s sû k kû ' m mû n r nh ng mb mbû nd ndû ng ngû gû û î a á e é i í y ý o ó u ú ã ẽ ĩ ỹ õ ũ x".split(
             " "
         ),
     }
 
-    vogais = "a á e é i í y ý o ó u ú ã ẽ ĩ ỹ õ ũ".split(" ")
+    vogais = "a á e é i í y ý o ó u ú ã ẽ ĩ ỹ õ ũ".split(" ")
+    nasais = "m n ng ã ẽ ĩ ỹ õ ũ".split(" ")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -67,8 +77,8 @@ class Verb(TupiAntigo):
         self.verbete = verbete  # The name of the verb in its dictionary form
         self.substantivo = f"{verbete}{'a' if verbete[-1] not in self.vogais else ''}"
         self.verb_class = verb_class  # Class of the verb (string)
-        self.transitive = (
-            "v.tr." in verb_class
+        self.transitivo = (
+            "v.tr." in verb_class.replace(' ', '')
         )  # Whether the verb is transitive (boolean)
         self.raw_definition = raw_definition  # Raw definition of the verb (string)
         self.pluriforme = "(s)" in self.verb_class or "(r, s)" in self.verb_class
@@ -163,6 +173,17 @@ class Verb(TupiAntigo):
                 start = position + len(replacement)
 
         return result_string
+    def object_marker(self):
+        return "s" if self.pluriforme else 'îo' if self.monosilibica() else "î"
+
+    def accent_last_vowel(self, input_string):
+        vowels = 'aeiyou'
+        
+        # Check if the last character is a vowel
+        if input_string[-1] in vowels:
+            # Accent the last vowel
+            return input_string[:-1] + input_string[-1] + '́'
+        return input_string
 
     def conjugate(
         self,
@@ -177,10 +198,53 @@ class Verb(TupiAntigo):
         perm_suf = ["", ""]
         if mode == "permissivo":
             perm_suf = self.permissivo[subject_tense]
-        if "2p" not in subject_tense and mode == "circunstancial":
+        
+        if mode == 'gerundio':
+            if not self.segunda_classe:    
+                subj = self.personal_inflections[subject_tense][0]
+                suf = 'bo'
+                vbt = self.verbete
+                if self.verbete[-1] in self.nasais or self.verbete[-2:] in self.nasais:
+                    suf = 'mo'
+                if self.verbete[-1] in "i í y ý u ú ĩ ỹ ũ":
+                    suf = f'a{suf}'
+                elif self.verbete[-1] == 'b':
+                    suf = 'pa'
+                    vbt = vbt[:-1]
+                elif self.verbete[-1] == 'r':
+                    suf = ''
+                    vbt = self.accent_last_vowel(vbt[:-1])
+                elif self.verbete[-1] not in self.vogais:
+                    suf = 'a'      
+                if not self.transitivo:
+                    pref = f"{self.gerundio[subject_tense][0]}-"
+                else:
+                    dir_obj = (
+                            f"{self.personal_inflections[object_tense][1]}"
+                            if dir_obj_raw is None
+                            else dir_obj_raw
+                        )
+                    if dir_obj == 'i' and self.pluriforme:
+                        dir_obj = 's-'
+                    else:
+                        dir_obj += f' {"r-" if self.pluriforme else ""}'
+                    pref = dir_obj
+                # TODO: modify last sound of verbete in accordance with gerundio
+                result = f"{subj} {pref}{vbt}{suf}"
+            else:
+                subj = self.personal_inflections[subject_tense][1] if '3p' not in subject_tense else 'o'
+                suf = 'amo'
+                vbt = self.verbete
+                if self.verbete[-1] in self.nasais or self.verbete[-2:] in self.nasais:
+                    suf = 'namo'
+                elif self.verbete[-1] in self.vogais:
+                    suf = 'ramo'
+                # TODO: modify last sound of verbete in accordance with gerundio (annamo -> ãnamo)
+                result = f"{subj} {vbt}{suf}"
+        elif "2p" not in subject_tense and mode == "circunstancial":
             subj = self.personal_inflections[subject_tense][1]
             obj = ""
-            if self.transitive:
+            if self.transitivo:
                 if "3p" in subject_tense:
                     subj = self.personal_inflections[subject_tense][0]
                 if subject_tense == object_tense:
@@ -209,7 +273,7 @@ class Verb(TupiAntigo):
         elif self.segunda_classe:
             subj = self.personal_inflections[subject_tense][1]
             result = f"{perm_suf[1]}{subj} {self.verbete}"
-        elif not self.segunda_classe and not self.transitive:
+        elif not self.segunda_classe and not self.transitivo:
             subj = self.personal_inflections[subject_tense][0] if not pro_drop else ""
             conj = (
                 self.imperativo[subject_tense][0]
@@ -217,7 +281,7 @@ class Verb(TupiAntigo):
                 else self.personal_inflections[subject_tense][2]
             )
             result = f"{subj} {perm_suf[0]}{conj}-{self.verbete}"
-        elif self.transitive:
+        elif self.transitivo:
             if pos not in ["posposto", "incorporado", "anteposto"]:
                 raise Exception("Position Not Valid")
             if object_tense in self.personal_inflections.keys():
@@ -250,7 +314,7 @@ class Verb(TupiAntigo):
                         if dir_obj_raw is None
                         else dir_obj_raw
                     )
-                    pluriforme = "s" if self.pluriforme else 'îo' if self.monosilibica() else "î"
+                    pluriforme = self.object_marker()
                     if pos == "posposto":
                         result = f"{subj} {perm_suf[0]}{conj}-{pluriforme}-{self.verbete} {dir_obj}"
                     elif pos == "anteposto":
