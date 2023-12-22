@@ -337,6 +337,7 @@ for v in tqdm(sorted(
         ],
     }
     for modo, test_cases in [x for x in test_cases_map.items()]:
+        deff = f"{v.verbete} - {v.raw_definition}"[:200]
         # print(f"{v.verbete} - {v.verb_class} ({modo})")
         # Print the result
         if v.transitivo:
@@ -347,7 +348,7 @@ for v in tqdm(sorted(
                         object_tense=obj,
                         mode=modo,
                     )
-                    quiz.append({'f': res, 's':subj if modo[:2] != 'ge' else None, 'o': obj, 'm': modo[:2]})
+                    quiz.append({'f': res, 's':subj if modo[:2] != 'ge' else None, 'o': obj, 'm': modo[:2], 'd':deff})
                 except Exception as e:
                     pass
                     # print(f"\t({subj} -> {obj}):\tainda não desenvolvida", e)
@@ -358,7 +359,7 @@ for v in tqdm(sorted(
                         subject_tense=subj,
                         mode=modo,
                     )
-                    quiz.append({'f': res, 's':subj, 'o': None, 'm': modo[:2]})
+                    quiz.append({'f': res, 's':subj, 'o': None, 'm': modo[:2], 'd':deff})
                 except Exception as e:
                     pass
                     # print(f"\t({subj} -> {obj}):\tainda não desenvolvida", e)
