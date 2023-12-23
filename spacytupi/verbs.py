@@ -94,6 +94,7 @@ verb_types = [
     "2ª p. do sing. irreg. do imper. d",
     "(-îo-, -s-) (v.tr. irreg. Incorpora -îo- (ou -nho-) e -s- no indicativo e formas derivadas deste.)",
     "(xe) (r, s) (v. da 2ª classe)",
+    "(r, s) (xe) (v. da 2ª classe)",
     "(v. irreg. - forma só usada no imper.)",
     "(v.tr.) (Pode ter gerúndio irregular",
     "ger. irreg. d",
@@ -224,6 +225,7 @@ for vclass in tqdm([x for x in verbs.keys()]):
             "(v. da 2ª classe)",
             "(-îo-, -s-) (v.tr. irreg. Incorpora -îo- (ou -nho-) e -s- no indicativo e formas derivadas deste.)",
             "(xe) (r, s) (v. da 2ª classe)",
+            "(r, s) (xe) (v. da 2ª classe)",
             "(-îo-) (v.tr.)",
             "(-îo- ou -nho-) (v.tr.)",
             "(-îo-s- ou -nho-s-) (v.tr. irreg. Incorpora -îo- e -s-. Nas formas nominais é pluriforme.)",
@@ -247,7 +249,7 @@ for v in tqdm(sorted(
     [
         x
         for x in vobjs
-        # if x.verbete in ["pytá", "potar", "aûsub", "nhan", "nhe'eng", "porang"]
+        # if x.verbete in ["endyîuî"]
     ],
     key=lambda x: x.verbete,
 )):
@@ -260,6 +262,7 @@ for v in tqdm(sorted(
             ("1ps", "2pp"),
             ("1ps", "3p"),
             ("1ps", "1ps"),
+            ("3p", "1ps"),
         ],
         "indicativo": [
             ("1ps", "1ps"),

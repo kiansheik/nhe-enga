@@ -191,7 +191,7 @@ class Verb(TupiAntigo):
         return input_string
 
     def fix_phonetics(self, input_str):
-        replacements = {"is": "ix", "i s": "i x", "nn": "n", "oer":"ogûer","îeer": "îer"}
+        replacements = {"is": "ix", "i s": "i x", "nn": "n", "oer":"ogûer","îeer": "îer", '  ': ' '}
         new_str = input_str
         for b4, aft in replacements.items():
             new_str = new_str.replace(b4, aft)
@@ -262,7 +262,13 @@ class Verb(TupiAntigo):
                 elif self.verbete[-1] in self.vogais:
                     suf = "ramo"
                 # TODO: modify last sound of verbete in accordance with gerundio (annamo -> ãnamo)
-                result = f"{subj} {vbt}{suf}"
+                pluriforme = ''
+                if self.pluriforme and not self.transitivo:
+                    if '3p' in subject_tense:
+                        pluriforme = 's-'
+                    else:
+                        pluriforme += 'r-'
+                result = f"{subj} {pluriforme}{vbt}{suf}"
         elif "2p" not in subject_tense and mode == "circunstancial":
             subj = self.personal_inflections[subject_tense][1]
             obj = ""
@@ -291,10 +297,23 @@ class Verb(TupiAntigo):
                 if self.verbete[-1] in self.vogais
                 else "i"
             )
+            if self.pluriforme and not self.transitivo:
+                if '3p' in subject_tense:
+                    obj = 'x-'
+                    subj = ''
+                else:
+                    obj += 'r-'
             result = f"{subj} {obj}{self.verbete}{circ}"
         elif self.segunda_classe:
             subj = self.personal_inflections[subject_tense][1]
-            result = f"{perm_suf[1]}{subj} {self.verbete}"
+            pluriforme = ''
+            if self.pluriforme:
+                if '3p' in subject_tense:
+                    pluriforme = 'x-'
+                    subj = ''
+                else:
+                    pluriforme = 'r-'
+            result = f"{perm_suf[1]}{subj} {pluriforme}{self.verbete}"
         elif not self.segunda_classe and not self.transitivo:
             subj = self.personal_inflections[subject_tense][0] if not pro_drop else ""
             conj = (
