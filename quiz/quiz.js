@@ -21,7 +21,7 @@ function startQuiz() {
             // Populate dropdown options
             populateDropdown('mode', modes);
             populateDropdown('subject', ['ø', 'endé', 'ixé', 'oré', 'îandé', "pe'ẽ", "a'e"]);
-            populateDropdown('object', ['ø', 'xé', 'nde', 'oré', 'îandé', "pe", "i"]);
+            populateDropdown('object', ['ø', 'xe', 'nde', 'oré', 'îandé', "pe", "i"]);
 
             showQuestion();
         })
@@ -121,7 +121,7 @@ let subj_pref_map = {
 }
 let obj_pref_map = {
     'ø': null,
-    'xé': '1ps',
+    'xe': '1ps',
     'oré': '1ppe',
     'îandé': '1ppi',
     'nde': '2ps',
