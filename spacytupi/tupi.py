@@ -263,11 +263,8 @@ class Verb(TupiAntigo):
                     suf = "ramo"
                 # TODO: modify last sound of verbete in accordance with gerundio (annamo -> ãnamo)
                 pluriforme = ''
-                if self.pluriforme and not self.transitivo:
-                    if '3p' in subject_tense:
-                        pluriforme = 's-'
-                    else:
-                        pluriforme += 'r-'
+                if self.pluriforme and '3p' not in subject_tense:
+                    pluriforme += 'r-'
                 result = f"{subj} {pluriforme}{vbt}{suf}"
         elif "2p" not in subject_tense and mode == "circunstancial":
             subj = self.personal_inflections[subject_tense][1]
