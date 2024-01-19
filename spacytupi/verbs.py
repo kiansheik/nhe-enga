@@ -44,13 +44,15 @@ ban = [
 ]
 # Parse the JSON data into a Python object
 dicc = json.loads(lines[0])
+dicc_dict = {i:v for i,v in enumerate(dicc)}
 tupi_only = []
 include = False
 adjectives = []
-for vbt in dicc:
+for i, vbt in dicc_dict.items():
     if vbt["first_word"] == "ã":
         include = True
     if include and vbt["first_word"] not in ban and "adj.: " not in vbt["definition"]:
+        vbt['id'] = i
         tupi_only.append(vbt)
     if vbt["first_word"] == "'yura":
         include = False
@@ -68,16 +70,18 @@ adj_raws = [
         .replace("ygapenung", "yapenung"),
         x["optional_number"],
         x["definition"],
+        i
     )
-    for x in dicc
+    for i, x in dicc_dict.items()
     if "adj.: " in x["definition"]
 ]
-for first_word, optional_number, definition in {(x[1], x[2], x[3]) for x in adj_raws}:
+for first_word, optional_number, definition, vid in {(x[1], x[2], x[3], x[4]) for x in adj_raws}:
     tupi_only.append(
         {
             "first_word": first_word,
             "optional_number": optional_number,
             "definition": definition,
+            "id": vid
         }
     )
 
@@ -230,7 +234,7 @@ for vclass in tqdm([x for x in verbs.keys()]):
             "(-îo- ou -nho-) (v.tr.)",
             "(-îo-s- ou -nho-s-) (v.tr. irreg. Incorpora -îo- e -s-. Nas formas nominais é pluriforme.)",
         ]:
-            verb_obj = tupi.Verb(vbt["first_word"], vclass, vbt["definition"])
+            verb_obj = tupi.Verb(vbt["first_word"], vclass, vbt["definition"], vid=vbt['id'])
             vobjs.append(verb_obj)
 
 
@@ -352,6 +356,11 @@ for v in tqdm(sorted(
                         mode=modo,
                     )
                     quiz.append({'f': res, 's':subj if modo[:2] != 'ge' else None, 'o': obj, 'm': modo[:2], 'd':deff})
+                    dicc_con = {'f': res, 's':subj if modo[:2] != 'ge' else None, 'o': obj, 'm': modo[:2]}
+                    if 'con' in dicc_dict[v.vid]:
+                        dicc_dict[v.vid]['con'].append(dicc_con)
+                    else:
+                        dicc_dict[v.vid]['con'] = [dicc_con]
                 except Exception as e:
                     pass
                     # print(f"\t({subj} -> {obj}):\tainda não desenvolvida", e)
@@ -363,12 +372,20 @@ for v in tqdm(sorted(
                         mode=modo,
                     )
                     quiz.append({'f': res, 's':subj, 'o': None, 'm': modo[:2], 'd':deff})
+                    dicc_con = {'f': res, 's':subj, 'o': None, 'm': modo[:2]}
+                    if 'con' in dicc_dict[v.vid]:
+                        dicc_dict[v.vid]['con'].append(dicc_con)
+                    else:
+                        dicc_dict[v.vid]['con'] = [dicc_con]
                 except Exception as e:
                     pass
                     # print(f"\t({subj} -> {obj}):\tainda não desenvolvida", e)
 
 with open('../quiz/quiz.json', 'w') as f:
     json.dump(quiz, f)
+
+with open('../docs/dict-conjugated.json', 'w') as f:
+    json.dump(list(dicc_dict.values()), f)
 
     # v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='anteposto', pro_drop=False)
     # v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='anteposto', pro_drop=False, dir_obj_raw='kunumin')

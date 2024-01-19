@@ -76,7 +76,7 @@ class TupiAntigo(spacy.language.Language):
 
 
 class Verb(TupiAntigo):
-    def __init__(self, verbete, verb_class, raw_definition):
+    def __init__(self, verbete, verb_class, raw_definition, vid=None):
         super().__init__()
         self.verbete = verbete  # The name of the verb in its dictionary form
         self.substantivo = f"{verbete}{'a' if verbete[-1] not in self.vogais else ''}"
@@ -90,6 +90,7 @@ class Verb(TupiAntigo):
             "2ª classe" in self.verb_class or "adj." in self.verb_class
         )
         self.ero = self.verbete.startswith('ero')
+        self.vid = vid
 
     def silibas(self):
         silibas = self.siliba_string()

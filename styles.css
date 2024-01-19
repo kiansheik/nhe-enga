@@ -26,6 +26,16 @@ article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
+.option {
+    background-color: #bbf7d0;
+    color: #030303;
+    border: none;
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
 body {
 	line-height: 1;
 }
