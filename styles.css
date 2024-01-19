@@ -35,7 +35,10 @@ footer, header, hgroup, menu, nav, section {
     cursor: pointer;
     border-radius: 5px;
 }
-
+.options-container {
+    display: flex;
+    flex-wrap: wrap;
+}
 body {
 	line-height: 1;
 }
