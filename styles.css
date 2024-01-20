@@ -36,7 +36,7 @@ footer, header, hgroup, menu, nav, section {
     border-radius: 5px;
 }
 .options-container {
-    display: flex;
+    display: none;
     flex-wrap: wrap;
 }
 body {
@@ -134,6 +134,51 @@ main > div.content > div.actions > .search:hover {
 	border: 1px solid #ca8a04;
 	cursor: pointer;
 }
+/* Added styles for the toggle label */
+main > div.content > div.actions > .toggle-container > .toggle-label {
+    margin-right: 10px; /* Adjust as needed for spacing between label and toggle */
+    font-size: 10px;
+	margin-top: 61%;
+    color: #333;
+}
+/* Updated styles for the sliding toggle */
+main > div.content > div.actions {
+    display: inline-flex; /* Use flexbox for layout control */
+	align-items: center;
+}
+/* Updated styles for the sliding toggle */
+main > div.content > div.actions > .toggle-container {
+	margin-bottom: 15%;
+    position: relative;
+    width: 26px;
+    height: 12px;
+    background-color: #ddd;
+    border-radius: 25px; /* Half of the height for a circular shape */
+    cursor: pointer;
+	margin-left: 10px; /* Adjust the margin as needed for spacing */
+}
+
+main > div.content > div.actions > .toggle-container > .toggle-ball {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translate(0, -50%);
+    width: 15px; /* Adjust as needed */
+    height: 15px; /* Adjust as needed */
+    background-color: #ffd700;
+    border-radius: 50%;
+    transition: transform 0.3s ease; /* Adjust the duration and timing function as needed */
+}
+
+main > div.content > div.actions > .toggle-container.disabled {
+    background-color: #f5f5f5;
+}
+
+main > div.content > div.actions > .toggle-container.disabled > .toggle-ball {
+    background-color: #ccc;
+    cursor: default;
+}
+
 
 @media only screen and (max-width: 600px) {
 	main > div.content > div.title > h1 {

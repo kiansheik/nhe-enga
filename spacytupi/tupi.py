@@ -89,7 +89,7 @@ class Verb(TupiAntigo):
         self.segunda_classe = (
             "2ª classe" in self.verb_class or "adj." in self.verb_class
         )
-        self.ero = self.verbete.startswith('ero')
+        self.ero = self.verbete.startswith('ero') or self.verbete.startswith('eno')
         self.vid = vid
 
     def silibas(self):
@@ -192,7 +192,7 @@ class Verb(TupiAntigo):
         return input_string
 
     def fix_phonetics(self, input_str):
-        replacements = {"is": "ix", "i s": "i x", "nn": "n", "oer":"ogûer","îeer": "îer", '  ': ' '}
+        replacements = {"is": "ix", "i s": "i x", "nn": "n", "oer":"ogûer", "oen":"ogûen", "îeer": "îer", '  ': ' '}
         new_str = input_str
         for b4, aft in replacements.items():
             new_str = new_str.replace(b4, aft)
