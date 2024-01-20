@@ -64,11 +64,19 @@
             return null;
         }
         
-        // // Load the JSON file and store it in the global variable
-        // loadJSON('docs/dict-conjugated.json', function (data) {
-        //     window.jsonData = data;
-        //     // You can perform additional actions with the loaded JSON data here
-        // });
+        function transformConjList(mode, list) {
+            const resultObject = {};
+            console.log("ert");
+            list.forEach(obj => {
+                if (obj.m.slice(0, 2) === mode.slice(0, 2)) {
+                const key = [obj.s, obj.o];
+                console.log(key)
+                resultObject[JSON.stringify(key)] = obj.f;
+                }
+            });
+
+        return resultObject;
+        }
         window.jsonData = loadJSONSync('docs/dict-conjugated.json')
     </script>
     <script>
@@ -91,6 +99,49 @@
             "pe": '2pp',
             "i": '3p'
         };
+        function generateConjugationTable(mode, conjugations_b, un_id) {
+            // Opening HTML tags
+            let conjugations =  transformConjList(mode, conjugations_b);
+            console.log("b4", conjugations_b)
+            console.log("dp", conjugations)
+            const subjects = Object.keys(subj_pref_map)
+            const subjects_vals = Object.values(subj_pref_map)
+            const objects_vals = Object.values(obj_pref_map)
+            const objects = Object.keys(obj_pref_map)
+            let htmlString = `<table class="options-container" id="conj-${un_id}">`;
+                htmlString += '<tr><th class="label" colspan="' + (subjects.length + 2) + '">Sujeito</th></tr>';
+            htmlString += '<tr><th class="label" rowspan="' + (objects.length + 1) + '">Objeto</th>';
+            htmlString += `<th>
+                <select id="mode-${un_id}" class="option">
+                    <!-- Add options dynamically using JavaScript -->
+                </select
+                ></th>`;
+
+            // Add header row with subjects
+            for (const subject of subjects) {
+                htmlString += `<th>${subject}</th>`;
+            }
+
+            htmlString += '</tr>';
+
+            // Add rows with conjugations
+            for (let i = 0; i < objects.length; i++) {
+                htmlString += `<tr><th>${objects[i]}</th>`;
+                const obj = objects_vals[i];
+                for (let j = 0; j < subjects.length; j++) {
+                    const subj = subjects_vals[j];
+                    let conj = conjugations[JSON.stringify([subj, obj])] || '-'
+                    htmlString += `<td>${conj}</td>`;
+                }
+                htmlString += '</tr>';
+            }
+
+            // Closing HTML tags
+            htmlString += '</table>';
+
+            return htmlString;
+        }
+
         function searchByFirstWord(data, query) {
             const clean_query = removePunctuation(query)
             return data.filter(item => removePunctuation(item.first_word).toLowerCase() === clean_query.toLowerCase());
@@ -148,64 +199,38 @@
 
         function createConjugateFunction(un_id, data) {
             // Create the divId based on the provided un_id
-            var divId = 'options-container-' + un_id;
+            var divId = 'conj-' + un_id;
 
             // Get the div element
             var divElement = document.getElementById(divId);
-
+            // Get the button element inside the div
+            var selectElement = divElement.querySelector('select');
             // Define the function to append 'f' value as text to the end of the div
             function appendFValue() {
                 // Get the values for mode, subject, and object using the provided un_id
-                var modeValue = document.getElementById('mode-' + un_id).value;
-                var subjectValue = document.getElementById('subject-' + un_id).value;
-                var objectValue = document.getElementById('object-' + un_id).value;
-
-                // Find the matching object in the data array based on the first letter of attributes
-                // console.log(data)
-                var matchingObject = data.find(function(obj) {
-                    return obj.m === modeValue.substring(0, 2) && obj.s === subj_pref_map[subjectValue] && obj.o === obj_pref_map[objectValue];
-                });
-                // Get or create the text node with a specific ID
-                var textNodeId = 'fValueText-' + un_id;
-                var existingTextNode = document.getElementById(textNodeId);
-                var fValueText = existingTextNode || document.createElement('div');
-
-                // Set the ID for the text node
-                fValueText.id = textNodeId;
-
-                // Update the content of the text node with the 'f' value
-                fValueText.textContent = matchingObject ? matchingObject.f : '';
-                // Check if a match is found and update the background color of the dropdowns
-                var dropdowns = divElement.querySelectorAll('select');
-                var dropdownBackgroundColor = matchingObject ? '' : 'red';
-                
-                dropdowns.forEach(function(dropdown) {
-                    dropdown.style.backgroundColor = dropdownBackgroundColor;
-                });
-                // If the text node is newly created, append it to the end of the div
-                if (!existingTextNode) {
-                    divElement.appendChild(fValueText);
-                }
+                var modeValue = selectElement.value;
+                console.log("conj func", data)
+                appendOptionsToResultDiv(divElement.parentElement, data, modeValue);
+                divElement.remove();
             }
-
             // Attach the function to the div
             divElement.dataset.conjugateFunction = appendFValue;
-
-            // Get the button element inside the div
-            var buttonElement = divElement.querySelector('button');
-
-            // Set the onclick handler of the button to the created function
-            buttonElement.onclick = appendFValue;
+            // var selectElement = document.getElementById("mySelect");
+            // Add a change event listener
+            selectElement.addEventListener("change", appendFValue)
         }
 
-        function toggleAllOptionsContainers() {
-            // Find all elements with the class .options-container
-            var optionsContainers = document.querySelectorAll('.options-container');
+        function toggleAllOptionsContainers(dry) {
+            var is_dry = dry || false;
+            if(!is_dry){
+                // Find all elements with the class .options-container
+                var optionsContainers = document.querySelectorAll('.options-container');
 
-            // Toggle the visibility of each options container
-            optionsContainers.forEach(function(optionsContainer) {
-                optionsContainer.style.display = (optionsContainer.style.display === 'none' || optionsContainer.style.display === '') ? 'flex' : 'none';
-            });
+                // Toggle the visibility of each options container
+                optionsContainers.forEach(function(optionsContainer) {
+                    optionsContainer.style.display = (optionsContainer.style.display === 'none' || optionsContainer.style.display === '') ? 'flex' : 'none';
+                });
+            }
 
             // Find the toggle container and ball elements
             var toggleContainer = document.getElementById('toggleContainer');
@@ -219,49 +244,35 @@
             setCookie('conjugationToggle', toggleContainer.classList.contains('disabled') ? 'disabled' : 'enabled', 30);
         }
         // Function to append the HTML string to resultDiv
-        function appendOptionsToResultDiv(resultDiv, con) {
+        function appendOptionsToResultDiv(resultDiv, con, mode) {
             // HTML string representing the options container
             const un_id = Math.random().toString(36).substring(2, 10);
-            const htmlString = `
-            <div id="options-container-${un_id}" class="options-container">
-                <label for="mode">Modo:</label>
-                <select id="mode-${un_id}" class="option">
-                    <!-- Add options dynamically using JavaScript -->
-                </select>
-
-                <label for="subject">Sujeito:</label>
-                <select id="subject-${un_id}" class="option">
-                    <!-- Add options dynamically using JavaScript -->
-                </select>
-
-                <label for="object">Objeto:</label>
-                <select id="object-${un_id}" class="option">
-                    <!-- Add options dynamically using JavaScript -->
-                </select>
-
-                <button>Conjugar</button>
-            </div>
-            `;
-
+            const htmlString = '';
             // Create a temporary container element
             const tempContainer = document.createElement("div");
             // Set innerHTML of the container to the HTML string
-            tempContainer.innerHTML = htmlString;
+            tempContainer.innerHTML = generateConjugationTable(mode, con, un_id);
+            var storedState = getCookie('conjugationToggle');
+            if (storedState === 'enabled') {
+                tempContainer.firstChild.style.display = 'flex';
+            } else {
+                tempContainer.firstChild.style.display = 'none';
+            }
 
             // Append the child nodes of the container to the resultDiv
             while (tempContainer.firstChild) {
                 resultDiv.appendChild(tempContainer.firstChild);
             }
-            // Populate dropdown options
-            populateDropdown(`mode-${un_id}`, modes);
-            populateDropdown(`subject-${un_id}`, ['ø', 'endé', 'ixé', 'oré', 'îandé', "pe'ẽ", "a'e"]);
-            populateDropdown(`object-${un_id}`, ['ø', 'xe', 'nde', 'oré', 'îandé', "pe", "i"]);
+            // // Populate dropdown options
+            populateDropdown(`mode-${un_id}`, modes, mode);
+            // populateDropdown(`subject-${un_id}`, ['ø', 'endé', 'ixé', 'oré', 'îandé', "pe'ẽ", "a'e"]);
+            // populateDropdown(`object-${un_id}`, ['ø', 'xe', 'nde', 'oré', 'îandé', "pe", "i"]);
 
             createConjugateFunction(un_id, con)
             
         }
 
-        function populateDropdown(id, options) {
+        function populateDropdown(id, options, mode) {
             const dropdown = document.getElementById(id);
             
             options.forEach(option => {
@@ -270,6 +281,7 @@
                 optionElement.text = option;
                 dropdown.add(optionElement);
             });
+            dropdown.value = mode;
         }
 
         function performSearch() {
@@ -327,7 +339,7 @@
                     }
                     resultsDiv.appendChild(resultDiv);
                     if (result.con) {
-                        appendOptionsToResultDiv(resultDiv, result.con);
+                        appendOptionsToResultDiv(resultDiv, result.con, 'indicativo');
                     }
                 });
                 const newUrl = `${window.location.pathname}?query=${encodeURIComponent(query)}`;
@@ -371,7 +383,7 @@
             var toggleContainer = document.getElementById('toggleContainer');
             var storedState = getCookie('conjugationToggle');
             if (storedState === 'enabled') {
-                toggleAllOptionsContainers()
+                toggleAllOptionsContainers(true)
             }
         });
         // Function to handle the popstate event

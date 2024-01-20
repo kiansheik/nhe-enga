@@ -85,7 +85,7 @@ class Verb(TupiAntigo):
             " ", ""
         )  # Whether the verb is transitive (boolean)
         self.raw_definition = raw_definition  # Raw definition of the verb (string)
-        self.pluriforme = "(s)" in self.verb_class or "(r, s)" in self.verb_class
+        self.pluriforme = "(s)" in self.verb_class or "(r, s)" in self.verb_class or "-s-" in self.verb_class
         self.segunda_classe = (
             "2ª classe" in self.verb_class or "adj." in self.verb_class
         )
