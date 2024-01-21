@@ -102,7 +102,6 @@
             // Create sets of unique subjects and objects
             // Filter conjugations_b based on the first two letters of mode
             const filteredConjugations = conjugations_b.filter(item => item.m === mode.slice(0, 2));
-            console.log('filtered', filteredConjugations)
             // Create sets of unique subjects and objects from the filtered conjugations
             const uniqueSubjects = new Set(filteredConjugations.map(item => item.s));
             const uniqueObjects = new Set(filteredConjugations.map(item => item.o));
@@ -148,7 +147,6 @@
                 .filter(item => uniqueObjects.has(item[1]))
                 .map(([key, value]) => key);
 
-            // console.log(uniqueObjects);
             let htmlString = `<table class="options-container" id="conj-${un_id}">`;
                 htmlString += `<tr><th>Modo<br><select id="mode-${un_id}" class="option">
                     <!-- Add options dynamically using JavaScript -->
