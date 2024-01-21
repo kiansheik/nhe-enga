@@ -226,8 +226,6 @@ class Verb(TupiAntigo):
     def negate_verb(self, result, modo):
         if modo == 'permissivo':
             return f"{result} umẽ"
-        elif modo == 'circunstancial':
-            return f"{result}e'ymi"
         else:
             if result[0] in TupiAntigo.vogais or result[0] == 'î':
                 result = f"n'{result}"
@@ -293,6 +291,8 @@ class Verb(TupiAntigo):
                             dir_obj += f' {"r-" if self.pluriforme or self.ero else ""}'
                     pref = dir_obj
                 # TODO: modify last sound of verbete in accordance with gerundio
+                if negative:
+                    suf = "e'yma"
                 result = f"{pref}{vbt}{suf}"
             else:
                 subj = (
@@ -310,6 +310,8 @@ class Verb(TupiAntigo):
                 pluriforme = ""
                 if self.pluriforme and "3p" not in subject_tense:
                     pluriforme += "r-"
+                if negative:
+                    suf = "e'ymamo"
                 result = f"{subj} {pluriforme}{vbt}{suf}"
         elif "2p" not in subject_tense and mode == "circunstancial":
             subj = self.personal_inflections[subject_tense][1]
@@ -345,6 +347,8 @@ class Verb(TupiAntigo):
                     subj = ""
                 else:
                     obj += "r-"
+            if negative:
+                circ = "e'ymi"
             result = f"{subj} {obj}{self.verbete}{circ}"
         elif self.segunda_classe:
             subj = self.personal_inflections[subject_tense][1]
@@ -376,7 +380,7 @@ class Verb(TupiAntigo):
             if object_tense in self.personal_inflections.keys():
                 if object_tense == subject_tense:
                     subj = (
-                        self.personal_inflections[subject_tense][1]
+                        self.personal_inflections[subject_tense][1] if not '3p' == subject_tense else "a'e"
                         if not pro_drop
                         else ""
                     )
