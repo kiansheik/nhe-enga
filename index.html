@@ -64,12 +64,12 @@
             return null;
         }
         
-        function transformConjList(mode, list) {
+        function transformConjList(mode, list, negar) {
             const resultObject = {};
             list.forEach(obj => {
                 if (obj.m.slice(0, 2) === mode.slice(0, 2)) {
                 const key = [obj.s, obj.o];
-                resultObject[JSON.stringify(key)] = obj.f;
+                resultObject[JSON.stringify(key)] = negar? obj.n: obj.f;
                 }
             });
 
@@ -97,7 +97,8 @@
             "pe": '2pp',
             "i": '3p'
         };
-        function generateConjugationTable(mode, conjugations_b, un_id) {
+        function generateConjugationTable(mode, conjugations_b, un_id, ne) {
+            let negar = ne || false;
             // Opening HTML tags
             // Create sets of unique subjects and objects
             // Filter conjugations_b based on the first two letters of mode
@@ -106,7 +107,7 @@
             const uniqueSubjects = new Set(filteredConjugations.map(item => item.s));
             const uniqueObjects = new Set(filteredConjugations.map(item => item.o));
 
-            let conjugations =  transformConjList(mode, filteredConjugations);
+            let conjugations =  transformConjList(mode, filteredConjugations, negar);
             let subj_m = subj_pref_map;
             let obj_m = obj_pref_map;
             if (mode === 'imperativo'){
@@ -148,9 +149,13 @@
                 .map(([key, value]) => key);
 
             let htmlString = `<table class="options-container" id="conj-${un_id}">`;
-                htmlString += `<tr><th>Modo<br><select id="mode-${un_id}" class="option">
+                htmlString += `<tr><th>
+                    Modo<br><select id="mode-${un_id}" class="option">
                     <!-- Add options dynamically using JavaScript -->
-                </select></th><th class="label" style="background-color: #e4ffe4;" colspan="${(objects.length + 1)}">Objeto</th></tr>`;
+                </select><br>
+                    <input type="checkbox" id="negarCheckbox-${un_id}" ${negar?"checked":""} name="negarCheckbox">
+                    <label for="negarCheckbox">Negar</label>
+                </th><th class="label" style="background-color: #e4ffe4;" colspan="${(objects.length + 1)}">Objeto</th></tr>`;
             // htmlString += '<tr><th class="label" rowspan="' + (objects.length + 1) + '">Objeto</th>';
             htmlString += `<th style="background-color: #fef9c3ab;" class="label">
                 Sujeito</th>`;
@@ -241,13 +246,14 @@
 
             // Get the div element
             var divElement = document.getElementById(divId);
+            var negarCheckbox = document.getElementById(`negarCheckbox-${un_id}`);
             // Get the button element inside the div
             var selectElement = divElement.querySelector('select');
             // Define the function to append 'f' value as text to the end of the div
             function appendFValue() {
                 // Get the values for mode, subject, and subject using the provided un_id
                 var modeValue = selectElement.value;
-                appendOptionsToResultDiv(divElement.parentElement, data, modeValue);
+                appendOptionsToResultDiv(divElement.parentElement, data, modeValue, negarCheckbox.checked);
                 divElement.remove();
             }
             // Attach the function to the div
@@ -255,6 +261,7 @@
             // var selectElement = document.getElementById("mySelect");
             // Add a change event listener
             selectElement.addEventListener("change", appendFValue)
+            negarCheckbox.addEventListener("change", appendFValue)
         }
 
         function toggleAllOptionsContainers(dry) {
@@ -281,14 +288,14 @@
             setCookie('conjugationToggle', toggleContainer.classList.contains('disabled') ? 'disabled' : 'enabled', 30);
         }
         // Function to append the HTML string to resultDiv
-        function appendOptionsToResultDiv(resultDiv, con, mode) {
+        function appendOptionsToResultDiv(resultDiv, con, mode, ne) {
             // HTML string representing the options container
             const un_id = Math.random().toString(36).substring(2, 10);
             const htmlString = '';
             // Create a temporary container element
             const tempContainer = document.createElement("div");
             // Set innerHTML of the container to the HTML string
-            tempContainer.innerHTML = generateConjugationTable(mode, con, un_id);
+            tempContainer.innerHTML = generateConjugationTable(mode, con, un_id, ne);
             var storedState = getCookie('conjugationToggle');
             if (storedState === 'enabled') {
                 tempContainer.firstChild.style.display = 'flex';
@@ -376,7 +383,7 @@
                     }
                     resultsDiv.appendChild(resultDiv);
                     if (result.con) {
-                        appendOptionsToResultDiv(resultDiv, result.con, 'indicativo');
+                        appendOptionsToResultDiv(resultDiv, result.con, 'indicativo', false);
                     }
                 });
                 const newUrl = `${window.location.pathname}?query=${encodeURIComponent(query)}`;

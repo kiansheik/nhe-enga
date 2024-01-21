@@ -386,6 +386,12 @@ for v in tqdm(
                         object_tense=obj,
                         mode=modo,
                     )
+                    neg_res = v.conjugate(
+                        subject_tense=subj,
+                        object_tense=obj,
+                        mode=modo,
+                        negative=True
+                    )
                     if (subj, obj) in test_cases_map[modo]:
                         quiz.append(
                             {
@@ -400,7 +406,7 @@ for v in tqdm(
                         "f": res,
                         "s": subj if modo[:2] != "ge" else None,
                         "o": obj,
-                        "m": modo[:2],
+                        "m": modo[:2], 'n': neg_res
                     }
                     if "con" in dicc_dict[v.vid]:
                         dicc_dict[v.vid]["con"].append(dicc_con)
@@ -416,11 +422,16 @@ for v in tqdm(
                         subject_tense=subj,
                         mode=modo,
                     )
+                    neg_res = v.conjugate(
+                        subject_tense=subj,
+                        mode=modo,
+                        negative=True
+                    )
                     if (subj, obj) in test_cases_map[modo]:
                         quiz.append(
                             {"f": res, "s": subj, "o": None, "m": modo[:2], "d": deff}
                         )
-                    dicc_con = {"f": res, "s": subj, "o": None, "m": modo[:2]}
+                    dicc_con = {"f": res, "s": subj, "o": None, "m": modo[:2], 'n': neg_res}
                     if "con" in dicc_dict[v.vid]:
                         dicc_dict[v.vid]["con"].append(dicc_con)
                     else:
