@@ -85,7 +85,8 @@ class Verb(TupiAntigo):
             " ", ""
         )  # Whether the verb is transitive (boolean)
         self.raw_definition = raw_definition  # Raw definition of the verb (string)
-        self.pluriforme = "(s)" in self.verb_class or "(r, s)" in self.verb_class or "-s-" in self.verb_class
+        self.pluriforme = "(s)" in self.verb_class or "(r, s)" in self.verb_class or '-s-' in self.verb_class
+        self.ios = "-îo-" in self.verb_class and '-s-' in self.verb_class
         self.segunda_classe = (
             "2ª classe" in self.verb_class or "adj." in self.verb_class
         )
@@ -180,7 +181,7 @@ class Verb(TupiAntigo):
         return result_string
 
     def object_marker(self):
-        return '' if self.ero else "s" if self.pluriforme else "îo" if self.monosilibica() else "î"
+        return '' if self.ero else "îos" if self.ios else "s" if self.pluriforme else "îo" if self.monosilibica() else "î" 
 
     def accent_last_vowel(self, input_string):
         vowels = "aeiyou"

@@ -66,11 +66,9 @@
         
         function transformConjList(mode, list) {
             const resultObject = {};
-            console.log("ert");
             list.forEach(obj => {
                 if (obj.m.slice(0, 2) === mode.slice(0, 2)) {
                 const key = [obj.s, obj.o];
-                console.log(key)
                 resultObject[JSON.stringify(key)] = obj.f;
                 }
             });
@@ -102,8 +100,6 @@
         function generateConjugationTable(mode, conjugations_b, un_id) {
             // Opening HTML tags
             let conjugations =  transformConjList(mode, conjugations_b);
-            console.log("b4", conjugations_b)
-            console.log("dp", conjugations)
             const subjects = Object.keys(subj_pref_map)
             const subjects_vals = Object.values(subj_pref_map)
             const objects_vals = Object.values(obj_pref_map)
@@ -209,7 +205,6 @@
             function appendFValue() {
                 // Get the values for mode, subject, and object using the provided un_id
                 var modeValue = selectElement.value;
-                console.log("conj func", data)
                 appendOptionsToResultDiv(divElement.parentElement, data, modeValue);
                 divElement.remove();
             }
