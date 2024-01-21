@@ -223,18 +223,23 @@ class Verb(TupiAntigo):
             new_str = new_str.replace(b4, aft)
         return new_str
     
-    def negate_verb(self, result):
-        if result[0] in TupiAntigo.vogais or result[0] == 'î':
-            result = f"n'{result}"
+    def negate_verb(self, result, modo):
+        if modo == 'permissivo':
+            return f"{result} umẽ"
+        elif modo == 'circunstancial':
+            return f"{result}e'ymi"
         else:
-            result = f"na {result}"
-        if result[-1] == 'i' or result[-1] == 'î':
-            result = f"{result[:-1]}î"
-        elif result[-1] in TupiAntigo.vogais:
-            result = f"{result}î"
-        else:
-            result = f"{result}i"
-        return result
+            if result[0] in TupiAntigo.vogais or result[0] == 'î':
+                result = f"n'{result}"
+            else:
+                result = f"na {result}"
+            if result[-1] == 'i' or result[-1] == 'î':
+                result = f"{result[:-1]}î"
+            elif result[-1] in TupiAntigo.vogais:
+                result = f"{result}î"
+            else:
+                result = f"{result}i"
+            return result
 
     def conjugate(
         self,
@@ -353,7 +358,7 @@ class Verb(TupiAntigo):
             vb =  f"{pluriforme}{self.verbete}"
             result = f"{perm_suf[1]}{subj} {vb}"
             if negative:
-                result = self.negate_verb(result)
+                result = self.negate_verb(result, mode)
         elif not self.segunda_classe and not self.transitivo:
             subj = self.personal_inflections[subject_tense][0] if not pro_drop else ""
             conj = (
@@ -363,7 +368,7 @@ class Verb(TupiAntigo):
             )
             vb = f"{perm_suf[0]}{conj}-{self.verbete}"
             if negative:
-                vb = self.negate_verb(vb)
+                vb = self.negate_verb(vb, mode)
             result = f"{subj} {vb}"
         elif self.transitivo:
             if pos not in ["posposto", "incorporado", "anteposto"]:
@@ -383,7 +388,7 @@ class Verb(TupiAntigo):
                     obj = "îe" if not io_pref else "îo"
                     vb = f"{perm_suf[0]}{conj}-{obj}-{self.verbete}"
                     if negative:
-                        vb = self.negate_verb(vb)
+                        vb = self.negate_verb(vb, mode)
                     result = f"{subj} {vb}"
                 elif "3p" in object_tense:
                     subj = (
@@ -410,21 +415,21 @@ class Verb(TupiAntigo):
                     if pos == "posposto":
                         vb = f"{perm_suf[0]}{conj}-{pluriforme}-{vbt}"
                         if negative:
-                            vb = self.negate_verb(vb)
+                            vb = self.negate_verb(vb, mode)
                         result = (
                             f"{subj} {vb} {dir_obj}"
                         )
                     elif pos == "anteposto":
                         vb = f"{perm_suf[0]}{conj}-{pluriforme}-{vbt}"
                         if negative:
-                            vb = self.negate_verb(vb)
+                            vb = self.negate_verb(vb, mode)
                         result = (
                             f"{subj} {dir_obj} {vb}"
                         )
                     elif pos == "incorporado":
                         vb = f"{perm_suf[0]}{conj}-{pluriforme if dir_obj_raw is None else dir_obj}-{vbt}"
                         if negative:
-                            vb = self.negate_verb(vb)
+                            vb = self.negate_verb(vb, mode)
                         result = f"{subj} {vb}"
                 if "2p" in object_tense:
                     if "1p" in subject_tense:
@@ -436,7 +441,7 @@ class Verb(TupiAntigo):
                         obj = self.personal_inflections[object_tense][3]
                         result = f"{perm_suf[0]}{obj}-{self.verbete}"
                         if negative:
-                            result = self.negate_verb(result)
+                            result = self.negate_verb(result, mode)
                         result = f"{subj} {result}"
                         
                 if "1p" in object_tense:
@@ -451,7 +456,7 @@ class Verb(TupiAntigo):
                         )
                         vb = f"{perm_suf[1]}{obj} {pluriforme}{self.verbete}"
                         if negative:
-                            vb = self.negate_verb(vb)
+                            vb = self.negate_verb(vb, mode)
                         result = f"{vb} {subj}"
                 if "2p" in object_tense or "1p" in object_tense:
                     if "3p" in subject_tense:
@@ -469,7 +474,7 @@ class Verb(TupiAntigo):
                         )
                         vb = f"{perm_suf[1]}{obj} {pluriforme}{self.verbete}"
                         if negative:
-                            vb = self.negate_verb(vb)
+                            vb = self.negate_verb(vb, mode)
                         result = f"{vb} {subj}"
         # else:
         #     return "Invalid/Unimplemented tense"
