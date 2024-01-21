@@ -107,9 +107,6 @@
             const uniqueSubjects = new Set(filteredConjugations.map(item => item.s));
             const uniqueObjects = new Set(filteredConjugations.map(item => item.o));
 
-            // Convert sets to arrays if needed
-            const subjects_vals = Array.from(uniqueSubjects);
-            const objects_vals = Array.from(uniqueObjects);
             let conjugations =  transformConjList(mode, filteredConjugations);
             let subj_m = subj_pref_map;
             let obj_m = obj_pref_map;
@@ -127,6 +124,15 @@
                     "a'e": '3p'
                 };
             }
+            // Get values from subj_pref_map for keys in uniqueSubjectsSet
+            const subjects_vals = Object.entries(subj_m)
+                .filter(item => uniqueSubjects.has(item[1]))
+                .map(([key, value]) => value);
+
+            // Get values from obj_pref_map for keys in uniqueObjectsSet
+            const objects_vals = Object.entries(obj_m)
+                .filter(item => uniqueObjects.has(item[1]))
+                .map(([key, value]) => value);
             // const subjects = Object.keys(subj_m)
             // const subjects_vals = Object.values(subj_m)
             // const objects_vals = Object.values(obj_m)
