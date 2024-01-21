@@ -80,7 +80,7 @@
     <script>
         let modes = ['indicativo', 'permissivo', 'circunstancial', 'gerundio', 'imperativo'];
         let subj_pref_map = {
-            'ø': null,
+            // 'ø': null,
             'ixé': '1ps',
             'oré': '1ppe',
             'îandé': '1ppi',
@@ -105,24 +105,23 @@
             const objects_vals = Object.values(obj_pref_map)
             const objects = Object.keys(obj_pref_map)
             let htmlString = `<table class="options-container" id="conj-${un_id}">`;
-                htmlString += '<tr><th class="label" colspan="' + (subjects.length + 2) + '">Sujeito</th></tr>';
-            htmlString += '<tr><th class="label" rowspan="' + (objects.length + 1) + '">Objeto</th>';
-            htmlString += `<th>
-                <select id="mode-${un_id}" class="option">
+                htmlString += `<tr><th>Modo<br><select id="mode-${un_id}" class="option">
                     <!-- Add options dynamically using JavaScript -->
-                </select
-                ></th>`;
+                </select></th><th class="label" style="background-color: #e4ffe4;" colspan="${(subjects.length + 1)}">Sujeito</th></tr>`;
+            // htmlString += '<tr><th class="label" rowspan="' + (objects.length + 1) + '">Objeto</th>';
+            htmlString += `<th style="background-color: #fef9c3ab;" class="label">
+                Objeto</th>`;
 
             // Add header row with subjects
             for (const subject of subjects) {
-                htmlString += `<th>${subject}</th>`;
+                htmlString += `<th style="background-color: #e4ffe4;">${subject}</th>`;
             }
 
             htmlString += '</tr>';
 
             // Add rows with conjugations
             for (let i = 0; i < objects.length; i++) {
-                htmlString += `<tr><th>${objects[i]}</th>`;
+                htmlString += `<tr><th style="background-color: #fef9c3ab;">${objects[i]}</th>`;
                 const obj = objects_vals[i];
                 for (let j = 0; j < subjects.length; j++) {
                     const subj = subjects_vals[j];
