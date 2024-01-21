@@ -260,23 +260,3 @@ table {
   tr:hover {
 	background-color: #d3e0ea;
   }
-  
-  /* Responsive styles for smaller screens */
-@media screen and (max-width: 600px) {
-	table, th, td {
-	  display: block;
-	}
-  
-	th, td {
-	  width: 100%;
-	  box-sizing: border-box;
-	}
-  
-	th.label, td.label {
-	  background-color: #b3d4fc;
-	  font-weight: bold;
-	  text-align: center;
-	  width: 100%;
-	  box-sizing: border-box;
-	}
-  }
