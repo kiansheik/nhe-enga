@@ -80,7 +80,7 @@
     <script>
         let modes = ['indicativo', 'permissivo', 'circunstancial', 'gerundio', 'imperativo'];
         let subj_pref_map = {
-            // 'ø': null,
+            'ø': null,
             'ixé': '1ps',
             'oré': '1ppe',
             'îandé': '1ppi',
@@ -99,11 +99,50 @@
         };
         function generateConjugationTable(mode, conjugations_b, un_id) {
             // Opening HTML tags
-            let conjugations =  transformConjList(mode, conjugations_b);
-            const subjects = Object.keys(subj_pref_map)
-            const subjects_vals = Object.values(subj_pref_map)
-            const objects_vals = Object.values(obj_pref_map)
-            const objects = Object.keys(obj_pref_map)
+            // Create sets of unique subjects and objects
+            // Filter conjugations_b based on the first two letters of mode
+            const filteredConjugations = conjugations_b.filter(item => item.m === mode.slice(0, 2));
+            console.log('filtered', filteredConjugations)
+            // Create sets of unique subjects and objects from the filtered conjugations
+            const uniqueSubjects = new Set(filteredConjugations.map(item => item.s));
+            const uniqueObjects = new Set(filteredConjugations.map(item => item.o));
+
+            // Convert sets to arrays if needed
+            const subjects_vals = Array.from(uniqueSubjects);
+            const objects_vals = Array.from(uniqueObjects);
+            let conjugations =  transformConjList(mode, filteredConjugations);
+            let subj_m = subj_pref_map;
+            let obj_m = obj_pref_map;
+            if (mode === 'imperativo'){
+                subj_m = {
+                    'endé': '2ps',
+                    "pe'ẽ": '2pp',
+                };
+            } else if (mode === 'circunstancial'){
+                subj_m = {
+                    'ø': null,
+                    'ixé': '1ps',
+                    'oré': '1ppe',
+                    'îandé': '1ppi',
+                    "a'e": '3p'
+                };
+            }
+            // const subjects = Object.keys(subj_m)
+            // const subjects_vals = Object.values(subj_m)
+            // const objects_vals = Object.values(obj_m)
+            // const objects = Object.keys(obj_m)
+
+            // Get values from subj_pref_map for keys in uniqueSubjectsSet
+            const subjects = Object.entries(subj_m)
+                .filter(item => uniqueSubjects.has(item[1]))
+                .map(([key, value]) => key);
+
+            // Get values from obj_pref_map for keys in uniqueObjectsSet
+            const objects = Object.entries(obj_m)
+                .filter(item => uniqueObjects.has(item[1]))
+                .map(([key, value]) => key);
+
+            // console.log(uniqueObjects);
             let htmlString = `<table class="options-container" id="conj-${un_id}">`;
                 htmlString += `<tr><th>Modo<br><select id="mode-${un_id}" class="option">
                     <!-- Add options dynamically using JavaScript -->

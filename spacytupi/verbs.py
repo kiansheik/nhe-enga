@@ -248,6 +248,26 @@ def generate_permutations(input_list):
 input_list = list(set(tupi.TupiAntigo.personal_inflections.keys()))
 all_pairs = generate_permutations(input_list)
 
+modes = ['indicativo', 'permissivo', 'circunstancial', 'gerundio', 'imperativo']
+subj_pref_map = {
+    'ø': None,
+    'ixé': '1ps',
+    'oré': '1ppe',
+    'îandé': '1ppi',
+    'endé': '2ps',
+    "pe'ẽ": '2pp',
+    "a'e": '3p'
+}
+obj_pref_map = {
+    'ø': None,
+    'xe': '1ps',
+    'oré': '1ppe',
+    'îandé': '1ppi',
+    'nde': '2ps',
+    "pe": '2pp',
+    "i": '3p'
+}
+
 quiz = []
 for v in tqdm(sorted(
     [
@@ -343,7 +363,7 @@ for v in tqdm(sorted(
             ("2pp", "1ps"),
         ],
     }
-    for modo, test_cases in [x for x in test_cases_map.items()]:
+    for modo, test_cases in [(x[0], all_pairs) for x in test_cases_map.items()]:
         deff = f"{v.verbete} - {v.raw_definition}"[:200]
         print(f"{v.verbete} - {v.verb_class} ({modo})")
         # Print the result
