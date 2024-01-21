@@ -152,24 +152,24 @@
             let htmlString = `<table class="options-container" id="conj-${un_id}">`;
                 htmlString += `<tr><th>Modo<br><select id="mode-${un_id}" class="option">
                     <!-- Add options dynamically using JavaScript -->
-                </select></th><th class="label" style="background-color: #e4ffe4;" colspan="${(subjects.length + 1)}">Sujeito</th></tr>`;
+                </select></th><th class="label" style="background-color: #e4ffe4;" colspan="${(objects.length + 1)}">Objeto</th></tr>`;
             // htmlString += '<tr><th class="label" rowspan="' + (objects.length + 1) + '">Objeto</th>';
             htmlString += `<th style="background-color: #fef9c3ab;" class="label">
-                Objeto</th>`;
+                Sujeito</th>`;
 
-            // Add header row with subjects
-            for (const subject of subjects) {
-                htmlString += `<th style="background-color: #e4ffe4;">${subject}</th>`;
+            // Add header row with objects
+            for (const object of objects) {
+                htmlString += `<th style="background-color: #e4ffe4;">${object}</th>`;
             }
 
             htmlString += '</tr>';
 
             // Add rows with conjugations
-            for (let i = 0; i < objects.length; i++) {
-                htmlString += `<tr><th style="background-color: #fef9c3ab;">${objects[i]}</th>`;
-                const obj = objects_vals[i];
-                for (let j = 0; j < subjects.length; j++) {
-                    const subj = subjects_vals[j];
+            for (let i = 0; i < subjects.length; i++) {
+                htmlString += `<tr><th style="background-color: #fef9c3ab;">${subjects[i]}</th>`;
+                const subj = subjects_vals[i];
+                for (let j = 0; j < objects.length; j++) {
+                    const obj = objects_vals[j];
                     let conj = conjugations[JSON.stringify([subj, obj])] || '-'
                     htmlString += `<td>${conj}</td>`;
                 }
@@ -247,7 +247,7 @@
             var selectElement = divElement.querySelector('select');
             // Define the function to append 'f' value as text to the end of the div
             function appendFValue() {
-                // Get the values for mode, subject, and object using the provided un_id
+                // Get the values for mode, subject, and subject using the provided un_id
                 var modeValue = selectElement.value;
                 appendOptionsToResultDiv(divElement.parentElement, data, modeValue);
                 divElement.remove();
