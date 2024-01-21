@@ -44,7 +44,7 @@ ban = [
 ]
 # Parse the JSON data into a Python object
 dicc = json.loads(lines[0])
-dicc_dict = {i:v for i,v in enumerate(dicc)}
+dicc_dict = {i: v for i, v in enumerate(dicc)}
 tupi_only = []
 include = False
 adjectives = []
@@ -52,7 +52,7 @@ for i, vbt in dicc_dict.items():
     if vbt["first_word"] == "ã":
         include = True
     if include and vbt["first_word"] not in ban and "adj.: " not in vbt["definition"]:
-        vbt['id'] = i
+        vbt["id"] = i
         tupi_only.append(vbt)
     if vbt["first_word"] == "'yura":
         include = False
@@ -70,18 +70,20 @@ adj_raws = [
         .replace("ygapenung", "yapenung"),
         x["optional_number"],
         x["definition"],
-        i
+        i,
     )
     for i, x in dicc_dict.items()
     if "adj.: " in x["definition"]
 ]
-for first_word, optional_number, definition, vid in {(x[1], x[2], x[3], x[4]) for x in adj_raws}:
+for first_word, optional_number, definition, vid in {
+    (x[1], x[2], x[3], x[4]) for x in adj_raws
+}:
     tupi_only.append(
         {
             "first_word": first_word,
             "optional_number": optional_number,
             "definition": definition,
-            "id": vid
+            "id": vid,
         }
     )
 
@@ -234,7 +236,9 @@ for vclass in tqdm([x for x in verbs.keys()]):
             "(-îo- ou -nho-) (v.tr.)",
             "(-îo-s- ou -nho-s-) (v.tr. irreg. Incorpora -îo- e -s-. Nas formas nominais é pluriforme.)",
         ]:
-            verb_obj = tupi.Verb(vbt["first_word"], vclass, vbt["definition"], vid=vbt['id'])
+            verb_obj = tupi.Verb(
+                vbt["first_word"], vclass, vbt["definition"], vid=vbt["id"]
+            )
             vobjs.append(verb_obj)
 
 
@@ -248,35 +252,37 @@ def generate_permutations(input_list):
 input_list = list(set(tupi.TupiAntigo.personal_inflections.keys()))
 all_pairs = generate_permutations(input_list)
 
-modes = ['indicativo', 'permissivo', 'circunstancial', 'gerundio', 'imperativo']
+modes = ["indicativo", "permissivo", "circunstancial", "gerundio", "imperativo"]
 subj_pref_map = {
-    'ø': None,
-    'ixé': '1ps',
-    'oré': '1ppe',
-    'îandé': '1ppi',
-    'endé': '2ps',
-    "pe'ẽ": '2pp',
-    "a'e": '3p'
+    "ø": None,
+    "ixé": "1ps",
+    "oré": "1ppe",
+    "îandé": "1ppi",
+    "endé": "2ps",
+    "pe'ẽ": "2pp",
+    "a'e": "3p",
 }
 obj_pref_map = {
-    'ø': None,
-    'xe': '1ps',
-    'oré': '1ppe',
-    'îandé': '1ppi',
-    'nde': '2ps',
-    "pe": '2pp',
-    "i": '3p'
+    "ø": None,
+    "xe": "1ps",
+    "oré": "1ppe",
+    "îandé": "1ppi",
+    "nde": "2ps",
+    "pe": "2pp",
+    "i": "3p",
 }
 
 quiz = []
-for v in tqdm(sorted(
-    [
-        x
-        for x in vobjs
-        # if x.verbete in ["endyîuî"]
-    ],
-    key=lambda x: x.verbete,
-)):
+for v in tqdm(
+    sorted(
+        [
+            x
+            for x in vobjs
+            # if x.verbete in ["endyîuî"]
+        ],
+        key=lambda x: x.verbete,
+    )
+):
     test_cases_map = {
         "indicativo": [
             # Ixe
@@ -284,33 +290,28 @@ for v in tqdm(sorted(
             ("1ps", "2ps"),
             ("1ps", "2pp"),
             ("1ps", "3pp"),
-
             # Oré
             ("1ppe", "1ppe"),
             ("1ppe", "2ps"),
             ("1ppe", "2pp"),
             ("1ppe", "3pp"),
-
             # Îandé
             ("1ppi", "1ppi"),
             ("1ppi", "2ps"),
             ("1ppi", "2pp"),
             ("1ppi", "3pp"),
-
             # Endé
             ("2ps", "1ps"),
             ("2ps", "1ppe"),
             ("2ps", "1ppi"),
             ("2ps", "2ps"),
             ("2ps", "3pp"),
-
             # pe'e
             ("2pp", "1ps"),
             ("2pp", "1ppe"),
             ("2pp", "1ppi"),
             ("2pp", "2pp"),
             ("2pp", "3pp"),
-  
             # a'e
             ("3p", "1ps"),
             ("3p", "1ppe"),
@@ -318,7 +319,6 @@ for v in tqdm(sorted(
             ("3p", "2ps"),
             ("3p", "2pp"),
             ("3p", "3p"),
-
         ],
         "gerundio": [
             ("1ps", "1ps"),
@@ -329,14 +329,13 @@ for v in tqdm(sorted(
             ("3p", "3p"),
         ],
         "circunstancial": [
-            #ixe
+            # ixe
             ("1ps", "1ps"),
             ("1ps", "1ppe"),
             ("1ps", "1ppi"),
             ("1ps", "2ps"),
             ("1ps", "2pp"),
             ("1ps", "3p"),
-
             # oré
             ("1ppe", "1ps"),
             ("1ppe", "1ppe"),
@@ -344,7 +343,6 @@ for v in tqdm(sorted(
             ("1ppe", "2ps"),
             ("1ppe", "2pp"),
             ("1ppe", "3p"),
-
             # iande
             ("1ppi", "1ps"),
             ("1ppi", "1ppe"),
@@ -352,7 +350,6 @@ for v in tqdm(sorted(
             ("1ppi", "2ps"),
             ("1ppi", "2pp"),
             ("1ppi", "3p"),
-
             # a'e
             ("3p", "1ps"),
             ("3p", "1ppe"),
@@ -368,7 +365,6 @@ for v in tqdm(sorted(
             ("2ps", "1ppi"),
             ("2ps", "2ps"),
             ("2ps", "3pp"),
-
             # pe'e
             ("2pp", "1ps"),
             ("2pp", "1ppe"),
@@ -377,7 +373,7 @@ for v in tqdm(sorted(
             ("2pp", "3pp"),
         ],
     }
-    test_cases_map['permissivo'] = test_cases_map['indicativo']
+    test_cases_map["permissivo"] = test_cases_map["indicativo"]
     for modo, test_cases in [(x[0], all_pairs) for x in test_cases_map.items()]:
         deff = f"{v.verbete} - {v.raw_definition}"[:200]
         print(f"{v.verbete} - {v.verb_class} ({modo})")
@@ -391,12 +387,25 @@ for v in tqdm(sorted(
                         mode=modo,
                     )
                     if (subj, obj) in test_cases_map[modo]:
-                        quiz.append({'f': res, 's':subj if modo[:2] != 'ge' else None, 'o': obj, 'm': modo[:2], 'd':deff})
-                    dicc_con = {'f': res, 's':subj if modo[:2] != 'ge' else None, 'o': obj, 'm': modo[:2]}
-                    if 'con' in dicc_dict[v.vid]:
-                        dicc_dict[v.vid]['con'].append(dicc_con)
+                        quiz.append(
+                            {
+                                "f": res,
+                                "s": subj if modo[:2] != "ge" else None,
+                                "o": obj,
+                                "m": modo[:2],
+                                "d": deff,
+                            }
+                        )
+                    dicc_con = {
+                        "f": res,
+                        "s": subj if modo[:2] != "ge" else None,
+                        "o": obj,
+                        "m": modo[:2],
+                    }
+                    if "con" in dicc_dict[v.vid]:
+                        dicc_dict[v.vid]["con"].append(dicc_con)
                     else:
-                        dicc_dict[v.vid]['con'] = [dicc_con]
+                        dicc_dict[v.vid]["con"] = [dicc_con]
                 except Exception as e:
                     pass
                     # print(f"\t({subj} -> {obj}):\tainda não desenvolvida", e)
@@ -408,20 +417,22 @@ for v in tqdm(sorted(
                         mode=modo,
                     )
                     if (subj, obj) in test_cases_map[modo]:
-                        quiz.append({'f': res, 's':subj, 'o': None, 'm': modo[:2], 'd':deff})
-                    dicc_con = {'f': res, 's':subj, 'o': None, 'm': modo[:2]}
-                    if 'con' in dicc_dict[v.vid]:
-                        dicc_dict[v.vid]['con'].append(dicc_con)
+                        quiz.append(
+                            {"f": res, "s": subj, "o": None, "m": modo[:2], "d": deff}
+                        )
+                    dicc_con = {"f": res, "s": subj, "o": None, "m": modo[:2]}
+                    if "con" in dicc_dict[v.vid]:
+                        dicc_dict[v.vid]["con"].append(dicc_con)
                     else:
-                        dicc_dict[v.vid]['con'] = [dicc_con]
+                        dicc_dict[v.vid]["con"] = [dicc_con]
                 except Exception as e:
                     pass
                     # print(f"\t({subj} -> {obj}):\tainda não desenvolvida", e)
 
-with open('../quiz/quiz.json', 'w') as f:
+with open("../quiz/quiz.json", "w") as f:
     json.dump(quiz, f)
 
-with open('../docs/dict-conjugated.json', 'w') as f:
+with open("../docs/dict-conjugated.json", "w") as f:
     json.dump(list(dicc_dict.values()), f)
 
     # v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='anteposto', pro_drop=False)
