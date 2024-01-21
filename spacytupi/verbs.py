@@ -278,91 +278,106 @@ for v in tqdm(sorted(
     key=lambda x: x.verbete,
 )):
     test_cases_map = {
-        "gerundio": [
-            ("1ppi", "1ps"),
-            ("1ps", "2ps"),
-            ("1ps", "1pp1"),
-            ("1ps", "1ppe"),
-            ("1ps", "2pp"),
-            ("1ps", "3p"),
-            ("1ps", "1ps"),
-            ("3p", "1ps"),
-        ],
         "indicativo": [
+            # Ixe
             ("1ps", "1ps"),
-            ("2ps", "2ps"),
-            ("1ppi", "1ppi"),
-            ("1ppe", "1ppe"),
-            ("2pp", "2pp"),
-            ("3p", "3p"),
             ("1ps", "2ps"),
             ("1ps", "2pp"),
-            ("1ps", "3p"),
-            ("2ps", "1ps"),
-            ("2ps", "1ppi"),
-            ("2ps", "1ppe"),
-            ("2ps", "3p"),
-            ("1ppi", "3p"),
+            ("1ps", "3pp"),
+
+            # Oré
+            ("1ppe", "1ppe"),
             ("1ppe", "2ps"),
             ("1ppe", "2pp"),
-            ("1ppe", "3p"),
+            ("1ppe", "3pp"),
+
+            # Îandé
+            ("1ppi", "1ppi"),
+            ("1ppi", "2ps"),
+            ("1ppi", "2pp"),
+            ("1ppi", "3pp"),
+
+            # Endé
+            ("2ps", "1ps"),
+            ("2ps", "1ppe"),
+            ("2ps", "1ppi"),
+            ("2ps", "2ps"),
+            ("2ps", "3pp"),
+
+            # pe'e
+            ("2pp", "1ps"),
+            ("2pp", "1ppe"),
+            ("2pp", "1ppi"),
+            ("2pp", "2pp"),
+            ("2pp", "3pp"),
+  
+            # a'e
             ("3p", "1ps"),
-            ("3p", "2ps"),
-            ("3p", "1ppi"),
             ("3p", "1ppe"),
+            ("3p", "1ppi"),
+            ("3p", "2ps"),
             ("3p", "2pp"),
+            ("3p", "3p"),
+
         ],
-        "permissivo": [
+        "gerundio": [
             ("1ps", "1ps"),
-            ("2ps", "2ps"),
-            ("1ppi", "1ppi"),
             ("1ppe", "1ppe"),
+            ("1ppi", "1ppi"),
+            ("2ps", "2ps"),
             ("2pp", "2pp"),
             ("3p", "3p"),
-            ("1ps", "2ps"),
-            ("1ps", "2pp"),
-            ("1ps", "3p"),
-            ("2ps", "1ps"),
-            ("2ps", "1ppi"),
-            ("2ps", "1ppe"),
-            ("2ps", "3p"),
-            ("1ppi", "3p"),
-            ("1ppe", "2ps"),
-            ("1ppe", "2pp"),
-            ("1ppe", "3p"),
-            ("3p", "1ps"),
-            ("3p", "2ps"),
-            ("3p", "1ppi"),
-            ("3p", "1ppe"),
-            ("3p", "2pp"),
         ],
         "circunstancial": [
+            #ixe
             ("1ps", "1ps"),
-            ("1ppi", "1ppi"),
-            ("1ppe", "1ppe"),
-            ("3p", "3p"),
+            ("1ps", "1ppe"),
+            ("1ps", "1ppi"),
             ("1ps", "2ps"),
             ("1ps", "2pp"),
             ("1ps", "3p"),
-            ("1ppi", "3p"),
+
+            # oré
+            ("1ppe", "1ps"),
+            ("1ppe", "1ppe"),
+            ("1ppe", "1ppi"),
             ("1ppe", "2ps"),
             ("1ppe", "2pp"),
             ("1ppe", "3p"),
+
+            # iande
+            ("1ppi", "1ps"),
+            ("1ppi", "1ppe"),
+            ("1ppi", "1ppi"),
+            ("1ppi", "2ps"),
+            ("1ppi", "2pp"),
+            ("1ppi", "3p"),
+
+            # a'e
             ("3p", "1ps"),
-            ("3p", "2ps"),
-            ("3p", "1ppi"),
             ("3p", "1ppe"),
+            ("3p", "1ppi"),
+            ("3p", "2ps"),
             ("3p", "2pp"),
+            ("3p", "3p"),
         ],
         "imperativo": [
-            ("2ps", "2ps"),
-            ("2ps", "2pp"),
-            ("2pp", "2pp"),
-            ("2pp", "3p"),
+            # ende
             ("2ps", "1ps"),
+            ("2ps", "1ppe"),
+            ("2ps", "1ppi"),
+            ("2ps", "2ps"),
+            ("2ps", "3pp"),
+
+            # pe'e
             ("2pp", "1ps"),
+            ("2pp", "1ppe"),
+            ("2pp", "1ppi"),
+            ("2pp", "2pp"),
+            ("2pp", "3pp"),
         ],
     }
+    test_cases_map['permissivo'] = test_cases_map['indicativo']
     for modo, test_cases in [(x[0], all_pairs) for x in test_cases_map.items()]:
         deff = f"{v.verbete} - {v.raw_definition}"[:200]
         print(f"{v.verbete} - {v.verb_class} ({modo})")
@@ -375,7 +390,8 @@ for v in tqdm(sorted(
                         object_tense=obj,
                         mode=modo,
                     )
-                    quiz.append({'f': res, 's':subj if modo[:2] != 'ge' else None, 'o': obj, 'm': modo[:2], 'd':deff})
+                    if (subj, obj) in test_cases_map[modo]:
+                        quiz.append({'f': res, 's':subj if modo[:2] != 'ge' else None, 'o': obj, 'm': modo[:2], 'd':deff})
                     dicc_con = {'f': res, 's':subj if modo[:2] != 'ge' else None, 'o': obj, 'm': modo[:2]}
                     if 'con' in dicc_dict[v.vid]:
                         dicc_dict[v.vid]['con'].append(dicc_con)
@@ -391,7 +407,8 @@ for v in tqdm(sorted(
                         subject_tense=subj,
                         mode=modo,
                     )
-                    quiz.append({'f': res, 's':subj, 'o': None, 'm': modo[:2], 'd':deff})
+                    if (subj, obj) in test_cases_map[modo]:
+                        quiz.append({'f': res, 's':subj, 'o': None, 'm': modo[:2], 'd':deff})
                     dicc_con = {'f': res, 's':subj, 'o': None, 'm': modo[:2]}
                     if 'con' in dicc_dict[v.vid]:
                         dicc_dict[v.vid]['con'].append(dicc_con)
