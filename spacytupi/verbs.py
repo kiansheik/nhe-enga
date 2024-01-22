@@ -443,8 +443,12 @@ for v in tqdm(
 with open("../quiz/quiz.json", "w") as f:
     json.dump(quiz, f)
 
+processed_data = [
+    {k[0]:v for k,v in obj.items()}
+    for obj in dicc_dict.values()
+]
 with open("../docs/dict-conjugated.json", "w") as f:
-    json.dump(list(dicc_dict.values()), f)
+    json.dump(processed_data, f)
 
     # v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='anteposto', pro_drop=False)
     # v.conjugate(subject_tense='1ps', object_tense='3p', mode='indicativo', pos='anteposto', pro_drop=False, dir_obj_raw='kunumin')

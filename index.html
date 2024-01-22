@@ -75,7 +75,12 @@
 
         return resultObject;
         }
-        window.jsonData = loadJSONSync('docs/dict-conjugated.json')
+        window.jsonData = loadJSONSync('docs/dict-conjugated.json').map(item => ({
+            "first_word": item.f || "",
+            "optional_number": item.o || "",
+            "definition": item.d || "",
+            "con": item.c || ""
+        }));
     </script>
     <script>
         let modes = ['indicativo', 'permissivo', 'circunstancial', 'gerundio', 'imperativo'];
