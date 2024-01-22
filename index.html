@@ -38,6 +38,7 @@
     <meta name="citation_author" content="Eduardo de Almeida Navarro">
     <meta name="citation_publication_date" content="2007">
     <meta name="citation_publisher" content="Global Editora e Distribuidora Ltda.">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.3/pako.min.js"></script>
     <script>
         // Function to load JSON from a file
         function loadJSON(url, callback) {
@@ -51,6 +52,20 @@
             };
             xhr.send(null);
         }
+        function loadCompressedJSONSync(url) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, false); // Make the request synchronous
+            xhr.responseType = 'arraybuffer'; // Use arraybuffer to handle binary data
+            xhr.send(null);
+
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // Decompress the data using pako
+                var decompressedData = pako.inflate(xhr.response, { to: 'string' });
+                return JSON.parse(decompressedData);
+            }
+
+            return null;
+        }
 
           // Function to load JSON from a file synchronously
         function loadJSONSync(url) {
@@ -59,7 +74,7 @@
             xhr.open('GET', url, false); // Make the request synchronous
             xhr.send(null);
             if (xhr.readyState == 4 && xhr.status == 200) {
-            return JSON.parse(xhr.responseText);
+                return JSON.parse(xhr.responseText);
             }
             return null;
         }
