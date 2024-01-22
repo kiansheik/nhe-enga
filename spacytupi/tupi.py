@@ -9,6 +9,8 @@ class TupiAntigo(spacy.language.Language):
         "2ps": ["endé", "nde", "ere", "oro", "îepé"],
         "2pp": ["pe'ẽ", "pe", "pe", "opo", "peîepé"],
         "3p": ["a'e", "i", "o"],
+        "refl": ["îe"],
+        "mut": ["îo"],
     }
 
     gerundio = {
@@ -247,7 +249,6 @@ class Verb(TupiAntigo):
         mode="indicativo",
         pos="anteposto",
         pro_drop=False,
-        io_pref=False,
         negative=False,
     ):
         perm_suf = ["", ""]
@@ -378,7 +379,7 @@ class Verb(TupiAntigo):
             if pos not in ["posposto", "incorporado", "anteposto"]:
                 raise Exception("Position Not Valid")
             if object_tense in self.personal_inflections.keys():
-                if object_tense == subject_tense:
+                if (subject_tense != '3p' and object_tense == subject_tense) or (object_tense in ('refl', 'mut')):
                     subj = (
                         self.personal_inflections[subject_tense][1] if not '3p' == subject_tense else "a'e"
                         if not pro_drop
@@ -389,7 +390,7 @@ class Verb(TupiAntigo):
                         if (mode == "imperativo" and "2p" in subject_tense)
                         else self.personal_inflections[subject_tense][2]
                     )
-                    obj = "îe" if not io_pref else "îo"
+                    obj = "îe" if object_tense == 'refl' else "îo"
                     vb = f"{perm_suf[0]}{conj}-{obj}-{self.verbete}"
                     if negative:
                         vb = self.negate_verb(vb, mode)

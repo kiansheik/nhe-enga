@@ -286,32 +286,40 @@ for v in tqdm(
     test_cases_map = {
         "indicativo": [
             # Ixe
-            ("1ps", "1ps"),
+            # ("1ps", "1ps"),
             ("1ps", "2ps"),
             ("1ps", "2pp"),
-            ("1ps", "3pp"),
+            ("1ps", "3p"),
+            ("1ps", "refl"),
             # Oré
-            ("1ppe", "1ppe"),
+            # ("1ppe", "1ppe"),
             ("1ppe", "2ps"),
             ("1ppe", "2pp"),
-            ("1ppe", "3pp"),
+            ("1ppe", "3p"),
+            ("1ppe", "refl"),
+            ("1ppe", "mut"),
             # Îandé
-            ("1ppi", "1ppi"),
+            # ("1ppi", "1ppi"),
             ("1ppi", "2ps"),
             ("1ppi", "2pp"),
-            ("1ppi", "3pp"),
+            ("1ppi", "3p"),
+            ("1ppi", "refl"),
+            ("1ppi", "mut"),
             # Endé
             ("2ps", "1ps"),
             ("2ps", "1ppe"),
             ("2ps", "1ppi"),
-            ("2ps", "2ps"),
-            ("2ps", "3pp"),
+            # ("2ps", "2ps"),
+            ("2ps", "3p"),
+            ("2ps", "refl"),
             # pe'e
             ("2pp", "1ps"),
             ("2pp", "1ppe"),
             ("2pp", "1ppi"),
-            ("2pp", "2pp"),
-            ("2pp", "3pp"),
+            # ("2pp", "2pp"),
+            ("2pp", "3p"),
+            ("2pp", "refl"),
+            ("2pp", "mut"),
             # a'e
             ("3p", "1ps"),
             ("3p", "1ppe"),
@@ -319,6 +327,8 @@ for v in tqdm(
             ("3p", "2ps"),
             ("3p", "2pp"),
             ("3p", "3p"),
+            ("3p", "refl"),
+            ("3p", "mut"),
         ],
         "gerundio": [
             ("1ps", "1ps"),
@@ -364,17 +374,17 @@ for v in tqdm(
             ("2ps", "1ppe"),
             ("2ps", "1ppi"),
             ("2ps", "2ps"),
-            ("2ps", "3pp"),
+            ("2ps", "3p"),
             # pe'e
             ("2pp", "1ps"),
             ("2pp", "1ppe"),
             ("2pp", "1ppi"),
             ("2pp", "2pp"),
-            ("2pp", "3pp"),
+            ("2pp", "3p"),
         ],
     }
     test_cases_map["permissivo"] = test_cases_map["indicativo"]
-    for modo, test_cases in [(x[0], all_pairs) for x in test_cases_map.items()]:
+    for modo, test_cases in [(x[0], x[1]) for x in test_cases_map.items()]:
         deff = f"{v.verbete} - {v.raw_definition}"[:200]
         print(f"{v.verbete} - {v.verb_class} ({modo})")
         # Print the result

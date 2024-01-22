@@ -102,20 +102,22 @@
         let subj_pref_map = {
             'ø': null,
             'ixé': '1ps',
+            'endé': '2ps',
+            "a'e": '3p',
             'oré': '1ppe',
             'îandé': '1ppi',
-            'endé': '2ps',
             "pe'ẽ": '2pp',
-            "a'e": '3p'
         };
         let obj_pref_map = {
             'ø': null,
             'xe': '1ps',
+            'nde': '2ps',
+            "i": '3p',
             'oré': '1ppe',
             'îandé': '1ppi',
-            'nde': '2ps',
             "pe": '2pp',
-            "i": '3p'
+            "îe": 'refl',
+            "îo": 'mut',
         };
         function generateConjugationTable(mode, conjugations_b, un_id, ne) {
             let negar = ne || false;
