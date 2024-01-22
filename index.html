@@ -119,14 +119,9 @@
         };
         function generateConjugationTable(mode, conjugations_b, un_id, ne) {
             let negar = ne || false;
-            // Opening HTML tags
-            // Create sets of unique subjects and objects
-            // Filter conjugations_b based on the first two letters of mode
             const filteredConjugations = conjugations_b.filter(item => item.m === mode.slice(0, 2));
-            // Create sets of unique subjects and objects from the filtered conjugations
             const uniqueSubjects = new Set(filteredConjugations.map(item => item.s));
             const uniqueObjects = new Set(filteredConjugations.map(item => item.o));
-
             let conjugations =  transformConjList(mode, filteredConjugations, negar);
             let subj_m = subj_pref_map;
             let obj_m = obj_pref_map;
@@ -144,30 +139,18 @@
                     "a'e": '3p'
                 };
             }
-            // Get values from subj_pref_map for keys in uniqueSubjectsSet
             const subjects_vals = Object.entries(subj_m)
                 .filter(item => uniqueSubjects.has(item[1]))
                 .map(([key, value]) => value);
-
-            // Get values from obj_pref_map for keys in uniqueObjectsSet
             const objects_vals = Object.entries(obj_m)
                 .filter(item => uniqueObjects.has(item[1]))
                 .map(([key, value]) => value);
-            // const subjects = Object.keys(subj_m)
-            // const subjects_vals = Object.values(subj_m)
-            // const objects_vals = Object.values(obj_m)
-            // const objects = Object.keys(obj_m)
-
-            // Get values from subj_pref_map for keys in uniqueSubjectsSet
             const subjects = Object.entries(subj_m)
                 .filter(item => uniqueSubjects.has(item[1]))
                 .map(([key, value]) => key);
-
-            // Get values from obj_pref_map for keys in uniqueObjectsSet
             const objects = Object.entries(obj_m)
                 .filter(item => uniqueObjects.has(item[1]))
                 .map(([key, value]) => key);
-
             let htmlString = `<table class="options-container" id="conj-${un_id}">`;
                 htmlString += `<tr><th>
                     Modo<br><select id="mode-${un_id}" class="option">
@@ -176,18 +159,12 @@
                     <input type="checkbox" id="negarCheckbox-${un_id}" ${negar?"checked":""} name="negarCheckbox">
                     <label for="negarCheckbox">Negar</label>
                 </th><th class="label" style="background-color: #e4ffe4;" colspan="${(objects.length + 1)}">Objeto</th></tr>`;
-            // htmlString += '<tr><th class="label" rowspan="' + (objects.length + 1) + '">Objeto</th>';
             htmlString += `<th style="background-color: #fef9c3ab;" class="label">
                 Sujeito</th>`;
-
-            // Add header row with objects
             for (const object of objects) {
                 htmlString += `<th style="background-color: #e4ffe4;">${object}</th>`;
             }
-
             htmlString += '</tr>';
-
-            // Add rows with conjugations
             for (let i = 0; i < subjects.length; i++) {
                 htmlString += `<tr><th style="background-color: #fef9c3ab;">${subjects[i]}</th>`;
                 const subj = subjects_vals[i];
@@ -198,10 +175,7 @@
                 }
                 htmlString += '</tr>';
             }
-
-            // Closing HTML tags
             htmlString += '</table>';
-
             return htmlString;
         }
 

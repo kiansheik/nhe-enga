@@ -224,7 +224,7 @@ class Verb(TupiAntigo):
         return new_str
     
     def negate_verb(self, result, modo):
-        if modo == 'permissivo':
+        if modo in ('permissivo', 'imperativo'):
             return f"{result} umẽ"
         else:
             if result[0] in TupiAntigo.vogais or result[0] == 'î':
