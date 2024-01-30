@@ -280,8 +280,8 @@ class Verb(TupiAntigo):
                         if dir_obj_raw is None
                         else dir_obj_raw
                     )
-                    if subject_tense == object_tense:
-                        dir_obj = "îe-"
+                    if object_tense  in ('refl', 'mut'):
+                        dir_obj =  "îe-" if object_tense == 'refl' else "îo-"
                     else:
                         if dir_obj == "i":
                             if self.pluriforme or self.ero:
