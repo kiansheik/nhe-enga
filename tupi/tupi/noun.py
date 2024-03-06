@@ -84,7 +84,7 @@ class Noun(TupiAntigo):
                         break
                 return self.keep_brackets_contents(prefixes)+root+self.keep_brackets_contents(suffixes), n
             else:
-                tokens.append(self.keep_brackets_contents(word.split(']')))
+                tokens.append(self.keep_brackets_contents(word))
         return f"{input_string}[{input_string}]"
 
     def verbete(self, anotated=False):
