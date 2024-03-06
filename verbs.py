@@ -2,6 +2,7 @@
 import json
 from collections import Counter
 from itertools import product
+import random
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import tupi
@@ -478,37 +479,28 @@ for a in abas:
 test_cases_map = {
     "indicativo": [
         # Ixe
-        # ("1ps", "1ps"),
         ("1ps", "2ps"),
         ("1ps", "2pp"),
         ("1ps", "3p"),
         ("1ps", "refl"),
         # Oré
-        # ("1ppe", "1ppe"),
         ("1ppe", "2ps"),
         ("1ppe", "2pp"),
         ("1ppe", "3p"),
         ("1ppe", "refl"),
         ("1ppe", "mut"),
         # Îandé
-        # ("1ppi", "1ppi"),
-        ("1ppi", "2ps"),
-        ("1ppi", "2pp"),
         ("1ppi", "3p"),
         ("1ppi", "refl"),
         ("1ppi", "mut"),
         # Endé
         ("2ps", "1ps"),
         ("2ps", "1ppe"),
-        ("2ps", "1ppi"),
-        # ("2ps", "2ps"),
         ("2ps", "3p"),
         ("2ps", "refl"),
         # pe'e
         ("2pp", "1ps"),
         ("2pp", "1ppe"),
-        ("2pp", "1ppi"),
-        # ("2pp", "2pp"),
         ("2pp", "3p"),
         ("2pp", "refl"),
         ("2pp", "mut"),
@@ -549,8 +541,6 @@ test_cases_map = {
         ("1ppi", "1ps"),
         ("1ppi", "1ppe"),
         ("1ppi", "1ppi"),
-        ("1ppi", "2ps"),
-        ("1ppi", "2pp"),
         ("1ppi", "3p"),
         # a'e
         ("3p", "1ps"),
@@ -564,73 +554,93 @@ test_cases_map = {
         # ende
         ("2ps", "1ps"),
         ("2ps", "1ppe"),
-        ("2ps", "1ppi"),
         ("2ps", "2ps"),
         ("2ps", "3p"),
+        ("2ps", "refl"),
         # pe'e
         ("2pp", "1ps"),
         ("2pp", "1ppe"),
-        ("2pp", "1ppi"),
         ("2pp", "2pp"),
         ("2pp", "3p"),
+        ("2pp", "refl"),
+        ("2pp", "mut"),
     ],
 }
+    # def conjugate(
+    #     self,
+    #     subject_tense="1ps",
+    #     object_tense=None,
+    #     dir_obj_raw=None,
+    #     mode="indicativo",
+    #     pos="anteposto",
+    #     pro_drop=False,
+    #     negative=False,
+    #     anotar=False,
+# Write the .keys contents of c to a file as a json list
+with open('anotated_results_nouns.json', 'r') as f:
+    # use json to write to file
+    nouns = json.load(f)
+
 results = []
 test_cases_map["permissivo"] = test_cases_map["indicativo"]
 verbs = [Verb("apysyk", "adj.", "gostar"), Verb("nhe'eng", "v. intr.", "gostar"), Verb("enõî", "v.tr. (r, s)", "gostar"),]
-for modo, test_cases in [(x[0], x[1]) for x in test_cases_map.items()]:
-    for v in vobjs:
-        # Print the result
-        if v.transitivo:
-            for subj, obj in test_cases:
-                try:
-                    res = v.conjugate(
-                        subject_tense=subj,
-                        object_tense=obj,
-                        mode=modo,
-                        anotar=True
-                    )
-                    neg_res = v.conjugate(
-                        subject_tense=subj,
-                        object_tense=obj,
-                        mode=modo,
-                        negative=True,
-                        anotar=True
-                    )
-                    # print(f"{res}")
-                    results.append({"anotated":res, "label":v.remove_brackets_and_contents(res)})
-                    results.append({"anotated":neg_res, "label":v.remove_brackets_and_contents(neg_res)})
-                except Exception as e:
-                    pass
-        else:
-            for subj in sorted({x[0] for x in test_cases}):
-                try:
-                    res = v.conjugate(
-                        subject_tense=subj,
-                        mode=modo,
-                        anotar=True
-                    )
-                    neg_res = v.conjugate(
-                        subject_tense=subj,
-                        mode=modo,
-                        negative=True,
-                        anotar=True
-                    )
-                    # print(f"{res}")
-                    results.append({"anotated":res, "label":v.remove_brackets_and_contents(res)})
-                    results.append({"anotated":neg_res, "label":v.remove_brackets_and_contents(neg_res)})
-                except Exception as e:
-                    pass
+vobjs_intr = [x for x in vobjs if not x.transitivo]
+for modo, test_cases in tqdm([(x[0], x[1]) for x in test_cases_map.items()]):
+    for pro_drop in [True, False]:
+        for dir_subj_raw in [True, False]:
+            for v in vobjs:
+                for neg in [True, False]:
+                    # Print the result
+                    if v.transitivo:
+                        for pos in ["posposto", "incorporado", "anteposto"]:
+                            for dir_obj_raw in [True, False]:
+                                for subj, obj in test_cases:
+                                    try:
+
+                                        res = v.conjugate(
+                                            subject_tense=subj,
+                                            object_tense=obj,
+                                            mode=modo,
+                                            pro_drop=pro_drop,
+                                            pos=pos,
+                                            negative=neg,
+                                            dir_subj_raw=f"({random.choice(nouns)['anotated'] if dir_subj_raw and '3p' in subj else None})",
+                                            dir_obj_raw=f"({random.choice(nouns)['anotated'] if dir_obj_raw and '3p' in obj else None})",
+                                            anotar=True
+                                        )
+                                        # print(f"{res}")
+                                        results.append({"anotated":res, "label":v.remove_brackets_and_contents(res)})
+                                    except Exception as e:
+                                        pass
+                    else:
+                        for subj in sorted({x[0] for x in test_cases}):
+                            try:
+                                res = v.conjugate(
+                                    subject_tense=subj,
+                                    pro_drop=pro_drop,
+                                    mode=modo,
+                                    dir_subj_raw=f"({random.choice(nouns)['anotated'] if dir_subj_raw and '3p' in subj else None})",
+                                    negative=neg,
+                                    anotar=True
+                                )
+                                # print(f"{res}")
+                                results.append({"anotated":res, "label":v.remove_brackets_and_contents(res)})
+                            except Exception as e:
+                                pass
+
 import json, re
 # Write results to file
+print("simplifying tags...")
+results = [{"anotated":x[0], "label":x[1]} for x in tqdm(set([(x['anotated'], x['label']) for x in results+nouns]))]
 with open('anotated_results.json', 'w') as f:
     # use json to write to file
     json.dump(results, f)
 
 def tokenize_string(annotated_string):
-    matches = re.findall(r'([^\s\[\]]+)?(\[.*?\])', annotated_string)
-    notes = {(token, annotation) for token, annotation in matches if '[VERB]' not in annotation}
-    notes.add((None,'[VERB]'))
+    matches = re.findall(r'([^\s\[\]\(\)]+)?(\[.*?\])', annotated_string)
+    notes = {(token, annotation) for token, annotation in matches if '[VERB]' not in annotation and '[ROOT]' not in annotation and 'DIRECT' not in annotation}
+    for tag in {(None, annotation) for _, annotation in matches}:
+        notes.add(tag)
     return notes
 
 print("test")

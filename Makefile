@@ -6,7 +6,7 @@ REPOSITORY=""
 FULL_IMAGE_NAME=${IMAGE_NAME}:${TAG_NAME}
 
 lint:
-	echo no lint yet
+	zsh -c 'cd tupi; python3 setup.py sdist bdist_wheel;'
 
 push:
 	make lint
