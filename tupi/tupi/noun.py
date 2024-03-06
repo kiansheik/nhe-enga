@@ -74,9 +74,17 @@ class Noun(TupiAntigo):
                         n = n.sara()
                     if "SUBSTANTIVE_SUFFIX" in suffix:
                         break
+                for suffix in suffixes.split("]"):
+                    
+                    if "FACILITY_SUFFIX" in suffix:
+                        n = n.saba()
+                    if "ACTIVE_AGENT_SUFFIX" in suffix:
+                        n = n.sara()
+                    if "SUBSTANTIVE_SUFFIX" in suffix:
+                        break
                 return self.keep_brackets_contents(prefixes)+root+self.keep_brackets_contents(suffixes), n
             else:
-                tokens.append(word.split(']'))
+                tokens.append(self.keep_brackets_contents(word.split(']')))
         return f"{input_string}[{input_string}]"
 
     def verbete(self, anotated=False):
