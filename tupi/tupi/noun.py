@@ -372,6 +372,7 @@ class Noun(TupiAntigo):
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
+    
 
 if __name__ == "__main__":
     # Example usage:
