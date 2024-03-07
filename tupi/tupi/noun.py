@@ -268,7 +268,7 @@ class Noun(TupiAntigo):
         elif vbt[-1] in ['r']:
             parts = ret_noun.latest_verbete.split("[")
             start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{start}[{parts[-1]}er"
+            ret_noun.latest_verbete = f"{start}[{parts[-1]}ûer"
         elif vbt[-1] in ['m']:
             parts = ret_noun.latest_verbete.split("[")
             start = "[".join(parts[:-1])
@@ -313,6 +313,37 @@ class Noun(TupiAntigo):
         else:
             ret_noun.latest_verbete = f"{ret_noun.latest_verbete}ûam"
         ret_noun.latest_verbete += "[FUTURE_SUFFIX]"
+        ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.recreate += f".{func_name}({args_str})"
+        return ret_noun
+    def pyr(self):
+        frame = inspect.currentframe()
+        func_name = frame.f_code.co_name
+        args, _, _, values = inspect.getargvalues(frame)
+        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        ret_noun = copy.deepcopy(self)
+        ret_noun.aglutinantes[-1] = self
+        # --------------------------------
+        vbt = self.verbete()
+        if vbt[-1] in self.vogais:
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            ret_noun.latest_verbete = f"{start}[{parts[-1]}pyr"
+            if vbt[-1] in self.vogais_nasais:
+                ret_noun.latest_verbete = f"{start}[{parts[-1]}mbyr"
+        elif vbt[-1] in ['b', 'p']:
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            ret_noun.latest_verbete = f"{start[:-1]}[{parts[-1]}pyr"
+        else:
+            ret_noun.latest_verbete = f"{ret_noun.latest_verbete}ypyr"
+        obj_pref = f"{ret_noun.pluriform_prefix('3p')}"
+        if obj_pref:
+            obj_pref += "[OBJECT_PRONOUN]"
+        else:
+            obj_pref = "i[OBJECT_PRONOUN] "
+        ret_noun.latest_verbete = f"{obj_pref}{ret_noun.latest_verbete}"
+        ret_noun.latest_verbete += "[INDEFINITE_SUBJET_SUFFIX]"
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
@@ -427,6 +458,23 @@ if __name__ == "__main__":
         if noun_example.emi().substantivo() not in solution:
             print(noun_example.verbete(), "\t", noun_example.emi(), "\t", solution)
     n = Noun("'u", "(v.tr) ingerir").emi().puer().possessive('1ps')
+    print(n)
+    print(n.recreate)
+    print(n.substantivo(True))
+    print(n.aglutinantes)
+
+    print()
+    print("pyr- test")
+    noun_examples = [(Noun("îuká", "adj.: "), "i îukápyra"),
+                        (Noun("aûsub", "(s)"), "saûsupyra"),
+                        (Noun("potar", ""), "i potarypyra"),
+                        (Noun("kuab", ""), "i kuapyra"),
+    ]
+    print()
+    for noun_example, solution in noun_examples:
+        if noun_example.pyr().substantivo().strip() != solution.strip():
+            print(noun_example.verbete(), "\t", noun_example.pyr(), "\t", solution)
+    n = Noun("'u", "(v.tr) ingerir").pyr().ram().puer().possessive('1ps')
     print(n)
     print(n.recreate)
     print(n.substantivo(True))
