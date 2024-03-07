@@ -1,5 +1,5 @@
 from tupi import TupiAntigo
-import copy
+import copy, inspect
 
 sara_consoante_map = {
     "b": "par",
@@ -39,6 +39,7 @@ class Noun(TupiAntigo):
         self.latest_verbete = self.base_verbete # The name of the verb in its dictionary form
         self.raw_definition = raw_definition  # Raw definition of the verb (string)
         self.aglutinantes = [self]
+        self.recreate = f'Noun("{self.verbete()}", "{self.raw_definition}")'
         raw_def = self.raw_definition[:50]
         if "(r, s)" in raw_def or "(s)" in raw_def or "-s-" in raw_def:
             self.pluriforme = "r, s"
@@ -64,28 +65,20 @@ class Noun(TupiAntigo):
                 if prefixes:
                     prefixes += "]"
                 root = root_split[0].split(']')[-1]
+                print(root, prefixes, suffixes)
 
                 n = Noun(root, prefixes)
                 for suffix in suffixes.split("]"):
-                    
                     if "FACILITY_SUFFIX" in suffix:
                         n = n.saba()
                     if "ACTIVE_AGENT_SUFFIX" in suffix:
                         n = n.sara()
                     if "SUBSTANTIVE_SUFFIX" in suffix:
                         break
-                for suffix in suffixes.split("]"):
-                    
-                    if "FACILITY_SUFFIX" in suffix:
-                        n = n.saba()
-                    if "ACTIVE_AGENT_SUFFIX" in suffix:
-                        n = n.sara()
-                    if "SUBSTANTIVE_SUFFIX" in suffix:
-                        break
-                return self.keep_brackets_contents(prefixes)+root+self.keep_brackets_contents(suffixes), n
+                tokens.append(self.keep_brackets_contents(prefixes)+root+self.keep_brackets_contents(suffixes))
             else:
                 tokens.append(self.keep_brackets_contents(word))
-        return f"{input_string}[{input_string}]"
+        return " ".join(tokens)
 
     def verbete(self, anotated=False):
         return self.remove_brackets_and_contents(self.latest_verbete) if not anotated else self.latest_verbete
@@ -94,7 +87,7 @@ class Noun(TupiAntigo):
         return f"{self.verbete(anotated=True)}{'a[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING]' if self.verbete(anotated=False)[-1] not in self.vogais else '[SUBSTANTIVE_SUFFIX:VOWEL_ENDING]'}"
         
     def substantivo(self, anotated=False):
-        return self.base_substantivo() if anotated else self.fix_phonetics(self.remove_brackets_and_contents(self.base_substantivo()))
+        return self.base_substantivo() if anotated else self.remove_brackets_and_contents(self.base_substantivo())
     
     def __repr__(self) -> str:
         return self.substantivo()
@@ -102,9 +95,31 @@ class Noun(TupiAntigo):
     def __str__(self) -> str:
         return repr(self)
 
+    def pluriform_prefix(self, person='absoluta'):
+        plf = self.pluriforme
+        if plf:
+            if '3p' in person:
+                if plf == "t, t":
+                    return "t[PLURIFORM_PREFIX:T]"
+                elif plf:
+                    return "s[PLURIFORM_PREFIX:S]"
+            if person == 'absoluta':
+                if plf == "t, t" or plf == "t":
+                    return "t[PLURIFORM_PREFIX:T]"
+                if plf == "s, r, s":
+                    return "s[PLURIFORM_PREFIX:S]"
+            if '1p' in person or '2p' in person:
+                return "r[PLURIFORM_PREFIX:R]"
+        return ""
+
     # TODO: Implement rest of phonetic changes
     def sara(self):
+        frame = inspect.currentframe()
+        func_name = frame.f_code.co_name
+        args, _, _, values = inspect.getargvalues(frame)
+        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
         ret_noun = copy.deepcopy(self)
+        ret_noun.aglutinantes[-1] = self
         vbt = ret_noun.verbete()
         vbt_an = ret_noun.verbete(anotated=True)
         if self.ends_with(vbt, self.vogais_nasais):
@@ -128,14 +143,20 @@ class Noun(TupiAntigo):
             ret_noun.latest_verbete = f"{vbt_an}ar"
         else:
             ret_noun.latest_verbete = f"{vbt_an}sar"
-        ret_noun.latest_verbete += "[ACTIVE_AGENT_SUFFIX]"
+        ret_noun.latest_verbete += "[ABSOLUTE_AGENT_SUFFIX]"
         ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
 
 
     # TODO: Implement rest of phonetic changes
     def saba(self):
+        frame = inspect.currentframe()
+        func_name = frame.f_code.co_name
+        args, _, _, values = inspect.getargvalues(frame)
+        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
         ret_noun = copy.deepcopy(self)
+        ret_noun.aglutinantes[-1] = self
         vbt = ret_noun.verbete()
         vbt_an = ret_noun.verbete(anotated=True)
         if self.ends_with(vbt, self.vogais_nasais):
@@ -159,42 +180,166 @@ class Noun(TupiAntigo):
             ret_noun.latest_verbete = f"{vbt_an}sab"
         ret_noun.latest_verbete += "[FACILITY_SUFFIX]"
         ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
 
-    def pluriform_prefix(self, person='absoluta'):
-        plf = self.pluriforme
-        if plf:
-            if '3p' in person:
-                if plf == "t, t":
-                    return "t[PLURIFORM_PREFIX:T]"
-                elif plf:
-                    return "s[PLURIFORM_PREFIX:S]"
-            if person == 'absoluta':
-                if plf == "t, t" or plf == "t":
-                    return "t[PLURIFORM_PREFIX:T]"
-                if plf == "s, r, s":
-                    return "s[PLURIFORM_PREFIX:S]"
-            if '1p' in person or '2p' in person:
-                return "r[PLURIFORM_PREFIX:R]"
-        return ""
     # TODO: Implement rest of phonetic changes
     def possessive(self, person='3p'):
+        frame = inspect.currentframe()
+        func_name = frame.f_code.co_name
+        args, _, _, values = inspect.getargvalues(frame)
+        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
         if person == 'absoluta':
             return self.absoluta()
         ret_noun = copy.deepcopy(self)
-        vbt = ret_noun.verbete(anotated=True)
+        ret_noun.aglutinantes[-1] = self
+        vbt = self.remove_parens_and_contents(ret_noun.verbete(anotated=True))
         pref = ret_noun.pluriform_prefix(person)
+        if pref:
+            vbt = ret_noun.verbete(anotated=True).replace('(', '').replace(')', '')
         pronoun = f"{self.personal_inflections[person][1]}[POSSESSIVE_PRONOUN:{person}]"
         ret_noun.latest_verbete = f"{'' if '3p' in person and self.pluriforme else pronoun} {pref}{vbt}".strip()
         ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
         # TODO: Implement rest of phonetic changes
     def absoluta(self):
+        frame = inspect.currentframe()
+        func_name = frame.f_code.co_name
+        args, _, _, values = inspect.getargvalues(frame)
+        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
         ret_noun = copy.deepcopy(self)
+        ret_noun.aglutinantes[-1] = self
+        # TODO: Figure out verbetes como '(a)pé' which have the perntheses and that vowel only if there's no prefix
         vbt = self.remove_parens_and_contents(ret_noun.verbete(anotated=True))
         pref = ret_noun.pluriform_prefix('absoluta')
+        if pref:
+            vbt = ret_noun.verbete(anotated=True).replace('(', '').replace(')', '')
         ret_noun.latest_verbete = f"{pref}{vbt}".strip()
         ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.recreate += f".{func_name}({args_str})"
+        return ret_noun
+    def bae(self):
+        frame = inspect.currentframe()
+        func_name = frame.f_code.co_name
+        args, _, _, values = inspect.getargvalues(frame)
+        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        ret_noun = copy.deepcopy(self)
+        ret_noun.aglutinantes[-1] = self
+        # --------------------------------
+        vbt = self.verbete()
+        if vbt[-1] in 'bmp':
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            ret_noun.latest_verbete = f"{self.accent_last_vowel(start[:-1])}[{parts[-1]}ba'e"
+        elif vbt[-1] in self.vogais:
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            ret_noun.latest_verbete = f"{self.remove_accent_last_vowel(start)}[{parts[-1]}ba'e"
+        else:
+            ret_noun.latest_verbete = f"{ret_noun.latest_verbete}yba'e"
+        ret_noun.latest_verbete += "[RELATIVE_AGENT_SUFFIX]"
+        ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.recreate += f".{func_name}({args_str})"
+        return ret_noun
+    def puer(self):
+        frame = inspect.currentframe()
+        func_name = frame.f_code.co_name
+        args, _, _, values = inspect.getargvalues(frame)
+        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        ret_noun = copy.deepcopy(self)
+        ret_noun.aglutinantes[-1] = self
+        # --------------------------------
+        vbt = self.verbete()
+        if vbt[-1] in self.vogais:
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            ret_noun.latest_verbete = f"{start}[{parts[-1]}pûer"
+            if vbt[-1] in self.vogais_nasais:
+                ret_noun.latest_verbete = f"{start}[{parts[-1]}mbûer"
+        elif vbt[-1] in ['b']:
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            ret_noun.latest_verbete = f"{start[:-1]}[{parts[-1]}gûer"
+        elif vbt[-1] in ['n']:
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            ret_noun.latest_verbete = f"{start}[{parts[-1]}der"
+        elif vbt[-1] in ['r']:
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            ret_noun.latest_verbete = f"{start}[{parts[-1]}er"
+        elif vbt[-1] in ['m']:
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            ret_noun.latest_verbete = f"{start}[{parts[-1]}bûer"
+        else:
+            ret_noun.latest_verbete = f"{ret_noun.latest_verbete}ûer"
+        ret_noun.latest_verbete += "[PRETERITE_SUFFIX]"
+        ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.recreate += f".{func_name}({args_str})"
+        return ret_noun
+    def ram(self):
+        frame = inspect.currentframe()
+        func_name = frame.f_code.co_name
+        args, _, _, values = inspect.getargvalues(frame)
+        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        ret_noun = copy.deepcopy(self)
+        ret_noun.aglutinantes[-1] = self
+        # --------------------------------
+        vbt = self.verbete()
+        if vbt[-1] in self.vogais:
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            ret_noun.latest_verbete = f"{start}[{parts[-1]}ram"
+            if vbt[-1] in self.vogais_nasais:
+                ret_noun.latest_verbete = f"{start}[{parts[-1]}nam"
+        elif vbt[-1] in ['b']:
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            ret_noun.latest_verbete = f"{start[:-1]}[{parts[-1]}gûam"
+        elif vbt[-1] in ['n']:
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            ret_noun.latest_verbete = f"{start}[{parts[-1]}am"
+        elif vbt[-1] in ['r']:
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            ret_noun.latest_verbete = f"{start}[{parts[-1]}am"
+        elif vbt[-1] in ['m']:
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            ret_noun.latest_verbete = f"{self.nasaliza_final(start[:-1])}[{parts[-1]}gûam"
+        else:
+            ret_noun.latest_verbete = f"{ret_noun.latest_verbete}ûam"
+        ret_noun.latest_verbete += "[FUTURE_SUFFIX]"
+        ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.recreate += f".{func_name}({args_str})"
+        return ret_noun
+    def emi(self):
+        frame = inspect.currentframe()
+        func_name = frame.f_code.co_name
+        args, _, _, values = inspect.getargvalues(frame)
+        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        ret_noun = copy.deepcopy(self)
+        ret_noun.aglutinantes[-1] = self
+        # --------------------------------
+        vbt = self.verbete()
+        ret_noun.pluriforme = "t"
+        token = "[PATIENT_PREFIX]"
+        if vbt[0] in self.nasal_prefix_map.keys():
+            # if any of self.nasais are present in vbt
+            if not any(nasal in vbt for nasal in self.nasais):
+                suf = "emi"
+                if self.monosilibica():
+                    suf = "embi"
+                ret_noun.latest_verbete = f"{suf}{token}{self.nasal_prefix_map[ret_noun.latest_verbete[0]]}{ret_noun.latest_verbete[1:]}"
+        elif self.monosilibica() and not any(nasal in vbt for nasal in self.nasais):
+            ret_noun.latest_verbete = f"embi{token}{ret_noun.latest_verbete}"
+        else:
+            ret_noun.latest_verbete = f"emi{token}{ret_noun.latest_verbete}"
+        ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
 
 if __name__ == "__main__":
@@ -223,11 +368,66 @@ if __name__ == "__main__":
                         (Noun("îuká", "v.intr."), "îukasara"),
                         
     ]
+    print()
     for noun_example, solution in noun_examples:
-        print(noun_example.verbete(), "\t", noun_example.sara())
+        if noun_example.sara().substantivo() not in solution:
+            print(noun_example.verbete(), "\t", noun_example.sara(), "\t", solution)
         # print("\tBase substantivo:\t", noun_example.substantivo())
         # print("\tSaba form:\t", noun_example.saba())
         # print(noun_example.verbete)
         # print(noun_example.base_substantivo)
         # print(noun_example.pluriforme)
         # print(noun_example.saba())
+    n = Noun("(a)pé", "(r, s)")
+    print()
+    print(n.recreate)
+    print(n.verbete())
+    print(n.substantivo(True))
+    print(n.possessive('absoluta'), n.possessive('absoluta').recreate)
+    print(n.possessive('absoluta').possessive('1ps'), n.possessive('absoluta').possessive('1ps').recreate)
+    print(n.possessive('1ps'))
+    print(n.possessive('3p'), n.possessive('3p').recreate)
+
+    print()
+    print("Puera, rama test")
+    noun_examples = [(Noun("ybyrá", "adj.: "), "ybyrárama,ybyrápûera"),
+                        (Noun("embi'u", "(t)"), "embi'urama,embi'upûera"),
+                        (Noun("só", ""), "sórama,sópûera"),
+                        (Noun("nhũ", "v.tr. (r, s)"), "nhũnama,nhũmbûera"),
+                        (Noun("kunumĩ", "v.intr."), "kunumĩnama,kunumĩmbûera"),
+                        (Noun("anhanga", "v.intr."), "anhangûama,anhangûera"),
+                        (Noun("oka", "(r, s)"), "okûama,okûera"),
+                        (Noun("pesaba", "v.intr."), "pesagûama,pesagûera"),
+                        (Noun("sema", "v.intr."), "sẽgûama,sembûera"),
+                        (Noun("mena", "v.intr."), "menama,mendera"),
+                        (Noun("pira", "v.intr."), "pirama,pirera"),
+                        
+    ]
+    print()
+    for noun_example, solution in noun_examples:
+        if noun_example.ram().substantivo() not in solution or noun_example.puer().substantivo() not in solution:
+            print(noun_example.verbete(), "\t", noun_example.ram(), "\t", noun_example.puer(), "\t", solution)
+    n = Noun("embi'u", "(t)").puer().possessive('1ps')
+    print(n)
+    print(n.recreate)
+    print(n.substantivo(True))
+    print(n.aglutinantes)
+
+    print()
+    print("(r)emi- test")
+    noun_examples = [(Noun("ka'u", "adj.: "), "eminga'u"),
+                        (Noun("su'u", ""), "emindu'u"),
+                        (Noun("potar", ""), "emimbotara"),
+                        (Noun("tym", ""), "emityma"),
+                        (Noun("tyr", ""), "embindyra"),
+                        (Noun("'u", ""), "embi'u"),
+    ]
+    print()
+    for noun_example, solution in noun_examples:
+        if noun_example.emi().substantivo() not in solution:
+            print(noun_example.verbete(), "\t", noun_example.emi(), "\t", solution)
+    n = Noun("'u", "(v.tr) ingerir").emi().puer().possessive('1ps')
+    print(n)
+    print(n.recreate)
+    print(n.substantivo(True))
+    print(n.aglutinantes)

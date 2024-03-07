@@ -58,6 +58,32 @@ class TupiAntigo(object):
     special_chars_map = {char: index for index, char in list(enumerate(special_chars))+[(x,i)for i, x in list(enumerate(special_chars))]}
 
     vogais = "a á e é i í y ý o ó u ú ã ẽ ĩ ỹ õ ũ".split(" ")
+    accent_map = {"á": "a",
+                  "é": "e",
+                    "í": "i",
+                    "ý": "y",
+                    "ó": "o",
+                    "ú": "u",
+                  }
+    nasal_prefix_map = {
+        "p": "mb",
+        "k": "ng",
+        "t": "nd",
+        "s": "nd",
+    }
+    nasal_map = {"á": "ã",
+                "é": "ẽ",
+                "í": "ĩ",
+                "ý": "ỹ",
+                "ó": "õ",
+                "ú": "ũ",
+                "a": "ã",
+                "e": "ẽ",
+                "i": "ĩ",
+                "y": "ỹ",
+                "o": "õ",
+                "u": "ũ",
+                } 
     semi_vogais = "û î ŷ".split(" ")
     nasais = "m n ng ã ẽ ĩ ỹ õ ũ".split(" ")
     consoantes = "p b t s k ' m n r nh ng mb nd ng g û î ŷ".split(" ")
@@ -149,7 +175,7 @@ class TupiAntigo(object):
         return self.silibas() == 1
     def siliba_string(self, inp=None):
         if inp is None:
-            inp = self.verbete
+            inp = self.verbete if type(self.verbete) == str else self.verbete()
         sorted_clusters = [x[0] for x in self.siliba_map]
         result_string = inp.replace("-", "")
         cluster_mapping = dict(self.siliba_map)
@@ -185,7 +211,7 @@ class TupiAntigo(object):
 
     def ipa(self, inp=None):
         if inp is None:
-            inp = self.verbete
+            inp = self.verbete if type(self.verbete) == str else self.verbete()
         sorted_clusters = [x[0] for x in self.ipa_map]
         result_string = inp.replace("-", "")
         cluster_mapping = dict(self.ipa_map)
@@ -228,6 +254,20 @@ class TupiAntigo(object):
             return input_string[:-1] + input_string[-1] + "́"
         return input_string
 
+    def remove_accent_last_vowel(self, input_string):
+        vowels = "áéíýóú"
+        # Check if the last character is an accented vowel
+        if input_string[-1] in vowels:
+            # Remove the accent from the last vowel
+            return input_string[:-1] + self.accent_map[input_string[-1]]
+        return input_string
+    def nasaliza_final(self, input_string):
+        vowels = "áéíýóú"
+        # Check if the last character is an accented vowel
+        if input_string[-1] in self.nasal_map.keys():
+            # Remove the accent from the last vowel
+            return input_string[:-1] + self.nasal_map[input_string[-1]]
+        return input_string
     # Define a function which returns a randomly generated tupi antigo string between 1 and 3 syllables
     def random_tupi_antigo(self):
         # Define a list of possible syllable patterns
