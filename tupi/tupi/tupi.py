@@ -169,6 +169,8 @@ class TupiAntigo(object):
                     num += 1
                     silibas = silibas[len(pattern) :]
                     break
+            else:  # No match found
+                silibas = silibas[1:]
         return num
 
     def monosilibica(self):
@@ -313,3 +315,14 @@ class TupiAntigo(object):
         tonic = random.choice(vowels)
         tonic_str = input_string[:tonic] + v_map[input_string[tonic]] + input_string[tonic + 1 :]
         return random.choice([input_string, tonic_str])
+    
+    # function to make a single random vowel in a string tonic if none have accents already
+    def recreate_annotated(self):
+        matches = re.findall(r'Noun\(\"([^\"]+)\", \"([^\"]+)\"\)((?:\.[^\)]+\))*)', self.recreate)
+        vbt = matches[0]
+        defn = matches[0][1]
+        fns = []
+        for match in matches[0][2:]:
+            fns.append(match)
+        print(vbt, defn, fns)
+            

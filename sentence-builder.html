@@ -1,0 +1,495 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dicionário de tupi antigo: A língua indígena clássica do Brasil</title>
+    <link rel="icon" href="/nhe-enga/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<!--    The following HTML document is an academic paper which seaks to explore a methods in which on might be able to represent a book which such authors as Eudardo Navarro have written.
+    His monumental work titled "Dicionário de Tupi antigo: A língua indígena clássica do Brasil" has allowed many in the world to be able to study the ancestral language of Brasil.
+    In this vain, I would like to explore theoretical ways in which one might be able to allow even more people to access that information.
+-->
+<body>
+    <main>
+        <div class='content'>
+            <a href="/nhe-enga/quiz">Quiz</a><br>
+            Citando
+            <div class='title'><h1>Dicionário de Tupi antigo</h1></div>
+            <div class='subtitle'><h2>A língua indígena clássica do Brasil</h2></div>
+                <div class='search_input'><input type="text" id="searchInput" placeholder="Digite a palavra a ser pesquisada" /></div>
+                <div class='actions'>
+                    <button class="search" id="searchButton">Pesquisar</button>
+                    <div onclick="toggleAllOptionsContainers()" class="toggle-container disabled" id="toggleContainer">
+                        <div class="toggle-ball" id="toggleBall"></div>
+                    <div class="toggle-label">Mostrar Conjugações</div>
+                    </div>
+                </div>
+            <section class='results' id="results">
+                <ul></ul>
+            </section>
+        </div>
+    </main>
+    <div class='credits'>Dicionário por Eduardo de Almeida Navarro</div>
+
+    <!-- The following citations will cite the text for which you can find all of the specific instances referenced in this research paper. -->
+    <meta name="citation_title" content="Tupi Antigo: A Língua Indígena Clássica do Brasil">
+    <meta name="citation_author" content="Eduardo de Almeida Navarro">
+    <meta name="citation_publication_date" content="2007">
+    <meta name="citation_publisher" content="Global Editora e Distribuidora Ltda.">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.3/pako.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+    <script>
+        // Function to load JSON from a file
+        function loadJSON(url, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.overrideMimeType("application/json");
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                callback(JSON.parse(xhr.responseText));
+            }
+            };
+            xhr.send(null);
+        }
+        function loadCompressedJSONSync(url) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, false); // Make the request synchronous
+            xhr.responseType = 'arraybuffer'; // Use arraybuffer to handle binary data
+            xhr.send(null);
+
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // Decompress the data using pako
+                var decompressedData = pako.inflate(xhr.response, { to: 'string' });
+                return JSON.parse(decompressedData);
+            }
+
+            return null;
+        }
+
+          // Function to load JSON from a file synchronously
+        function loadJSONSync(url) {
+            var xhr = new XMLHttpRequest();
+            xhr.overrideMimeType("application/json");
+            xhr.open('GET', url, false); // Make the request synchronous
+            xhr.send(null);
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                return JSON.parse(xhr.responseText);
+            }
+            return null;
+        }
+        let globalPyodide;
+        async function initializePython() {
+            globalPyodide = await loadPyodide();
+            console.log(globalPyodide.runPython(`
+                import sys
+                sys.version
+            `));
+            await globalPyodide.loadPackage('micropip');
+            const micropip = globalPyodide.pyimport('micropip');
+            await micropip.install('tupi/dist/tupi-0.1.0-py3-none-any.whl');
+            console.log('Package installed');
+            globalPyodide.runPython("import tupi");
+            globalPyodide.runPython("print(tupi.Noun('îagûar', 'normal'))");
+            return globalPyodide;
+        }
+
+        async function runPythonCode() {
+            if (!globalPyodide) {
+                await initializePython();
+            }
+            const pythonCode = "n = tupi.Noun('nhe\\'eng', 'normal').saba(); print(n)";
+            globalPyodide.runPython(pythonCode);
+            const prn = globalPyodide.globals.get("n");
+            globalPyodide.runPython("print(tupi.Noun('ker', 'normal'))");
+        }
+
+        function transformConjList(mode, list, negar) {
+            const resultObject = {};
+            list.forEach(obj => {
+                if (obj.m.slice(0, 2) === mode.slice(0, 2)) {
+                const key = [obj.s, obj.o];
+                resultObject[JSON.stringify(key)] = negar? obj.n: obj.f;
+                }
+            });
+
+        return resultObject;
+        }
+        initializePython();
+        function Noun(verbete, definition, anotated=false, inflections=[]){
+            anotated_str = anotated ? "True" : "False";
+            pythonCode = `import tupi; tupi.Noun("${verbete}","${definition}")`
+            // For each inflection in inflections, add the inflection to the pythonCode
+            inflections.forEach(inflection => {
+                pythonCode += `.${inflection}`
+            });
+            pythonCode += `.substantivo(anotated=${anotated_str})`
+            return globalPyodide.runPython(pythonCode);
+        }
+        window.jsonData = loadJSONSync('docs/dict-conjugated.json').map(item => ({
+            "first_word": item.f || "",
+            "optional_number": item.o || "",
+            "definition": item.d || "",
+            "con": item.c || ""
+        }));
+    </script>
+    <script>
+        let modes = ['indicativo', 'permissivo', 'circunstancial', 'gerundio', 'imperativo'];
+        let subj_pref_map = {
+            'ø': null,
+            'ixé': '1ps',
+            'endé': '2ps',
+            "a'e": '3p',
+            'oré': '1ppe',
+            'îandé': '1ppi',
+            "pe'ẽ": '2pp',
+        };
+        let obj_pref_map = {
+            'ø': null,
+            'xe': '1ps',
+            'nde': '2ps',
+            "i": '3p',
+            'oré': '1ppe',
+            'îandé': '1ppi',
+            "pe": '2pp',
+            "îe": 'refl',
+            "îo": 'mut',
+        };
+        function generateConjugationTable(mode, conjugations_b, un_id, ne) {
+            let negar = ne || false;
+            const filteredConjugations = conjugations_b.filter(item => item.m === mode.slice(0, 2));
+            const uniqueSubjects = new Set(filteredConjugations.map(item => item.s));
+            const uniqueObjects = new Set(filteredConjugations.map(item => item.o));
+            let conjugations =  transformConjList(mode, filteredConjugations, negar);
+            let subj_m = subj_pref_map;
+            let obj_m = obj_pref_map;
+            if (mode === 'imperativo'){
+                subj_m = {
+                    'endé': '2ps',
+                    "pe'ẽ": '2pp',
+                };
+            } else if (mode === 'circunstancial'){
+                subj_m = {
+                    'ø': null,
+                    'ixé': '1ps',
+                    'oré': '1ppe',
+                    'îandé': '1ppi',
+                    "a'e": '3p'
+                };
+            }
+            const subjects_vals = Object.entries(subj_m)
+                .filter(item => uniqueSubjects.has(item[1]))
+                .map(([key, value]) => value);
+            const objects_vals = Object.entries(obj_m)
+                .filter(item => uniqueObjects.has(item[1]))
+                .map(([key, value]) => value);
+            const subjects = Object.entries(subj_m)
+                .filter(item => uniqueSubjects.has(item[1]))
+                .map(([key, value]) => key);
+            const objects = Object.entries(obj_m)
+                .filter(item => uniqueObjects.has(item[1]))
+                .map(([key, value]) => key);
+            let htmlString = `<table class="options-container" id="conj-${un_id}">`;
+                htmlString += `<tr><th>
+                    Modo<br><select id="mode-${un_id}" class="option">
+                    <!-- Add options dynamically using JavaScript -->
+                </select><br>
+                    <input type="checkbox" id="negarCheckbox-${un_id}" ${negar?"checked":""} name="negarCheckbox">
+                    <label for="negarCheckbox">Negar</label>
+                </th><th class="label" style="background-color: #e4ffe4;" colspan="${(objects.length + 1)}">Objeto</th></tr>`;
+            htmlString += `<th style="background-color: #fef9c3ab;" class="label">
+                Sujeito</th>`;
+            for (const object of objects) {
+                htmlString += `<th style="background-color: #e4ffe4;">${object}</th>`;
+            }
+            htmlString += '</tr>';
+            for (let i = 0; i < subjects.length; i++) {
+                htmlString += `<tr><th style="background-color: #fef9c3ab;">${subjects[i]}</th>`;
+                const subj = subjects_vals[i];
+                for (let j = 0; j < objects.length; j++) {
+                    const obj = objects_vals[j];
+                    let conj = conjugations[JSON.stringify([subj, obj])] || '-'
+                    htmlString += `<td>${conj}</td>`;
+                }
+                htmlString += '</tr>';
+            }
+            htmlString += '</table>';
+            return htmlString;
+        }
+
+        function searchByFirstWord(data, query) {
+            const clean_query = removePunctuation(query)
+            return data.filter(item => removePunctuation(item.first_word).toLowerCase() === clean_query.toLowerCase());
+        }
+
+        function searchInFirstWord(data, query) {
+            const clean_query = removePunctuation(query).toLowerCase();
+            return data.filter(item => removePunctuation(item.first_word).toLowerCase().includes(clean_query));
+        }
+
+        function searchAllDefinitions(data, query) {
+            const regex = new RegExp(`\\b${query}\\b`, 'i'); // Create a case-insensitive regex
+            return data.filter(item => (
+                item.first_word.toLowerCase() !== query.toLowerCase() &&
+                regex.test(item.definition.toLowerCase())
+            ));
+        }
+
+        // Function to remove diacritics from a string
+        function removeDiacritics(str) {
+            return removePunctuation(str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
+        }
+        function removePunctuation(str) {
+                return str
+                .replace(/[.,\/#!$%?^&*;:{}=\-_`~()]/g, "")
+                .trim();
+        }
+
+        function searchByFirstWordNoAccent(data, query) {
+            const queryNormalized = removeDiacritics(query.toLowerCase());
+            return data.filter(item => removeDiacritics(item.first_word.toLowerCase()) === queryNormalized);
+        }
+
+        function searchAllDefinitionsNoAccent(data, query) {
+            const queryNormalized = removeDiacritics(query.toLowerCase());
+            return data.filter(item => (removeDiacritics(item.first_word.toLowerCase()) !== queryNormalized) && removeDiacritics(item.definition.toLowerCase()).includes(queryNormalized));
+        }
+
+        const searchButton = document.getElementById("searchButton");
+        const searchInput = document.getElementById("searchInput");
+        const resultsDiv = document.getElementById("results");
+
+        searchButton.addEventListener("click", performSearch);
+        searchInput.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                performSearch();
+            }
+        });
+
+        window.addEventListener("load", function() {
+            searchInput.focus();
+            searchInput.click();
+        });
+
+
+        function createConjugateFunction(un_id, data) {
+            // Create the divId based on the provided un_id
+            var divId = 'conj-' + un_id;
+
+            // Get the div element
+            var divElement = document.getElementById(divId);
+            var negarCheckbox = document.getElementById(`negarCheckbox-${un_id}`);
+            // Get the button element inside the div
+            var selectElement = divElement.querySelector('select');
+            // Define the function to append 'f' value as text to the end of the div
+            function appendFValue() {
+                // Get the values for mode, subject, and subject using the provided un_id
+                var modeValue = selectElement.value;
+                appendOptionsToResultDiv(divElement.parentElement, data, modeValue, negarCheckbox.checked);
+                divElement.remove();
+            }
+            // Attach the function to the div
+            divElement.dataset.conjugateFunction = appendFValue;
+            // var selectElement = document.getElementById("mySelect");
+            // Add a change event listener
+            selectElement.addEventListener("change", appendFValue)
+            negarCheckbox.addEventListener("change", appendFValue)
+        }
+
+        function toggleAllOptionsContainers(dry) {
+            var is_dry = dry || false;
+            if(!is_dry){
+                // Find all elements with the class .options-container
+                var optionsContainers = document.querySelectorAll('.options-container');
+
+                // Toggle the visibility of each options container
+                optionsContainers.forEach(function(optionsContainer) {
+                    optionsContainer.style.display = (optionsContainer.style.display === 'none' || optionsContainer.style.display === '') ? 'flex' : 'none';
+                });
+            }
+
+            // Find the toggle container and ball elements
+            var toggleContainer = document.getElementById('toggleContainer');
+            var toggleBall = document.getElementById('toggleBall');
+            // Toggle the disabled class on the toggle container
+            toggleContainer.classList.toggle('disabled');
+
+            // Toggle the position of the toggle ball
+            var newPosition = !toggleContainer.classList.contains('disabled') ? '100%' : '0';
+            toggleBall.style.transform = 'translate(' + newPosition + ', -50%)';
+            setCookie('conjugationToggle', toggleContainer.classList.contains('disabled') ? 'disabled' : 'enabled', 30);
+        }
+        // Function to append the HTML string to resultDiv
+        function appendOptionsToResultDiv(resultDiv, con, mode, ne) {
+            // HTML string representing the options container
+            const un_id = Math.random().toString(36).substring(2, 10);
+            const htmlString = '';
+            // Create a temporary container element
+            const tempContainer = document.createElement("div");
+            // Set innerHTML of the container to the HTML string
+            tempContainer.innerHTML = generateConjugationTable(mode, con, un_id, ne);
+            var storedState = getCookie('conjugationToggle');
+            if (storedState === 'enabled') {
+                tempContainer.firstChild.style.display = 'flex';
+            } else {
+                tempContainer.firstChild.style.display = 'none';
+            }
+
+            // Append the child nodes of the container to the resultDiv
+            while (tempContainer.firstChild) {
+                resultDiv.appendChild(tempContainer.firstChild);
+            }
+            // // Populate dropdown options
+            populateDropdown(`mode-${un_id}`, modes, mode);
+            // populateDropdown(`subject-${un_id}`, ['ø', 'endé', 'ixé', 'oré', 'îandé', "pe'ẽ", "a'e"]);
+            // populateDropdown(`object-${un_id}`, ['ø', 'xe', 'nde', 'oré', 'îandé', "pe", "i"]);
+
+            createConjugateFunction(un_id, con)
+            
+        }
+
+        function populateDropdown(id, options, mode) {
+            const dropdown = document.getElementById(id);
+            
+            options.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option;
+                optionElement.text = option;
+                dropdown.add(optionElement);
+            });
+            dropdown.value = mode;
+        }
+
+        function performSearch() {
+            const query = searchInput.value.trim().toLowerCase(); // Convert query to lowercase
+
+            if (!query) {
+                alert('Ops, é necessário preencher algo para pesquisar!')
+                return;
+            }
+
+            const verbete_results_exact = searchByFirstWord(window.jsonData, query);
+            const def_results_exact = searchAllDefinitions(window.jsonData, query);
+            const verbete_results_in = searchInFirstWord(window.jsonData, query);
+            
+            // Perform diacritic-insensitive searches
+            const verbete_results_diacritic = searchByFirstWordNoAccent(window.jsonData, query);
+            const def_results_diacritic = searchAllDefinitionsNoAccent(window.jsonData, query);
+            
+            // Combine and prioritize results
+            const combinedResults = Array.from(new Set([...verbete_results_exact, ...verbete_results_diacritic, ...def_results_exact, ...verbete_results_in, ...def_results_diacritic]));
+            // Add the 'exact_match' property based on source
+            const results = combinedResults.map(result => {
+                const sourceIsVerbete = verbete_results_exact.includes(result) || def_results_exact.includes(result);
+                return {
+                    ...result,
+                    exact_match: sourceIsVerbete
+                };
+            });
+            resultsDiv.innerHTML = ""; // Clear previous results
+            resultsDiv.style.display = "block";
+
+            if (results.length > 0) {
+                results.forEach(result => {
+                    const resultDiv = document.createElement("div");
+
+                    // Case-insensitive highlighting of query word
+                    const definition = result.definition.replace(new RegExp(`(${query})`, "ig"), '<span class="highlighted">$1</span>');
+                    // Create a link with query parameter
+                    const link = document.createElement("a");
+                    link.href = `${window.location.pathname}?query=${encodeURIComponent(result.first_word)}`;
+                    link.innerText = result.first_word;
+                    link.classList.add("search-link");
+                    
+                    // Create superscript for optional_number
+                    const optionalNumberSup = document.createElement("sup");
+                    optionalNumberSup.innerText = result.optional_number;
+
+                    resultDiv.appendChild(link);
+                    resultDiv.appendChild(optionalNumberSup);
+                    resultDiv.innerHTML += ` ${definition}`;
+                    if (result.exact_match) {
+                        resultDiv.classList.add("exact-match");
+                    } else {
+                        resultDiv.classList.add("approximate-match");
+                    }
+                    resultsDiv.appendChild(resultDiv);
+                    if (result.con) {
+                        appendOptionsToResultDiv(resultDiv, result.con, 'indicativo', false);
+                    }
+                });
+                const newUrl = `${window.location.pathname}?query=${encodeURIComponent(query)}`;
+                history.pushState(null, null, newUrl);
+            } else {
+                resultsDiv.innerHTML = "Não foram encontrados resultados.";
+            }
+        }
+
+        // Read query parameter from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const queryParam = urlParams.get('query');
+
+        if (queryParam) {
+            // Preload results based on the query parameter
+            searchInput.value = queryParam;
+            performSearch();
+        }
+        function setCookie(name, value, days) {
+            var expires = '';
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = '; expires=' + date.toUTCString();
+            }
+            document.cookie = name + '=' + value + expires + '; path=/';
+        }
+
+        // Function to get the value of a cookie by name
+        function getCookie(name) {
+            var nameEQ = name + '=';
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            var toggleContainer = document.getElementById('toggleContainer');
+            var storedState = getCookie('conjugationToggle');
+            if (storedState === 'enabled') {
+                toggleAllOptionsContainers(true)
+            }
+        });
+        // Function to handle the popstate event
+        function handlePopstate(event) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const queryParam = urlParams.get('query');
+
+            if (queryParam) {
+                // Update the search bar with the query parameter
+                searchInput.value = queryParam;
+                // Trigger the search function
+                performSearch();
+            }
+        }
+        // Attach the popstate event listener
+        window.addEventListener('popstate', handlePopstate);
+        document.addEventListener('click', function(event) {
+        // Check if the clicked element has the "search-link" class
+        if (event.target.classList.contains('search-link')) {
+            // Prevent the default link behavior
+            event.preventDefault();
+            // Get the innerHTML of the clicked link and set it as the search input value
+            searchInput.value = event.target.innerText;
+            // Call the performSearch() function (assuming it's defined)
+            performSearch();
+            // return to top to see results
+            window.scrollTo(0, 0);
+        }
+        });
+    </script>
+</body>
+</html>

@@ -5,8 +5,9 @@ from itertools import product
 import random
 from tqdm import tqdm
 import matplotlib.pyplot as plt
-import tupi
-from tupi import Verb, Noun
+import sys
+sys.path.append('tupi')
+from tupi import Noun, Verb
 
 with open("docs/tupi_dict_navarro.js", "r") as file:
     lines = file.readlines()
@@ -171,13 +172,93 @@ persons = [
         "absoluta"
     ]
 for noun in tqdm(all_nouns_objs):
-    results.append((noun.substantivo(anotated=False),noun.substantivo(anotated=True)))
-    results.append((noun.saba().substantivo(anotated=False),noun.saba().substantivo(anotated=True)))
-    results.append((noun.sara().substantivo(anotated=False),noun.sara().substantivo(anotated=True)))
     for person in persons:
-        results.append((noun.possessive(person).substantivo(anotated=False),noun.possessive(person).substantivo(anotated=True)))
-        results.append((noun.saba().possessive(person).substantivo(anotated=False),noun.saba().possessive(person).substantivo(anotated=True)))
-        results.append((noun.sara().possessive(person).substantivo(anotated=False),noun.sara().possessive(person).substantivo(anotated=True)))
+        n = noun
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+        n = noun.ram()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+        n = noun.ram().puer()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+        n = noun.puer()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+
+        
+        n = noun.saba()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+        n = noun.saba().puer()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+        n = noun.saba().ram()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+        n = noun.saba().ram().puer()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+
+
+        results.append((n.substantivo(anotated=False),n.recreate))
+        n = noun.sara()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+        n = noun.sara().puer()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+        n = noun.sara().ram()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+        n = noun.sara().ram().puer()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+
+
+
+        results.append((n.substantivo(anotated=False),n.recreate))
+        n = noun.pyr()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+        n = noun.pyr().puer()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+        n = noun.pyr().ram()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+        n = noun.pyr().ram().puer()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+
+        results.append((n.substantivo(anotated=False),n.recreate))
+        n = noun.emi()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+        n = noun.emi().puer()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+        n = noun.emi().ram()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+        n = noun.emi().ram().puer()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+
+
+        results.append((n.substantivo(anotated=False),n.recreate))
+        n = noun.bae()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+        n = noun.puer().bae()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+        n = noun.ram().bae()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
+        n = noun.ram().puer().bae()
+        n = n.possessive(person)
+        results.append((n.substantivo(anotated=False),n.recreate))
 
 import json, re
 # Write results to file

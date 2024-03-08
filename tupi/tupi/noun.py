@@ -347,6 +347,28 @@ class Noun(TupiAntigo):
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
+    # TODO: Not yet tested -reme
+    def reme(self):
+        frame = inspect.currentframe()
+        func_name = frame.f_code.co_name
+        args, _, _, values = inspect.getargvalues(frame)
+        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        ret_noun = copy.deepcopy(self)
+        ret_noun.aglutinantes[-1] = self
+        # --------------------------------
+        vbt = self.verbete()
+        if vbt[-1] in self.vogais:
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            ret_noun.latest_verbete = f"{start}[{parts[-1]}reme"
+            if vbt[-1] in self.vogais_nasais:
+                ret_noun.latest_verbete = f"{start}[{parts[-1]}reme"
+        else:
+            ret_noun.latest_verbete = f"{ret_noun.latest_verbete}eme"
+        ret_noun.latest_verbete += "[CIRCUMSTANCE_SUBSTANTATIVE_SUFFIX]"
+        ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.recreate += f".{func_name}({args_str})"
+        return ret_noun
     def emi(self):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name

@@ -5,12 +5,14 @@ from itertools import product
 import random
 from tqdm import tqdm
 import matplotlib.pyplot as plt
+import sys
+sys.path.append('tupi')
 import tupi
-from tupi import Verb
+from tupi.verb import Verb
 
-with open("docs/tupi_dict_navarro.js", "r") as file:
-    lines = file.readlines()
-    lines[0] = lines[0][lines[0].find("=") + 1 : -2]
+# with open("docs/tupi_dict_navarro.js", "r") as file:
+#     lines = file.readlines()
+#     lines[0] = lines[0][lines[0].find("=") + 1 : -2]
 
 ban = [
     "NOTA",
@@ -45,8 +47,11 @@ ban = [
     "O",
     "Cardim,",
 ]
-# Parse the JSON data into a Python object
-dicc = json.loads(lines[0])
+# Parse the JSON data from 'docs/dict-conjugated.json' into a Python object
+with open("docs/dict-conjugated.json", "r") as f:
+    # use json to read from file
+    dicc = json.load(f)
+
 dicc_dict = {i: v for i, v in enumerate(dicc)}
 tupi_only = []
 include = False
