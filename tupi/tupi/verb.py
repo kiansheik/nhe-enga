@@ -67,7 +67,7 @@ class Verb(TupiAntigo):
         negative=False,
         anotar=False,
     ):  
-        res = ''
+        result = ''
         perm_suf = ["", ""]
         if mode == "permissivo":
             obj_perm = ("1p" in object_tense and "2p" in subject_tense) or (("2p" in object_tense or "1p" in object_tense) and "3p" in subject_tense)
