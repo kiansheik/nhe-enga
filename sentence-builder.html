@@ -156,7 +156,15 @@
             "îe": 'refl',
             "îo": 'mut',
         };
-        function generateConjugationTable(mode, conjugations_b, un_id, ne) {
+        // A function which runs globalPyodide.runPython('import tupi; tupi.Verb("epîak", "(v.tr.) (s)", "ver").conjugate(subject_tense="1ps", object_tense="2ps", mode="indicativo", anotar=True)')
+        function conjugateVerb(verbete, verb_class, definition, subj, obj, mode, anotar=false){
+            pythonCode = `import tupi; tupi.Verb("${verbete}", "${verb_class}", "${definition}").conjugate(subject_tense="${subj}", object_tense="${obj}", mode="${mode}", anotar=${anotar? 'True' : 'False'})`
+            return globalPyodide.runPython(pythonCode);
+        }
+
+        function generateConjugationTable(mode, res, un_id, ne) {
+            conjugations_b = res.con;
+            console.log('few', res)
             let negar = ne || false;
             const filteredConjugations = conjugations_b.filter(item => item.m === mode.slice(0, 2));
             const uniqueSubjects = new Set(filteredConjugations.map(item => item.s));
@@ -209,7 +217,8 @@
                 const subj = subjects_vals[i];
                 for (let j = 0; j < objects.length; j++) {
                     const obj = objects_vals[j];
-                    let conj = conjugations[JSON.stringify([subj, obj])] || '-'
+                    // let conj = conjugations[JSON.stringify([subj, obj])] || '-'
+                    let conj = conjugateVerb(res.first_word, res.definition.substring(0, 50) , res.definition, subj, obj, mode, false);
                     htmlString += `<td>${conj}</td>`;
                 }
                 htmlString += '</tr>';
@@ -321,14 +330,15 @@
             setCookie('conjugationToggle', toggleContainer.classList.contains('disabled') ? 'disabled' : 'enabled', 30);
         }
         // Function to append the HTML string to resultDiv
-        function appendOptionsToResultDiv(resultDiv, con, mode, ne) {
+        function appendOptionsToResultDiv(resultDiv, res, mode, ne) {
+            con = res.con;
             // HTML string representing the options container
             const un_id = Math.random().toString(36).substring(2, 10);
             const htmlString = '';
             // Create a temporary container element
             const tempContainer = document.createElement("div");
             // Set innerHTML of the container to the HTML string
-            tempContainer.innerHTML = generateConjugationTable(mode, con, un_id, ne);
+            tempContainer.innerHTML = generateConjugationTable(mode, res, un_id, ne);
             var storedState = getCookie('conjugationToggle');
             if (storedState === 'enabled') {
                 tempContainer.firstChild.style.display = 'flex';
@@ -345,7 +355,7 @@
             // populateDropdown(`subject-${un_id}`, ['ø', 'endé', 'ixé', 'oré', 'îandé', "pe'ẽ", "a'e"]);
             // populateDropdown(`object-${un_id}`, ['ø', 'xe', 'nde', 'oré', 'îandé', "pe", "i"]);
 
-            createConjugateFunction(un_id, con)
+            createConjugateFunction(un_id, res)
             
         }
 
@@ -416,7 +426,7 @@
                     }
                     resultsDiv.appendChild(resultDiv);
                     if (result.con) {
-                        appendOptionsToResultDiv(resultDiv, result.con, 'indicativo', false);
+                        appendOptionsToResultDiv(resultDiv, result, 'indicativo', false);
                     }
                 });
                 const newUrl = `${window.location.pathname}?query=${encodeURIComponent(query)}`;
