@@ -158,7 +158,7 @@
         };
         // A function which runs globalPyodide.runPython('import tupi; tupi.Verb("epîak", "(v.tr.) (s)", "ver").conjugate(subject_tense="1ps", object_tense="2ps", mode="indicativo", anotar=True)')
         function conjugateVerb(verbete, verb_class, definition, subj, obj, mode, anotar=false){
-            pythonCode = `import tupi; tupi.Verb("${verbete}", "${verb_class}", "${definition}").conjugate(subject_tense="${subj}", object_tense="${obj}", mode="${mode}", anotar=${anotar? 'True' : 'False'})`
+            pythonCode = `import tupi; tupi.Verb("${verbete}", "${verb_class}", "${definition}").conjugate(subject_tense="${subj}", object_tense="${obj}", mode="${mode}", anotar=${anotar? 'True' : 'False'}, negar=${negar? 'True' : 'False'})`
             return globalPyodide.runPython(pythonCode);
         }
 
@@ -218,7 +218,7 @@
                 for (let j = 0; j < objects.length; j++) {
                     const obj = objects_vals[j];
                     // let conj = conjugations[JSON.stringify([subj, obj])] || '-'
-                    let conj = conjugateVerb(res.first_word, res.definition.substring(0, 50) , res.definition, subj, obj, mode, false);
+                    let conj = conjugateVerb(res.first_word, res.definition.substring(0, 50) , res.definition, subj, obj, mode, negar, false);
                     htmlString += `<td>${conj}</td>`;
                 }
                 htmlString += '</tr>';
