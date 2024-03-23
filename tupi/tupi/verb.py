@@ -1,4 +1,4 @@
-from tupi import TupiAntigo, Noun
+from tupi import TupiAntigo
 import re
 
 
@@ -11,7 +11,6 @@ class Verb(TupiAntigo):
             " ", ""
         )  # Whether the verb is transitive (boolean)
         self.raw_definition = raw_definition  # Raw definition of the verb (string)
-        self.substantivo = Noun(verbete, raw_definition)
         self.pluriforme = (
             "(s)" in self.verb_class
             or "(r, s)" in self.verb_class
@@ -23,7 +22,7 @@ class Verb(TupiAntigo):
         )
         self.ero = self.verbete.startswith("ero") or self.verbete.startswith("eno") or self.verbete.startswith("eru")
         self.vid = vid
-
+    
     def object_marker(self):
         return (
             ""

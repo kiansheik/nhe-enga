@@ -79,7 +79,7 @@
             }
             return null;
         }
-        let globalPyodide;
+        let globalPyodide, pyodideReady = false;
         async function initializePython() {
             globalPyodide = await loadPyodide();
             console.log(globalPyodide.runPython(`
@@ -92,6 +92,7 @@
             console.log('Package installed');
             globalPyodide.runPython("import tupi");
             globalPyodide.runPython("print(tupi.Noun('îagûar', 'normal'))");
+            pyodideReady = true;
             return globalPyodide;
         }
 
@@ -157,8 +158,15 @@
             "îo": 'mut',
         };
         // A function which runs globalPyodide.runPython('import tupi; tupi.Verb("epîak", "(v.tr.) (s)", "ver").conjugate(subject_tense="1ps", object_tense="2ps", mode="indicativo", anotar=True)')
-        function conjugateVerb(verbete, verb_class, definition, subj, obj, mode, anotar=false){
-            pythonCode = `import tupi; tupi.Verb("${verbete}", "${verb_class}", "${definition}").conjugate(subject_tense="${subj}", object_tense="${obj}", mode="${mode}", anotar=${anotar? 'True' : 'False'}, negar=${negar? 'True' : 'False'})`
+        function conjugateVerb(verbete, verb_class, definition, subj, obj, mode, negar, anotar=false){
+            if (subj === null) {
+                subj = `3p`;
+            }
+            if (obj === null) {
+                obj = `3p`;
+            }
+            pythonCode = `import tupi; tupi.Verb("${verbete}", "${verb_class}", "${definition}").conjugate(subject_tense="${subj}", object_tense="${obj}", mode="${mode}", anotar=${anotar? 'True' : 'False'}, negative=${negar? 'True' : 'False'})`
+            console.log(pythonCode)
             return globalPyodide.runPython(pythonCode);
         }
 
@@ -331,32 +339,39 @@
         }
         // Function to append the HTML string to resultDiv
         function appendOptionsToResultDiv(resultDiv, res, mode, ne) {
-            con = res.con;
-            // HTML string representing the options container
-            const un_id = Math.random().toString(36).substring(2, 10);
-            const htmlString = '';
-            // Create a temporary container element
-            const tempContainer = document.createElement("div");
-            // Set innerHTML of the container to the HTML string
-            tempContainer.innerHTML = generateConjugationTable(mode, res, un_id, ne);
-            var storedState = getCookie('conjugationToggle');
-            if (storedState === 'enabled') {
-                tempContainer.firstChild.style.display = 'flex';
-            } else {
-                tempContainer.firstChild.style.display = 'none';
-            }
+            function waitForElement(){
+                if(pyodideReady !== false){
+                    con = res.con;
+                    // HTML string representing the options container
+                    const un_id = Math.random().toString(36).substring(2, 10);
+                    const htmlString = '';
+                    // Create a temporary container element
+                    const tempContainer = document.createElement("div");
+                    // Set innerHTML of the container to the HTML string
+                    tempContainer.innerHTML = generateConjugationTable(mode, res, un_id, ne);
+                    var storedState = getCookie('conjugationToggle');
+                    if (storedState === 'enabled') {
+                        tempContainer.firstChild.style.display = 'flex';
+                    } else {
+                        tempContainer.firstChild.style.display = 'none';
+                    }
 
-            // Append the child nodes of the container to the resultDiv
-            while (tempContainer.firstChild) {
-                resultDiv.appendChild(tempContainer.firstChild);
-            }
-            // // Populate dropdown options
-            populateDropdown(`mode-${un_id}`, modes, mode);
-            // populateDropdown(`subject-${un_id}`, ['ø', 'endé', 'ixé', 'oré', 'îandé', "pe'ẽ", "a'e"]);
-            // populateDropdown(`object-${un_id}`, ['ø', 'xe', 'nde', 'oré', 'îandé', "pe", "i"]);
+                    // Append the child nodes of the container to the resultDiv
+                    while (tempContainer.firstChild) {
+                        resultDiv.appendChild(tempContainer.firstChild);
+                    }
+                    // // Populate dropdown options
+                    populateDropdown(`mode-${un_id}`, modes, mode);
+                    // populateDropdown(`subject-${un_id}`, ['ø', 'endé', 'ixé', 'oré', 'îandé', "pe'ẽ", "a'e"]);
+                    // populateDropdown(`object-${un_id}`, ['ø', 'xe', 'nde', 'oré', 'îandé', "pe", "i"]);
 
-            createConjugateFunction(un_id, res)
-            
+                    createConjugateFunction(un_id, res)
+                }
+                else{
+                    setTimeout(waitForElement, 250);
+                }
+            }
+            waitForElement();
         }
 
         function populateDropdown(id, options, mode) {

@@ -143,7 +143,8 @@ class TupiAntigo(object):
             "îî": "î",
             "ee": "e",
             "  ": " ",
-            "-": ""
+            "-": "",
+            "'û": "gû",
         }
 
         # Split the string into parts inside and outside of brackets
@@ -321,8 +322,10 @@ class TupiAntigo(object):
         matches = re.findall(r'Noun\(\"([^\"]+)\", \"([^\"]+)\"\)((?:\.[^\)]+\))*)', self.recreate)
         vbt = matches[0]
         defn = matches[0][1]
-        fns = []
+        fns = ''
         for match in matches[0][2:]:
-            fns.append(match)
-        print(vbt, defn, fns)
+            for fn in match[1:].split('.'):
+                fns += f"[{fn}]".replace("'", '"')
+        out_str = f"{vbt[0]}[{defn}]{fns}"
+        return out_str
             

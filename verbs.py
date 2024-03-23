@@ -9,6 +9,10 @@ import sys
 sys.path.append('tupi')
 import tupi
 from tupi.verb import Verb
+import unicodedata
+
+def strip_accents(s):
+    return ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
 
 # with open("docs/tupi_dict_navarro.js", "r") as file:
 #     lines = file.readlines()
@@ -48,7 +52,7 @@ ban = [
     "Cardim,",
 ]
 # Parse the JSON data from 'docs/dict-conjugated.json' into a Python object
-with open("docs/dict-conjugated.json", "r") as f:
+with open("docs/tupi_dict_navarro.json", "r") as f:
     # use json to read from file
     dicc = json.load(f)
 

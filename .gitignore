@@ -6,6 +6,7 @@ __pycache__/
 # C extensions
 *.so
 anotated_results_nouns.json
+anotated_results.json
 # Distribution / packaging
 .Python
 build/

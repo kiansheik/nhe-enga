@@ -1,5 +1,6 @@
 from tupi import TupiAntigo
-import copy, inspect
+from verb import Verb
+import copy, inspect, re
 
 sara_consoante_map = {
     "b": "par",
@@ -27,10 +28,15 @@ saba_consoante_map = {
     "u": "ûab",
     "y": "ŷab",
     "é": "esab",
-    "á": "asab",
     "ó": "osab",
+    "á": "asab",
     "í": "isab",
 }
+
+def tokenize_string(annotated_string):
+    matches = re.findall(r'([^\s\[\]]+)?\[(.*?)\]', annotated_string)
+    notes = [(token, annotation) for token, annotation in matches]
+    return notes
 
 class Noun(TupiAntigo):
     def __init__(self, verbete, raw_definition):
@@ -39,7 +45,6 @@ class Noun(TupiAntigo):
         self.latest_verbete = self.base_verbete # The name of the verb in its dictionary form
         self.raw_definition = raw_definition  # Raw definition of the verb (string)
         self.aglutinantes = [self]
-        self.recreate = f'Noun("{self.verbete()}", "{self.raw_definition}")'
         raw_def = self.raw_definition[:50]
         if "(r, s)" in raw_def or "(s)" in raw_def or "-s-" in raw_def:
             self.pluriforme = "r, s"
@@ -51,6 +56,48 @@ class Noun(TupiAntigo):
             self.pluriforme = "t, t"
         else:
             self.pluriforme = None
+        self.recreate = f'Noun("{self.verbete()}", "({self.pluriforme})")'
+        self.ios = "-îo-" in raw_def and "-s-" in raw_def
+        self.segunda_classe = (
+            "2ª classe" in raw_def or "adj." in raw_def
+        )
+        self.transitivo ="v.tr." in raw_def.replace(
+            " ", ""
+        )
+        self.ero = self.verbete().startswith("ero") or self.verbete().startswith("eno") or self.verbete().startswith("eru")
+        self.objeto_raw = None
+    
+    def verb(self):
+        raiz =  self.verbete()
+        verb_class = ""
+        if self.segunda_classe:
+            verb_class += "2ª classe "
+        if self.transitivo:
+            verb_class += "v.tr. "
+        if self.pluriforme:
+            verb_class += f"({self.pluriforme}) "
+        if self.ios:
+            verb_class += "-îo- -s- "
+        ret = Verb(self.verbete(), verb_class, self.raw_definition)
+        return ret
+    
+    def objeto(self, objeto_raw=None):
+        if not objeto_raw:
+            return self.objeto_raw
+        frame = inspect.currentframe()
+        func_name = frame.f_code.co_name
+        args, _, _, values = inspect.getargvalues(frame)
+        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        ret_noun = copy.deepcopy(self)
+        ret_noun.aglutinantes[-1] = self
+        ret_noun.objeto_raw = objeto_raw
+        ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.recreate += f".{func_name}({args_str})"
+        return ret_noun
+    # Define a .conjugate function which passes all args to .verb.conjugate()
+    def conjugate(self, *args, **kwargs):
+        # kwargs["dir_obj_raw"] = self.objeto()
+        return self.verb().conjugate(*args, **kwargs)
 
     def annotated_min(self, input_string):
         words = input_string.split(" ")
@@ -80,6 +127,14 @@ class Noun(TupiAntigo):
                 tokens.append(self.keep_brackets_contents(word))
         return " ".join(tokens)
 
+    def perform_recreate(self, recreate='epîak[(r, s)][possessive(person="1ps")]'):
+        # root = recreate.split('[')[0]
+        tokens = tokenize_string(recreate)
+        noun_out = f'Noun("{tokens[0][0]}", "{tokens[0][1]}")'
+        for token, annotation in tokens[1:]:
+            noun_out += f".{annotation}"
+        return noun_out
+
     def verbete(self, anotated=False):
         return self.remove_brackets_and_contents(self.latest_verbete) if not anotated else self.latest_verbete
     
@@ -87,7 +142,8 @@ class Noun(TupiAntigo):
         return f"{self.verbete(anotated=True)}{'a[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING]' if self.verbete(anotated=False)[-1] not in self.vogais else '[SUBSTANTIVE_SUFFIX:VOWEL_ENDING]'}"
         
     def substantivo(self, anotated=False):
-        return self.base_substantivo() if anotated else self.remove_brackets_and_contents(self.base_substantivo())
+        bs = self.base_substantivo() if anotated else self.remove_brackets_and_contents(self.base_substantivo())
+        return bs
     
     def __repr__(self) -> str:
         return self.substantivo()
@@ -145,6 +201,8 @@ class Noun(TupiAntigo):
             ret_noun.latest_verbete = f"{vbt_an}sar"
         ret_noun.latest_verbete += "[ABSOLUTE_AGENT_SUFFIX]"
         ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.segunda_classe = True
+        ret_noun.transitivo = False
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
 
@@ -180,6 +238,8 @@ class Noun(TupiAntigo):
             ret_noun.latest_verbete = f"{vbt_an}sab"
         ret_noun.latest_verbete += "[FACILITY_SUFFIX]"
         ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.segunda_classe = True
+        ret_noun.transitivo = False
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
 
@@ -277,6 +337,8 @@ class Noun(TupiAntigo):
             ret_noun.latest_verbete = f"{ret_noun.latest_verbete}ûer"
         ret_noun.latest_verbete += "[PRETERITE_SUFFIX]"
         ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.segunda_classe = True
+        ret_noun.transitivo = False
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
     def ram(self):
@@ -314,6 +376,8 @@ class Noun(TupiAntigo):
             ret_noun.latest_verbete = f"{ret_noun.latest_verbete}ûam"
         ret_noun.latest_verbete += "[FUTURE_SUFFIX]"
         ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.segunda_classe = True
+        ret_noun.transitivo = False
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
     def pyr(self):
@@ -345,6 +409,8 @@ class Noun(TupiAntigo):
         ret_noun.latest_verbete = f"{obj_pref}{ret_noun.latest_verbete}"
         ret_noun.latest_verbete += "[INDEFINITE_SUBJET_SUFFIX]"
         ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.segunda_classe = True
+        ret_noun.transitivo = False
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
     # TODO: Not yet tested -reme
@@ -392,10 +458,11 @@ class Noun(TupiAntigo):
         else:
             ret_noun.latest_verbete = f"emi{token}{ret_noun.latest_verbete}"
         ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.segunda_classe = True
+        ret_noun.transitivo = False
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
     
-
 if __name__ == "__main__":
     # Example usage:
     # noun_examples = [Noun("apysyk", "adj.: "),
@@ -497,7 +564,7 @@ if __name__ == "__main__":
     for noun_example, solution in noun_examples:
         if noun_example.pyr().substantivo().strip() != solution.strip():
             print(noun_example.verbete(), "\t", noun_example.pyr(), "\t", solution)
-    n = Noun("'u", "(v.tr) ingerir").pyr().ram().puer().possessive('1ps')
+    n = Noun("'u", "(v.tr.) ingerir").pyr().ram().puer().possessive('1ps')
     print(n)
     print(n.recreate)
     print(n.substantivo(True))
