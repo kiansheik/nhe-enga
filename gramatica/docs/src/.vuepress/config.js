@@ -21,8 +21,8 @@ module.exports = {
     ['meta', { name: 'apple-mobile-web-app-capable', content: 'yes' }],
     ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black' }],
     ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black' }],
-    ['script', { src: "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js" }]
-    
+    ['script', { src: "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js" }],
+     ['PyodideLoader']
   ],
 
   /**

@@ -1,6 +1,6 @@
 # Conjugation
 
-<PyodideLoader>
+<PyodideLoader/>
 
 There are 2 classes when it comes to using roots as verbs in Tupi Antigo.
 
@@ -25,13 +25,14 @@ In Tupi Antigo, we will follow always an **OV _(object-verb)_** format, at a min
 
 One quirk of Tupi Antigo is the 3rd person object pronoun _-î- (–s-)_. When the object is 3rd person, we must always _(there are exceptions)_ include the referential object pronoun _(unless we incorporate it between the prefix and the root)_. In this case, the pattern of **SVO _(subject-verb-object)_** is possible, because the object pronoun _-î- (–s-)_ is fulfilling the space to the left of the verb **S-î-V**, allowing the raw direct object to come either before the verb (**SOV**) or after (**SVO**).
 
+
+
 In these cases, the following orders are permitted: _(object in the 3rd person)_
 | Optional Subject Pronoun | Verb Format | Type | Example |
 |-----------------|-------|-------|------|
-| (Subject Pronoun) | **[Object]** [Subject Prefix]-**[î]**-[Root] |Preverbal Object| %Noun('îuká', '(v.tr.)').conjugate(subject_tense="1ps", object_tense="3p", dir_obj_raw='pirá')% |
-| (Subject Pronoun) | [Subject Prefix]-**[Object]**-[Root] |Incorporated Object|  |
-| (Subject Pronoun) | [Subject Prefix]-**[î]**-[Root] **[Object]** |Postverbal Object|  |
-
+| (Subject Pronoun) | **[Object]** [Subject Prefix]-**[î]**-[Root] |Preverbal Object| %Noun('kutuk', '(v.tr.)').conjugate(subject_tense="1ps", object_tense="3p", dir_obj_raw='pirá', pos='anteposto')% |
+| (Subject Pronoun) | [Subject Prefix]-**[Object]**-[Root] |Incorporated Object| %Noun('kutuk', '(v.tr.)').conjugate(subject_tense="1ps", object_tense="3p", dir_obj_raw='pirá', pos='incorporado')% |
+| (Subject Pronoun) | [Subject Prefix]-**[î]**-[Root] **[Object]** |Postverbal Object| %Noun('kutuk', '(v.tr.)').conjugate(subject_tense="1ps", object_tense="3p", dir_obj_raw='pirá', pos='posposto')% |
 
 In all other cases (often called _nominal cases_ by others), the object must always precede the verb. The following orders are permitted for the given subjects: _(object **not** in the 3rd person)_
 
@@ -52,4 +53,4 @@ A transitive root will always recieve an object upon conjugation or noun-creatio
 ## Second Class Verbs
 
 
-</PyodideLoader>
+

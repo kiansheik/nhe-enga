@@ -6,6 +6,9 @@
         blocks.forEach(block => {
             block.innerHTML = block.innerHTML.replace(/\%(.*?)\%/g, (_, match) => {
             // Your custom JavaScript goes here
+            console.log(match)
+            if (match === "(.*?)\\")
+                return match
             return window.plo.runPython('from tupi import Noun; '+ match); // For example, convert the text to uppercase
             });
         });
@@ -28,7 +31,7 @@
     },
     methods: {
       async loadPyodide() {
-        if (typeof window.plo === 'undefined') {
+        if (!window.pyodideLoaded) {
             window.plo = await loadPyodide();
             await window.plo.loadPackage('micropip');
             const micropip = window.plo.pyimport('micropip');
@@ -36,6 +39,7 @@
             window.plo.runPython('from tupi import Noun; ');
             console.log('Package installed');
         }
+        window.pyodideLoaded = true;
         this.pyodideLoaded = true;
       }
     }

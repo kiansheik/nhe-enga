@@ -1,5 +1,5 @@
-from tupi import TupiAntigo
-from verb import Verb
+from .tupi import TupiAntigo
+from .verb import Verb
 import copy, inspect, re
 
 sara_consoante_map = {

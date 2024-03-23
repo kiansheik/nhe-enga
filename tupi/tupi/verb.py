@@ -1,4 +1,4 @@
-from tupi import TupiAntigo
+from .tupi import TupiAntigo
 import re
 
 
