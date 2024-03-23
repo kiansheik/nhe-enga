@@ -1,0 +1,22 @@
+{
+  "name": "Gramática",
+  "version": "0.0.1",
+  "description": "A Grammar of Tupi Antigo",
+  "main": "index.js",
+  "authors": {
+    "name": "Kian Sheik",
+    "email": "kiansheik3128@gmail.com"
+  },
+  "repository": "https://github.com/kiansheik/nhe-enga//Gramática",
+  "scripts": {
+    "dev": "vuepress dev src",
+    "build": "vuepress build src"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "vuepress": "^1.5.3"
+  },
+  "dependencies": {
+    "yarn": "^1.22.22"
+  }
+}
