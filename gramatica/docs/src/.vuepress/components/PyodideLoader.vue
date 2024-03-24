@@ -22,7 +22,7 @@
                 `));
                 await globalPyodide.loadPackage('micropip');
                 const micropip = globalPyodide.pyimport('micropip');
-                await micropip.install(`${basePath}dist/tupi-0.1.0-py3-none-any.whl`);
+                await micropip.install(`${basePath}pylibs/tupi-0.1.0-py3-none-any.whl`);
                 console.log('Package installed');
                 globalPyodide.runPython('import tupi');
                 globalPyodide.runPython('print(tupi.Noun(\'îagûar\', \'normal\'))');

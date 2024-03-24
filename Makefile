@@ -7,7 +7,7 @@ FULL_IMAGE_NAME=${IMAGE_NAME}:${TAG_NAME}
 
 lint:
 	zsh -c 'cd tupi; python3 setup.py sdist bdist_wheel;'
-	cp tupi/dist/tupi-0.1.0* gramatica/docs/src/.vuepress/public/dist/
+	cp tupi/dist/tupi-0.1.0* gramatica/docs/src/.vuepress/public/pylibs/
 	zsh -c 'cd gramatica/docs; npm run build;'
 	cp -r gramatica/docs/src/.vuepress/dist/* gramatica/
 	rm -rf gramatica/docs/src/.vuepress/dist/*
