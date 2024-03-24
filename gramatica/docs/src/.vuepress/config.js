@@ -29,7 +29,7 @@ module.exports = {
     ['script', { src: "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js" }],
     // ['PyodideLoader'],
     // add an entry for PyodideLoader custom component
-    // ['script', { src: "/loadPyodide.js" }],
+    ['script', { src: "/utility_funcs.js" }],
   ],
 
   /**

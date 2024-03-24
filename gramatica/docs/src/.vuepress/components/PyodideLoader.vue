@@ -31,11 +31,14 @@
                 blocks = document.querySelectorAll('.page');
                 blocks.forEach(function(block) {
                     block.innerHTML = block.innerHTML.replace(/\%(.*?)\%/g, function(_, match) {
-                    // Your custom JavaScript goes here
-                    console.log(match)
-                    if (match === '(.*?)\\')
-                        return match
-                    return globalPyodide.runPython('from tupi import Noun; '+ match); // For example, convert the text to uppercase
+                        // Your custom JavaScript goes here
+                        console.log(match)
+                        if (match === '(.*?)\\')
+                            return match
+                        var parser = new DOMParser();
+                        var htmlDoc = parser.parseFromString(match, 'text/html');
+                        var textContent = htmlDoc.body.textContent || "";
+                        return globalPyodide.runPython('from tupi import Noun; '+ textContent); // For example, convert the text to uppercase
                     });
                 });
                 return globalPyodide;
