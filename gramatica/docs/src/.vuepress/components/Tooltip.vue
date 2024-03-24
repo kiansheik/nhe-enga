@@ -19,9 +19,17 @@
     border-radius: 5px; /* Add rounded corners */
     white-space: nowrap; /* Prevent line breaks within the span */
     display: inline-block; /* Move the entire span to a new line instead of breaking */
+    animation: glow 2s infinite; /* Add a glow animation */
 }
 
 .help-text:hover {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Increase box shadow on hover */
+}
+
+/* Define the glow animation */
+@keyframes glow {
+    0% { box-shadow: 0 0 1.5px #add8e6, 0 0 3px #add8e6; }
+    50% { box-shadow: 0 0 2.5px #add8e6, 0 0 5px #add8e6; }
+    100% { box-shadow: 0 0 1.5px #add8e6, 0 0 3px #add8e6; }
 }
 </style>
