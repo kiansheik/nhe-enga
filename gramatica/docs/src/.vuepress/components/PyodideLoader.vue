@@ -1,47 +1,61 @@
 <template>
-    <div v-if="pyodideLoaded">
-      <slot></slot>
-      <script>
-        blocks = document.querySelectorAll('.page');
-        blocks.forEach(block => {
-            block.innerHTML = block.innerHTML.replace(/\%(.*?)\%/g, (_, match) => {
-            // Your custom JavaScript goes here
-            console.log(match)
-            if (match === "(.*?)\\")
-                return match
-            return window.plo.runPython('from tupi import Noun; '+ match); // For example, convert the text to uppercase
-            });
-        });
-      </script>
+    <div>
+        <div v-if="env !== '/'">
+            <script>
+                let basePath = '/nhe-enga/gramatica/';
+            </script>
+        </div>
+        <div v-else>
+            <script>
+                let basePath = '/';
+            </script>
+        </div>
+        <script>
+            let globalPyodide, pyodideReady = false;
+            window.pyodideReady = false;
+
+            async function initializePython() {
+                globalPyodide = await loadPyodide();
+                console.log(globalPyodide.runPython(`
+                    import sys
+                    sys.version
+                `));
+                await globalPyodide.loadPackage('micropip');
+                const micropip = globalPyodide.pyimport('micropip');
+                await micropip.install(`${basePath}dist/tupi-0.1.0-py3-none-any.whl`);
+                console.log('Package installed');
+                globalPyodide.runPython('import tupi');
+                globalPyodide.runPython('print(tupi.Noun(\'îagûar\', \'normal\'))');
+                pyodideReady = true;
+                window.pyodideReady = pyodideReady;
+                blocks = document.querySelectorAll('.page');
+                blocks.forEach(function(block) {
+                    block.innerHTML = block.innerHTML.replace(/\%(.*?)\%/g, function(_, match) {
+                    // Your custom JavaScript goes here
+                    console.log(match)
+                    if (match === '(.*?)\\')
+                        return match
+                    return globalPyodide.runPython('from tupi import Noun; '+ match); // For example, convert the text to uppercase
+                    });
+                });
+                return globalPyodide;
+            }
+            initializePython();
+        </script>
     </div>
-    <div v-else>
-      Loading data, please wait a moment...
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        pyodideLoaded: false
-      };
-    },
-    mounted() {
-      this.loadPyodide();
-    },
-    methods: {
-      async loadPyodide() {
-        if (!window.pyodideLoaded) {
-            window.plo = await loadPyodide();
-            await window.plo.loadPackage('micropip');
-            const micropip = window.plo.pyimport('micropip');
-            await micropip.install('../dist/tupi-0.1.0-py3-none-any.whl');
-            window.plo.runPython('from tupi import Noun; ');
-            console.log('Package installed');
+</template>
+
+<script>
+export default {
+    computed: {
+        env() {
+            return this.$site.base;
         }
-        window.pyodideLoaded = true;
-        this.pyodideLoaded = true;
-      }
-    }
-  };
-  </script>
+    },
+//   data() {
+//     return {
+//         'env': this.$site.base
+//     }
+//   }
+};
+</script>

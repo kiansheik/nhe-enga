@@ -1,4 +1,4 @@
-import PyodideLoader from './components/PyodideLoader.vue';
+// import DefaultLayout from './theme/theme-default/layouts/Layout.vue';
 
 export default ({
   Vue, // the version of Vue being used in the VuePress app
@@ -6,5 +6,6 @@ export default ({
   router, // the router instance for the app
   siteData // site metadata
 }) => {
-  Vue.component('PyodideLoader', PyodideLoader);
+  // Vue.component('Layout', DefaultLayout);
+  // Vue.component('PyodideLoader', () => import('./components/PyodideLoader.vue'));
 }

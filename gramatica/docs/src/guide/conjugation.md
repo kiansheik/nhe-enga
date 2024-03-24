@@ -1,7 +1,5 @@
 # Conjugation
 
-<PyodideLoader/>
-
 There are 2 classes when it comes to using roots as verbs in Tupi Antigo.
 
 ## First Class Verbs
@@ -28,11 +26,11 @@ One quirk of Tupi Antigo is the 3rd person object pronoun _-î- (–s-)_. When t
 
 
 In these cases, the following orders are permitted: _(object in the 3rd person)_
-| Optional Subject Pronoun | Verb Format | Type | Example |
-|-----------------|-------|-------|------|
-| (Subject Pronoun) | **[Object]** [Subject Prefix]-**[î]**-[Root] |Preverbal Object| %Noun('kutuk', '(v.tr.)').conjugate(subject_tense="1ps", object_tense="3p", dir_obj_raw='pirá', pos='anteposto')% |
-| (Subject Pronoun) | [Subject Prefix]-**[Object]**-[Root] |Incorporated Object| %Noun('kutuk', '(v.tr.)').conjugate(subject_tense="1ps", object_tense="3p", dir_obj_raw='pirá', pos='incorporado')% |
-| (Subject Pronoun) | [Subject Prefix]-**[î]**-[Root] **[Object]** |Postverbal Object| %Noun('kutuk', '(v.tr.)').conjugate(subject_tense="1ps", object_tense="3p", dir_obj_raw='pirá', pos='posposto')% |
+| Verb Format | Type | Example |
+|-------|-------|------|
+| **[Object]** [Subject Prefix]-**[î]**-[Root] |Preverbal Object| %Noun('kutuk', '(v.tr.)').conjugate(subject_tense="1ps", object_tense="3p", dir_obj_raw='pirá', pos='anteposto')% |
+| [Subject Prefix]-**[Object]**-[Root] |Incorporated Object| %Noun('kutuk', '(v.tr.)').conjugate(subject_tense="1ps", object_tense="3p", dir_obj_raw='pirá', pos='incorporado')% |
+| [Subject Prefix]-**[î]**-[Root] **[Object]** |Postverbal Object| %Noun('kutuk', '(v.tr.)').conjugate(subject_tense="1ps", object_tense="3p", dir_obj_raw='pirá', pos='posposto')% |
 
 In all other cases (often called _nominal cases_ by others), the object must always precede the verb. The following orders are permitted for the given subjects: _(object **not** in the 3rd person)_
 
@@ -40,11 +38,11 @@ In all other cases (often called _nominal cases_ by others), the object must alw
 3p: OV/OVS/SOV
 2p: OVS
 1p: OV/SOV -->
-| Subject | Order |
-|---------|-------|
-| 3p      | OV/OVS/SOV |
-| 2p      | OVS |
-| 1p      | OV/SOV |
+| Subject | Order | Example |
+|---------|-------|---|
+| 3p      | OV / OVS / SOV | %Noun('kutuk', '(v.tr.)').conjugate(subject_tense="3p", object_tense="1ps", pro_drop=True)% / %Noun('kutuk', '(v.tr.)').conjugate(subject_tense="3p", object_tense="1ps", pro_drop=False)% / %Noun('kutuk', '(v.tr.)').conjugate(subject_tense="3p", object_tense="1ps", pro_drop=False, pos='posposto')% |
+| 2p      | OVS | %Noun('kutuk', '(v.tr.)').conjugate(subject_tense="2ps", object_tense="1ps", pro_drop=False)% |
+| 1p      | OV / SOV |  %Noun('kutuk', '(v.tr.)').conjugate(subject_tense="1ps", object_tense="2ps", pro_drop=True)% / %Noun('kutuk', '(v.tr.)').conjugate(subject_tense="1ps", object_tense="2ps", pro_drop=False)%  |
 
 **All transitive verbs are of the first class** which means that **they will recieve the subject prefixes when the object is in the 3rd person**. This includes the reflexive and mutual object markers, _-îe- (-nhe-)_ and _-îo- (-nho-)_, respectively.
 
@@ -52,5 +50,6 @@ A transitive root will always recieve an object upon conjugation or noun-creatio
 
 ## Second Class Verbs
 
-
-
+::: tip
+Second class verbs are always intransitive
+:::

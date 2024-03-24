@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Conjugation | Tupi Antigo</title>
+    <meta name="generator" content="VuePress 1.9.10">
+    <link rel="icon" href="/nhe-enga/gramatica/favicon.ico">
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+    <meta name="description" content="A Grammar of Tupi Antigo">
+    <meta name="theme-color" content="#3eaf7c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    
+    <link rel="preload" href="/nhe-enga/gramatica/assets/css/styles.styles.5275cce2.css" as="style"><link rel="preload" href="/nhe-enga/gramatica/assets/js/app.72e51a64.js" as="script"><link rel="preload" href="/nhe-enga/gramatica/assets/js/4.390c5dc6.js" as="script"><link rel="preload" href="/nhe-enga/gramatica/assets/js/3.8dc82c66.js" as="script"><link rel="preload" href="/nhe-enga/gramatica/assets/js/1.2b6c8d6e.js" as="script"><link rel="preload" href="/nhe-enga/gramatica/assets/js/2.26ece168.js" as="script"><link rel="preload" href="/nhe-enga/gramatica/assets/js/24.28922afc.js" as="script"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/0.b7230ffe.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/10.95794d6d.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/11.361d243b.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/12.2a72a0f0.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/13.508d7aca.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/14.7dab05fd.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/15.90690cee.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/16.114dfe83.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/17.24ebcd66.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/18.b16a8565.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/19.bafaa661.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/20.30fe9753.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/21.c1fd27c2.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/22.6c369100.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/23.7c81464c.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/25.aa390728.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/26.cd430d8d.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/27.0089f6e6.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/28.aef9dbd1.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/5.f2f9c9f4.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/6.343b2b5f.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/7.c84a9ff4.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/8.795eac1c.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/9.cb8936be.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/vendors~docsearch.3753da7f.js">
+    <link rel="stylesheet" href="/nhe-enga/gramatica/assets/css/styles.styles.5275cce2.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><div><div><script>
+            let basePath = '/nhe-enga/gramatica/';
+        </script></div> <script>
+        let globalPyodide, pyodideReady = false;
+        window.pyodideReady = false;
+
+        async function initializePython() {
+            globalPyodide = await loadPyodide();
+            console.log(globalPyodide.runPython(`
+                import sys
+                sys.version
+            `));
+            await globalPyodide.loadPackage('micropip');
+            const micropip = globalPyodide.pyimport('micropip');
+            await micropip.install(`${basePath}dist/tupi-0.1.0-py3-none-any.whl`);
+            console.log('Package installed');
+            globalPyodide.runPython('import tupi');
+            globalPyodide.runPython('print(tupi.Noun(\'îagûar\', \'normal\'))');
+            pyodideReady = true;
+            window.pyodideReady = pyodideReady;
+            blocks = document.querySelectorAll('.page');
+            blocks.forEach(function(block) {
+                block.innerHTML = block.innerHTML.replace(/\%(.*?)\%/g, function(_, match) {
+                // Your custom JavaScript goes here
+                console.log(match)
+                if (match === '(.*?)\\')
+                    return match
+                return globalPyodide.runPython('from tupi import Noun; '+ match); // For example, convert the text to uppercase
+                });
+            });
+            return globalPyodide;
+        }
+        initializePython();
+    </script></div> <header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/nhe-enga/gramatica/" class="home-link router-link-active"><!----> <span class="site-name">Tupi Antigo</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/nhe-enga/gramatica/guide/" class="nav-link router-link-active">
+  Guide
+</a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/nhe-enga/gramatica/guide/" class="nav-link router-link-active">
+  Guide
+</a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>Guide</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/nhe-enga/gramatica/guide/" aria-current="page" class="sidebar-link">Introduction</a></li><li><a href="/nhe-enga/gramatica/guide/roots.html" class="sidebar-link">Roots</a></li><li><a href="/nhe-enga/gramatica/guide/nouns.html" class="sidebar-link">Nouns</a></li><li><a href="/nhe-enga/gramatica/guide/conjugation.html" aria-current="page" class="active sidebar-link">Conjugation</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/nhe-enga/gramatica/guide/conjugation.html#first-class-verbs" class="sidebar-link">First Class Verbs</a></li><li class="sidebar-sub-header"><a href="/nhe-enga/gramatica/guide/conjugation.html#second-class-verbs" class="sidebar-link">Second Class Verbs</a></li></ul></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="conjugation"><a href="#conjugation" class="header-anchor">#</a> Conjugation</h1> <p>There are 2 classes when it comes to using roots as verbs in Tupi Antigo.</p> <h2 id="first-class-verbs"><a href="#first-class-verbs" class="header-anchor">#</a> First Class Verbs</h2> <p>Verbs in the first class are conugated with the following <em>(optional)</em> <strong>Subject Pronouns</strong> and <strong>Subject prefixes</strong>:</p> <table><thead><tr><th>Lema</th> <th>Subject Pronoun</th> <th>Prefix</th></tr></thead> <tbody><tr><td>I</td> <td>Ixé</td> <td>a-</td></tr> <tr><td>You</td> <td>Endé</td> <td>ere-</td></tr> <tr><td>He</td> <td>A'e</td> <td>o-</td></tr> <tr><td>We (Inclusive)</td> <td>Oré</td> <td>oro-</td></tr> <tr><td>We (Exclusive)</td> <td>Îandé</td> <td>îa-</td></tr> <tr><td>Ya'll</td> <td>Pe'ẽ</td> <td>pe-</td></tr> <tr><td>They</td> <td>A'e</td> <td>o-</td></tr></tbody></table> <h3 id="transitive-verbs"><a href="#transitive-verbs" class="header-anchor">#</a> Transitive Verbs</h3> <p>In English, we generally follow a <strong>SVO <em>(subject-verb-object)</em></strong> format.
+In Tupi Antigo, we will follow always an <strong>OV <em>(object-verb)</em></strong> format, at a minumum. The language is pro-drop, meaning that the subject may be ommitted in many circumstances when the context is clear.</p> <p>One quirk of Tupi Antigo is the 3rd person object pronoun <em>-î- (–s-)</em>. When the object is 3rd person, we must always <em>(there are exceptions)</em> include the referential object pronoun <em>(unless we incorporate it between the prefix and the root)</em>. In this case, the pattern of <strong>SVO <em>(subject-verb-object)</em></strong> is possible, because the object pronoun <em>-î- (–s-)</em> is fulfilling the space to the left of the verb <strong>S-î-V</strong>, allowing the raw direct object to come either before the verb (<strong>SOV</strong>) or after (<strong>SVO</strong>).</p> <p>In these cases, the following orders are permitted: <em>(object in the 3rd person)</em></p> <table><thead><tr><th>Verb Format</th> <th>Type</th> <th>Example</th></tr></thead> <tbody><tr><td><strong>[Object]</strong> [Subject Prefix]-<strong>[î]</strong>-[Root]</td> <td>Preverbal Object</td> <td>%Noun('kutuk', '(v.tr.)').conjugate(subject_tense=&quot;1ps&quot;, object_tense=&quot;3p&quot;, dir_obj_raw='pirá', pos='anteposto')%</td></tr> <tr><td>[Subject Prefix]-<strong>[Object]</strong>-[Root]</td> <td>Incorporated Object</td> <td>%Noun('kutuk', '(v.tr.)').conjugate(subject_tense=&quot;1ps&quot;, object_tense=&quot;3p&quot;, dir_obj_raw='pirá', pos='incorporado')%</td></tr> <tr><td>[Subject Prefix]-<strong>[î]</strong>-[Root] <strong>[Object]</strong></td> <td>Postverbal Object</td> <td>%Noun('kutuk', '(v.tr.)').conjugate(subject_tense=&quot;1ps&quot;, object_tense=&quot;3p&quot;, dir_obj_raw='pirá', pos='posposto')%</td></tr></tbody></table> <p>In all other cases (often called <em>nominal cases</em> by others), the object must always precede the verb. The following orders are permitted for the given subjects: <em>(object <strong>not</strong> in the 3rd person)</em></p> <table><thead><tr><th>Subject</th> <th>Order</th> <th>Example</th></tr></thead> <tbody><tr><td>3p</td> <td>OV / OVS / SOV</td> <td>%Noun('kutuk', '(v.tr.)').conjugate(subject_tense=&quot;3p&quot;, object_tense=&quot;1ps&quot;, pro_drop=True)% / %Noun('kutuk', '(v.tr.)').conjugate(subject_tense=&quot;3p&quot;, object_tense=&quot;1ps&quot;, pro_drop=False)% / %Noun('kutuk', '(v.tr.)').conjugate(subject_tense=&quot;3p&quot;, object_tense=&quot;1ps&quot;, pro_drop=False, pos='posposto')%</td></tr> <tr><td>2p</td> <td>OVS</td> <td>%Noun('kutuk', '(v.tr.)').conjugate(subject_tense=&quot;2ps&quot;, object_tense=&quot;1ps&quot;, pro_drop=False)%</td></tr> <tr><td>1p</td> <td>OV / SOV</td> <td>%Noun('kutuk', '(v.tr.)').conjugate(subject_tense=&quot;1ps&quot;, object_tense=&quot;2ps&quot;, pro_drop=True)% / %Noun('kutuk', '(v.tr.)').conjugate(subject_tense=&quot;1ps&quot;, object_tense=&quot;2ps&quot;, pro_drop=False)%</td></tr></tbody></table> <p><strong>All transitive verbs are of the first class</strong> which means that <strong>they will recieve the subject prefixes when the object is in the 3rd person</strong>. This includes the reflexive and mutual object markers, <em>-îe- (-nhe-)</em> and <em>-îo- (-nho-)</em>, respectively.</p> <p>A transitive root will always recieve an object upon conjugation or noun-creation. Nouns and verbs of transitives roots may be pro-drop in regards to the subject of the root, but the object is always necessary.</p> <h2 id="second-class-verbs"><a href="#second-class-verbs" class="header-anchor">#</a> Second Class Verbs</h2> <div class="custom-block tip"><p class="custom-block-title">TIP</p> <p>Second class verbs are always intransitive</p></div></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/nhe-enga/gramatica/guide/nouns.html" class="prev">
+        Nouns
+      </a></span> <!----></p></div> </main></div><div class="global-ui"></div></div>
+    <script src="/nhe-enga/gramatica/assets/js/app.72e51a64.js" defer></script><script src="/nhe-enga/gramatica/assets/js/4.390c5dc6.js" defer></script><script src="/nhe-enga/gramatica/assets/js/3.8dc82c66.js" defer></script><script src="/nhe-enga/gramatica/assets/js/1.2b6c8d6e.js" defer></script><script src="/nhe-enga/gramatica/assets/js/2.26ece168.js" defer></script><script src="/nhe-enga/gramatica/assets/js/24.28922afc.js" defer></script>
+  </body>
+</html>

@@ -1,4 +1,5 @@
 const { description } = require('../../package')
+const path = require('path');
 
 module.exports = {
   /**
@@ -9,6 +10,10 @@ module.exports = {
    * Ref：https://v1.vuepress.vuejs.org/config/#description
    */
   description: description,
+
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+  },
 
   /**
    * Extra tags to be injected to the page HTML `<head>`
@@ -22,7 +27,9 @@ module.exports = {
     ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black' }],
     ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black' }],
     ['script', { src: "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js" }],
-     ['PyodideLoader']
+    // ['PyodideLoader'],
+    // add an entry for PyodideLoader custom component
+    // ['script', { src: "/loadPyodide.js" }],
   ],
 
   /**
@@ -30,6 +37,8 @@ module.exports = {
    *
    * ref：https://v1.vuepress.vuejs.org/theme/default-theme-config.html
    */
+  theme: path.resolve(__dirname, './theme/theme-default'),
+  base: process.env.NODE_ENV === 'production' ? '/nhe-enga/gramatica/' : '/',
   themeConfig: {
     repo: '',
     editLinks: false,

@@ -312,7 +312,7 @@ class Verb(TupiAntigo):
                         vb = f"{perm_suf[1]}{obj} {pluriforme}{vbt}"
                         if negative:
                             vb = self.negate_verb(vb, mode)
-                        result = f"{vb} {subj if not pro_drop else ''}"
+                        result = f"{vb} {subj if not pro_drop else ''}" if pos == "anteposto" else f"{subj if not pro_drop else ''} {vb}"
         result = self.fix_phonetics(result)
         return result if anotar else self.remove_brackets_and_contents(result)
 
