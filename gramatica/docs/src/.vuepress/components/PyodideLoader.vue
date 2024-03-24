@@ -37,7 +37,7 @@
                             return match
                         var parser = new DOMParser();
                         var htmlDoc = parser.parseFromString(match, 'text/html');
-                        var textContent = htmlDoc.body.textContent || "";
+                        var textContent = htmlDoc.body.textContent || '';
                         return globalPyodide.runPython('from tupi import Noun; '+ textContent); // For example, convert the text to uppercase
                     });
                 });
