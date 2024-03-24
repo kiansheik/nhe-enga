@@ -39,7 +39,6 @@
     <meta name="citation_publication_date" content="2007">
     <meta name="citation_publisher" content="Global Editora e Distribuidora Ltda.">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.3/pako.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
     <script>
         // Function to load JSON from a file
         function loadJSON(url, callback) {
@@ -79,32 +78,7 @@
             }
             return null;
         }
-        let globalPyodide;
-        async function initializePython() {
-            globalPyodide = await loadPyodide();
-            console.log(globalPyodide.runPython(`
-                import sys
-                sys.version
-            `));
-            await globalPyodide.loadPackage('micropip');
-            const micropip = globalPyodide.pyimport('micropip');
-            await micropip.install('tupi/dist/tupi-0.1.0-py3-none-any.whl');
-            console.log('Package installed');
-            globalPyodide.runPython("import tupi");
-            globalPyodide.runPython("print(tupi.Noun('îagûar', 'normal'))");
-            return globalPyodide;
-        }
-
-        async function runPythonCode() {
-            if (!globalPyodide) {
-                await initializePython();
-            }
-            const pythonCode = "n = tupi.Noun('nhe\\'eng', 'normal').saba(); print(n)";
-            globalPyodide.runPython(pythonCode);
-            const prn = globalPyodide.globals.get("n");
-            globalPyodide.runPython("print(tupi.Noun('ker', 'normal'))");
-        }
-
+        
         function transformConjList(mode, list, negar) {
             const resultObject = {};
             list.forEach(obj => {
@@ -115,17 +89,6 @@
             });
 
         return resultObject;
-        }
-        initializePython();
-        function Noun(verbete, definition, anotated=false, inflections=[]){
-            anotated_str = anotated ? "True" : "False";
-            pythonCode = `import tupi; tupi.Noun("${verbete}","${definition}")`
-            // For each inflection in inflections, add the inflection to the pythonCode
-            inflections.forEach(inflection => {
-                pythonCode += `.${inflection}`
-            });
-            pythonCode += `.substantivo(anotated=${anotated_str})`
-            return globalPyodide.runPython(pythonCode);
         }
         window.jsonData = loadJSONSync('docs/dict-conjugated.json').map(item => ({
             "first_word": item.f || "",
