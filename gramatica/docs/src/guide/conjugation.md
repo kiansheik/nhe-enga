@@ -1,4 +1,4 @@
-# Conjugation
+# Verbs
 
 In English, we generally follow a **SVO _(subject-verb-object)_**:
 ``` python

@@ -28,8 +28,8 @@
 
 /* Define the glow animation */
 @keyframes glow {
-    0% { box-shadow: 0 0 1.5px #add8e5, 0 0 3px #add8e6; }
-    50% { box-shadow: 0 0 2.5px #add8e6, 0 0 5px #add8e6; }
-    100% { box-shadow: 0 0 1.5px #add8e6, 0 0 3px #add8e6; }
+    0% { box-shadow: 0 0 0px #add8e5, 0 0 0px #add8e6; }
+    50% { box-shadow: 0 0 1px #add8e6, 0 0 4px #add8e6; }
+    100% { box-shadow: 0 0 0px #add8e6, 0 0 0px #add8e6; }
 }
 </style>

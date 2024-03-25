@@ -61,6 +61,7 @@ module.exports = {
             'roots',
             'nouns',
             'conjugation',
+            'indicative',
           ]
         }
       ],
