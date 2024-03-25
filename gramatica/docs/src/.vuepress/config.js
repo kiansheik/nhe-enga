@@ -50,6 +50,10 @@ module.exports = {
         text: 'Guide',
         link: '/guide/',
       },
+      {
+        text: 'Dictionary',
+        link: '../',
+      },
     ],
     sidebar: {
       '/guide/': [
