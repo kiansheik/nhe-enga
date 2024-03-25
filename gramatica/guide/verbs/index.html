@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Verbs | Tupi Antigo</title>
+    <meta name="generator" content="VuePress 1.9.10">
+    <link rel="icon" href="/nhe-enga/gramatica/favicon.ico">
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+    <script src="/nhe-enga/gramatica/utility_funcs.js"></script>
+    <meta name="description" content="A Grammar of Tupi Antigo">
+    <meta name="theme-color" content="#3eaf7c">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    
+    <link rel="preload" href="/nhe-enga/gramatica/assets/css/styles.styles.5c17f103.css" as="style"><link rel="preload" href="/nhe-enga/gramatica/assets/js/app.f505fed5.js" as="script"><link rel="preload" href="/nhe-enga/gramatica/assets/js/4.af7b3a82.js" as="script"><link rel="preload" href="/nhe-enga/gramatica/assets/js/3.2889ca89.js" as="script"><link rel="preload" href="/nhe-enga/gramatica/assets/js/1.2b6c8d6e.js" as="script"><link rel="preload" href="/nhe-enga/gramatica/assets/js/2.26ece168.js" as="script"><link rel="preload" href="/nhe-enga/gramatica/assets/js/27.20f590ee.js" as="script"><link rel="preload" href="/nhe-enga/gramatica/assets/js/17.0168b425.js" as="script"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/0.b7230ffe.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/10.95794d6d.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/11.361d243b.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/12.2a72a0f0.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/13.508d7aca.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/14.7dab05fd.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/15.90690cee.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/16.114dfe83.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/18.46773013.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/19.2ed6d703.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/20.0b6e9eb0.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/21.b190dbe8.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/22.095c47f1.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/23.c64e143e.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/24.76c36117.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/25.aa390728.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/26.cd430d8d.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/28.9d302a22.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/29.86de62a4.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/30.b519a6d9.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/5.f2f9c9f4.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/6.343b2b5f.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/7.c84a9ff4.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/8.795eac1c.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/9.cb8936be.js"><link rel="prefetch" href="/nhe-enga/gramatica/assets/js/vendors~docsearch.3753da7f.js">
+    <link rel="stylesheet" href="/nhe-enga/gramatica/assets/css/styles.styles.5c17f103.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><div><div><script>
+            let basePath = '/nhe-enga/gramatica/';
+        </script></div> <script>
+        let globalPyodide, pyodideReady = false;
+        window.pyodideReady = false;
+
+        async function initializePython() {
+            globalPyodide = await loadPyodide();
+            console.log(globalPyodide.runPython(`
+                import sys
+                sys.version
+            `));
+            await globalPyodide.loadPackage('micropip');
+            const micropip = globalPyodide.pyimport('micropip');
+            await micropip.install(`${basePath}pylibs/tupi-0.1.0-py3-none-any.whl`);
+            console.log('Package installed');
+            globalPyodide.runPython('import tupi');
+            globalPyodide.runPython('print(tupi.Noun(\'îagûar\', \'normal\'))');
+            pyodideReady = true;
+            window.pyodideReady = pyodideReady;
+            blocks = document.querySelectorAll('.page');
+            blocks.forEach(function(block) {
+                block.innerHTML = block.innerHTML.replace(/\%(.*?)\%/g, function(_, match) {
+                    // Your custom JavaScript goes here
+                    if (match === '(.*?)\\')
+                        return match
+                    var parser = new DOMParser();
+                    var htmlDoc = parser.parseFromString(match, 'text/html');
+                    var textContent = htmlDoc.body.textContent || '';
+                    return globalPyodide.runPython('from tupi import Noun; '+ textContent); // For example, convert the text to uppercase
+                });
+            });
+            return globalPyodide;
+        }
+        initializePython();
+    </script></div> <header class="navbar"><div onclick="document.querySelector('.theme-container').classList.toggle('sidebar-open')" class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/nhe-enga/gramatica/" class="home-link router-link-active"><!----> <span class="site-name">Tupi Antigo</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/nhe-enga/gramatica/guide/" class="nav-link router-link-active">
+  Guide
+</a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/nhe-enga/gramatica/guide/" class="nav-link router-link-active">
+  Guide
+</a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>Introduction</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>Verbs</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/nhe-enga/gramatica/guide/verbs/" aria-current="page" class="active sidebar-link">Verbs</a><ul class="sidebar-sub-headers"></ul></li><li><a href="/nhe-enga/gramatica/guide/verbs/indicative.html" class="sidebar-link">Indicative Mood</a></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="verbs"><a href="#verbs" class="header-anchor">#</a> Verbs</h1> <p>In English, we generally follow a <strong>SVO <em>(subject-verb-object)</em></strong>:</p> <div class="language-python extra-class"><pre class="language-python"><code>I stab you
+S V    O
+</code></pre></div><p>In Tupi Antigo, we will always follow <strong>OV <em>(object-verb)</em></strong> at a minumum. The language is pro-drop, meaning the subject may be ommitted when the context is clear enough to allow it.</p> <div class="language-python extra-class"><pre class="language-python"><code><span class="token operator">%</span>Noun<span class="token punctuation">(</span><span class="token string">'kutuk'</span><span class="token punctuation">,</span> <span class="token string">'(v.tr.)'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>conjugate<span class="token punctuation">(</span>subject_tense<span class="token operator">=</span><span class="token string">'1ps'</span><span class="token punctuation">,</span> object_tense<span class="token operator">=</span><span class="token string">'2ps'</span><span class="token punctuation">,</span> pro_drop<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token operator">%</span>
+O  V
+</code></pre></div><p>Here, <code>oro-</code> is a <span title="2nd Person Singular (you/endé/nde/oro-)" onclick="swapTitleAndInnerText(event)" class="help-text" data-v-360c2f55><em data-v-360c2f55>2ps</em></span> object prefix <em>(nde)</em>. Given this prefix, the subject pronoun will always be <span title="1st Person (I/we/xe/oré)" onclick="swapTitleAndInnerText(event)" class="help-text" data-v-360c2f55><em data-v-360c2f55>1p</em></span>.</p> <p>Depending on the context, this can mean <code>I stab you (%Noun('kutuk', '(v.tr.)').conjugate(subject_tense='1ps', object_tense='2ps', pro_drop=False)%)</code> or <code>We stab you (%Noun('kutuk', '(v.tr.)').conjugate(subject_tense='1ppe', object_tense='2ps', pro_drop=False)%)</code></p> <div class="custom-block warning"><p class="custom-block-title">WARNING</p> <p>It cannot be <em>îandé</em> becuase it would be strange to include the object of the oration as a subject as well. Perhaps this semi-reflexivity is possible in poetry, but we will ignore such forms in this text.</p></div> <h3 id="moving-onto-the-next-section"><a href="#moving-onto-the-next-section" class="header-anchor">#</a> Moving onto the next section...</h3></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/nhe-enga/gramatica/guide/" class="prev router-link-active">
+        Introduction
+      </a></span> <span class="next"><a href="/nhe-enga/gramatica/guide/verbs/indicative.html">
+        Indicative Mood
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"></div></div>
+    <script src="/nhe-enga/gramatica/assets/js/app.f505fed5.js" defer></script><script src="/nhe-enga/gramatica/assets/js/4.af7b3a82.js" defer></script><script src="/nhe-enga/gramatica/assets/js/3.2889ca89.js" defer></script><script src="/nhe-enga/gramatica/assets/js/1.2b6c8d6e.js" defer></script><script src="/nhe-enga/gramatica/assets/js/2.26ece168.js" defer></script><script src="/nhe-enga/gramatica/assets/js/27.20f590ee.js" defer></script><script src="/nhe-enga/gramatica/assets/js/17.0168b425.js" defer></script>
+  </body>
+</html>

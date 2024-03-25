@@ -79,9 +79,11 @@ When a second class root is pluriform, add an **r-** prefix.
 Notice how in the <Tooltip content="3rd Person (they/a'e/i/-î-/-îo-/s-/-s-/-îos-)">_3p_</Tooltip>, rather than a `personal pronoun + r-` we are getting a single `s-` which takes the place of the `i` pronoun used in the above uniform case. 
 :::
 
+It really is that easy! 
+
 ### Negation
 
-It really is that easy! Let's take a look at the _negated form_ real quick before we move onto first class verbs.
+Let's take a look at the _negated form_ real quick before we move onto first class verbs.
 
 | English | Person | Example |
 |------|-----------------|--------|
@@ -208,6 +210,8 @@ I speared a fish :translation
 
 In Tupi Antigo, the **object** must always fill the space _directly to the left of the root_ `OV`. The _referential 3p object infix_ `-î- (–s-)` allows us to move the _direct object (pirá)_ more freely around the root without _technically_ breaking this rule. It's like a placeholder! A bit like _it_ in English, but not exactly. It takes some time to get used to, but you'll get the hang of _it_ 😄
 
+##### Uniform roots
+
 The following orders are permitted when the object is in the <Tooltip content="3rd Person (they/a'e/i/-î-/-îo-/s-/-s-/-îos-)">_3p_</Tooltip>:
 | Verb Format | Type | Example |
 |-------|-------|------|
@@ -219,4 +223,62 @@ The following orders are permitted when the object is in the <Tooltip content="3
 When the object is <Tooltip content="3rd Person (they/a'e/i/-î-/-îo-/s-/-s-/-îos-)">_3p_</Tooltip>, we must include `-î-` _(there are exceptions)_.
 
 Notice in the **incorporated** form, we do not use the _referential 3p object infix_ `-î- (–s-)`. Because the _direct object_ is in it's space directly to the left of the root, the use of `-î-` is unnecessary _(and unpermitted)_
+
+Roots with only one syllable will recieve the infix `-îo-` as a simple phonetic change to `-î-`, it does not change the meaning in this context. (i.e. %Noun('ká', '(-îo-) (v.tr.) - 1) quebrar ').conjugate('1ps', '3p')% - I broke them)
+
+Do not confuse with the _mutual infix_ `–îo–` which will only be used when the subject and object are the same and plural. This concept will be explained further in later chapters. 
+
+_a select few irregular verbs will recieve `-îos–` although this is not common._
 :::
+
+##### Pluriform roots
+
+Let's take a look at the same thing with a pluriform root: %n = Noun('epîak', '(s) (v.tr.)');n.verbete()% _(to see)_
+
+| Verb Format | Type | Example |
+|-------|-------|------|
+| **[Object]** [Subject Prefix]-**[î]**-[Root] |Preverbal Object| %n.conjugate(subject_tense="1ps", object_tense="3p", pro_drop=True, dir_obj_raw='pirá', pos='anteposto')% |
+| [Subject Prefix]-**[Object]**-[Root] |Incorporated Object| %n.conjugate(subject_tense="1ps", object_tense="3p", pro_drop=True, dir_obj_raw='pirá', pos='incorporado')% |
+| [Subject Prefix]-**[î]**-[Root] **[Object]** |Postverbal Object| %n.conjugate(subject_tense="1ps", object_tense="3p", pro_drop=True, dir_obj_raw='pirá', pos='posposto')% |
+
+As you can see, in this case the only difference is that the `-î-` has a phonetic change to `-s-`. This does not change the meaning at all, they represent the same _referential 3p object infix_.
+
+The following orders are permitted for the rest of the cases: %n = Noun('kutuk', '(v.tr.)');n.verbete()% _(to spear)_ _(object **not** in the 3rd person)_
+
+<!-- Subject: Order
+3p: OV/OVS/SOV
+2p: OVS
+1p: OV/SOV -->
+| Subject | Order | Example |
+|---------|-------|---|
+| 3p      | OV / OVS / SOV | %n.conjugate(subject_tense="3p", object_tense="1ps", pro_drop=True)% / %n.conjugate(subject_tense="3p", object_tense="1ps", pro_drop=False)% / %n.conjugate(subject_tense="3p", object_tense="1ps", pro_drop=False, pos='posposto')% |
+| 2p      | OVS | %n.conjugate(subject_tense="2ps", object_tense="1ps", pro_drop=False)% |
+| 1p      | OV / SOV |  %n.conjugate(subject_tense="1ps", object_tense="2ps", pro_drop=True)% / %n.conjugate(subject_tense="1ps", object_tense="2ps", pro_drop=False)%  |
+
+Let's go over each of these cases:
+
+#### 3p subject, 1p or 2p object
+
+In this case, it looks very similar to the [second class](#second-class-verbs) _subject prefixes_, although these same _personal pronouns_ will serve as _object prefixes_ in this transitive case.
+
+The _subject_ can either go _before_ **(SOV)** or _after_ **(OVS)**.
+
+Let's see **(OVS)** with a uniform root like: %n.verbete()% _(to spear)_
+
+| English | Object Person | Example |
+|------|-----------------|--------|
+| Me    | 1ps            | %n.conjugate(subject_tense="3p", object_tense="1ps")%    |
+| You  | 2ps           | %n.conjugate(subject_tense="3p", object_tense="2ps")%     |
+| Us _(Exclusive)_ | 1ppe   | %n.conjugate(subject_tense="3p", object_tense="1ppe")%    |
+| Us _(Inclusive)_ | 1ppi  | %n.conjugate(subject_tense="3p", object_tense="1ppi")%     |
+| Ya'll | 2pp           | %n.conjugate(subject_tense="3p", object_tense="2pp")%       |
+
+Now **(SOV)** with a pluriforme root like: %n = Noun('epîak', '(s) (v.tr.)');n.verbete()% _(to see)_
+
+| English | Object Person | Example |
+|------|-----------------|--------|
+| Me    | 1ps            | %n.conjugate(subject_tense="3p", object_tense="1ps", pos="posposto")%    |
+| You  | 2ps           | %n.conjugate(subject_tense="3p", object_tense="2ps", pos="posposto")%     |
+| Us _(Exclusive)_ | 1ppe   | %n.conjugate(subject_tense="3p", object_tense="1ppe", pos="posposto")%    |
+| Us _(Inclusive)_ | 1ppi  | %n.conjugate(subject_tense="3p", object_tense="1ppi", pos="posposto")%     |
+| Ya'll | 2pp           | %n.conjugate(subject_tense="3p", object_tense="2pp", pos="posposto")%       |

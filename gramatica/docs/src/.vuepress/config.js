@@ -54,15 +54,20 @@ module.exports = {
     sidebar: {
       '/guide/': [
         {
-          title: 'Guide',
+          title: 'Introduction',
           collapsable: true,
           sidebarDepth: 4,
           children: [
             '',
-            'roots',
-            'nouns',
-            'conjugation',
-            'indicative',
+          ]
+        },
+        {
+          title: 'Verbs',
+          collapsable: true,
+          sidebarDepth: 4,
+          children: [
+            'verbs/',
+            'verbs/indicative',
           ]
         }
       ],

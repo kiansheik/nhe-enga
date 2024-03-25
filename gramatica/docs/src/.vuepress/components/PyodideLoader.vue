@@ -32,7 +32,6 @@
                 blocks.forEach(function(block) {
                     block.innerHTML = block.innerHTML.replace(/\%(.*?)\%/g, function(_, match) {
                         // Your custom JavaScript goes here
-                        console.log(match)
                         if (match === '(.*?)\\')
                             return match
                         var parser = new DOMParser();
@@ -55,10 +54,5 @@ export default {
             return this.$site.base;
         }
     },
-//   data() {
-//     return {
-//         'env': this.$site.base
-//     }
-//   }
 };
 </script>
