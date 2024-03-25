@@ -56,6 +56,7 @@ module.exports = {
         {
           title: 'Guide',
           collapsable: true,
+          sidebarDepth: 4,
           children: [
             '',
             'roots',
