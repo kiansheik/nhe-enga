@@ -27,7 +27,7 @@ if negative:
 
 ### Uniform Roots
 
-Given a second class root like **%n = Noun("ma\'enduar", 'remember - adj.'); n.verbete()%**, we will conjugate it as follows:
+Given a uniform, second class root like **%n = Noun("ma\'enduar", 'remember - adj.'); n.verbete()%**, we will conjugate it as follows:
 
 | English | Person | Example |
 |------|-----------------|--------|
@@ -53,16 +53,16 @@ Super easy! Now let's look at a pluriforme root, like **%n = Noun('akûaur', '(r
 | They  | 3p            | %n.conjugate("3p")%        |
 
 ::: tip
-When a second class root is also pluriform, we will add an **r-** prefix. 
+When a second class root is pluriform, add an **r-** prefix. 
 :::
 
 ::: warning
-Notice how in the <Tooltip content="3rd Person (they/a'e/i/-î-/-îo-/s-/-s-/-îos-)">_3p_</Tooltip>, rather than a `personal pronoun + r-` we are getting a single **s-** which takes the place of the **i** pronoun used in the above uniform. 
+Notice how in the <Tooltip content="3rd Person (they/a'e/i/-î-/-îo-/s-/-s-/-îos-)">_3p_</Tooltip>, rather than a `personal pronoun + r-` we are getting a single `s-` which takes the place of the `i` pronoun used in the above uniform case. 
 :::
 
 ### Negation
 
-It really is that easy! Let's take a look at the _negated form_ real quick before we move on to first class verbs.
+It really is that easy! Let's take a look at the _negated form_ real quick before we move onto first class verbs.
 
 | English | Person | Example |
 |------|-----------------|--------|
@@ -75,10 +75,10 @@ It really is that easy! Let's take a look at the _negated form_ real quick befor
 
 #### Step 1 - First letter check
 
-From the conjugated form (%n.conjugate("1ps")% ) we will add on the negation prefix `n'` if the first letter is a <Tooltip content="%' '.join(n.vogais)%">vowel</Tooltip> or the semi-vowel `î`. Otherwise, the negation prefix will take the form of `na `, a negation particle. 
+From the conjugated form _(%n.conjugate("1ps")%)_ we will add the negation prefix `n'` if the first letter is a <Tooltip content="%' '.join(n.vogais)%">vowel</Tooltip> or the semi-vowel `î`. Otherwise, the negation prefix will take the form of `na `, a negation particle. 
 
 ::: tip
-We write this separately out of convention, but the difference between the negation particle and prefix is purely phonetic, they represent the same exact thing.
+We write `na` separate from the root out of convention, but the difference between the negation particle `na root` and prefix `n'root` is purely phonetic, they represent the same exact thing.
 :::
 
 #### Step 2 - Last letter check
