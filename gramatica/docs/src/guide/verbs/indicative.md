@@ -81,51 +81,6 @@ Notice how in the <Tooltip content="3rd Person (they/a'e/i/-î-/-îo-/s-/-s-/-î
 
 It really is that easy! 
 
-### Negation
-
-Let's take a look at the _negated form_ real quick before we move onto first class verbs.
-
-| English | Person | Example |
-|------|-----------------|--------|
-| I    | 1ps            | %n.conjugate("1ps", negative=True)%    |
-| You  | 2ps           | %n.conjugate("2ps", negative=True)%     |
-| We _(Exclusive)_ | 1ppe   | %n.conjugate("1ppe", negative=True)%    |
-| We _(Inclusive)_ | 1ppi  | %n.conjugate("1ppi", negative=True)%     |
-| Ya'll | 2pp           | %n.conjugate("2pp", negative=True)%       |
-| They  | 3p            | %n.conjugate("3p", negative=True)%        |
-
-#### Step 1 - First letter check
-
-From the conjugated form _(%n.conjugate("1ps")%)_ we will add the negation prefix `n'` if the first letter is a <Tooltip content="%' '.join(n.vogais)%">vowel</Tooltip> or the semi-vowel `î`. Otherwise, the negation prefix will take the form of `na `, a negation particle. 
-
-::: tip
-We write `na` separate from the root out of convention, but the difference between the negation particle `na verb` and prefix `n'verb` is purely phonetic, they represent the same exact thing and are inseperable from the verb.
-:::
-
-#### Step 2 - Last letter check
-
-1. If the last letter is `i` or `î`, it remains unchanged.
-
-| Root | Afirmative | Negative | Translation |
-|------|------|-----------------|----|
-| %n = Noun("esaraî", "(r, s) (xe) (v. da 2ª classe) - 1) esquecer-se");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('1ps')% | %n.conjugate('1ps', negative=True)% | I didn't forgot |
-
-2. If it's a <Tooltip content="%' '.join(n.vogais)%">vowel</Tooltip>, then we add on the suffix `-î`
-
-| Root | Afirmative | Negative | Translation |
-|------|------|-----------------|---|
-| %n = Noun("emirekoe'õ", "(r, s) (v. da 2ª classe) - enviuvar, ser viúvo");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('2pp')% | %n.conjugate('2pp', negative=True)% | Ya'll aren't widows |
-
-
-3. Otherwise, we add on the suffix `-i`
-
-| Root | Afirmative | Negative | Translation |
-|------|------|-----------------|---|
-| %n = Noun("'atybak", "(xe) (v. da 2ª classe) - voltar o rosto para trás");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('3p')% | %n.conjugate('3p', negative=True)% | They don't turn their face back |
-
-
-And there you have it, that's how you negate a second class verb in the indicative mood. Pat yourself on the back!
-
 ## First Class Verbs
 
 First class verbs recieve the following __subject pronouns__ *(optional)* and __subject prefixes__ *(required)*:
@@ -213,11 +168,12 @@ In Tupi Antigo, the **object** must always fill the space _directly to the left 
 ##### Uniform roots
 
 The following orders are permitted when the object is in the <Tooltip content="3rd Person (they/a'e/i/-î-/-îo-/s-/-s-/-îos-)">_3p_</Tooltip>:
-| Verb Format | Type | Example |
-|-------|-------|------|
-| **[Object]** [Subject Prefix]-**[î]**-[Root] |Preverbal Object| %n.conjugate(subject_tense="1ps", object_tense="3p", dir_obj_raw='pirá', pos='anteposto')% |
-| [Subject Prefix]-**[Object]**-[Root] |Incorporated Object| %n.conjugate(subject_tense="1ps", object_tense="3p", dir_obj_raw='pirá', pos='incorporado')% |
-| [Subject Prefix]-**[î]**-[Root] **[Object]** |Postverbal Object| %n.conjugate(subject_tense="1ps", object_tense="3p", dir_obj_raw='pirá', pos='posposto')% |
+
+| Verb Format | Type | Example | Translation |
+|-------|-------|------|-------------|
+| **[Object]** [Subject Prefix]-**[î]**-[Root] |Preverbal Object| %n.conjugate(subject_tense="1ps", object_tense="3p", pro_drop=True, dir_obj_raw='pirá', pos='anteposto')% | I speared a fish |
+| [Subject Prefix]-**[Object]**-[Root] |Incorporated Object| %n.conjugate(subject_tense="1ps", object_tense="3p", pro_drop=True, dir_obj_raw='pirá', pos='incorporado')% | I speared a fish |
+| [Subject Prefix]-**[î]**-[Root] **[Object]** |Postverbal Object| %n.conjugate(subject_tense="1ps", object_tense="3p", pro_drop=True, dir_obj_raw='pirá', pos='posposto')% | I speared a fish |
 
 ::: warning
 When the object is <Tooltip content="3rd Person (they/a'e/i/-î-/-îo-/s-/-s-/-îos-)">_3p_</Tooltip>, we must include `-î-` _(there are exceptions)_.
@@ -235,13 +191,24 @@ _a select few irregular verbs will recieve `-îos–` although this is not commo
 
 Let's take a look at the same thing with a pluriform root: %n = Noun('epîak', '(s) (v.tr.)');n.verbete()% _(to see)_
 
-| Verb Format | Type | Example |
-|-------|-------|------|
-| **[Object]** [Subject Prefix]-**[î]**-[Root] |Preverbal Object| %n.conjugate(subject_tense="1ps", object_tense="3p", pro_drop=True, dir_obj_raw='pirá', pos='anteposto')% |
-| [Subject Prefix]-**[Object]**-[Root] |Incorporated Object| %n.conjugate(subject_tense="1ps", object_tense="3p", pro_drop=True, dir_obj_raw='pirá', pos='incorporado')% |
-| [Subject Prefix]-**[î]**-[Root] **[Object]** |Postverbal Object| %n.conjugate(subject_tense="1ps", object_tense="3p", pro_drop=True, dir_obj_raw='pirá', pos='posposto')% |
+| Verb Format | Type | Example | Translation |
+|-------|-------|------|-------------|
+| **[Object]** [Subject Prefix]-**[î]**-[Root] |Preverbal Object| %n.conjugate(subject_tense="1ps", object_tense="3p", pro_drop=True, dir_obj_raw='pirá', pos='anteposto')% | I saw a fish |
+| [Subject Prefix]-**[Object]**-[Root] |Incorporated Object| %n.conjugate(subject_tense="1ps", object_tense="3p", pro_drop=True, dir_obj_raw='pirá', pos='incorporado')% | I saw a fish |
+| [Subject Prefix]-**[î]**-[Root] **[Object]** |Postverbal Object| %n.conjugate(subject_tense="1ps", object_tense="3p", pro_drop=True, dir_obj_raw='pirá', pos='posposto')% | I saw a fish |
 
 As you can see, in this case the only difference is that the `-î-` has a phonetic change to `-s-`. This does not change the meaning at all, they represent the same _referential 3p object infix_.
+
+And an example of each of the different subject prefixes:
+
+| English | Person | Example | Translation |
+|------|-----------------|--------|-------------|
+| I    | 1ps            | %n.conjugate("1ps", "3p")%    | I saw them |
+| You  | 2ps           | %n.conjugate("2ps", "3p")%     | You saw them |
+| We _(Exclusive)_ | 1ppe   | %n.conjugate("1ppe", "3p")%    | We, _not you_, saw them |
+| We _(Inclusive)_ | 1ppi  | %n.conjugate("1ppi", "3p")%     | We _all_ saw them |
+| Ya'll | 2pp           | %n.conjugate("2pp", "3p")%       | Ya'll saw them |
+| They  | 3p            | %n.conjugate("3p", "3p")%        | They saw them |
 
 The following orders are permitted for the rest of the cases: %n = Noun('kutuk', '(v.tr.)');n.verbete()% _(to spear)_ _(object **not** in the 3rd person)_
 
@@ -249,11 +216,11 @@ The following orders are permitted for the rest of the cases: %n = Noun('kutuk',
 3p: OV/OVS/SOV
 2p: OVS
 1p: OV/SOV -->
-| Subject | Order | Example |
-|---------|-------|---|
-| 3p      | OV / OVS / SOV | %n.conjugate(subject_tense="3p", object_tense="1ps", pro_drop=True)% / %n.conjugate(subject_tense="3p", object_tense="1ps", pro_drop=False)% / %n.conjugate(subject_tense="3p", object_tense="1ps", pro_drop=False, pos='posposto')% |
-| 2p      | OVS | %n.conjugate(subject_tense="2ps", object_tense="1ps", pro_drop=False)% |
-| 1p      | OV / SOV |  %n.conjugate(subject_tense="1ps", object_tense="2ps", pro_drop=True)% / %n.conjugate(subject_tense="1ps", object_tense="2ps", pro_drop=False)%  |
+| Subject | Order | Example | Translation |
+|---------|-------|---------|-------------|
+| 3p      | OV / OVS / SOV | %n.conjugate(subject_tense="3p", object_tense="1ps", pro_drop=True)% / %n.conjugate(subject_tense="3p", object_tense="1ps", pro_drop=False)% / %n.conjugate(subject_tense="3p", object_tense="1ps", pro_drop=False, pos='posposto')% | They speared me |
+| 2p      | OVS | %n.conjugate(subject_tense="2ps", object_tense="1ps", pro_drop=False)% | You speared me |
+| 1p      | OV / SOV |  %n.conjugate(subject_tense="1ps", object_tense="2ps", pro_drop=True)% / %n.conjugate(subject_tense="1ps", object_tense="2ps", pro_drop=False)%  | I speared you |
 
 Let's go over each of these cases:
 
@@ -262,6 +229,8 @@ Let's go over each of these cases:
 In this case, it looks very similar to the [second class](#second-class-verbs) _subject prefixes_, although these same _personal pronouns_ will serve as _object prefixes_ in this transitive case.
 
 The _subject_ can either go _before_ **(SOV)** or _after_ **(OVS)**.
+
+##### Uniform
 
 Let's see **(OVS)** with a uniform root like: %n.verbete()% _(to spear)_
 
@@ -273,6 +242,8 @@ Let's see **(OVS)** with a uniform root like: %n.verbete()% _(to spear)_
 | Us _(Inclusive)_ | 1ppi  | %n.conjugate(subject_tense="3p", object_tense="1ppi")%     |
 | Ya'll | 2pp           | %n.conjugate(subject_tense="3p", object_tense="2pp")%       |
 
+##### Pluriform
+
 Now **(SOV)** with a pluriforme root like: %n = Noun('epîak', '(s) (v.tr.)');n.verbete()% _(to see)_
 
 | English | Object Person | Example |
@@ -282,3 +253,53 @@ Now **(SOV)** with a pluriforme root like: %n = Noun('epîak', '(s) (v.tr.)');n.
 | Us _(Exclusive)_ | 1ppe   | %n.conjugate(subject_tense="3p", object_tense="1ppe", pos="posposto")%    |
 | Us _(Inclusive)_ | 1ppi  | %n.conjugate(subject_tense="3p", object_tense="1ppi", pos="posposto")%     |
 | Ya'll | 2pp           | %n.conjugate(subject_tense="3p", object_tense="2pp", pos="posposto")%       |
+
+## Negation
+
+Let's take a look at the _negated form_ real quick: **%n = Noun('akûaur', '(r, s) (xe) (v. da 2ª classe) - pubescer, passar a ter pêlos pubianos (VLB, II, 89)'); n.verbete()%** _(to go through puberty)_
+
+| English | Person | Example |
+|------|-----------------|--------|
+| I    | 1ps            | %n.conjugate("1ps", negative=True)%    |
+| You  | 2ps           | %n.conjugate("2ps", negative=True)%     |
+| We _(Exclusive)_ | 1ppe   | %n.conjugate("1ppe", negative=True)%    |
+| We _(Inclusive)_ | 1ppi  | %n.conjugate("1ppi", negative=True)%     |
+| Ya'll | 2pp           | %n.conjugate("2pp", negative=True)%       |
+| They  | 3p            | %n.conjugate("3p", negative=True)%        |
+
+#### Step 1 - First letter check
+
+From the conjugated form _(%n.conjugate("1ps")%)_ we will add the negation prefix `n'` if the first letter is a <Tooltip content="%' '.join(n.vogais)%">vowel</Tooltip> or the semi-vowel `î`. Otherwise, the negation prefix will take the form of `na `, a negation particle. 
+
+::: tip
+We write `na` separate from the root out of convention, but the difference between the negation particle `na verb` and prefix `n'verb` is purely phonetic, they represent the same exact thing and are inseperable from the verb.
+:::
+
+#### Step 2 - Last letter check
+
+1. If the last letter is `i` or `î`, it remains unchanged.
+
+| Verb Type | Root | Afirmative | Negative | Translation |
+|-----------|------|------------|----------|-------------|
+| 2nd class, pluriform | %n = Noun("esaraî", "(r, s) (xe) (v. da 2ª classe) - 1) esquecer-se");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('1ps')% | %n.conjugate('1ps', negative=True)% | I didn't forgot |
+| 2nd class, uniform | %n = Noun("îuraragûaî", "(v. da 2ª classe) - 1) esquecer-se");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('3p')% | %n.conjugate('3p', negative=True)% | They didn't lie |
+| 1st class, intransitive | %n = Noun("kuî", "");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('3p')% | %n.conjugate('3p', negative=True)% | It didn't fall |
+| transitive, uniform | %n = Noun("aso'i", "(v.tr.)");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('1ppe', '3p')% | %n.conjugate('1ppe', '3p', negative=True)% | We didn't cover it |
+| transitive, pluriform | %n = Noun("esepîak", "(s) (v.tr.)");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('2pp', '3p')% | %n.conjugate('2pp', '3p', negative=True)% | Ya'll didn't see it |
+
+
+2. If it's a <Tooltip content="%' '.join(n.vogais)%">vowel</Tooltip>, then we add on the suffix `-î`
+
+| Root | Afirmative | Negative | Translation |
+|------|------|-----------------|---|
+| %n = Noun("emirekoe'õ", "(r, s) (v. da 2ª classe) - enviuvar, ser viúvo");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('2pp')% | %n.conjugate('2pp', negative=True)% | Ya'll aren't widows |
+
+
+3. Otherwise, we add on the suffix `-i`
+
+| Root | Afirmative | Negative | Translation |
+|------|------|-----------------|---|
+| %n = Noun("'atybak", "(xe) (v. da 2ª classe) - voltar o rosto para trás");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('3p')% | %n.conjugate('3p', negative=True)% | They don't turn their face back |
+
+
+And there you have it, that's how you negate a second class verb in the indicative mood. Pat yourself on the back!
