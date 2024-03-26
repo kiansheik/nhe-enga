@@ -4,7 +4,7 @@ class TupiAntigo(object):
         "1ppi": ["îandé", "îandé", "îa"],
         "1ppe": ["oré", "oré", "oro"],
         "2ps": ["endé", "nde", "ere", "oro", "îepé"],
-        "2pp": ["pe'ẽ", "pe", "pe", "opo", "peîepé"],
+        "2pp": ["peẽ", "pe", "pe", "opo", "peîepé"],
         "3p": ["a'e", "i", "o"],
         "refl": ["îe"],
         "mut": ["îo"],

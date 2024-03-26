@@ -271,7 +271,7 @@ subj_pref_map = {
     "oré": "1ppe",
     "îandé": "1ppi",
     "endé": "2ps",
-    "pe'ẽ": "2pp",
+    "peẽ": "2pp",
     "a'e": "3p",
 }
 obj_pref_map = {
