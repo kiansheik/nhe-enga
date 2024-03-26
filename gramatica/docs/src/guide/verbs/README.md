@@ -1,6 +1,9 @@
-# Verbs
+# Introduction
 
-In English, we generally follow a **SVO _(subject-verb-object)_**:
+to be completed...
+
+
+<!-- In English, we generally follow a **SVO _(subject-verb-object)_**:
 ``` python
 I stab you
 S V    O
@@ -21,4 +24,4 @@ Depending on the context, this can mean `I stab you (%Noun('kutuk', '(v.tr.)').c
 It cannot be _îandé_ becuase it would be strange to include the object of the oration as a subject as well. Perhaps this semi-reflexivity is possible in poetry, but we will ignore such forms in this text. 
 :::
 
-### Moving onto the next section... 
+### Moving onto the next section...  -->

@@ -63,6 +63,15 @@ module.exports = {
           sidebarDepth: 4,
           children: [
             '',
+            'roots'
+          ]
+        },
+        {
+          title: 'Pronouns',
+          collapsable: true,
+          sidebarDepth: 4,
+          children: [
+            'pronouns/personal',
           ]
         },
         {
@@ -70,7 +79,6 @@ module.exports = {
           collapsable: true,
           sidebarDepth: 4,
           children: [
-            'verbs/',
             'verbs/indicative',
           ]
         }
