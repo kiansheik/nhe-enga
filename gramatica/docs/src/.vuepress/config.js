@@ -52,7 +52,7 @@ module.exports = {
       },
       {
         text: 'Dictionary',
-        link: '../',
+        link: 'https://kiansheik.io/nhe-enga/',
       },
     ],
     sidebar: {
