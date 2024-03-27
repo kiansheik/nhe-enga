@@ -47,7 +47,7 @@ class Verb(TupiAntigo):
         else:
             result = f"na[NEGATION_PARTICLE:NA] {result}"
         if result[-1] == 'i' or result[-1] == 'î':
-            result = f"{result[:-1]}[{last_tag}î" + "[NEGATION_SUFFIX:VOWEL_ENDING]"
+            result = f"{result[:-1]}[{last_tag}{result[-1]}" + "[NEGATION_SUFFIX:VOWEL_ENDING]"
         elif result[-1] in TupiAntigo.vogais:
             result = f"{result}[{last_tag}î" + "[NEGATION_SUFFIX:VOWEL_ENDING]"
         else:

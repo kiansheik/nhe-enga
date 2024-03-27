@@ -287,12 +287,12 @@ You know the drill: %n = Noun('epîak', '(s) (v.tr.)');n.verbete()% _(to see)_
 
 #### 1p subject, 2p object
 
-| Lema | Person | Subject Pronoun |
+| Lema | Person | Object Pronoun |
 |------|-----------------|--------|
 | You  | 2ps            | %n.personal_inflections["2ps"][3]% |
 | Y'all | 2pp           | %n.personal_inflections["2pp"][3]% |
 
-The quirk of this form are the 2p _object prefixes_. These prefixes fill the space normally reserver for `-î- (-s-)`, but will not recieve any _subject prefixes_ as with [intransitive](#intransitive-roots) and [3p object](#_3p-object-any-subject) verbs: _(2p always gotta be different)_ 🙄
+The quirk of this form are the 2p _object prefixes_. These prefixes fill the space normally reserved for `-î- (-s-)`, but will not recieve any _subject prefixes_ as with [intransitive](#intransitive-roots) and [3p object](#_3p-object-any-subject) verbs: _(2p always gotta be different)_ 🙄
 
 | English | Subject Person | Object Person | Example |
 |---------|---------------|----------------|---------|
@@ -333,7 +333,7 @@ Let's take a look at the _negated form_ real quick: **%n = Noun('akûaur', '(r, 
 
 #### Step 1 - First letter check
 
-From the conjugated form _(%n.conjugate("1ps")%)_ we will add the negation prefix `n'` if the first letter is a <tVowels/> or the semi-vowel `î`. Otherwise, the negation prefix will take the form of `na `, a negation particle. 
+From the conjugated form _(%n.conjugate("1ps")%)_ we will add the negation prefix `n'-` if the first letter is a <tVowels/> or the semi-vowel `î`. Otherwise, the negation prefix will take the form of `na `, a negation particle. 
 
 ::: tip
 We write `na` separate from the root out of convention, but the difference between the negation particle `na verb` and prefix `n'verb` is purely phonetic, they represent the same exact thing and are inseperable from the verb.
@@ -345,25 +345,31 @@ We write `na` separate from the root out of convention, but the difference betwe
 
 | Verb Type | Root | Afirmative | Negative | Translation |
 |-----------|------|------------|----------|-------------|
-| 2nd class, pluriform | %n = Noun("esaraî", "(r, s) (xe) (v. da 2ª classe) - 1) esquecer-se");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('1ps')% | %n.conjugate('1ps', negative=True)% | I didn't forget |
-| 2nd class, uniform | %n = Noun("îuraragûaî", "(v. da 2ª classe) - 1) esquecer-se");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('3p')% | %n.conjugate('3p', negative=True)% | They didn't lie |
 | 1st class, intransitive | %n = Noun("kuî", "");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('3p')% | %n.conjugate('3p', negative=True)% | It didn't fall |
 | transitive, uniform | %n = Noun("aso'i", "(v.tr.)");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('1ppe', '3p')% | %n.conjugate('1ppe', '3p', negative=True)% | We didn't cover it |
-| transitive, pluriform | %n = Noun("esepîak", "(s) (v.tr.)");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('2pp', '3p')% | %n.conjugate('2pp', '3p', negative=True)% | Y'all didn't see it |
+| transitive, pluriform | %n = Noun("eîyî", "(s) (v.tr.) - 1) afastar (de lugar)");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('3p', '1ps')% | %n.conjugate('3p', '1ps', negative=True)% | They didn't move me away |
+| 2nd class, uniform | %n = Noun("îuraragûaî", "(v. da 2ª classe) - 1) esquecer-se");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('3p')% | %n.conjugate('3p', negative=True)% | They didn't lie |
+| 2nd class, pluriform | %n = Noun("esaraî", "(r, s) (xe) (v. da 2ª classe) - 1) esquecer-se");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('3p')% | %n.conjugate('3p', negative=True)% | They didn't forget |
 
 
 2. If it's a <tVowels/>, then we add on the suffix `-î`
 
-| Root | Afirmative | Negative | Translation |
-|------|------|-----------------|---|
-| %n = Noun("emirekoe'õ", "(r, s) (v. da 2ª classe) - enviuvar, ser viúvo");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('2pp')% | %n.conjugate('2pp', negative=True)% | Y'all aren't widows |
-
+| Verb Type | Root | Afirmative | Negative | Translation |
+|-----------|------|------------|----------|-------------|
+| 1st class, intransitive | %n = Noun("'amĩ", " (v. intr.) - estar em pé, sem mudar de lugar");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('3p')% | %n.conjugate('3p', negative=True)% | He wasn't standing |
+| transitive, uniform | %n = Noun("akangá", "(v.tr.) - quebrar a cabeça de");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('1ppe', '2pp')% | %n.conjugate('1ppe', '2pp', negative=True)% | We didn't break your heads |
+| transitive, pluriform | %n = Noun("apekó", "(s) (v.tr.) - frequentar, visitar amiúde");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('2pp', '1ps')% | %n.conjugate('2pp', '1ps', negative=True)% | Y'all don't visit us often |
+| 2nd class, uniform | %n = Noun("aîarõ", "(xe) (v. da 2ª classe)");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('3p')% | %n.conjugate('3p', negative=True)% | It didn't make sense |
+| 2nd class, pluriform | %n = Noun("emirekoe'õ", "(r, s) (v. da 2ª classe) - enviuvar, ser viúvo");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('2pp')% | %n.conjugate('2pp', negative=True)% | Ya'll aren't widows |
 
 3. Otherwise, we add on the suffix `-i`
 
-| Root | Afirmative | Negative | Translation |
-|------|------|-----------------|---|
-| %n = Noun("'atybak", "(xe) (v. da 2ª classe) - voltar o rosto para trás");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('3p')% | %n.conjugate('3p', negative=True)% | They don't turn their face back |
+| Verb Type | Root | Afirmative | Negative | Translation |
+|-----------|------|------------|----------|-------------|
+| 1st class, intransitive | %n = Noun("ker", " (v. intr.) sleep");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('3p')% | %n.conjugate('2ps', negative=True)% | You didn't sleep |
+| transitive, uniform | %n = Noun("akab", "(v.tr.) - bradar com, gritar com, brigar com");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('2pp', '1ppe')% | %n.conjugate('2pp', '1ppe', negative=True)% | They didn't fight with us |
+| transitive, pluriform | %n = Noun("obasakatu", "(s) (v.tr.) - abençoar");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('2pp', '1ps')% | %n.conjugate('2pp', '1ps', negative=True)% | Y'all didn't bless me |
+| 2nd class, uniform | %n = Noun("'atybak", "(xe) (v. da 2ª classe) - voltar o rosto para trás");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('3p')% | %n.conjugate('3p', negative=True)% | It didn't make sense |
+| 2nd class, pluriform | %n = Noun("opar", "(r, s) (v. da 2ª classe) - perder-se, errar o caminho, andar perdido; transviar-se");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('2pp')% | %n.conjugate('2pp', negative=True)% | I didn't get lost |
 
-
-And there you have it, that's how you negate a second class verb in the indicative mood. Pat yourself on the back!
+And there you have it, that's how you negate verbs in the indicative mood. Pat yourself on the back!
