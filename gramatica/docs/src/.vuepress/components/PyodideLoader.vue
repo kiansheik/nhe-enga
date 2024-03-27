@@ -1,58 +1,63 @@
 <template>
     <div>
-        <div v-if="env !== '/'">
-            <script>
-                let basePath = '/nhe-enga/gramatica/';
-            </script>
-        </div>
-        <div v-else>
-            <script>
-                let basePath = '/';
-            </script>
-        </div>
-        <script>
-            let globalPyodide, pyodideReady = false;
-            window.pyodideReady = false;
-
-            async function initializePython() {
-                globalPyodide = await loadPyodide();
-                console.log(globalPyodide.runPython(`
-                    import sys
-                    sys.version
-                `));
-                await globalPyodide.loadPackage('micropip');
-                const micropip = globalPyodide.pyimport('micropip');
-                await micropip.install(`${basePath}pylibs/tupi-0.1.0-py3-none-any.whl`);
-                console.log('Package installed');
-                globalPyodide.runPython('import tupi');
-                globalPyodide.runPython('print(tupi.Noun(\'îagûar\', \'normal\'))');
-                pyodideReady = true;
-                window.pyodideReady = pyodideReady;
-                blocks = document.querySelectorAll('.page');
-                blocks.forEach(function(block) {
-                    block.innerHTML = block.innerHTML.replace(/\%(.*?)\%/g, function(_, match) {
-                        // Your custom JavaScript goes here
-                        if (match === '(.*?)\\')
-                            return match
-                        var parser = new DOMParser();
-                        var htmlDoc = parser.parseFromString(match, 'text/html');
-                        var textContent = htmlDoc.body.textContent || '';
-                        return globalPyodide.runPython('from tupi import Noun; '+ textContent); // For example, convert the text to uppercase
-                    });
-                });
-                return globalPyodide;
-            }
-            initializePython();
-        </script>
+        <iframe id="pyodide-iframe" :src="`${this.basePath}iframe_pyodide.html`" style="display: none;"></iframe>
     </div>
 </template>
-
 <script>
 export default {
+    data() {
+        return {
+            pyodideReady: false,
+            basePath: this.env !== 'production' ? '/' : '/nhe-enga/gramatica/',
+        };
+    },
     computed: {
         env() {
             return this.$site.base;
-        }
+        },
     },
+    methods: {
+        receiveMessage (event) {
+            if (event.data.pyodideReady) {
+                    console.log("pyodide ready!")
+                    this.pyodideReady = true;
+                    this.processPage();
+                    
+            }
+        },
+        processPage() {
+            let block = document.querySelector('.page');
+            let html = block.innerHTML;
+            return new Promise((resolve, reject) => {
+                // Post a message to the iframe
+                const iframe = document.getElementById('pyodide-iframe');
+                iframe.contentWindow.postMessage({
+                    command: 'processBlock',
+                    html: html
+                }, '*');
+
+                // Set up an event listener to receive the response
+                const listener = (event) => {
+                    if (event.data.command === 'processBlockResponse') {
+                        // Remove the event listener once we receive the response
+                        window.removeEventListener('message', listener);
+                        block.innerHTML = event.data.html;
+                        if (event.data.error) {
+                            reject(new Error(event.data.error));
+                        } else {
+                            resolve(event.data.html);
+                        }
+                    }
+                };
+                window.addEventListener('message', listener);
+            });
+        },
+    },
+    mounted () {
+        window.addEventListener('message', this.receiveMessage)
+    },
+    beforeDestroy () {
+        window.removeEventListener('message', this.receiveMessage)
+    }
 };
 </script>

@@ -1,0 +1,33 @@
+<script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+<script>
+let globalPyodide;
+async function initializePython() {
+    globalPyodide = await loadPyodide();
+    await globalPyodide.loadPackage('micropip');
+    const micropip = globalPyodide.pyimport('micropip');
+    await micropip.install('https://kiansheik.io/nhe-enga/gramatica/pylibs/tupi-0.1.0-py3-none-any.whl');
+    globalPyodide.runPython('import tupi');
+    globalPyodide.runPython('print(tupi.Noun(\'îagûar\', \'normal\'))');
+    this.pyodideReady = true;
+    window.parent.postMessage({ pyodideReady: true }, '*');
+}
+
+// Add an event listener to listen for the 'processBlock' message
+window.addEventListener('message', (event) => {
+    if (event.data.command === 'processBlock') {
+        const block = event.data.html;
+        resp_html = block.replace(/\%(.*?)\%/g, function(_, match) {
+            if (match === '(.*?)\\')
+                return match
+            var parser = new DOMParser();
+            var htmlDoc = parser.parseFromString(match, 'text/html');
+            var textContent = htmlDoc.body.textContent || '';
+            return globalPyodide.runPython('from tupi import Noun; '+ textContent); // For example, convert the text to uppercase
+        });
+        window.parent.postMessage({ command: "processBlockResponse", html: resp_html }, '*');
+        
+    }
+});
+
+initializePython();
+</script>
