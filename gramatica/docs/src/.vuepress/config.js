@@ -48,6 +48,7 @@ module.exports = {
     docsDir: '',
     editLinkText: '',
     lastUpdated: false,
+    algolia: false,
     nav: [
       {
         text: 'Guide',

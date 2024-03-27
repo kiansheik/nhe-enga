@@ -15,17 +15,12 @@ async function initializePython() {
 // Add an event listener to listen for the 'processBlock' message
 window.addEventListener('message', (event) => {
     if (event.data.command === 'processBlock') {
-        const block = event.data.html;
-        resp_html = block.replace(/\%(.*?)\%/g, function(_, match) {
-            if (match === '(.*?)\\')
-                return match
-            var parser = new DOMParser();
-            var htmlDoc = parser.parseFromString(match, 'text/html');
-            var textContent = htmlDoc.body.textContent || '';
-            return globalPyodide.runPython('from tupi import Noun; '+ textContent); // For example, convert the text to uppercase
-        });
-        window.parent.postMessage({ command: "processBlockResponse", html: resp_html }, '*');
-        
+        const block_text = event.data.html;
+        var parser = new DOMParser();
+        var htmlDoc = parser.parseFromString(block_text, 'text/html');
+        var textContent = htmlDoc.body.textContent || '';
+        resp_html = globalPyodide.runPython('from tupi import Noun; '+ block_text); // For example, convert the text to uppercase
+        window.parent.postMessage({ command: "processBlockResponse", pre_html:block_text, resp_html: resp_html }, '*');
     }
 });
 

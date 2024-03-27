@@ -5,7 +5,7 @@
     @touchstart="onTouchStart"
     @touchend="onTouchEnd"
   >
-    <PyodideLoader></PyodideLoader>
+    <PyodideLoader ref="pyLoader"></PyodideLoader>
     <Navbar
       v-if="shouldShowNavbar"
       @toggle-sidebar="toggleSidebar"
@@ -29,7 +29,7 @@
     </Sidebar>
     <Home v-if="$page.frontmatter.home" />
 
-    <Page
+    <Page ref="pageBig"
       v-else
       :sidebar-items="sidebarItems"
     >

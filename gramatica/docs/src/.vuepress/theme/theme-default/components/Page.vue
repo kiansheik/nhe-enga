@@ -1,5 +1,5 @@
 <template>
-  <main class="page">
+  <main ref="mainPage" class="page">
     <slot name="top" />
 
     <Content class="theme-default-content" />

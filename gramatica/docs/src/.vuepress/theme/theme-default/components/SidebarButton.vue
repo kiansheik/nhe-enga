@@ -1,7 +1,7 @@
 <template>
   <div
     class="sidebar-button"
-    onclick="document.querySelector('.theme-container').classList.toggle('sidebar-open')"
+    @click="$emit('toggle-sidebar')"
   >
     <svg
       class="icon"
