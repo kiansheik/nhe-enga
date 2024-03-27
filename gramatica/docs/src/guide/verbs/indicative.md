@@ -366,10 +366,10 @@ We write `na` separate from the root out of convention, but the difference betwe
 
 | Verb Type | Root | Afirmative | Negative | Translation |
 |-----------|------|------------|----------|-------------|
-| 1st class, intransitive | %n = Noun("ker", " (v. intr.) sleep");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('3p')% | %n.conjugate('2ps', negative=True)% | You didn't sleep |
+| 1st class, intransitive | %n = Noun("ker", " (v. intr.) sleep");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('2ps')% | %n.conjugate('2ps', negative=True)% | You didn't sleep |
 | transitive, uniform | %n = Noun("akab", "(v.tr.) - bradar com, gritar com, brigar com");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('2pp', '1ppe')% | %n.conjugate('2pp', '1ppe', negative=True)% | They didn't fight with us |
-| transitive, pluriform | %n = Noun("obasakatu", "(s) (v.tr.) - abençoar");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('2pp', '1ps')% | %n.conjugate('2pp', '1ps', negative=True)% | Y'all didn't bless me |
+| transitive, pluriform | %n = Noun("obasakatu", "(s) (v.tr.) - abençoar");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('1ps', '2ps')% | %n.conjugate('1ps', '2ps', negative=True)% | I didn't bless you |
 | 2nd class, uniform | %n = Noun("'atybak", "(xe) (v. da 2ª classe) - voltar o rosto para trás");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('3p')% | %n.conjugate('3p', negative=True)% | It didn't make sense |
-| 2nd class, pluriform | %n = Noun("opar", "(r, s) (v. da 2ª classe) - perder-se, errar o caminho, andar perdido; transviar-se");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('2pp')% | %n.conjugate('2pp', negative=True)% | I didn't get lost |
+| 2nd class, pluriform | %n = Noun("opar", "(r, s) (v. da 2ª classe) - perder-se, errar o caminho, andar perdido; transviar-se");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('1ppi')% | %n.conjugate('1ppi', negative=True)% | We didn't get lost |
 
 And there you have it, that's how you negate verbs in the indicative mood. Pat yourself on the back!
