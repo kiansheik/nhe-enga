@@ -287,16 +287,36 @@ You know the drill: %n = Noun('epîak', '(s) (v.tr.)');n.verbete()% _(to see)_
 
 #### 1p subject, 2p object
 
-In this case, the _subject pronoun_ `Ixé` and _personal pronoun_ `xe` can equally be used as a 1ps subject pronoun. **Pro drop** is also an option.
-
-The quirk of this form are the 2p _object pronouns_: _(2p always gotta be different)_ 🙄
-
 | Lema | Person | Subject Pronoun |
 |------|-----------------|--------|
 | You  | 2ps            | %n.personal_inflections["2ps"][3]% |
 | Y'all | 2pp           | %n.personal_inflections["2pp"][3]% |
 
+The quirk of this form are the 2p _object prefixes_. These prefixes fill the space normally reserver for `-î- (-s-)`, but will not recieve any _subject prefixes_ as with [intransitive](#intransitive-roots) and [3p object](#_3p-object-any-subject) verbs: _(2p always gotta be different)_ 🙄
 
+| English | Subject Person | Object Person | Example |
+|---------|---------------|----------------|---------|
+| I saw you | 1ps           | 2ps   | %n.conjugate(object_tense="2ps", subject_tense="1ps")% |
+| We saw you | 1ppe | 2ps   | %n.conjugate(object_tense="2ps", subject_tense="1ppe")% |
+| I saw y'all | 1ps           | 2pp   | %n.conjugate(object_tense="2pp", subject_tense="1ps")% |
+| We saw y'all | 1ppe | 2pp   | %n.conjugate(object_tense="2pp", subject_tense="1ppe")% |
+
+::: tip
+In this case, the _subject pronoun_ `Ixé` and _personal pronoun_ `xe` can equally be used as a 1ps subject pronoun. **Pro drop** is also an option.
+:::
+
+The uniform and pluriform roots will behave exactly the same in this case, as the _object prefix_ is taking the space which would normally see the `-î-` change to `-s-`.
+
+::: warning
+Especially in a **pro drop* situation, the 2ps object prefix `oro-` can look _very_ similar to the 1ppe subject prefix `oro-`, but the way to tell is that there will be an _object pronoun_ when it is 1ppe, and there will not be one when it is 2ps:
+
+| English | Subject Person | Object Person | Example |
+|---------|---------------|----------------|---------|
+| We saw it | 1ppe           | 3p   | %n.conjugate(object_tense="3p", subject_tense="1ppe", pro_drop=True)% |
+| We saw you | 1ppe | 2ps   | %n.conjugate(object_tense="2ps", subject_tense="1ppe", pro_drop=True)% |
+
+Although they look similar, a transitive verb will never be without it's object. In the first example, `a'e` and `-s-` give away the fact that it's 1ppe. In the second example, the subject is ambiguous `(xe/oré)` but the object can only be 2ps because `oro-` is in the space of the object, not the subject.
+:::
 
 ## Negation
 
