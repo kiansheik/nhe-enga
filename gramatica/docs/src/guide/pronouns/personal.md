@@ -8,7 +8,7 @@ The first type of pronoun in Tupi Antigo that we will cover are _personal pronou
 | You  | 2ps            | %n.personal_inflections["2ps"][0]% | %n.personal_inflections["2ps"][2]%-    |
 | We _(Exclusive)_ | 1ppe    | %n.personal_inflections["1ppe"][0]% | %n.personal_inflections["1ppe"][2]%-  |
 | We _(Inclusive)_ | 1ppi  | %n.personal_inflections["1ppi"][0]% | %n.personal_inflections["1ppi"][2]%-   |
-| Ya'll | 2pp           | %n.personal_inflections["2pp"][0]% | %n.personal_inflections["2pp"][2]%-     |
+| Y'all | 2pp           | %n.personal_inflections["2pp"][0]% | %n.personal_inflections["2pp"][2]%-     |
 | They  | 3p            | %n.personal_inflections["3p"][0]% | %n.personal_inflections["3p"][2]%-      |
 
 In Tupi Antigo, the <t3p/> does not distinguish between _singular_ and _plural_; context will dictate which is more likely.

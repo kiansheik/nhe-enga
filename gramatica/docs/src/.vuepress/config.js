@@ -39,6 +39,9 @@ module.exports = {
    */
   theme: path.resolve(__dirname, './theme/theme-default'),
   base: process.env.NODE_ENV === 'production' ? '/nhe-enga/gramatica/' : '/',
+  markdown: {
+    extractHeaders: ['h2', 'h3', 'h4', 'h5' , 'h6']
+  },
   themeConfig: {
     repo: '',
     editLinks: false,
@@ -60,7 +63,8 @@ module.exports = {
         {
           title: 'Introduction',
           collapsable: true,
-          sidebarDepth: 4,
+          displayAllHeaders: true,
+          sidebarDepth: 6,
           children: [
             '',
             'roots'
@@ -69,7 +73,8 @@ module.exports = {
         {
           title: 'Pronouns',
           collapsable: true,
-          sidebarDepth: 4,
+          displayAllHeaders: true,
+          sidebarDepth: 6,
           children: [
             'pronouns/personal',
           ]
@@ -77,7 +82,8 @@ module.exports = {
         {
           title: 'Verbs',
           collapsable: true,
-          sidebarDepth: 4,
+          sidebarDepth: 6,
+          displayAllHeaders: true,
           children: [
             'verbs/indicative',
           ]

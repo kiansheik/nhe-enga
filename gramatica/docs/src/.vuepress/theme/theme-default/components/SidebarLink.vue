@@ -33,11 +33,11 @@ export default {
       : renderLink(h, item.path, item.title || item.path, active)
 
     const maxDepth = [
-      $page.frontmatter.sidebarDepth,
+      // $page.frontmatter.sidebarDepth,
       sidebarDepth,
-      $themeLocaleConfig.sidebarDepth,
-      $themeConfig.sidebarDepth,
-      1
+      // $themeLocaleConfig.sidebarDepth,
+      // $themeConfig.sidebarDepth,
+      // 1
     ].find(depth => depth !== undefined)
 
     const displayAllHeaders = $themeLocaleConfig.displayAllHeaders
