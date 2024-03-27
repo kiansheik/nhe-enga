@@ -87,12 +87,12 @@ First class verbs recieve the following __subject pronouns__ *(optional)* and __
 
 | Lema | Person | Subject Pronoun | Subject Prefix |
 |------|-----------------|--------|---|
-| I    | 1ps             |  %n.personal_inflections["1ps"][0]% | %n.personal_inflections["1ps"][2]%-   |
-| You  | 2ps            | %n.personal_inflections["2ps"][0]% | %n.personal_inflections["2ps"][2]%-    |
-| We _(Exclusive)_ | 1ppe    | %n.personal_inflections["1ppe"][0]% | %n.personal_inflections["1ppe"][2]%-  |
-| We _(Inclusive)_ | 1ppi  | %n.personal_inflections["1ppi"][0]% | %n.personal_inflections["1ppi"][2]%-   |
-| Y'all | 2pp           | %n.personal_inflections["2pp"][0]% | %n.personal_inflections["2pp"][2]%-     |
-| They  | 3p            | %n.personal_inflections["3p"][0]% | %n.personal_inflections["3p"][2]%-      |
+| I    | 1ps             |  %n.personal_inflections["1ps"][0]% | %n.personal_inflections["1ps"][2]%  |
+| You  | 2ps            | %n.personal_inflections["2ps"][0]% | %n.personal_inflections["2ps"][2]%   |
+| We _(Exclusive)_ | 1ppe    | %n.personal_inflections["1ppe"][0]% | %n.personal_inflections["1ppe"][2]% |
+| We _(Inclusive)_ | 1ppi  | %n.personal_inflections["1ppi"][0]% | %n.personal_inflections["1ppi"][2]%  |
+| Y'all | 2pp           | %n.personal_inflections["2pp"][0]% | %n.personal_inflections["2pp"][2]%    |
+| They  | 3p            | %n.personal_inflections["3p"][0]% | %n.personal_inflections["3p"][2]%     |
 
 
 First class verbs are split between [intransitive](#intransitive-roots) and [transtitive](#transitive-roots) verbs. 
@@ -105,7 +105,7 @@ I speak
 ```
 
 ::: warning
-Atlhough some verbs are _intransitive_, they can often be combined with _postpositions_ to serve the role of indirect objects. For example 
+Atlhough some verbs are _intransitive_, they can often be combined with _postpositions_ to serve the role of indirect objects. For example:
 ```
 %n.conjugate("1ps", pro_drop=True)% i xupé
 I spoke to them
@@ -345,7 +345,7 @@ We write `na` separate from the root out of convention, but the difference betwe
 
 | Verb Type | Root | Afirmative | Negative | Translation |
 |-----------|------|------------|----------|-------------|
-| 2nd class, pluriform | %n = Noun("esaraî", "(r, s) (xe) (v. da 2ª classe) - 1) esquecer-se");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('1ps')% | %n.conjugate('1ps', negative=True)% | I didn't forgot |
+| 2nd class, pluriform | %n = Noun("esaraî", "(r, s) (xe) (v. da 2ª classe) - 1) esquecer-se");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('1ps')% | %n.conjugate('1ps', negative=True)% | I didn't forget |
 | 2nd class, uniform | %n = Noun("îuraragûaî", "(v. da 2ª classe) - 1) esquecer-se");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('3p')% | %n.conjugate('3p', negative=True)% | They didn't lie |
 | 1st class, intransitive | %n = Noun("kuî", "");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('3p')% | %n.conjugate('3p', negative=True)% | It didn't fall |
 | transitive, uniform | %n = Noun("aso'i", "(v.tr.)");n.verbete() + (f' ({n.pluriforme})' if n.pluriforme else '')% | %n.conjugate('1ppe', '3p')% | %n.conjugate('1ppe', '3p', negative=True)% | We didn't cover it |
