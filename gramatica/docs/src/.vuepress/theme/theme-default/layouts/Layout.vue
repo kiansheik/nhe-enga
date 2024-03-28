@@ -5,7 +5,7 @@
     @touchstart="onTouchStart"
     @touchend="onTouchEnd"
   >
-    <PyodideLoader ref="pyLoader"></PyodideLoader>
+  <PyodideLoader ref="pyLoader"></PyodideLoader>
     <Navbar
       v-if="shouldShowNavbar"
       @toggle-sidebar="toggleSidebar"

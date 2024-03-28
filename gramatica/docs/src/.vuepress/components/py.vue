@@ -52,29 +52,26 @@ export default {
             }
         },
         getAllPyComponents() {
-        let queue = [this.$root];
-        let pyComponents = [];
+            let pyComponents = [];
 
-        while (queue.length > 0) {
-            let component = queue.pop();
+            // Get all <py> elements in the DOM order
+            let pyElements = document.querySelectorAll('div.python-output');
 
-            // Check if the current component is a <py> component
-            if (component.$options._componentTag === 'py') {
-                pyComponents.push(component);
+            for (let element of pyElements) {
+                // Get the Vue component instance associated with the element
+                // let component = this.$root.$el.__vue__;
+                // if (component) {
+                    pyComponents.push(element);
+                // }
             }
 
-            // Add all child components to the queue
-            for (let child of component.$children) {
-                queue.push(child);
-            }
-        }
-
-        return pyComponents;
-    },
+            return pyComponents;
+        },
         getCurrentComponentIndex() {
-            let allPyComponents = this.getAllPyComponents(this.$root, this);
+            let allPyComponents = this.getAllPyComponents();
             // console.log(allPyComponents)
-            return allPyComponents.indexOf(this);
+            // Return the index of the current component's div.python-output element in the array
+            return allPyComponents.indexOf(this.$el);
         }
     },
     computed: {
@@ -96,6 +93,10 @@ export default {
             if (newVal) {
                 this.updateContent();
             }
+        },
+        '$route': {
+            immediate: false,
+            handler: "updateContent"
         }
     },
     mounted() {
