@@ -1,5 +1,7 @@
 <template>
-    <py>n = Noun("{{this.root}}", "{{ this.trans }} {{ this.pluriform }} {{ this.second }}".strip()); {{ this.inflection }}</py>
+    <div class="tupi-text">
+        <py>n = Noun("{{this.root}}", "{{ this.trans }} {{ this.pluriform }} {{ this.second }}".strip()); {{ this.inflection }}</py>
+    </div>
     </template>
 <script>
   import py from './py.vue';
@@ -7,7 +9,7 @@
     return !['0', 'false', '', 0, undefined, NaN].includes(value);
     }
   export default {
-    name: 'noun',
+    name: 'root',
     components: {
       py
     },
@@ -86,7 +88,7 @@
       inflection() {
         switch (this.type) {
             case 'verb':
-                let tl =  `n.conjugate("${this.subjectTense }", "${this.objectTense}", anotar="${this.anot}", pro_drop=${this.proD}, negative=${this.neg}, mode="${this.mode}", pos="${this.pos}", dir_obj_raw="${this.obj}", dir_subj_raw="${this.subj}")`
+                let tl =  `n.conjugate("${this.subjectTense }", "${this.objectTense}", anotar=${this.anot}, pro_drop=${this.proD}, negative=${this.neg}, mode="${this.mode}", pos="${this.pos}", dir_obj_raw="${this.obj}", dir_subj_raw="${this.subj}")`
                 console.log(tl)
                 return tl
                 break;
@@ -99,14 +101,6 @@
         }
       }
     },
-    // methods: {
-    //   conjugate() {
-    //     // Implement the conjugate method here
-    //   }
-    // },
-    // mounted() {
-    //   this.conjugate();
-    // }
   }
 </script>
 <style>

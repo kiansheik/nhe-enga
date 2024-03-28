@@ -1,8 +1,9 @@
 <template>
-    <div class="tupi-text" v-text="tText"></div>
+    <div class="python-output" v-text="tText"></div>
 </template>
     
 <script>
+
 export default {
     name: 'py',
     data() {
@@ -32,7 +33,7 @@ export default {
         },
         updateContent() {
             this.tText = this.$slots.default[0].text;
-            console.log(this.tText)
+            // console.log(this.tText)
             let iframe;
             if (this.pyLoader && this.pyLoader.$refs && this.pyLoader.$refs.pyodideiframe) {
                 iframe = this.pyLoader.$refs.pyodideiframe;
@@ -41,6 +42,7 @@ export default {
             // Create the message
             let message = {
                 command: 'processBlock',
+                orderid: this.getCurrentComponentIndex(),
                 html: this.tText // Send the transformed text as the HTML
             };
 
@@ -48,6 +50,31 @@ export default {
             if (iframe) {
                 iframe.contentWindow.postMessage(message, '*');
             }
+        },
+        getAllPyComponents() {
+        let queue = [this.$root];
+        let pyComponents = [];
+
+        while (queue.length > 0) {
+            let component = queue.pop();
+
+            // Check if the current component is a <py> component
+            if (component.$options._componentTag === 'py') {
+                pyComponents.push(component);
+            }
+
+            // Add all child components to the queue
+            for (let child of component.$children) {
+                queue.push(child);
+            }
+        }
+
+        return pyComponents;
+    },
+        getCurrentComponentIndex() {
+            let allPyComponents = this.getAllPyComponents(this.$root, this);
+            // console.log(allPyComponents)
+            return allPyComponents.indexOf(this);
         }
     },
     computed: {
@@ -82,3 +109,8 @@ export default {
     },
 }
 </script>
+<style>
+.python-output {
+    display: inline-block;
+}
+</style>

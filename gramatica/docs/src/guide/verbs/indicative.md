@@ -22,7 +22,10 @@ result = f"{perm_suf[1]}{subj} {vb}"
 if negative:
     result = self.negate_verb(result, mode)
 ``` -->
-%n = Noun("ma\'enduar", 'remember - adj.');''%
+
+<!-- <py>n = Noun("ma\'enduar", 'remember - adj.');''</py> -->
+
+<root root="ma'enduar" secondClass=true />
 
 ## Second Class Verbs
 
@@ -30,12 +33,12 @@ Second class verbs recieve the following _subject prefixes_:
 
 | Lema | Person | Prefix _(Pluriform)_ |
 |------|-----------------|--------|
-| I    | 1ps             |   %n.personal_inflections["1ps"][1]%(r)   |
-| You  | 2ps            | %n.personal_inflections["2ps"][1]%(r)    |
-| We _(Exclusive)_ | 1ppe    | %n.personal_inflections["1ppe"][1]%(r)  |
-| We _(Inclusive)_ | 1ppi  | %n.personal_inflections["1ppi"][1]%(r)   |
-| Y'all | 2pp           | %n.personal_inflections["2pp"][1]%(r)     |
-| They  | 3p            | %n.personal_inflections["3p"][1]%/(s)      |
+| I    | 1ps             |   <py>n.personal_inflections["1ps"][1]</py>(r)   |
+| You  | 2ps            | <py>n.personal_inflections["2ps"][1]</py>(r)    |
+| We _(Exclusive)_ | 1ppe    | <py>n.personal_inflections["1ppe"][1]</py>(r)  |
+| We _(Inclusive)_ | 1ppi  | <py>n.personal_inflections["1ppi"][1]</py>(r)   |
+| Y'all | 2pp           | <py>n.personal_inflections["2pp"][1]</py>(r)     |
+| They  | 3p            | <py>n.personal_inflections["3p"][1]</py>/(s)      |
 
 ::: warning
 There is no **pro drop** form of second class verbs, these prefixes are _necessary_.
