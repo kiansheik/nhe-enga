@@ -1,6 +1,6 @@
 <template>
     <div>
-        <iframe id="pyodide-iframe" ref="pyodideiframe" :src="`${this.basePath}iframe_pyodide.html`" style="display: none;"></iframe>
+        <iframe id="pyodide-iframe" ref="pyodideiframe" :src="`https://kiansheik.io${this.basePath}iframe_pyodide.html`" style="display: none;"></iframe>
     </div>
 </template>
 <script>
@@ -8,7 +8,7 @@ export default {
     data() {
         return {
             pyodideReady: false,
-            basePath: this.env !== 'production' ? '/' : '/nhe-enga/gramatica/',
+            basePath: '/nhe-enga/gramatica/',
         };
     },
     computed: {
