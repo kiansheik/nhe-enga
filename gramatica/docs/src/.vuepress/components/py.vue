@@ -3,7 +3,7 @@
 </template>
     
 <script>
-import { eventBus } from '../eventBus';
+// import { eventBus } from '../eventBus';
 // import { ClientOnly } from 'vue';
 
 export default {
@@ -108,15 +108,15 @@ export default {
         if (this.pyodideReady) {
             this.updateContent();
         }
-        eventBus.$on('softNavigationFinished', (to, from) => {
-            if (this.pyodideReady) {
-                this.updateContent();
-            }
-        });
+        // eventBus.$on('softNavigationFinished', (to, from) => {
+        //     if (this.pyodideReady) {
+        //         this.updateContent();
+        //     }
+        // });
     },
     beforeDestroy() {
         window.removeEventListener('message', this.handleMessage);
-        eventBus.$off('softNavigationFinished');
+        // eventBus.$off('softNavigationFinished');
     },
 }
 </script>
