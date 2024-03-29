@@ -38,7 +38,7 @@ module.exports = {
    * ref：https://v1.vuepress.vuejs.org/theme/default-theme-config.html
    */
   theme: path.resolve(__dirname, './theme/theme-default'),
-  base: process.env.NODE_ENV === 'development' ? '/' : '/nhe-enga/gramatica/',
+  base: process.env.NODE_ENV === '"development"' ? '/' : '/nhe-enga/gramatica/',
   markdown: {
     extractHeaders: ['h2', 'h3', 'h4', 'h5' , 'h6']
   },
