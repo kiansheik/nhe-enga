@@ -70,11 +70,7 @@ export default {
             let pyElements = document.querySelectorAll('div.python-output');
 
             for (let element of pyElements) {
-                // Get the Vue component instance associated with the element
-                // let component = this.$root.$el.__vue__;
-                // if (component) {
                     pyComponents.push(element);
-                // }
             }
 
             return pyComponents;
@@ -94,7 +90,6 @@ export default {
                 let firstChildComponent = layoutComponent.$children[0];
                 if (firstChildComponent.$refs.pyLoader) {
                     pl = firstChildComponent.$refs.pyLoader;
-                    // Use pl here
                 }
             }   
             return pl.pyodideReady;
@@ -112,15 +107,9 @@ export default {
         if (this.pyodideReady) {
             this.updateContent();
         }
-        // eventBus.$on('softNavigationFinished', (to, from) => {
-        //     if (this.pyodideReady) {
-        //         this.updateContent();
-        //     }
-        // });
     },
     beforeDestroy() {
         window.removeEventListener('message', this.handleMessage);
-        // eventBus.$off('softNavigationFinished');
     },
 }
 </script>

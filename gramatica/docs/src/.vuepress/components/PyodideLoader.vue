@@ -12,7 +12,7 @@ export default {
     data() {
         return {
             pyodideReady: false,
-            basePath: base
+            basePath: process.env.NODE_ENV === '"development"' ? '/' : '/nhe-enga/gramatica/'
         };
     },
     methods: {
