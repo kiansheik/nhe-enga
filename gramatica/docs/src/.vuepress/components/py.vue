@@ -43,7 +43,7 @@ export default {
             if (this.pyRendered) {
                 return;
             }
-            // this.tText = this.origText;
+            this.tText = this.origText;
             let iframe;
             if (this.pyLoader && this.pyLoader.$refs && this.pyLoader.$refs.pyodideiframe) {
                 iframe = this.pyLoader.$refs.pyodideiframe;
