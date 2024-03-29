@@ -1,5 +1,3 @@
-
-
 <template>
     <div>
         <iframe id="pyodide-iframe" ref="pyodideiframe" :src="`${this.basePath}iframe_pyodide.html`" style="display: none;"></iframe>
@@ -20,7 +18,6 @@ export default {
             if (event.data.pyodideReady) {
                     console.log("pyodide ready!")
                     this.pyodideReady = true;
-                    
             }
         },
     },

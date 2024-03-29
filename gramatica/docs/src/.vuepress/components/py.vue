@@ -26,13 +26,14 @@ export default {
             otherComponentLoaded: pl.pyodideReady,
             pyLoader: pl,
             pyRendered: false,
+            origText: this.$slots.default[0].text,
             tText: 'rendering...' // this.$slots.default[0].text // Add this line
         };
     },
     methods: {
         handleMessage(event) {
             // Check the command of the message
-            if (event.data.command === 'processBlockResponse' && event.data.pre_html === this.tText) {
+            if (event.data.command === 'processBlockResponse' && event.data.pre_html === this.origText) {
                 // Handle the message
                 this.tText = event.data.resp_html;
                 this.pyRendered = true;
@@ -42,7 +43,7 @@ export default {
             if (this.pyRendered) {
                 return;
             }
-            this.tText = this.$slots.default[0].text;
+            // this.tText = this.origText;
             let iframe;
             if (this.pyLoader && this.pyLoader.$refs && this.pyLoader.$refs.pyodideiframe) {
                 iframe = this.pyLoader.$refs.pyodideiframe;
@@ -54,7 +55,7 @@ export default {
             let message = {
                 command: 'processBlock',
                 orderid: this.getCurrentComponentIndex(),
-                html: this.tText // Send the transformed text as the HTML
+                html: this.origText // Send the transformed text as the HTML
             };
 
             // Send the message to the iframe
