@@ -9,12 +9,13 @@
   },
   "repository": "https://github.com/kiansheik/nhe-enga/",
   "scripts": {
-    "dev": "NODE_ENV=development vuepress dev src",
-    "build": "NODE_ENV=production vuepress build --debug src",
+    "dev": "cross-env NODE_ENV=development vuepress dev src",
+    "build": "cross-env NODE_ENV=production vuepress build --debug src",
     "docs:build": "vuepress build docs"
   },
   "license": "MIT",
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "vitepress": "^1.0.1",
     "vuepress": "^1.9.10"
   },
