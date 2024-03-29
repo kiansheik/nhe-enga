@@ -17,11 +17,15 @@ async function initializePython() {
 // Add an event listener to listen for the 'processBlock' message
 window.addEventListener('message', (event) => {
     if (event.data.command === 'processBlock') {
+        // window.parent.postMessage(['Received message: nextOrderId ', nextOrderId, ' event.data.orderid ', event.data.orderid] , '*');
         // Add the message to the queue
         messageQueue.push(event.data);
         // Sort the queue by order ID
         messageQueue.sort((a, b) => a.orderid - b.orderid);
         // Process messages in order
+        if (nextOrderId > messageQueue[0].orderid) {
+            nextOrderId = 0;
+        }
         while (messageQueue.length > 0 && messageQueue[0].orderid === nextOrderId) {
             let data = messageQueue.shift();
             const block_text = data.html;

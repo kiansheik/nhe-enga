@@ -3,23 +3,28 @@
 </template>
     
 <script>
+import { eventBus } from '../eventBus';
 
 export default {
+
     name: 'py',
     data() {
-        // console.log(this.$root.$refs.layout.$children[0].$refs.pyLoader.pyodideReady)
         let pl = {pyodideReady:false};
         let layoutComponent = this.$root.$refs.layout;
         if (layoutComponent && layoutComponent.$children.length > 0) {
             let firstChildComponent = layoutComponent.$children[0];
             if (firstChildComponent.$refs.pyLoader) {
                 pl = firstChildComponent.$refs.pyLoader;
-                // Use pl here
+            } else {
+                console.log('no pyLoader')
             }
+        } else {
+            console.log('no layoutComponent')
         }        
         return {
             otherComponentLoaded: pl.pyodideReady,
             pyLoader: pl,
+            pyRendered: false,
             tText: 'rendering...' // this.$slots.default[0].text // Add this line
         };
     },
@@ -29,15 +34,20 @@ export default {
             if (event.data.command === 'processBlockResponse' && event.data.pre_html === this.tText) {
                 // Handle the message
                 this.tText = event.data.resp_html;
+                this.pyRendered = true;
             }
         },
         updateContent() {
+            if (this.pyRendered) {
+                return;
+            }
             this.tText = this.$slots.default[0].text;
-            // console.log(this.tText)
             let iframe;
             if (this.pyLoader && this.pyLoader.$refs && this.pyLoader.$refs.pyodideiframe) {
                 iframe = this.pyLoader.$refs.pyodideiframe;
             // Use iframe here
+            } else {
+                console.log('no iframe')
             }
             // Create the message
             let message = {
@@ -49,6 +59,8 @@ export default {
             // Send the message to the iframe
             if (iframe) {
                 iframe.contentWindow.postMessage(message, '*');
+            } else {
+                console.log('no iframe 2')
             }
         },
         getAllPyComponents() {
@@ -94,19 +106,21 @@ export default {
                 this.updateContent();
             }
         },
-        '$route': {
-            immediate: false,
-            handler: "updateContent"
-        }
     },
     mounted() {
         window.addEventListener('message', this.handleMessage);
         if (this.pyodideReady) {
             this.updateContent();
         }
+        // eventBus.$on('softNavigationFinished', (to, from) => {
+        //     if (this.pyodideReady) {
+        //         this.updateContent();
+        //     }
+        // });
     },
     beforeDestroy() {
         window.removeEventListener('message', this.handleMessage);
+        // eventBus.$off('softNavigationFinished');
     },
 }
 </script>
