@@ -20,6 +20,8 @@
     "vuepress": "^1.9.10"
   },
   "dependencies": {
+    "@vuepress/plugin-back-to-top": "^1.9.10",
+    "@vuepress/plugin-medium-zoom": "^1.9.10",
     "@vuepress/theme-default": "^1.9.10",
     "vue-client-only": "^2.1.0",
     "yarn": "^1.22.22"
