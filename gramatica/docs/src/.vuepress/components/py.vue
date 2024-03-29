@@ -1,12 +1,13 @@
 <template>
-    <div class="python-output" v-text="tText"></div>
+        <div class="python-output" v-text="tText"></div>
 </template>
     
 <script>
 import { eventBus } from '../eventBus';
+// import { ClientOnly } from 'vue';
 
 export default {
-
+    // components: { ClientOnly },
     name: 'py',
     data() {
         let pl = {pyodideReady:false};
@@ -107,9 +108,15 @@ export default {
         if (this.pyodideReady) {
             this.updateContent();
         }
+        eventBus.$on('softNavigationFinished', (to, from) => {
+            if (this.pyodideReady) {
+                this.updateContent();
+            }
+        });
     },
     beforeDestroy() {
         window.removeEventListener('message', this.handleMessage);
+        eventBus.$off('softNavigationFinished');
     },
 }
 </script>
