@@ -11,6 +11,7 @@ lint:
 	zsh -c 'cd gramatica/docs; npm run build;'
 	cp -r gramatica/docs/src/.vuepress/dist/* gramatica/
 	rm -rf gramatica/docs/src/.vuepress/dist/*
+	cp gramatica/docs/src/.vuepress/public/iframe_pyodide.html .
 
 push:
 	make lint
