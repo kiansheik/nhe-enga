@@ -6,7 +6,7 @@
     </div>
 </template>
 <script>
-import { base } from '../config.js';
+// import { base } from '../config.js';
 
 export default {
     data() {
