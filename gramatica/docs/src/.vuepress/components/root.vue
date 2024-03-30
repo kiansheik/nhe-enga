@@ -1,7 +1,9 @@
 <template>
     <div class="tupi-text">
+      <client-only>
         <py>n = Noun("{{this.root}}", "{{ this.trans }} {{ this.pluriform }} {{ this.second }}".strip()); {{ this.inflection }}</py>
-    </div>
+      </client-only>
+      </div>
     </template>
 <script>
   import py from './py.vue';

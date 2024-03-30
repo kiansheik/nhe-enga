@@ -48,8 +48,9 @@ import Home from '@theme/components/Home.vue'
 import Navbar from '@theme/components/Navbar.vue'
 import Page from '@theme/components/Page.vue'
 import Sidebar from '@theme/components/Sidebar.vue'
-import PyodideLoader from '../../../components/PyodideLoader.vue';
 import { resolveSidebarItems } from '../util'
+
+const PyodideLoader = () => import('../../../components/PyodideLoader.vue');
 
 export default {
   name: 'Layout',
