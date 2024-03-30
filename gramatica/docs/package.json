@@ -9,7 +9,7 @@
   },
   "repository": "https://github.com/kiansheik/nhe-enga/",
   "scripts": {
-    "dev": "vuepress dev src",
+    "dev": "vuepress dev --debug src",
     "build": "vuepress build --debug src"
   },
   "license": "MIT",
