@@ -26,7 +26,7 @@ module.exports = {
     ['meta', { name: 'apple-mobile-web-app-capable', content: 'yes' }],
     ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black' }],
     ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black' }],
-    ['script', { src: "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js" }],
+    // ['script', { src: "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js" }],
     // ['PyodideLoader'],
     // add an entry for PyodideLoader custom component
     ['script', { src: "/utility_funcs.js" }],
@@ -48,7 +48,7 @@ module.exports = {
     docsDir: '',
     editLinkText: '',
     lastUpdated: false,
-    algolia: false,
+    // algolia: false,
     nav: [
       {
         text: 'Guide',
