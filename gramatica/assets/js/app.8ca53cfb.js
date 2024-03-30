@@ -64,7 +64,7 @@
 /******/
 /******/ 	// script path function
 /******/ 	function jsonpScriptSrc(chunkId) {
-/******/ 		return __webpack_require__.p + "assets/js/" + ({"vendors~docsearch":"vendors~docsearch"}[chunkId]||chunkId) + "." + {"0":"6eafcb0b","1":"5ff7dcdd","2":"6e695686","3":"38db26d8","4":"c4f09e4b","5":"01440a29","6":"99a903b6","7":"dcafead5","8":"5508f16d","9":"e5d2380e","10":"8b74134c","11":"1f29bd15","12":"e34a2e35","13":"008fa239","14":"e0353870","15":"167c38b7","16":"9fd8203f","17":"4ba4443f","18":"679faa9d","19":"6fe2d8a0","20":"68c611d6","21":"f8a54e7e","22":"78ee2cbb","23":"948cb596","24":"ec85468f","25":"2f3c6d81","26":"8be08b20","27":"6fa5858e","28":"14854dc7","29":"7605f2b0","30":"58bf9872","31":"8d6a9a84","32":"1a562bd8","33":"8927a9ec","34":"c3da535f","35":"0da70a7f","36":"a49887aa","vendors~docsearch":"3753da7f"}[chunkId] + ".js"
+/******/ 		return __webpack_require__.p + "assets/js/" + ({"vendors~docsearch":"vendors~docsearch"}[chunkId]||chunkId) + "." + {"0":"6eafcb0b","1":"5ff7dcdd","2":"6e695686","3":"38db26d8","4":"c4f09e4b","5":"01440a29","6":"99a903b6","7":"dcafead5","8":"5508f16d","9":"e5d2380e","10":"f3998229","11":"1f29bd15","12":"e34a2e35","13":"008fa239","14":"e0353870","15":"167c38b7","16":"9fd8203f","17":"4ba4443f","18":"679faa9d","19":"6fe2d8a0","20":"68c611d6","21":"f8a54e7e","22":"78ee2cbb","23":"948cb596","24":"ec85468f","25":"2f3c6d81","26":"8be08b20","27":"6fa5858e","28":"14854dc7","29":"7605f2b0","30":"58bf9872","31":"8d6a9a84","32":"1a562bd8","33":"8927a9ec","34":"c3da535f","35":"0da70a7f","36":"a49887aa","vendors~docsearch":"3753da7f"}[chunkId] + ".js"
 /******/ 	}
 /******/
 /******/ 	// The require function
@@ -308,9 +308,9 @@ vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("PyodideLoader", () => __w
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("Tooltip", () => Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(22)]).then(__webpack_require__.bind(null, /*! ./src/.vuepress/components/Tooltip */ "./src/.vuepress/components/Tooltip.vue")));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("py", () => Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(7)]).then(__webpack_require__.bind(null, /*! ./src/.vuepress/components/py */ "./src/.vuepress/components/py.vue")));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("root", () => Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(13)]).then(__webpack_require__.bind(null, /*! ./src/.vuepress/components/root */ "./src/.vuepress/components/root.vue")));
-vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("wQuiz", () => Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(23)]).then(__webpack_require__.bind(null, /*! ./src/.vuepress/components/wQuiz */ "./src/.vuepress/components/wQuiz.vue")));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("t3p", () => Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(16)]).then(__webpack_require__.bind(null, /*! ./src/.vuepress/components/t3p */ "./src/.vuepress/components/t3p.vue")));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("tVowels", () => Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(17)]).then(__webpack_require__.bind(null, /*! ./src/.vuepress/components/tVowels */ "./src/.vuepress/components/tVowels.vue")));
+vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("wQuiz", () => Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(23)]).then(__webpack_require__.bind(null, /*! ./src/.vuepress/components/wQuiz */ "./src/.vuepress/components/wQuiz.vue")));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("Badge", () => Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(11)]).then(__webpack_require__.bind(null, /*! ./src/.vuepress/theme/theme-default/global-components/Badge */ "./src/.vuepress/theme/theme-default/global-components/Badge.vue")));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("CodeBlock", () => Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(8)]).then(__webpack_require__.bind(null, /*! ./src/.vuepress/theme/theme-default/global-components/CodeBlock */ "./src/.vuepress/theme/theme-default/global-components/CodeBlock.vue")));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("CodeGroup", () => Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(9)]).then(__webpack_require__.bind(null, /*! ./src/.vuepress/theme/theme-default/global-components/CodeGroup */ "./src/.vuepress/theme/theme-default/global-components/CodeGroup.vue")));
@@ -408,11 +408,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   "v-10fe03c2": () => __webpack_require__.e(/*! import() */ 29).then(__webpack_require__.bind(null, /*! ./src/guide/README.md */ "./src/guide/README.md")),
   "v-1a20cc7c": () => __webpack_require__.e(/*! import() */ 30).then(__webpack_require__.bind(null, /*! ./src/guide/nouns.md */ "./src/guide/nouns.md")),
-  "v-646e89fc": () => __webpack_require__.e(/*! import() */ 31).then(__webpack_require__.bind(null, /*! ./src/guide/pronouns/personal.md */ "./src/guide/pronouns/personal.md")),
   "v-0cedb0c2": () => __webpack_require__.e(/*! import() */ 32).then(__webpack_require__.bind(null, /*! ./src/guide/roots.md */ "./src/guide/roots.md")),
   "v-c20a96d6": () => __webpack_require__.e(/*! import() */ 33).then(__webpack_require__.bind(null, /*! ./src/guide/verbs/README.md */ "./src/guide/verbs/README.md")),
   "v-1e9d678c": () => __webpack_require__.e(/*! import() */ 34).then(__webpack_require__.bind(null, /*! ./src/guide/verbs/indicative.md */ "./src/guide/verbs/indicative.md")),
-  "v-09041d8a": () => __webpack_require__.e(/*! import() */ 35).then(__webpack_require__.bind(null, /*! ./src/index.md */ "./src/index.md"))
+  "v-09041d8a": () => __webpack_require__.e(/*! import() */ 35).then(__webpack_require__.bind(null, /*! ./src/index.md */ "./src/index.md")),
+  "v-646e89fc": () => __webpack_require__.e(/*! import() */ 31).then(__webpack_require__.bind(null, /*! ./src/guide/pronouns/personal.md */ "./src/guide/pronouns/personal.md"))
 });
 
 /***/ }),
@@ -478,13 +478,6 @@ const routes = [{
     Object(_app_util__WEBPACK_IMPORTED_MODULE_0__["ensureAsyncComponentsLoaded"])("Layout", "v-1a20cc7c").then(next);
   }
 }, {
-  name: "v-646e89fc",
-  path: "/guide/pronouns/personal.html",
-  component: _Users_kian_code_nhe_enga_gramatica_docs_node_modules_vuepress_core_lib_client_components_GlobalLayout_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
-  beforeEnter: (to, from, next) => {
-    Object(_app_util__WEBPACK_IMPORTED_MODULE_0__["ensureAsyncComponentsLoaded"])("Layout", "v-646e89fc").then(next);
-  }
-}, {
   name: "v-0cedb0c2",
   path: "/guide/roots.html",
   component: _Users_kian_code_nhe_enga_gramatica_docs_node_modules_vuepress_core_lib_client_components_GlobalLayout_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
@@ -518,6 +511,13 @@ const routes = [{
 }, {
   path: "/index.html",
   redirect: "/"
+}, {
+  name: "v-646e89fc",
+  path: "/guide/pronouns/personal.html",
+  component: _Users_kian_code_nhe_enga_gramatica_docs_node_modules_vuepress_core_lib_client_components_GlobalLayout_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+  beforeEnter: (to, from, next) => {
+    Object(_app_util__WEBPACK_IMPORTED_MODULE_0__["ensureAsyncComponentsLoaded"])("Layout", "v-646e89fc").then(next);
+  }
 }, {
   path: '*',
   component: _Users_kian_code_nhe_enga_gramatica_docs_node_modules_vuepress_core_lib_client_components_GlobalLayout_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
@@ -574,13 +574,6 @@ const siteData = {
     "relativePath": "guide/nouns.md",
     "key": "v-1a20cc7c",
     "path": "/guide/nouns.html"
-  }, {
-    "title": "Personal Pronouns",
-    "frontmatter": {},
-    "regularPath": "/guide/pronouns/personal.html",
-    "relativePath": "guide/pronouns/personal.md",
-    "key": "v-646e89fc",
-    "path": "/guide/pronouns/personal.html"
   }, {
     "title": "Roots",
     "frontmatter": {},
@@ -698,6 +691,13 @@ const siteData = {
     "relativePath": "index.md",
     "key": "v-09041d8a",
     "path": "/"
+  }, {
+    "title": "Personal Pronouns",
+    "frontmatter": {},
+    "regularPath": "/guide/pronouns/personal.html",
+    "relativePath": "guide/pronouns/personal.md",
+    "key": "v-646e89fc",
+    "path": "/guide/pronouns/personal.html"
   }],
   "themeConfig": {
     "repo": "",
@@ -1028,7 +1028,7 @@ __webpack_require__.r(__webpack_exports__);
 
 window.__VUEPRESS__ = {
   version: "1.9.10",
-  hash: "83ecf9ba"
+  hash: "52c43ae7"
 };
 Object(_app__WEBPACK_IMPORTED_MODULE_0__["createApp"])(false /* isServer */).then(({
   app,
@@ -12202,7 +12202,17 @@ function createRouteMap (
     }
   }
 
-  if (false) { var pathNames, found; }
+  if (true) {
+    // warn if routes do not include leading slashes
+    var found = pathList
+    // check for missing leading slash
+      .filter(function (path) { return path && path.charAt(0) !== '*' && path.charAt(0) !== '/'; });
+
+    if (found.length > 0) {
+      var pathNames = found.map(function (path) { return ("- " + path); }).join('\n');
+      warn(false, ("Non-nested routes must include a leading slash character. Fix the following routes: \n" + pathNames));
+    }
+  }
 
   return {
     pathList: pathList,
@@ -14420,11 +14430,11 @@ var config = {
     /**
      * Show production mode tip message on boot?
      */
-    productionTip: "\"production\"" !== 'production',
+    productionTip: "development" !== 'production',
     /**
      * Whether to enable devtools
      */
-    devtools: "\"production\"" !== 'production',
+    devtools: "development" !== 'production',
     /**
      * Whether to record perf
      */
@@ -18924,7 +18934,7 @@ strats.props =
         strats.inject =
             strats.computed =
                 function (parentVal, childVal, vm, key) {
-                    if (childVal && "\"production\"" !== 'production') {
+                    if (childVal && "development" !== 'production') {
                         assertObjectType(key, childVal, vm);
                     }
                     if (!parentVal)
@@ -22942,4 +22952,4 @@ module.exports = __webpack_require__(/*! /Users/kian/code/nhe-enga/gramatica/doc
 /***/ })
 
 /******/ });
-//# sourceMappingURL=app.8420e93a.js.map
+//# sourceMappingURL=app.8ca53cfb.js.map

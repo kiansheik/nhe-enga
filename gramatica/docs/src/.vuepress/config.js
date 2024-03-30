@@ -2,6 +2,7 @@ const { description } = require('../../package')
 const path = require('path');
 
 module.exports = {
+
   /**
    * Ref：https://v1.vuepress.vuejs.org/config/#title
    */
@@ -12,7 +13,7 @@ module.exports = {
   description: description,
 
   define: {
-    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+    'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
   },
 
   /**
