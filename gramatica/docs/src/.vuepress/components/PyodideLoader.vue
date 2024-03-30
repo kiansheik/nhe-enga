@@ -8,14 +8,14 @@ export default {
     data() {
         return {
             pyodideReady: false,
-            basePath: this.env === '"development"' ? '/' : '/nhe-enga/gramatica/',
+            basePath: process.env.NODE_ENV === 'production' ? '/nhe-enga/gramatica/' : '/',
         };
     },
-    computed: {
-        env() {
-            return this.$site.base;
-        },
-    },
+    // computed: {
+    //     env() {
+    //         return this.$site.base;
+    //     },
+    // },
     methods: {
         receiveMessage (event) {
             if (event.data.pyodideReady) {
