@@ -7,9 +7,9 @@ export default ({
   router, // the router instance for the app
   siteData // site metadata
 }) => {
-  // router.afterEach((to, from) => {
-  //   Vue.nextTick(() => {
-  //     eventBus.$emit('softNavigationFinished', to, from);
-  //   });
-  // });
+  // Dynamically import a component
+  const py_comp = () => import('./components/py.vue');
+
+  // Globally register the component
+  Vue.component('py', py_comp);
 }
