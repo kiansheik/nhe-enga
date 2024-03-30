@@ -8,7 +8,7 @@ export default {
     data() {
         return {
             pyodideReady: false,
-            basePath: process.env.NODE_ENV === 'production' ? '/nhe-enga/gramatica/' : '/',
+            basePath: process.env.NODE_ENV === '"production"' ? '/nhe-enga/gramatica/' : '/',
         };
     },
     // computed: {
