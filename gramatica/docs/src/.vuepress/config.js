@@ -26,7 +26,7 @@ module.exports = {
     ['meta', { name: 'apple-mobile-web-app-capable', content: 'yes' }],
     ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black' }],
     ['meta', { name: 'apple-mobile-web-app-status-bar-style', content: 'black' }],
-    // ['script', { src: "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js" }],
+    ['script', { src: "https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js" }],
     // ['PyodideLoader'],
     // add an entry for PyodideLoader custom component
     ['script', { src: "/utility_funcs.js" }],
@@ -38,7 +38,7 @@ module.exports = {
    * ref：https://v1.vuepress.vuejs.org/theme/default-theme-config.html
    */
   theme: path.resolve(__dirname, './theme/theme-default'),
-  base: process.env.NODE_ENV === '"development"' ? '/' : '/nhe-enga/gramatica/',
+  base: process.env.NODE_ENV === 'production' ? '/nhe-enga/gramatica/' : '/',
   markdown: {
     extractHeaders: ['h2', 'h3', 'h4', 'h5' , 'h6']
   },
