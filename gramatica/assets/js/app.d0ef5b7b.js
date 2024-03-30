@@ -304,16 +304,16 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.runtime.esm.js");
 
-vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("PyodideLoader", () => __webpack_require__.e(/*! import() */ 10).then(__webpack_require__.bind(null, /*! ./src/.vuepress/components/PyodideLoader */ "./src/.vuepress/components/PyodideLoader.vue")));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("Tooltip", () => Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(22)]).then(__webpack_require__.bind(null, /*! ./src/.vuepress/components/Tooltip */ "./src/.vuepress/components/Tooltip.vue")));
+vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("PyodideLoader", () => __webpack_require__.e(/*! import() */ 10).then(__webpack_require__.bind(null, /*! ./src/.vuepress/components/PyodideLoader */ "./src/.vuepress/components/PyodideLoader.vue")));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("py", () => Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(7)]).then(__webpack_require__.bind(null, /*! ./src/.vuepress/components/py */ "./src/.vuepress/components/py.vue")));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("root", () => Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(13)]).then(__webpack_require__.bind(null, /*! ./src/.vuepress/components/root */ "./src/.vuepress/components/root.vue")));
-vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("t3p", () => Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(16)]).then(__webpack_require__.bind(null, /*! ./src/.vuepress/components/t3p */ "./src/.vuepress/components/t3p.vue")));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("tVowels", () => Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(17)]).then(__webpack_require__.bind(null, /*! ./src/.vuepress/components/tVowels */ "./src/.vuepress/components/tVowels.vue")));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("wQuiz", () => Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(23)]).then(__webpack_require__.bind(null, /*! ./src/.vuepress/components/wQuiz */ "./src/.vuepress/components/wQuiz.vue")));
+vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("t3p", () => Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(16)]).then(__webpack_require__.bind(null, /*! ./src/.vuepress/components/t3p */ "./src/.vuepress/components/t3p.vue")));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("Badge", () => Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(11)]).then(__webpack_require__.bind(null, /*! ./src/.vuepress/theme/theme-default/global-components/Badge */ "./src/.vuepress/theme/theme-default/global-components/Badge.vue")));
-vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("CodeBlock", () => Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(8)]).then(__webpack_require__.bind(null, /*! ./src/.vuepress/theme/theme-default/global-components/CodeBlock */ "./src/.vuepress/theme/theme-default/global-components/CodeBlock.vue")));
 vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("CodeGroup", () => Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(9)]).then(__webpack_require__.bind(null, /*! ./src/.vuepress/theme/theme-default/global-components/CodeGroup */ "./src/.vuepress/theme/theme-default/global-components/CodeGroup.vue")));
+vue__WEBPACK_IMPORTED_MODULE_0__["default"].component("CodeBlock", () => Promise.all(/*! import() */[__webpack_require__.e("styles"), __webpack_require__.e(8)]).then(__webpack_require__.bind(null, /*! ./src/.vuepress/theme/theme-default/global-components/CodeBlock */ "./src/.vuepress/theme/theme-default/global-components/CodeBlock.vue")));
 /* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
@@ -408,11 +408,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   "v-10fe03c2": () => __webpack_require__.e(/*! import() */ 29).then(__webpack_require__.bind(null, /*! ./src/guide/README.md */ "./src/guide/README.md")),
   "v-1a20cc7c": () => __webpack_require__.e(/*! import() */ 30).then(__webpack_require__.bind(null, /*! ./src/guide/nouns.md */ "./src/guide/nouns.md")),
-  "v-0cedb0c2": () => __webpack_require__.e(/*! import() */ 32).then(__webpack_require__.bind(null, /*! ./src/guide/roots.md */ "./src/guide/roots.md")),
-  "v-c20a96d6": () => __webpack_require__.e(/*! import() */ 33).then(__webpack_require__.bind(null, /*! ./src/guide/verbs/README.md */ "./src/guide/verbs/README.md")),
-  "v-1e9d678c": () => __webpack_require__.e(/*! import() */ 34).then(__webpack_require__.bind(null, /*! ./src/guide/verbs/indicative.md */ "./src/guide/verbs/indicative.md")),
   "v-09041d8a": () => __webpack_require__.e(/*! import() */ 35).then(__webpack_require__.bind(null, /*! ./src/index.md */ "./src/index.md")),
-  "v-646e89fc": () => __webpack_require__.e(/*! import() */ 31).then(__webpack_require__.bind(null, /*! ./src/guide/pronouns/personal.md */ "./src/guide/pronouns/personal.md"))
+  "v-0cedb0c2": () => __webpack_require__.e(/*! import() */ 32).then(__webpack_require__.bind(null, /*! ./src/guide/roots.md */ "./src/guide/roots.md")),
+  "v-646e89fc": () => __webpack_require__.e(/*! import() */ 31).then(__webpack_require__.bind(null, /*! ./src/guide/pronouns/personal.md */ "./src/guide/pronouns/personal.md")),
+  "v-c20a96d6": () => __webpack_require__.e(/*! import() */ 33).then(__webpack_require__.bind(null, /*! ./src/guide/verbs/README.md */ "./src/guide/verbs/README.md")),
+  "v-1e9d678c": () => __webpack_require__.e(/*! import() */ 34).then(__webpack_require__.bind(null, /*! ./src/guide/verbs/indicative.md */ "./src/guide/verbs/indicative.md"))
 });
 
 /***/ }),
@@ -478,11 +478,28 @@ const routes = [{
     Object(_app_util__WEBPACK_IMPORTED_MODULE_0__["ensureAsyncComponentsLoaded"])("Layout", "v-1a20cc7c").then(next);
   }
 }, {
+  name: "v-09041d8a",
+  path: "/",
+  component: _Users_kian_code_nhe_enga_gramatica_docs_node_modules_vuepress_core_lib_client_components_GlobalLayout_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+  beforeEnter: (to, from, next) => {
+    Object(_app_util__WEBPACK_IMPORTED_MODULE_0__["ensureAsyncComponentsLoaded"])("Layout", "v-09041d8a").then(next);
+  }
+}, {
+  path: "/index.html",
+  redirect: "/"
+}, {
   name: "v-0cedb0c2",
   path: "/guide/roots.html",
   component: _Users_kian_code_nhe_enga_gramatica_docs_node_modules_vuepress_core_lib_client_components_GlobalLayout_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
   beforeEnter: (to, from, next) => {
     Object(_app_util__WEBPACK_IMPORTED_MODULE_0__["ensureAsyncComponentsLoaded"])("Layout", "v-0cedb0c2").then(next);
+  }
+}, {
+  name: "v-646e89fc",
+  path: "/guide/pronouns/personal.html",
+  component: _Users_kian_code_nhe_enga_gramatica_docs_node_modules_vuepress_core_lib_client_components_GlobalLayout_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+  beforeEnter: (to, from, next) => {
+    Object(_app_util__WEBPACK_IMPORTED_MODULE_0__["ensureAsyncComponentsLoaded"])("Layout", "v-646e89fc").then(next);
   }
 }, {
   name: "v-c20a96d6",
@@ -500,23 +517,6 @@ const routes = [{
   component: _Users_kian_code_nhe_enga_gramatica_docs_node_modules_vuepress_core_lib_client_components_GlobalLayout_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
   beforeEnter: (to, from, next) => {
     Object(_app_util__WEBPACK_IMPORTED_MODULE_0__["ensureAsyncComponentsLoaded"])("Layout", "v-1e9d678c").then(next);
-  }
-}, {
-  name: "v-09041d8a",
-  path: "/",
-  component: _Users_kian_code_nhe_enga_gramatica_docs_node_modules_vuepress_core_lib_client_components_GlobalLayout_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
-  beforeEnter: (to, from, next) => {
-    Object(_app_util__WEBPACK_IMPORTED_MODULE_0__["ensureAsyncComponentsLoaded"])("Layout", "v-09041d8a").then(next);
-  }
-}, {
-  path: "/index.html",
-  redirect: "/"
-}, {
-  name: "v-646e89fc",
-  path: "/guide/pronouns/personal.html",
-  component: _Users_kian_code_nhe_enga_gramatica_docs_node_modules_vuepress_core_lib_client_components_GlobalLayout_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
-  beforeEnter: (to, from, next) => {
-    Object(_app_util__WEBPACK_IMPORTED_MODULE_0__["ensureAsyncComponentsLoaded"])("Layout", "v-646e89fc").then(next);
   }
 }, {
   path: '*',
@@ -575,6 +575,20 @@ const siteData = {
     "key": "v-1a20cc7c",
     "path": "/guide/nouns.html"
   }, {
+    "title": "Home",
+    "frontmatter": {
+      "home": true,
+      "heroImage": "/icon.png",
+      "tagline": "A Grammar of Tupi Antigo",
+      "actionText": "Quick Start →",
+      "actionLink": "/guide/",
+      "footer": "Kian Sheik remimonhanga moroaûsuba resé ❤️"
+    },
+    "regularPath": "/",
+    "relativePath": "index.md",
+    "key": "v-09041d8a",
+    "path": "/"
+  }, {
     "title": "Roots",
     "frontmatter": {},
     "regularPath": "/guide/roots.html",
@@ -586,6 +600,13 @@ const siteData = {
       "title": "Charectaristics of Roots",
       "slug": "charectaristics-of-roots"
     }]
+  }, {
+    "title": "Personal Pronouns",
+    "frontmatter": {},
+    "regularPath": "/guide/pronouns/personal.html",
+    "relativePath": "guide/pronouns/personal.md",
+    "key": "v-646e89fc",
+    "path": "/guide/pronouns/personal.html"
   }, {
     "title": "Introduction",
     "frontmatter": {},
@@ -677,27 +698,6 @@ const siteData = {
       "title": "Step 2 - Last letter check",
       "slug": "step-2-last-letter-check"
     }]
-  }, {
-    "title": "Home",
-    "frontmatter": {
-      "home": true,
-      "heroImage": "/icon.png",
-      "tagline": "A Grammar of Tupi Antigo",
-      "actionText": "Quick Start →",
-      "actionLink": "/guide/",
-      "footer": "Kian Sheik remimonhanga moroaûsuba resé ❤️"
-    },
-    "regularPath": "/",
-    "relativePath": "index.md",
-    "key": "v-09041d8a",
-    "path": "/"
-  }, {
-    "title": "Personal Pronouns",
-    "frontmatter": {},
-    "regularPath": "/guide/pronouns/personal.html",
-    "relativePath": "guide/pronouns/personal.md",
-    "key": "v-646e89fc",
-    "path": "/guide/pronouns/personal.html"
   }],
   "themeConfig": {
     "repo": "",
@@ -1028,7 +1028,7 @@ __webpack_require__.r(__webpack_exports__);
 
 window.__VUEPRESS__ = {
   version: "1.9.10",
-  hash: "52c43ae7"
+  hash: "614171c8"
 };
 Object(_app__WEBPACK_IMPORTED_MODULE_0__["createApp"])(false /* isServer */).then(({
   app,
@@ -22952,4 +22952,4 @@ module.exports = __webpack_require__(/*! /Users/kian/code/nhe-enga/gramatica/doc
 /***/ })
 
 /******/ });
-//# sourceMappingURL=app.8ca53cfb.js.map
+//# sourceMappingURL=app.d0ef5b7b.js.map
