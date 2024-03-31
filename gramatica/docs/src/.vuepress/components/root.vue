@@ -1,12 +1,16 @@
 <template>
     <div class="tupi-text">
-      <client-only>
+      <!-- <client-only> -->
         <py>n = Noun("{{this.root}}", "{{ this.trans }} {{ this.pluriform }} {{ this.second }}".strip()); {{ this.inflection }}</py>
-      </client-only>
+      <!-- </client-only> -->
       </div>
     </template>
 <script>
   import py from './py.vue';
+  // define function toBolean if not defined
+  function toBoolean(value) {
+    return !['0', 'false', '', 0, undefined, NaN].includes(value);
+  }
   export default {
     name: 'root',
     components: {
