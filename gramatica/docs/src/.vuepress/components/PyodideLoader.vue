@@ -8,7 +8,7 @@ export default {
     data() {
         return {
             pyodideReady: false,
-            basePath: '/' // NODE_ENV !== 'development' ? '/.vuepress/dist/' : '/',
+            basePath: NODE_ENV !== 'development' ? '/nhe-enga/gramatica/' : '/',
         };
     },
     // computed: {

@@ -25,7 +25,7 @@ module.exports = {
   define: {
     'NODE_ENV': process.env.NODE_ENV || 'development',
   },
-  // base: process.env.NODE_ENV === 'development' ? '/' : '/.vuepress/dist/',
+  base: process.env.NODE_ENV === 'development' ? '/' : '/nhe-enga/gramatica/',
   /**
    * Theme configuration, here is the default theme configuration for VuePress.
    *
