@@ -10,6 +10,7 @@ lint:
 	cp tupi/dist/tupi-0.1.0* gramatica/docs/src/.vuepress/public/pylibs/
 	zsh -c 'cd gramatica/docs; npm run build;'
 	cp -r gramatica/docs/src/.vuepress/dist/* gramatica/
+	echo 'kiansheik.io' > gramatica/CNAME
 	rm -rf gramatica/docs/src/.vuepress/dist/*
 
 push:
