@@ -1,26 +1,19 @@
 {
-  "name": "Gramática",
+  "name": "tupi-grammar",
   "version": "0.0.1",
-  "description": "A Grammar of Tupi Antigo",
+  "description": "a grammar of tupi antigo",
   "main": "index.js",
   "authors": {
     "name": "Kian Sheik",
     "email": "kiansheik3128@gmail.com"
   },
-  "repository": "https://github.com/kiansheik/nhe-enga/",
+  "repository": "https://github.com/kiansheik/nhe-enga//tupi-grammar",
   "scripts": {
-    "dev": "NODE_ENV=development vuepress dev src",
-    "build": "NODE_ENV=production vuepress build --debug src",
-    "docs:build": "vuepress build docs"
+    "dev": "vuepress dev src",
+    "build": "vuepress build src"
   },
   "license": "MIT",
   "devDependencies": {
-    "vitepress": "^1.0.1",
-    "vuepress": "^1.9.10"
-  },
-  "dependencies": {
-    "@vuepress/theme-default": "^1.9.10",
-    "vue-client-only": "^2.1.0",
-    "yarn": "^1.22.22"
+    "vuepress": "^1.5.3"
   }
 }

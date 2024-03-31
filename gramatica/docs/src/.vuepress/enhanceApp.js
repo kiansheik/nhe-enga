@@ -1,4 +1,8 @@
-// import DefaultLayout from './theme/theme-default/layouts/Layout.vue';
+/**
+ * Client app enhancement file.
+ *
+ * https://v1.vuepress.vuejs.org/guide/basic-config.html#app-level-enhancements
+ */
 
 export default ({
   Vue, // the version of Vue being used in the VuePress app
@@ -6,6 +10,5 @@ export default ({
   router, // the router instance for the app
   siteData // site metadata
 }) => {
-  // Vue.component('Layout', DefaultLayout);
-  // Vue.component('PyodideLoader', () => import('./components/PyodideLoader.vue'));
+  // ...apply enhancements for the site.
 }
