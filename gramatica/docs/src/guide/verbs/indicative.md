@@ -102,26 +102,24 @@ First class verbs are split between [intransitive](#intransitive-roots) and [tra
 
 Simply put, there are roots which _syntactically_ take no object: ___(intransitive)___ 
 
-```
 <py>n = Noun("nhe'eng", "(v. intr.)"); n.conjugate("1ps")</py>
 I speak
-```
 
 ::: warning
 Atlhough some verbs are _intransitive_, they can often be combined with _postpositions_ to serve the role of indirect objects. For example:
-```
+
 <py>n.conjugate("1ps", pro_drop=True)</py>i xupé
 I spoke to them
-```
+
 This will be expanded upon in later chapters.
 :::
 
 There are also roots which **must** be accompanied by an object: ___(transitive)___ 
 
-```
+
 <py>n = Noun("aûsub", "(s) (v.tr.)"); n.conjugate("1ps", "3p", dir_obj_raw="mba'e")</py>
 I love things
-```
+
 
 ::: tip
 In the above statement, the root **<py>n.verbete()</py>** must carry an object. If we want to use a generic object, we will use `mba'e` for things and `poro/moro` for people.
@@ -160,11 +158,11 @@ If you thought the [intransitive verbs](#intransitive-roots) were too easy to co
 #### 3p object, any subject
 
 No matter which person-tense the subject may be in `(1p/2p/3p)`, if the object is in the <t3p/> then the conjugation pattern will be ***very*** similar to the [intransitive first class verbs](#intransitive-roots). The main difference you'll notice below is that we insert an `-î-` in between the **subject prefix** and the **root**:<py>n = Noun('kutuk', '(v.tr.)');n.verbete()</py>_(to spear)_
-```
+
 <py>n.conjugate(subject_tense="1ps", object_tense="3p", dir_obj_raw='pirá', pos='anteposto', pro_drop=True)</py>
 fish I-(it)-spear :literal
 I speared a fish :translation
-```
+
 
 In Tupi Antigo, the **object** must always fill the space _directly to the left of the root_ `OV`. The _referential 3p object infix_ `-î- (–s-)` allows us to move the _direct object (pirá)_ more freely around the root without _technically_ breaking this rule. It's like a placeholder! A bit like _it_ in English, but not exactly. It takes some time to get used to, but you'll get the hang of _it_ 😄
 

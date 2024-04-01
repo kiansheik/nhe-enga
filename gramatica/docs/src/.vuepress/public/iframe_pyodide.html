@@ -32,7 +32,14 @@ window.addEventListener('message', (event) => {
             var parser = new DOMParser();
             var htmlDoc = parser.parseFromString(block_text, 'text/html');
             var textContent = htmlDoc.body.textContent || '';
-            resp_html = globalPyodide.runPython('from tupi import Noun; '+ block_text); // For example, convert the text to uppercase
+            var command = `from tupi import Noun; ${textContent}`;
+            globalPyodide.runPython(`print("""idx: ${data.orderid}\\t ${textContent} """)`);
+            try {
+                resp_html = globalPyodide.runPython(command);
+            } catch (error) {
+                console.error(error);
+                resp_html = "ERROR";
+            }
             window.parent.postMessage({ command: "processBlockResponse", pre_html:block_text, resp_html: resp_html }, '*');
             nextOrderId++;
         }

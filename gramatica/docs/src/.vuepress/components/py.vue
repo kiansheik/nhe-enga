@@ -74,7 +74,6 @@ export default {
             for (let element of pyElements) {
                     pyComponents.push(element);
             }
-
             return pyComponents;
         },
         getCurrentComponentIndex() {
@@ -106,9 +105,11 @@ export default {
     },
     mounted() {
         window.addEventListener('message', this.handleMessage);
-        if (this.pyodideReady) {
-            this.updateContent();
-        }
+        this.$nextTick(() => {
+            if (this.pyodideReady) {
+                this.updateContent();
+            }
+        });
         // eventBus.$on('softNavigationFinished', (to, from) => {
         //     if (this.pyodideReady) {
         //         this.updateContent();
