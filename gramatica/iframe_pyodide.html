@@ -11,7 +11,9 @@ async function initializePython() {
     globalPyodide.runPython('import tupi');
     globalPyodide.runPython('print(tupi.Noun(\'îagûar\', \'normal\'))');
     this.pyodideReady = true;
-    window.parent.postMessage({ pyodideReady: true }, '*');
+    setTimeout(function() {
+        window.parent.postMessage({ pyodideReady: true }, '*');
+    }, 200);
 }
 
 // Add an event listener to listen for the 'processBlock' message
@@ -23,6 +25,9 @@ window.addEventListener('message', (event) => {
         // Sort the queue by order ID
         messageQueue.sort((a, b) => a.orderid - b.orderid);
         // Process messages in order
+        while (nextOrderId == messageQueue[0].orderid+1) {
+            messageQueue.shift();
+        }
         if (nextOrderId > messageQueue[0].orderid) {
             nextOrderId = 0;
         }

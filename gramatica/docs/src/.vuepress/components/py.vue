@@ -98,27 +98,19 @@ export default {
     },
     watch: {
         pyodideReady(newVal, oldVal) {
-            if (newVal) {
+            if (newVal && !oldVal) {
                 this.updateContent();
             }
         },
     },
     mounted() {
         window.addEventListener('message', this.handleMessage);
-        this.$nextTick(() => {
-            if (this.pyodideReady) {
-                this.updateContent();
-            }
-        });
-        // eventBus.$on('softNavigationFinished', (to, from) => {
-        //     if (this.pyodideReady) {
-        //         this.updateContent();
-        //     }
-        // });
+        if (this.pyodideReady) {
+            this.updateContent();
+        }
     },
     beforeDestroy() {
         window.removeEventListener('message', this.handleMessage);
-        // eventBus.$off('softNavigationFinished');
     },
 }
 </script>
