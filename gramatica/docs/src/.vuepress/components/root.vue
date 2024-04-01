@@ -89,11 +89,9 @@
         return toBoolean(this.negative) ? "True" : "False";
       },
       inflection() {
-        console.log(this.root)
         switch (this.type) {
             case 'verb':
                 let tl =  `n.conjugate("${this.subjectTense }", "${this.objectTense}", anotar=${this.anot}, pro_drop=${this.proD}, negative=${this.neg}, mode="${this.mode}", pos="${this.pos}", dir_obj_raw="${this.obj}", dir_subj_raw="${this.subj}")`
-                console.log(tl)
                 return tl
                 break;
             case 'noun':

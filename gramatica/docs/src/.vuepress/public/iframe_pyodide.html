@@ -44,7 +44,7 @@ window.addEventListener('message', (event) => {
                 console.error(error);
                 resp_html = "ERROR";
             }
-            window.parent.postMessage({ command: "processBlockResponse", pre_html:block_text, resp_html: resp_html }, '*');
+            window.parent.postMessage({ command: "processBlockResponse", pre_html:block_text, resp_html: resp_html, hash: data.hash }, '*');
             nextOrderId++;
         }
     }
