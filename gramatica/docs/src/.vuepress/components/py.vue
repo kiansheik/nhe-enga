@@ -40,9 +40,9 @@ export default {
             }
         },
         updateContent() {
-            if (this.pyRendered) {
-                return;
-            }
+            // if (this.pyRendered) {
+            //     return;
+            // }
             this.tText = this.origText;
             let iframe;
             if (this.pyLoader && this.pyLoader.$refs && this.pyLoader.$refs.pyodideiframe) {
