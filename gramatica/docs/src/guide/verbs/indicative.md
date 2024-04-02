@@ -162,7 +162,7 @@ If you thought the [intransitive verbs](#intransitive-roots) were too easy to co
 
 #### 3p object, any subject
 
-No matter which person-tense the subject may be in `(1p/2p/3p)`, if the object is in the <t3p/> then the conjugation pattern will be ***very*** similar to the [intransitive first class verbs](#intransitive-roots). The main difference you'll notice below is that we insert an `-î-` in between the **subject prefix** and the **root**: <root root=kutuk optionalNumber=1 /> _(to spear)_
+No matter which person-tense the subject may be in `(1p/2p/3p)`, if the object is in the <t3p/> then the conjugation pattern will be ***very*** similar to the [intransitive first class verbs](#intransitive-roots). The main difference you'll notice below is that we insert an `-î-` in between the **subject prefix** and the **root**: <root root=kutuk entryNumber=1 /> _(to spear)_
 
 <py>n.conjugate(subject_tense="1ps", object_tense="3p", dir_obj_raw='pirá', pos='anteposto', pro_drop=True)</py>
 
@@ -175,7 +175,7 @@ In Tupi Antigo, the **object** must always fill the space _directly to the left 
 
 ##### Uniform roots
 
-The following orders are permitted when the object is in the <t3p/>: <root root=kutuk optionalNumber=1 /> _(to spear)_
+The following orders are permitted when the object is in the <t3p/>: <root root=kutuk entryNumber=1 /> _(to spear)_
 
 | Verb Format | Type | Example | Translation |
 |-------|-------|------|-------------|
@@ -218,7 +218,7 @@ And an example of each of the different subject prefixes:
 | Y'all | 2pp           |<py>n.conjugate("2pp", "3p")</py>      | Y'all saw them |
 | They  | 3p            |<py>n.conjugate("3p", "3p")</py>       | They saw them |
 
-The following orders are permitted for the rest of the cases: <root root=kutuk optionalNumber=1 /> _(to spear)_ _(object **not** in the 3rd person)_
+The following orders are permitted for the rest of the cases: <root root=kutuk entryNumber=1 /> _(to spear)_ _(object **not** in the 3rd person)_
 
 <!-- Subject: Order
 3p: OV/OVS/SOV
@@ -240,7 +240,7 @@ The _subject_ can either go _before_ **(SOV)** or _after_ **(OVS)**.
 
 ##### Uniform
 
-Let's see **(OVS)** with a uniform root like: <root root=kutuk optionalNumber=1 /> _(to spear)_
+Let's see **(OVS)** with a uniform root like: <root root=kutuk entryNumber=1 /> _(to spear)_
 
 | English | Object Person | Example |
 |------|-----------------|--------|
@@ -273,7 +273,7 @@ This form must always be **(OVS)**. Take a look at the following 2p _**subject p
 
 ##### Uniform
 
-Let's keep going with the same root so you can see the differences: <root root=kutuk optionalNumber=1 /> _(to spear)_
+Let's keep going with the same root so you can see the differences: <root root=kutuk entryNumber=1 /> _(to spear)_
 
 | English | Object Person | Subject Person | Example |
 |---------|---------------|----------------|---------|
