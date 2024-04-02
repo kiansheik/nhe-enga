@@ -11,7 +11,7 @@ async function initializePython() {
     globalPyodide.runPython('import tupi');
     globalPyodide.runPython('print(tupi.Noun(\'îagûar\', \'normal\'))');
     this.pyodideReady = true;
-    window.parent.postMessage({ pyodideReady: true }, '*');
+    window.parent.postMessage({ pyodideLoaded: true }, '*');
 }
 
 // Add an event listener to listen for the 'processBlock' message

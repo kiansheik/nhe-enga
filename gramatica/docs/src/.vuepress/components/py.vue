@@ -23,11 +23,10 @@ export default {
             console.log('no layoutComponent')
         }        
         return {
-            otherComponentLoaded: pl.pyodideReady,
             pyLoader: pl,
             pyRendered: false,
             // Make a random hash for the component
-            hash: Math.random().toString(36).substring(10),
+            hash: Math.random().toString(36),
             evBus: pl.evBus,
             origText: this.$slots.default[0].text,
             tText: 'rendering...' // this.$slots.default[0].text // Add this line

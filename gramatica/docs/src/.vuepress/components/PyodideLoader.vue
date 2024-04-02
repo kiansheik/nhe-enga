@@ -10,12 +10,33 @@ export default {
     data() {
         return {
             pyodideReady: false,
+            pyodideLoaded: false,
+            dictLoaded: false,
             evBus: eventBus,
             basePath: NODE_ENV !== 'development' ? '/nhe-enga/gramatica/' : '/',
             elems: [], // New data property to store the messages
+            jsonData: null,
         };
     },
     methods: {
+        async loadJson() {
+            try {
+                const response = await fetch('/nhe-enga/docs/dict-conjugated.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const json = await response.json();
+                this.jsonData = json;
+                this.dictLoaded = true;
+                console.log('dict loaded!')
+                if (this.pyodideLoaded) {
+                    this.pyodideReady = true;
+                    this.updateContent();
+                }
+            } catch (error) {
+                console.error('There was a problem loading the JSON file:', error);
+            }
+        },
         getAllPyComponents() {
             return Array.from(document.querySelectorAll('.python-output'));
         },
@@ -29,11 +50,14 @@ export default {
             return this.getAllPyComponents().length;
         },
         receiveMessage (event) {
-            if (event.data.pyodideReady) {
-                console.log("pyodide ready!");
-                this.pyodideReady = true;
+            if (event.data.pyodideLoaded) {
+                this.pyodideLoaded = true;
+                console.log("pyodide Loaded!");
                 // console.log("comps: "+ this.countComponents())
-                this.updateContent();
+                if (this.dictLoaded) {
+                    this.pyodideReady = true;
+                    this.updateContent();
+                }
             } 
         },
         sendMessagesToIframe() {
@@ -47,18 +71,36 @@ export default {
             // console.log("updating");
             let allPyComponents = this.getAllPyComponents().map(el => el.__vue__);
             for (let cidx = 0; cidx < allPyComponents.length; cidx++) {
+                let elem = allPyComponents[cidx];
+                // if (elem.$parent.$options._componentTag === 'root') {
+                //     elem.$parent.updateDefinition();
+                // }
+                // elem.updateDefinition();
                 let message = {
                     command: 'processBlock',
                     orderid: cidx,
-                    hash: allPyComponents[cidx].hash,
-                    html: allPyComponents[cidx].origText // Send the transformed text as the HTML
+                    hash: elem.hash,
+                    html: elem.origText // Send the transformed text as the HTML
                 };
                 this.$refs.pyodideiframe.contentWindow.postMessage(message, '*');
             }
             // if (soft){
             //     this.elems = [];
             // }
-        }
+        },
+        findDefinition(root, optionalNumber) {
+            optionalNumber = optionalNumber || '';
+            // for entry in this.jsonData
+            for (let entry of this.jsonData) {
+                if (entry.f === root && entry.o === optionalNumber) {
+                    return entry.d;
+                }
+            }
+            return null;
+        },
+    },
+    created() {
+        this.loadJson();
     },
     mounted () {
         this.evBus.$on("pyReadyRender", (element, idx) => {

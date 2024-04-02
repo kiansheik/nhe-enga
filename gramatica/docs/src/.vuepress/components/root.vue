@@ -1,10 +1,17 @@
 <template>
+  <div :key="definition" @click="toggleDefinition" class="root-div">
     <div class="tupi-text">
       <!-- <client-only> -->
-        <py>n = Noun("{{this.root}}", "{{ this.trans }} {{ this.pluriform }} {{ this.second }}".strip()); {{ this.inflection }}</py>
+        <strong><py>n = Noun("{{this.root}}", "{{ this.definition }}".strip()); {{ this.inflection }}</py></strong>
+    <!-- </client-only> -->
+    </div>
+    <div :class="{ 'hidden': this.hideDefinition, 'tupi-def': true }">
+      <!-- <client-only> -->
+        <py>n.raw_definition</py>
       <!-- </client-only> -->
-      </div>
-    </template>
+    </div>
+  </div>
+</template>
 <script>
   import py from './py.vue';
   // define function toBolean if not defined
@@ -16,11 +23,48 @@
     components: {
       py
     },
+    data() {
+      let pl = {dictLoaded:false};
+      let layoutComponent = this.$root.$refs.layout;
+      if (layoutComponent && layoutComponent.$children.length > 0) {
+          let firstChildComponent = layoutComponent.$children[0];
+          if (firstChildComponent.$refs.pyLoader) {
+              pl = firstChildComponent.$refs.pyLoader;
+          } else {
+              console.log('no pyLoader')
+          }
+      } else {
+          console.log('no layoutComponent')
+      }     
+      return {
+        hideDefinition: true,
+        // dictLoaded: pl.dictLoaded,
+        raw_definition: null,
+        pyLoader: pl
+      }
+    },
+    methods: {
+      toggleDefinition() {
+        if (window.getSelection().toString().length === 0) {
+            // No text is selected, so toggle the definition
+            this.hideDefinition = !this.hideDefinition;
+        }
+      },
+      updateDefinition(){
+        if (this.dictLoaded) {
+          this.raw_definition = this.pyLoader.findDefinition(this.root, this.entryNumber);
+        }
+      }
+    },
     props: {
       root: String,
       type: {
         type: String,
         default: 'root'
+      },
+      entryNumber: {
+        type: String,
+        default: ''
       },
       root: String,
       pluriform: {
@@ -101,12 +145,38 @@
                 return `n.verbete(anotated=${this.anot})`
                 break;
         }
+      },
+      definition() {
+        return this.raw_definition || `${this.trans} ${this.pluriform} ${this.second}`;
+      },
+      dictLoaded() {
+            let pl = {dictLoaded:false};
+            let layoutComponent = this.$root.$refs.layout;
+            if (layoutComponent && layoutComponent.$children.length > 0) {
+                let firstChildComponent = layoutComponent.$children[0];
+                if (firstChildComponent.$refs.pyLoader) {
+                    pl = firstChildComponent.$refs.pyLoader;
+                }
+            }   
+            return pl.dictLoaded;
+        }
+    },
+    watch: {
+      dictLoaded(newVal, oldVal) {
+        if (newVal && !oldVal) {
+          console.log('dict loaded! ', this)
+          this.updateDefinition();
+        }
       }
     },
+    created() {
+      this.updateDefinition();
+    }
   }
 </script>
 <style>
-.tupi-text {
+.root-div {
+    cursor: help;
     display: inline-block;
     /* font-family: 'Georgia', serif; */
     color: #6C6C2A; 
@@ -117,5 +187,14 @@
     padding-top: 0px;
     padding-bottom: 1px;
     border-radius: 7px;
+}
+.hidden {
+    display: none;
+}
+.tupi-def {
+    display: inline;
+}
+.tupi-def.hidden {
+    display: none;
 }
 </style>
