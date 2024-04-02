@@ -39,7 +39,7 @@ Second class verbs recieve the following _subject prefixes_:
 | They  | 3p            | <py>Noun.personal_inflections["3p"][1]</py>/(s)      |
 
 ::: warning
-There is no **pro drop** form of second class verbs, these prefixes are _necessary_.
+There is no **pro drop** form of second class verbs, which is another reason we consider these to be **prefixes** and not _pronouns_. They are _necessary_.
 
 We will write these __"prefixes"__ as though they were **pronouns** due to orthographic convention, but it's important to note that they are inseperable from the root. This is why they are included in the [Negation](#negation) process, whereas the _subject pronouns_ of [first class roots](#first-class-verbs) are not. More on this later.
 :::
