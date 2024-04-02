@@ -1,11 +1,29 @@
 <template>
-    <span class="help-text" :title="content" onclick="swapTitleAndInnerText(event)">
-     <slot></slot>
-    </span>
+    <div class="help-text" @click="toggleDefinition">
+        <span :class="{ 'hidden': this.show}">
+            {{ this.content }}
+        </span>
+        <span :class="{ 'hidden': !this.show}">
+            <slot></slot>
+        </span>
+    </div>
  </template>
  <script>
  export default {
-   props: ['content']
+   props: ['content'],
+   data() {
+        return {
+            show: false
+        }
+    },
+    methods: {
+      toggleDefinition() {
+        if (window.getSelection().toString().length === 0) {
+            // No text is selected, so toggle the definition
+            this.show = !this.show;
+        }
+      },
+    }
  }
  </script>
 <style scoped>
@@ -24,6 +42,10 @@
 
 .help-text:hover {
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Increase box shadow on hover */
+}
+
+span.hidden {
+    display: none;
 }
 
 /* Define the glow animation */

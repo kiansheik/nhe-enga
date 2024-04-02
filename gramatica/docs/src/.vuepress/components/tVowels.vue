@@ -1,5 +1,5 @@
 <template>
-    <Tooltip content="<py>' '.join(n.vogais)</py>">vowel</Tooltip>
+    <Tooltip content="vowel"><py>' '.join(n.vogais)</py></Tooltip>
   </template>
   
   <script>

@@ -164,7 +164,6 @@
     watch: {
       dictLoaded(newVal, oldVal) {
         if (newVal && !oldVal) {
-          console.log('dict loaded! ', this)
           this.updateDefinition();
         }
       }
