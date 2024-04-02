@@ -59,7 +59,7 @@ class Noun(TupiAntigo):
         self.recreate = f'Noun("{self.verbete()}", "({self.pluriforme})")'
         self.ios = "-îo-" in raw_def and "-s-" in raw_def
         self.segunda_classe = (
-            "2ª classe" in raw_def or "adj." in raw_def
+            "2ª classe" in self.raw_definition or "adj." in self.raw_definition
         )
         self.transitivo ="v.tr." in raw_def.replace(
             " ", ""
