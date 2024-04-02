@@ -316,7 +316,7 @@ In this case, the _subject pronoun_ `Ixé` and _personal pronoun_ `xe` can equal
 The uniform and pluriform roots will behave exactly the same in this case, as the _object prefix_ is taking the space which would normally see the `-î-` change to `-s-`.
 
 ::: warning
-Especially in a **pro drop* situation, the 2ps object prefix `oro-` can look _very_ similar to the 1ppe subject prefix `oro-`, but the way to tell is that there will be an _object pronoun_ when it is 1ppe, and there will not be one when it is 2ps:
+Especially in a **pro drop** situation, the 2ps object prefix `oro-` can look _very_ similar to the 1ppe subject prefix `oro-`, but the way to tell is that there will be an _object pronoun_ when it is 1ppe, and there will not be one when it is 2ps:
 
 | English | Subject Person | Object Person | Example |
 |---------|---------------|----------------|---------|

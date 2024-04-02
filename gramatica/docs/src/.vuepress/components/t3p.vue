@@ -1,6 +1,6 @@
 <template>
-    <Tooltip content="3rd Person (they/a'e/i/-î-/-îo-/s-/-s-/-îos-)">
-      3p
+    <Tooltip content="3p">
+      3rd Person (they/a'e/i/-î-/-îo-/s-/-s-/-îos-)
     </Tooltip>
   </template>
   
