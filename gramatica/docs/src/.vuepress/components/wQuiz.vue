@@ -1,6 +1,6 @@
 <template>
     <div>
-      <p v-if="showAnswer" class="answer">{{ content }}</p>
+      <p v-if="showAnswer" class="answer">{{ answer }}</p>
       <input
         v-model="guess"
         @keyup.enter="checkAnswer"
@@ -14,7 +14,7 @@
   <script>
   export default {
     props: {
-      content: {
+      answer: {
         type: String,
         required: true,
       },
@@ -29,8 +29,10 @@
     },
     methods: {
       checkAnswer() {
-        console.log(this.guess)
-        if (this.guess === this.content) {
+        const normalizedGuess = this.guess.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const normalizedAnswer = this.answer.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+        if (normalizedGuess === normalizedAnswer) {
           this.isCorrect = true;
           this.isIncorrect = false;
           this.showAnswer = false;

@@ -186,6 +186,7 @@
     padding-top: 0px;
     padding-bottom: 1px;
     border-radius: 7px;
+    font-family: "Arial"
 }
 .hidden {
     display: none;
