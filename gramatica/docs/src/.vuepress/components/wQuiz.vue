@@ -6,7 +6,7 @@
         @keyup.enter="checkAnswer"
         :class="{ correct: isCorrect, incorrect: isIncorrect }"
         type="text"
-        placeholder="Guess!"
+        placeholder="'Enter' to submit..."
       />
     </div>
   </template>
@@ -29,8 +29,8 @@
     },
     methods: {
       checkAnswer() {
-        const normalizedGuess = this.guess.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        const normalizedAnswer = this.answer.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const normalizedGuess = this.guess.normalize("NFD").replace(/[\u0300-\u036f]/g, "").lower();
+        const normalizedAnswer = this.answer.normalize("NFD").replace(/[\u0300-\u036f]/g, "").lower();
 
         if (normalizedGuess === normalizedAnswer) {
           this.isCorrect = true;
