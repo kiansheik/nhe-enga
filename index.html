@@ -34,30 +34,43 @@
                     vertical-align: middle;
                     margin-left: 10px;
                 }
-                /* Style for the iCal link
-                .ical-link {
-                display: inline-block;
-                padding: 10px 20px;
-                background-color: #4285F4; 
-                color: #fff;
-                text-decoration: none;
-                border-radius: 5px;
-                font-family: Arial, sans-serif;
-                font-size: 16px;
-                transition: background-color 0.3s ease;
+                .hidden {
+                    display: none;
+                }
+                .calendar-link > span {
+                    color: #0000EE; /* Classic link blue color */
+                    text-decoration: underline;
+                    cursor: pointer;
                 }
 
-                .ical-link:hover {
-                background-color: #4285F4; /* Change the hover color as desired
-                } 
-                */
+                .calendar-link > span:hover {
+                    color: #551A8B; /* Darker blue on hover */
+                }
             </style>
             <div class="calendar-link">
-                Free Tupi Antigo Class Calendar: 
+                <span id="calendar-toggle">Free Tupi Antigo Class Calendar</span><span>: </span>
                 <a target="_blank" href="https://calendar.google.com/calendar/u/0?cid=ZWM0MTE4MmQ2YzZmYWNhODQ1ZjJmYmUzZGViOTNjYzEwYWI1ZTM4OGY5OTM3YjY2MGY0NmI2YzNmNzA5NTRlY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t"><img border="0" src="https://www.google.com/calendar/images/ext/gc_button1_en.gif"></a>
-                <a href="https://calendar.google.com/calendar/ical/ec41182d6c6faca845f2fbe3deb93cc10ab5e388f9937b660f46b6c3f70954ec%40group.calendar.google.com/public/basic.ics" class="ical-link" target="_blank"><img border="0" width="40px" height="40px" src="ical.png"></a>
+                <br><a href="https://calendar.google.com/calendar/ical/ec41182d6c6faca845f2fbe3deb93cc10ab5e388f9937b660f46b6c3f70954ec%40group.calendar.google.com/public/basic.ics" class="ical-link" target="_blank">(Non-google users):<img border="0" width="40px" height="40px" src="ical.png"></a>
             </div>
             <br>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                var toggle = document.getElementById('calendar-toggle');
+                var calendarLinkChildren = document.querySelector('.calendar-link').children;
+                Array.from(calendarLinkChildren).forEach(function(child) {
+                        if (child.id !== 'calendar-toggle') {
+                            child.classList.toggle('hidden');
+                        }
+                    });
+                toggle.addEventListener('click', function() {
+                    Array.from(calendarLinkChildren).forEach(function(child) {
+                        if (child.id !== 'calendar-toggle') {
+                            child.classList.toggle('hidden');
+                        }
+                    });
+                });
+            });
+            </script>
             <a href="/nhe-enga/quiz">Quiz</a><br>
             <a href="/nhe-enga/gramatica">Gramática</a><br>
             Citando
