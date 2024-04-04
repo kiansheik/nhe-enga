@@ -6,7 +6,7 @@
         @keyup.enter="checkAnswer"
         :class="{ correct: isCorrect, incorrect: isIncorrect }"
         type="text"
-        placeholder="'Enter' to submit..."
+        placeholder="Enter to submit..."
       />
     </div>
   </template>
