@@ -44,6 +44,10 @@ By the start of the 19th century, the Paulistan General Language was already for
 
 ## Nheengatu
 
-The Amazonian General Language, however, did not completely die out.  
+The Amazonian General Language, however, did not completely die out. It continued to spread deep inland into the country. In these remote parts, Eurpoean immigration was much less common. 
+
+Today, a living descendent of the _Amazonian General Language_ knows as __Nheengatu__ _(good language)_ is still spoken by around 20,000 people. It's worth noting that this language has replaced the _"original"_ language of it's speakers. As Brazilian colonization continued into the interior, the _General Languages_ were taught to and used to communicate with the non-tupian speaking peoples of the interior. 
+
+As the _Amazonian General Language_ was the _lingua franca_ of the region, it ended up supplanting many local indigenous languages. This is how we have today __Nheengatu__; a language originally from the coast of Brazil which only survives far away, in the forests being spoken by non-tupian peoples. 
 
 <exercise answer="tîá nde ko'ema">How do you say _Good Morning_ in Tupi Antigo?</excercise>
