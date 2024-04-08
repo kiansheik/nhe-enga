@@ -20,7 +20,7 @@ _Guaraní_ is the most widely spoken indigenous language in all of the Americas!
 
 ## Anchieta
 
-Almost all of the texts we have today about Tupi Antigo were recorded by Jesuits, primariliy ___Father José de Anchieta___. Father Anchieta noted that the languages spoken by the peoples along the coast of Brazil were all very similar. He resolved to compile a standardized version of this language which we called _Língua Brasílica_. 
+Almost all of the texts we have today about Tupi Antigo were recorded by Jesuits, primariliy [___Father José de Anchieta___](https://en.wikipedia.org/wiki/Joseph_of_Anchieta). Father Anchieta noted that the languages spoken by the peoples along the coast of Brazil were all very similar. He resolved to compile a standardized version of this language which we called _Língua Brasílica_. 
 
 This language which he described is what we today call __Tupi Antigo__. He used this grammar to write _catechisms_ and _theatres_ in Tupi Antigo. The goal of these works was to evangelize the indigenous peoples of Brazil, or convert them to Christianity.
 
@@ -33,10 +33,10 @@ The two main varieties of _General Language_ spoken in what we now call Brazil w
 1. Paulistan General Language (South)
 
 ::: warning
-Closer to the south of Brazil and Paraguay, __Father Montoya__ was doing a parallel work with _Old Guaraní_, creating a grammar and evangilizing the peoples of the area. In those regions, there existed _General Languages_ based more heavily on Guaraní than Tupi Antigo. While parallel to what we are discussing, those languages are not descendents of _Tupi Antigo_
+Closer to the south of Brazil and Paraguay, [__Father Montoya__](https://en.wikipedia.org/wiki/Antonio_Ruiz_de_Montoya) was doing a parallel work with _Old Guaraní_, creating a grammar and evangilizing the peoples of the area. In those regions, there existed _General Languages_ based more heavily on Guaraní than Tupi Antigo. While parallel to what we are discussing, those languages are not descendents of _Tupi Antigo_
 :::
 
-With the arrival of the __Marques do Pombal__ in Brazil, he made a decree to outlaw the official use of any indigenous languages. Portuguese became number one. While this event did not single-handedly cause the downfall of Tupi Antigo as a _língua franca_ in Brazil, it set the stage for it's inevitable demise.
+With the arrival of the [__Marques do Pombal__](https://en.wikipedia.org/wiki/Sebasti%C3%A3o_Jos%C3%A9_de_Carvalho_e_Melo,_1st_Marquis_of_Pombal) in Brazil, he made a decree to outlaw the official use of any indigenous languages. Portuguese became number one. While this event did not single-handedly cause the downfall of Tupi Antigo as a _língua franca_ in Brazil, it set the stage for it's inevitable demise.
 
 With the onset of mass immigration to Brazil from Europe, the Portuguese language slowly but surely replaced the _General Languages_ and _Tupi Antigo_ as the _língua franca_ in most of the country. 
 

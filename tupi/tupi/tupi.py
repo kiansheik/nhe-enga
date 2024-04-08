@@ -52,6 +52,23 @@ class TupiAntigo(object):
             " "
         ),
     }
+    def generate_html_table(self):
+        table_header = "<tr><th>Navarro</th><th>IPA</th></tr>"
+        table_rows = [
+            f"<tr><td>{navarro}</td><td>{ipa}</td></tr>"
+            for navarro, ipa in zip(self.sound_graf["navarro"], self.sound_graf["ipa"])
+        ]
+        table = f"<table>{table_header}{''.join(table_rows)}</table>"
+        return table
+    def generate_html_table_from_dict(self, data):
+        headers = data.keys()
+        table_header = "<tr>" + "".join(f"<th>{header}</th>" for header in headers) + "</tr>"
+        table_rows = [
+            "<tr>" + "".join(f"<td>{value}</td>" for value in values) + "</tr>"
+            for values in zip(*data.values())
+        ]
+        table = f"<table>{table_header}{''.join(table_rows)}</table>"
+        return table
     # Identify all non-ascii special chars in the navarro alphabet
     special_chars = list(enumerate("û î ŷ á é í ý ó ú ã ẽ ĩ ỹ õ ũ '".split(" ")))
     # Create a two-way dictionary
