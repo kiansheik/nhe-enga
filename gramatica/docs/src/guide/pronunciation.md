@@ -40,11 +40,10 @@ Tupi Antigo pronunciation is fairly straightforward. We are borrowing the orthog
 | <sound sound="sû" />  | sʷ      | <root root="so'o" /> | animal |
 | <sound sound="t" />   | t       | <root root="so'o" /> | animal |
 | <sound sound="u" />   | u       | <root root="so'o" /> | animal |
-| <sound sound="ú" />   | ˈu      | <root root="so'o" /> | animal |
-| <sound sound="û" />   | w       | <root root="so'o" /> | animal |
-| <sound sound="ũ" />   | ũ       | <root root="so'o" /> | animal |
-| <sound sound="x" />   | ʃ       | <root root="so'o" /> | animal |
-| <sound sound="y" />   | ɨ       | <root root="so'o" /> | animal |
+| <sound sound="ú" />   | ˈu      | <root root="karu" entryNumber=2 /> | eat |
+| <sound sound="ũ" />   | ũ       | <root root="irũ" entryNumber=2 /> | friend |
+| <sound sound="x" />   | ʃ       | <root root="ixé" /> | I |
+| <sound sound="y" />   | ɨ       | <root root="'y" /> | water, river |
 | <sound sound="ý" />   | ˈɨ      | <root root="gûaîaý" /> | feathered headdress |
 | <sound sound="ŷ" />   | ɨ       | <root root="apŷaba" /> | oven |
 | <sound sound="ỹ" />   | ɨ̃      | <root root="-e'ym" entryNumber=2 /> | without |
