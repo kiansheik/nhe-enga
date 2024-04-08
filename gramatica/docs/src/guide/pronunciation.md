@@ -13,10 +13,10 @@ Tupi Antigo pronunciation is fairly straightforward. We are borrowing the orthog
 | <sound sound="é" />   | ˈɛ      | <root root="bebé" /> | flight |
 | <sound sound="ẽ" />   | ɛ̃      | <root root="anhẽ" /> | really, actually |
 | <sound sound="gû" />   | w       | <root root="kugûab" /> | to know |
-| <sound sound="i" />   | i       | <root root="so'o" /> | animal |
-| <sound sound="í" />   | ˈi      | <root root="so'o" /> | animal |
-| <sound sound="î" />   | j       | <root root="so'o" /> | animal |
-| <sound sound="k" />   | k       | <root root="so'o" /> | animal |
+| <sound sound="i" />   | i       | <root root="u'i" /> | flour |
+| <sound sound="í" />   | ˈi      | <root type=noun root="aíba" /> | poor, bad |
+| <sound sound="î" />   | j       | <root root="îandé" /> | we, us (incl.) |
+| <sound sound="k" />   | k       | <root tpye=noun root="karuka" /> | afternoon |
 | <sound sound="kû" />  | kʷ      | <root root="so'o" /> | animal |
 | <sound sound="m" />   | m       | <root root="so'o" /> | animal |
 | <sound sound="mb" />  | mb      | <root root="so'o" /> | animal |
