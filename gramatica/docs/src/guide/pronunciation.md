@@ -45,6 +45,6 @@ Tupi Antigo pronunciation is fairly straightforward. We are borrowing the orthog
 | <sound sound="ũ" />   | ũ       | <root root="so'o" /> | animal |
 | <sound sound="x" />   | ʃ       | <root root="so'o" /> | animal |
 | <sound sound="y" />   | ɨ       | <root root="so'o" /> | animal |
-| <sound sound="ý" />   | ˈɨ      | <root root="so'o" /> | animal |
-| <sound sound="ŷ" />   | ɨ       | <root root="so'o" /> | animal |
-| <sound sound="ỹ" />   | ɨ̃      | <root root="so'o" /> | animal |
+| <sound sound="ý" />   | ˈɨ      | <root root="gûaîaý" /> | feathered headdress |
+| <sound sound="ŷ" />   | ɨ       | <root root="apŷaba" /> | oven |
+| <sound sound="ỹ" />   | ɨ̃      | <root root="-e'ym" entryNumber=2 /> | without |
