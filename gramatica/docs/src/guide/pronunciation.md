@@ -12,8 +12,7 @@ Tupi Antigo pronunciation is fairly straightforward. We are borrowing the orthog
 | <sound sound="e" />   | e       | <root root="ker" /> | sleep |
 | <sound sound="é" />   | ˈɛ      | <root root="bebé" /> | flight |
 | <sound sound="ẽ" />   | ɛ̃      | <root root="anhẽ" /> | really, actually |
-| <sound sound="g" />   | w       | <root root="kugûab" /> | to know |
-| <sound sound="gû" />  | g       | <root root="so'o" /> | animal |
+| <sound sound="gû" />   | w       | <root root="kugûab" /> | to know |
 | <sound sound="i" />   | i       | <root root="so'o" /> | animal |
 | <sound sound="í" />   | ˈi      | <root root="so'o" /> | animal |
 | <sound sound="î" />   | j       | <root root="so'o" /> | animal |
