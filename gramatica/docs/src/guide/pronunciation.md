@@ -12,7 +12,7 @@ Tupi Antigo pronunciation is fairly straightforward. We are borrowing the orthog
 | <sound sound="e" />   | e       | <root root="ker" /> | sleep |
 | <sound sound="é" />   | ˈɛ      | <root root="bebé" /> | flight |
 | <sound sound="ẽ" />   | ɛ̃      | <root root="anhẽ" /> | really, actually |
-| <sound sound="gû" />   | w       | <root root="kugûab" /> | to know |
+| <sound sound="û,gû" />   | w       | <root root="saûí" />, <root root="sagûi" /> | Marmosets |
 | <sound sound="i" />   | i       | <root root="u'i" /> | flour |
 | <sound sound="í" />   | ˈi      | <root type=noun root="aíba" /> | poor, bad |
 | <sound sound="î" />   | j       | <root root="îandé" /> | we, us (incl.) |
