@@ -1,6 +1,10 @@
 # Pronunciation
 
-Tupi Antigo pronunciation is fairly straightforward. We are borrowing the orthography and pronunciation guide from Navarro. _(Click the blue bottons to hear the example words)_
+Tupi Antigo pronunciation is fairly straightforward. We are borrowing the orthography and pronunciation guide from Navarro. 
+
+::: tip
+___Click the blue bottons to hear the example words!___
+:::
 
 | Navarro | IPA | Example | Translation |
 | ------- | --- | ------- | ----------- |
