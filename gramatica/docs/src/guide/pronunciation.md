@@ -17,22 +17,22 @@ Tupi Antigo pronunciation is fairly straightforward. We are borrowing the orthog
 | <sound sound="í" />   | ˈi      | <root type=noun root="aíba" /> | poor, bad |
 | <sound sound="î" />   | j       | <root root="îandé" /> | we, us (incl.) |
 | <sound sound="k" />   | k       | <root type=noun root="karuka" /> | afternoon |
-| <sound sound="kû" />  | kʷ      | <root root="so'o" /> | animal |
-| <sound sound="m" />   | m       | <root root="so'o" /> | animal |
-| <sound sound="mb" />  | mb      | <root root="so'o" /> | animal |
-| <sound sound="mbû" /> | mbʷ     | <root root="so'o" /> | animal |
-| <sound sound="mû" />  | mʷ      | <root root="so'o" /> | animal |
-| <sound sound="n" />   | n       | <root root="so'o" /> | animal |
+| <sound sound="kû" />  | kʷ      | <root root="kûesé" /> | yesterday |
+| <sound sound="m" />   | m       | <root root="amõaé" /> | other |
+| <sound sound="mb" />  | mb      | <root root="mba'e" entryNumber=3 /> | animal |
+| <sound sound="mbû" /> | mbʷ     | <root type=absolute root="e'õmbûera" /> | dead body <br> _(human or animal)_ |
+| <sound sound="mû" />  | mʷ      | <root root="memûã" /> | rude, fake, mocking |
+| <sound sound="n" />   | n       | <root root="naná" /> | pineapple |
 | <sound sound="nd" />  | nd      | <root root="endé" /> | You |
 | <sound sound="ndû" /> | ndʷ     | <root type=noun root="tamandûá" /> | anteater |
 | <sound sound="-ng" /> <br> _end-word_  | ŋ       | <root root="nhe'eng" /> | to speak |
 | <sound sound="-ng-" /> <br> _mid-word_ | ŋɡ      | <root type=noun root="nhe'enga" /> | word, discourse, language |
-| <sound sound="ngû" /> | ŋɡʷ     | <root root="Anhanguera" /> | Old Devil <br> _nickname of bandeirante_ |
+| <sound sound="ngû" /> | ŋɡʷ     | <root type=noun root="Anhanguera" /> | Old Devil <br> _nickname of bandeirante_ |
 | <sound sound="nh" />  | ɲ       | <root root="nhemongetá" entryNumber=2 /> | to think, reflect <br> _(etim. - to converse with oneself)_ |
 | <sound sound="o" />   | o       | <root root="sokó" /> | Black-crowned night heron |
 | <sound sound="ó" />   | ˈɔ      | <root root="ikó" /> | this, these |
 | <sound sound="õ" />   | ɔ̃      | <root root="nhote" /> | only |
-| <sound sound="p" />   | p       | <root root="pó" /> | hand |
+| <sound sound="p" />   | p       | <root entryNumber=1 root="pó" /> | hand |
 | <sound sound="pî" />  | pʲ      | <root root="epîak" /> | to see |
 | <sound sound="pû" />  | pʷ      | <root type=absolute root="ypûera" /> | juice |
 | <sound sound="r" />   | r       | <root type=noun root="karaíba" /> | christian, saint, white man |
