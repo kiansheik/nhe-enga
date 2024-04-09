@@ -3,7 +3,9 @@
 Tupi Antigo pronunciation is fairly straightforward. We are borrowing the orthography and pronunciation guide from Navarro. 
 
 ::: tip
-_Click the **blue buttons** to hear the example words!_
+Click the **blue buttons** to hear the example words spoken _(Turn volume up...)_
+
+Click the **yellow words** to see Navarro's dictionary entry _(Portuguese)_
 :::
 
 | Navarro | IPA | Example | Translation |
