@@ -23,12 +23,12 @@ Tupi Antigo pronunciation is fairly straightforward. We are borrowing the orthog
 | <sound sound="mbû" /> | mbʷ     | <root root="so'o" /> | animal |
 | <sound sound="mû" />  | mʷ      | <root root="so'o" /> | animal |
 | <sound sound="n" />   | n       | <root root="so'o" /> | animal |
-| <sound sound="nd" />  | nd      | <root root="so'o" /> | animal |
-| <sound sound="ndû" /> | ndʷ     | <root root="so'o" /> | animal |
+| <sound sound="nd" />  | nd      | <root root="endé" /> | You |
+| <sound sound="ndû" /> | ndʷ     | <root type=noun root="tamandûá" /> | anteater |
 | <sound sound="-ng" /> <br> _end-word_  | ŋ       | <root root="nhe'eng" /> | to speak |
 | <sound sound="-ng-" /> <br> _mid-word_ | ŋɡ      | <root type=noun root="nhe'enga" /> | word, discourse, language |
-| <sound sound="ngû" /> | ŋɡʷ     | <root root="so'o" /> | animal |
-| <sound sound="nh" />  | ɲ       | <root root="nhemongetá" entryNumber=2 /> | to think, reflect _(etim. - to converse with oneself)_ |
+| <sound sound="ngû" /> | ŋɡʷ     | <root root="Anhanguera" /> | Old Devil <br> _nickname of bandeirante_ |
+| <sound sound="nh" />  | ɲ       | <root root="nhemongetá" entryNumber=2 /> | to think, reflect <br> _(etim. - to converse with oneself)_ |
 | <sound sound="o" />   | o       | <root root="sokó" /> | Black-crowned night heron |
 | <sound sound="ó" />   | ˈɔ      | <root root="ikó" /> | this, these |
 | <sound sound="õ" />   | ɔ̃      | <root root="nhote" /> | only |
