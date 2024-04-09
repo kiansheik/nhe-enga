@@ -94,6 +94,8 @@ export default {
             for (let entry of this.jsonData) {
                 if (entry.f === root && entry.o === optionalNumber) {
                     return entry.d.replace(/"/g, '\\"');
+                } else if (optionalNumber === '' && entry.f === root && entry.o === '1') {
+                    return entry.d.replace(/"/g, '\\"');
                 }
             }
             return null;
