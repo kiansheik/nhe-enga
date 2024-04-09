@@ -25,7 +25,7 @@ Click the **yellow words** to see Navarro's dictionary entry _(Portuguese)_
 | <sound sound="k" />   | k       | <root type=noun root="karuka" /> | afternoon |
 | <sound sound="kû" />  | kʷ      | <root root="kûesé" /> | yesterday |
 | <sound sound="m" />   | m       | <root root="amõaé" /> | other |
-| <sound sound="mb" />  | mb      | <root root="mba'e" entryNumber=3 /> | animal |
+| <sound sound="mb" />  | mb      | <root root="mba'e" entryNumber=3 /> | thing |
 | <sound sound="mbû" /> | mbʷ     | <root type=absolute root="e'õmbûera" /> | dead body <br> _(human or animal)_ |
 | <sound sound="mû" />  | mʷ      | <root root="memûã" /> | rude, fake, mocking |
 | <sound sound="n" />   | n       | <root root="naná" /> | pineapple |
