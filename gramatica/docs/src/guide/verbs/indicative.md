@@ -57,6 +57,10 @@ Given a uniform, second class root like <root root="ma'enduar" secondClass=true 
 | Y'all | 2pp           |<py>n.conjugate("2pp")</py>      |
 | They  | 3p            |<py>n.conjugate("3p")</py>       |
 
+
+
+<exercise answer="i aruru">Given the root <root root=aruru /> _(sad)_, translate the follow to tupi:<br> __He is sad.__ </excercise>
+
 Nice Job! Super easy! 
 
 ### Pluriform Roots
