@@ -36,7 +36,7 @@ export default {
 .exercise-container {
     display: inline-block;
     color: #6C6C2A; 
-    background-color: #F8F8E1;
+    background-color: #eeeeb8;
     border: 1.2px solid #6C6C2A; 
     padding-left: 3px;
     padding-right: 3px;
