@@ -90,6 +90,8 @@ Notice how in the <t3p/>, rather than a `personal pronoun + r-` we are getting a
 
 <exercise answer="sesãî"> __She is happy.__ </excercise>
 
+<exercise answer="nde rerapûan">Given the root <root root=erapûana /> _(famous)_, translate the follow to tupi:<br> __You are famous.__ </excercise>
+
 It really is that easy! 
 
 ## First Class Verbs
