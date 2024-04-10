@@ -61,6 +61,8 @@ Given a uniform, second class root like <root root="ma'enduar" secondClass=true 
 
 <exercise answer="i aruru">Given the root <root root=aruru /> _(sad)_, translate the follow to tupi:<br> __He is sad.__ </excercise>
 
+<exercise answer="xe aruru"> __I am sad.__ </excercise>
+
 Nice Job! Super easy! 
 
 ### Pluriform Roots
@@ -83,6 +85,8 @@ When a second class root is pluriform, add an **r-** prefix.
 ::: warning
 Notice how in the <t3p/>, rather than a `personal pronoun + r-` we are getting a single `s-` which takes the place of the `i` pronoun used in the above uniform case. 
 :::
+
+<exercise answer="pe resãî">Given the root <root root=esãî /> _(happy)_, translate the follow to tupi:<br> __You are happy.__ </excercise>
 
 It really is that easy! 
 
