@@ -86,7 +86,7 @@ When a second class root is pluriform, add an **r-** prefix.
 Notice how in the <t3p/>, rather than a `personal pronoun + r-` we are getting a single `s-` which takes the place of the `i` pronoun used in the above uniform case. 
 :::
 
-<exercise answer="pe resãî">Given the root <root root=esãî /> _(happy)_, translate the follow to tupi:<br> __Y'all are happy.__ </excercise>
+<exercise answer="pe resãî">Given the root <root root=esãîa /> _(happy)_, translate the follow to tupi:<br> __Y'all are happy.__ </excercise>
 
 <exercise answer="sesãî"> __She is happy.__ </excercise>
 
