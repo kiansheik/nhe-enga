@@ -19,11 +19,11 @@
                     display: inline-block;
                     padding: inherit;
                     /* background-color: #4285F4; Google's blue color */
-                    color: white;
+                    /* color: white;
                     text-decoration: none;
                     border-radius: 50px;
                     font-weight: bold;
-                    transition: background-color 0.3s ease;
+                    transition: background-color 0.3s ease; */
                 }
             
                 .calendar-link > a:hover {
@@ -37,20 +37,20 @@
                 .hidden {
                     display: none;
                 }
-                .calendar-link > span {
+                .calendar-link > a {
                     color: #0000EE;
                     text-decoration: underline;
                     cursor: pointer;
                 }
 
-                .calendar-link > span:hover {
+                .calendar-link > a:visited {
                     color: #551A8B; /* Darker blue on hover */
                 }
             </style>
             <a href="/nhe-enga/quiz">Quiz</a><br>
             <a href="/nhe-enga/gramatica">Gramática</a><br>
             <div class="calendar-link">
-                <span id="calendar-toggle">Class Calendar</span><span>: </span>
+                <a href="#" id="calendar-toggle">Class Calendar</a><span>: </span>
                 <a target="_blank" href="https://calendar.google.com/calendar/u/0?cid=ZWM0MTE4MmQ2YzZmYWNhODQ1ZjJmYmUzZGViOTNjYzEwYWI1ZTM4OGY5OTM3YjY2MGY0NmI2YzNmNzA5NTRlY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t"><img border="0" src="https://www.google.com/calendar/images/ext/gc_button1_en.gif"></a>
                 <br><a href="https://calendar.google.com/calendar/ical/ec41182d6c6faca845f2fbe3deb93cc10ab5e388f9937b660f46b6c3f70954ec%40group.calendar.google.com/public/basic.ics" class="ical-link" target="_blank">(Non-google users):<img border="0" width="40px" height="40px" src="ical.png"></a>
             </div>
