@@ -81,7 +81,16 @@ module.exports = {
           children: [
             'verbs/indicative',
           ]
-        }
+        },
+        {
+          title: 'Adjectives',
+          collapsable: true,
+          displayAllHeaders: true,
+          sidebarDepth: 6,
+          children: [
+            'adjectives/2-class-verbs',
+          ]
+        },
       ],
     }
   },
