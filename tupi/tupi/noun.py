@@ -67,6 +67,27 @@ class Noun(TupiAntigo):
         self.ero = self.verbete().startswith("ero") or self.verbete().startswith("eno") or self.verbete().startswith("eru")
         self.objeto_raw = None
     
+    def compose(self, modifier):
+        frame = inspect.currentframe()
+        func_name = frame.f_code.co_name
+        args, _, _, values = inspect.getargvalues(frame)
+        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        ret_noun = copy.deepcopy(self)
+        ret_noun.aglutinantes[-1] = self
+        vbt = ret_noun.verbete()
+        vbt_an = ret_noun.verbete(anotated=True)
+        mod_vbt = modifier.verbete()
+        mod_vbt_an = modifier.verbete(anotated=True)
+
+        if vbt[-1] in self.vogais:
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            ret_noun.latest_verbete = f"{start}[{parts[-1]}{mod_vbt_an}"
+
+        ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.recreate += f".{func_name}({args_str})"
+        return ret_noun
+    
     def verb(self):
         raiz =  self.verbete()
         verb_class = ""

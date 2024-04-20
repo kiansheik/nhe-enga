@@ -57,3 +57,13 @@ Let's see what that looks like with <root root=aruru /> _(sadness)_:
 | Y'all _(are)_ sad / Y'all's sadness | 2pp           |<py>n.conjugate("2pp")</py>      |
 | They _(are)_ sad / Their sadness | 3p            |<py>n.conjugate("3p")</py>       |
 
+## Composition
+
+Sometimes instead of saying something like _That woman is **beautiful**_ we will say _She is a **beautiful woman**_.
+
+| Tupi | English | Explanation |
+|------|-----------------|--------|
+| <root root="kunhã" /> <root root=i entryNumber=4 /> <root root='poranga' /> | (that) woman is beautiful | using the _"adjective"_ as a second class verb |
+| <root root=i entryNumber=4 /> <root root="kunhã" /><root type=noun root='poranga' /> | She is a beautiful woman | using the _"adjective"_ in composition with the base noun to create a *new root* |
+
+
