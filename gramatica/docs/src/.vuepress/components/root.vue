@@ -2,12 +2,12 @@
   <div :key="definition" @click="toggleDefinition" class="root-div">
     <div class="tupi-text">
       <!-- <client-only> -->
-        <strong><py>n = Noun("{{this.root}}", "{{ this.definition }}".strip()); {{ this.inflection }}</py></strong>
+        <strong><py>n = Noun("{{this.root.toLowerCase()}}", "{{ this.definition }}".strip()); {{ this.inflection }}</py></strong>
     <!-- </client-only> -->
     </div>
     <div :class="{ 'hidden': this.hideDefinition, 'tupi-def': true }">
       <!-- <client-only> -->
-        <py>n.raw_definition</py>
+        <py>n.verbete() + " " + n.raw_definition</py>
       <!-- </client-only> -->
     </div>
   </div>
@@ -52,7 +52,7 @@
       },
       updateDefinition(){
         if (this.dictLoaded) {
-          this.raw_definition = this.pyLoader.findDefinition(this.root, this.entryNumber);
+          this.raw_definition = this.pyLoader.findDefinition(this.root.toLowerCase(), this.entryNumber);
         }
       }
     },
