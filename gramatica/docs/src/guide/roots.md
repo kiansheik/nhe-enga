@@ -51,12 +51,12 @@ Verbs like <root root="ma'enduar" /> _(to remember)_ are stative, meaning they a
 
 | Lema | Person | Prefix _(Pluriform)_ | Conjugation | Translation |
 |------|-----------------|--------|-------------|-------------|
-| I    | 1ps             |   <py>Noun.personal_inflections["1ps"][1]</py>(r)   | <py>n.conjugate("1ps")</py> | I remember |
-| You  | 2ps            | <py>Noun.personal_inflections["2ps"][1]</py>(r)    | <py>n.conjugate("2ps")</py> | You remember |
-| We _(Exclusive)_ | 1ppe    | <py>Noun.personal_inflections["1ppe"][1]</py>(r)  | <py>n.conjugate("1ppe")</py> | We _(not you)_ remember |
-| We _(Inclusive)_ | 1ppi  | <py>Noun.personal_inflections["1ppi"][1]</py>(r)   | <py>n.conjugate("1ppi")</py> | We all remember |
-| Y'all | 2pp           | <py>Noun.personal_inflections["2pp"][1]</py>(r)     | <py>n.conjugate("2pp")</py> | You all remember |
-| They  | 3p            | <py>Noun.personal_inflections["3p"][1]</py>/(s)      | <py>n.conjugate("3p")</py> | They remember |
+| I    | 1ps             |   <py>Noun.personal_inflections["1ps"][1]</py>(r)   | <py>n.conjugate("1ps")</py> | I remembered |
+| You  | 2ps            | <py>Noun.personal_inflections["2ps"][1]</py>(r)    | <py>n.conjugate("2ps")</py> | You remembered |
+| We _(Exclusive)_ | 1ppe    | <py>Noun.personal_inflections["1ppe"][1]</py>(r)  | <py>n.conjugate("1ppe")</py> | We _(not you)_ remembered |
+| We _(Inclusive)_ | 1ppi  | <py>Noun.personal_inflections["1ppi"][1]</py>(r)   | <py>n.conjugate("1ppi")</py> | We all remembered |
+| Y'all | 2pp           | <py>Noun.personal_inflections["2pp"][1]</py>(r)     | <py>n.conjugate("2pp")</py> | You all remembered |
+| They  | 3p            | <py>Noun.personal_inflections["3p"][1]</py>/(s)      | <py>n.conjugate("3p")</py> | They remembered |
 
 ### Pluriform
 Any root may be what is called a _pluriform_ meaning that it will recieve specific prefixes governed based on it's class of plurformality.
