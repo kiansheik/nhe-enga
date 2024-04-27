@@ -32,15 +32,33 @@ Second class verbs are ___never transitive___. Verbs like <root root="ma'enduar"
 | Y'all | 2pp           | <py>Noun.personal_inflections["2pp"][1]</py>(r)     | <py>n.conjugate("2pp")</py> |
 | They  | 3p            | <py>Noun.personal_inflections["3p"][1]</py>/(s)      | <py>n.conjugate("3p")</py> |
 
-    - An intransitive root _may_ be a second class verb, these recieving special treatment in regards to conjugation.
+An intransitive root _may_ be a second class verb, these recieving special treatment in regards to conjugation.
 
 
 ### Transitivity
-    - A root can be either Transitive or Intransitive
+
+A root can be either Transitive or Intransitive
 
 
 
 ### Pluriform
-    - Any root may be what is called a _pluriform_ meaning that it will recieve specific prefixes governed based on it's class of plurformality.
+Any root may be what is called a _pluriform_ meaning that it will recieve specific prefixes governed based on it's class of plurformality.
+
+| **Pluriform Type** | **_Absolute_** | **_Possession_** | **_3p_** |
+|--------------------|----------------|------------------|----------|
+| _None_             |              ø |                ø |        ø |
+| _(r, s)_           |              ø |               r- |       s- |
+| _(t)_              |             t- |               r- |       s- |
+| _(t, t)_           |             t- |               r- |       t- |
+| _(s, r, s)_        |             s- |               r- |       s- |
+
+In addition to these pluriforms, some roots which begin with `p-` in the possessive and 3p cases will shift to `m-` in the absolute cases:
+
+| **_Possessive_** | **_Absolute_**    |
+|------------------|-------------------|
+| xe porombo'esara |     morombo'esara |
+| My teacher       | teacher (general) |
+
+## Conclusion
 
 These concepts will be discussed in further detail in later sections, feel free to skip around :)

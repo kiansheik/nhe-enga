@@ -83,6 +83,10 @@ class Noun(TupiAntigo):
             parts = ret_noun.latest_verbete.split("[")
             start = "[".join(parts[:-1])
             ret_noun.latest_verbete = f"{start}[{parts[-1]}{mod_vbt_an}"
+        elif vbt[-1] in self.consoantes:
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            ret_noun.latest_verbete = f"{start[:-1]}[{parts[-1]}{mod_vbt_an}"
 
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
