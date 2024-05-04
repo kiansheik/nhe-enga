@@ -91,6 +91,15 @@ module.exports = {
             'adjectives/2-class-verbs',
           ]
         },
+        {
+          title: 'Nouns',
+          collapsable: true,
+          displayAllHeaders: true,
+          sidebarDepth: 6,
+          children: [
+            'nouns/basic-nouns',
+          ]
+        },
       ],
     }
   },

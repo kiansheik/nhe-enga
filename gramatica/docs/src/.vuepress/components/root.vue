@@ -141,6 +141,9 @@
             case 'noun':
                 return `n.substantivo(anotated=${this.anot})`
                 break;
+            case 'saba':
+                return `n.saba().substantivo(anotated=${this.anot})`
+                break;
             case 'absolute':
                 return `n.absoluta().substantivo(anotated=${this.anot})`
                 break;
