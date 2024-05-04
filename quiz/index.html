@@ -5,8 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <title>Sentence Quiz</title>
+    <style>
+        .mood-button {
+            background-color: lightgray;
+            border: none;
+            color: black;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        .mood-button-active {
+            background-color: gray;
+            color: white;
+        }
+    </style>
 </head>
 <body>
+    <button class="mood-button" id="indicativo">Indicativo</button>
+    <button class="mood-button" id="circunstancial">Circunstancial</button>
+    <button class="mood-button" id="gerundio">Gerúndio</button>
+
     <div id="quiz-container">
         <!-- Add this element where you want to display the progress feedback -->
         <h2 id="progress-feedback"></h2>
