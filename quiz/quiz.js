@@ -21,7 +21,7 @@ function startQuiz() {
             // Populate dropdown options
             populateDropdown('mode', modes);
             populateDropdown('subject', ['ø', 'endé', 'ixé', 'oré', 'îandé', "peẽ", "a'e"]);
-            populateDropdown('object', ['ø', 'xe', 'nde', 'oré', 'îandé', "pe", "i", "îo"]);
+            populateDropdown('object', ['ø', 'xe', 'nde', 'oré', 'îandé', "pe", "i", "îo", "îe"]);
 
             showQuestion();
         })
@@ -64,14 +64,21 @@ function showQuestion() {
 
     resetDropdowns();
     if (currentQuestionIndex < question_count) {
-        const currentQuestion = dataset[currentQuestionIndex];
+        // Filter the dataset based on active mood buttons
+        const activeMoodButtons = document.querySelectorAll('.mood-button-active');
+        const activeMoods = Array.from(activeMoodButtons).map(button => button.id.substring(0, 2));
+        const filteredDataset = dataset.filter(item => activeMoods.includes(item.m));
+        console.log(activeMoods);
+        // Generate the next question using the filtered dataset
+        const currentQuestion = filteredDataset[currentQuestionIndex];
         document.getElementById('question').innerText = currentQuestion.f;
         partsArray = currentQuestion.d.split(' -');
-        mode_val = modes.find(option => option.slice(0, 2) === currentQuestion.m)
-        document.getElementById('definition').href = `${window.location.pathname}../?query=${encodeURIComponent(partsArray[0])}`
-        document.getElementById('definition').innerText = partsArray[0]
+        mode_val = modes.find(option => option.slice(0, 2) === currentQuestion.m);
+        console.log(mode_val)
+        document.getElementById('definition').href = `${window.location.pathname}../?query=${encodeURIComponent(partsArray[0])}`;
+        document.getElementById('definition').innerText = partsArray[0];
         document.getElementById('definition-text').innerText = partsArray.slice(1).join(' -');
-        document.getElementById('response').innerText = 'Modo: '+mode_val + '; Sujeito: ' + reverseSubjPrefMap[currentQuestion.s] + '; Objeto: ' + reverseObjPrefMap[currentQuestion.o] + ';';
+        document.getElementById('response').innerText = 'Modo: ' + mode_val + '; Sujeito: ' + reverseSubjPrefMap[currentQuestion.s] + '; Objeto: ' + reverseObjPrefMap[currentQuestion.o] + ';';
     } else {
         showResult();
     }
@@ -127,7 +134,8 @@ let obj_pref_map = {
     'nde': '2ps',
     "pe": '2pp',
     "i": '3p',
-    "îo": 'mut'
+    "îo": 'mut',
+    "îe": 'refl',
 } 
 
 // Function to create a reverse map
@@ -180,4 +188,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // Your JavaScript code here
     startQuiz();
     resetDropdowns();
+});
+
+document.querySelectorAll('.mood-button').forEach(button => {
+    button.addEventListener('click', () => {
+        button.classList.toggle('mood-button-active');
+    });
 });

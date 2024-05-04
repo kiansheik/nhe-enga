@@ -20,18 +20,20 @@
         }
 
         .mood-button-active {
-            background-color: gray;
+            background-color: rgb(76, 175, 80);
             color: white;
         }
     </style>
 </head>
 <body>
-    <button class="mood-button" id="indicativo">Indicativo</button>
-    <button class="mood-button" id="circunstancial">Circunstancial</button>
-    <button class="mood-button" id="gerundio">Gerúndio</button>
-
     <div id="quiz-container">
         <!-- Add this element where you want to display the progress feedback -->
+        <button class="mood-button mood-button-active" id="indicativo">Indicativo</button>
+        <button class="mood-button mood-button-active" id="permissivo">Permissivo</button>
+        <button class="mood-button mood-button-active" id="circunstancial">Circunstancial</button>
+        <button class="mood-button mood-button-active" id="gerundio">Gerúndio</button>
+        <button class="mood-button mood-button-active" id="imperativo">Imperativo</button>
+        <br>
         <h2 id="progress-feedback"></h2>
         <div class="answer-container">
             <a target="_blank" id="definition" href="'#"></a><p id="definition-text"></p></p>
