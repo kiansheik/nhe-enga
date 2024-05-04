@@ -17,7 +17,7 @@ function startQuiz() {
             // Assign the loaded data to the dataset variable
             dataset = data;
             dataset = dataset.filter(item => item.c !== undefined);
-            dataset = dataset.flatMap(item => item.c.map(child => ({...child, d: item.d})));
+            dataset = dataset.flatMap(item => item.c.map(child => ({...child, d: `${item.f} - ${item.d}`})));
             // dataset = dataset.flatMap(item => item.c);
             // Shuffle the dataset
             shuffleDataset();
