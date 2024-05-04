@@ -57,6 +57,7 @@ function populateDropdown(id, options) {
     });
 }
 
+let filteredDataset = [];
 
 function showQuestion() {
     const progressFeedback = document.getElementById('progress-feedback');
@@ -67,7 +68,7 @@ function showQuestion() {
         // Filter the dataset based on active mood buttons
         const activeMoodButtons = document.querySelectorAll('.mood-button-active');
         const activeMoods = Array.from(activeMoodButtons).map(button => button.id.substring(0, 2));
-        const filteredDataset = dataset.filter(item => activeMoods.includes(item.m));
+        filteredDataset = dataset.filter(item => activeMoods.includes(item.m));
         console.log(activeMoods);
         // Generate the next question using the filtered dataset
         const currentQuestion = filteredDataset[currentQuestionIndex];
@@ -158,7 +159,7 @@ let reverseObjPrefMap = createReverseMap(obj_pref_map);
 
 function checkDropdownAnswer(part, dropdownElement) {
     selectedValue = dropdownElement.value;
-    const currentQuestion = dataset[currentQuestionIndex];
+    const currentQuestion = filteredDataset[currentQuestionIndex];
     is_correct = false;
     // console.log(part, selectedValue, selectedValue.substring(0, 2), currentQuestion.m)
     if (part === 'mode' && selectedValue.substring(0, 2) === currentQuestion.m) {
