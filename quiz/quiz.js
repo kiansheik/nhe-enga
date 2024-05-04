@@ -21,7 +21,7 @@ function startQuiz() {
             // Populate dropdown options
             populateDropdown('mode', modes);
             populateDropdown('subject', ['ø', 'endé', 'ixé', 'oré', 'îandé', "peẽ", "a'e"]);
-            populateDropdown('object', ['ø', 'xe', 'nde', 'oré', 'îandé', "pe", "i"]);
+            populateDropdown('object', ['ø', 'xe', 'nde', 'oré', 'îandé', "pe", "i", "îo"]);
 
             showQuestion();
         })
@@ -126,7 +126,8 @@ let obj_pref_map = {
     'îandé': '1ppi',
     'nde': '2ps',
     "pe": '2pp',
-    "i": '3p'
+    "i": '3p',
+    "îo": 'mut'
 } 
 
 // Function to create a reverse map
