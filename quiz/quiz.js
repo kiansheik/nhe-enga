@@ -7,6 +7,8 @@ let currentQuestionIndex = 0;
 let score = 0;
 let question_count = 5;
 let modes = ['indicativo', 'permissivo', 'circunstancial', 'gerundio', 'imperativo'];
+let enviarButton = document.getElementById('enviar');
+
 function startQuiz() {
     // Load the dataset from 'verbs.json'
     fetch('quiz.json')
@@ -60,6 +62,7 @@ function populateDropdown(id, options) {
 let filteredDataset = [];
 
 function showQuestion() {
+    enviarButton.style.display = 'block';
     const progressFeedback = document.getElementById('progress-feedback');
     progressFeedback.innerText = `Perguntas: ${currentQuestionIndex+1}/${question_count}`;
 
@@ -85,7 +88,8 @@ function showQuestion() {
     }
 }
 
-function submitAnswer() {
+function submitAnswer(event) {
+    enviarButton.style.display = 'none';
     answers = document.querySelectorAll('.answer-container');
     answers.forEach(answer => {
         answer.style.display = 'block';
