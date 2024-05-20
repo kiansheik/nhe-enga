@@ -49,26 +49,26 @@ Now, if I want to use possession or agency with a __transitive__ root, as long a
 
 The most basic form of a noun will be referred to as the _Basic Nominalizing Suffix_. This will take the form as either `-a` or `-ø`, as shown above -->
 
-## Facility Form
+## Circumstantial Form
 
-Nouns can recieve a suffix `-(s)aba` in order to express the time, location, instrument, place, etc. of a given root.
+Nouns can recieve a suffix `-(s)aba` in order to express the time, location, instrument, place, etc. of a given root. These types of nouns describe the circumstances surounding an action, rather like the simple nouns ending in `-a/ø`, which represent the act itself.
 
 The phonetic rules guiding this inflection are as follows:
 
-| Root Ending     | Suffix | Example Root | Translation                | Facility Form | Translation                                             |
+| Root Ending     | Suffix | Example Root | Translation                | Circumstantial Form | Translation                                             |
 |-----------------|--------|--------------|----------------------------|---------------|---------------------------------------------------------|
-| Nasal Vowel     |    -ab |         arõ2 | to protect                 | tarõaba       |                            protection, safe place, etc. |
-| ng              |    -ab |      nhe'eng | to speak                   | nhe'engaba    |                proverb, discourse, place to speak, etc. |
-| Nasal Vowel + î |  -ndab |         enõî | to call, invoke            | enõîndaba     |            name, way of calling someone/something, etc. |
-| Vowel + î       |   -tab |       esaraî | to forget                  | esaraîtaba    |                                     something forgotten |
-| 'o              |   -ûab |      anga'o2 | to threaten                | angaûaba      |               the way, place, time or an insult, threat |
-| -b              |   -pab |         kuab | to know                    | kuapaba       | knowledge; time, place of knowing; school; encyclopedia |
-| -m              |  -mbab |          'am | to stand                   | 'ambaba       |    place to stand, way of standing, time to stand, etc. |
-| -n              |  -ndab |          pin | to scrape, shave           | pindaba       |              place to shave, tool to shave: razor, etc. |
-| -r              |   -sab |    nhe'engar | to sing                    | nhe'engasaba  |                     place to sing, way of singing, etc. |
-| -i              |   -îab |        apiti | to assassinate             | apitîaba      |                  time, place, method of assassination.  |
-| -u              |   -ûab |         aru1 | to prevent/harm            | arûaba        |                time, place, purpose of harm/obstruction |
-| -y              |   -ŷab |         aby3 | to violate/infringe        | abŷaba        |           time, place, etc. of violation; transgression |
-| -é              |  -esab |        aûîé1 | to finish, perfect, mature | aûîesaba      |  conclusion; place, time, method of maturing/perfecting |
-| -ó              |  -osab |           só | to go                      | sosaba        |                                   method, time of going |
-| -á              |  -asab |        mondá | to steal                   | mondaba       |                                         what was stolen |
+| Nasal Vowel     |    -ab | <root type=noun         root="arõ" entryNumber=2 /> | to protect                 | tarõaba       |                            protection, safe place, etc. |
+| ng              |    -ab | <root type=noun      root="nhe'eng" /> | to speak                   | nhe'engaba    |                proverb, discourse, place to speak, etc. |
+| Nasal Vowel + î |  -ndab | <root type=noun         root="enõî" /> | to call, invoke            | enõîndaba     |            name, way of calling someone/something, etc. |
+| Vowel + î       |   -tab | <root type=noun       root="esaraî" /> | to forget                  | esaraîtaba    |                                     something forgotten |
+| 'o              |   -ûab | <root type=noun      root="anga'o" entryNumber=2 /> | to threaten                | angaûaba      |               the way, place, time or an insult, threat |
+| -b              |   -pab | <root type=noun         root="kuab" /> | to know                    | kuapaba       | knowledge; time, place of knowing; school; encyclopedia |
+| -m              |  -mbab | <root type=noun          root="'am" /> | to stand                   | 'ambaba       |    place to stand, way of standing, time to stand, etc. |
+| -n              |  -ndab | <root type=noun          root="pin" /> | to scrape, shave           | pindaba       |              place to shave, tool to shave: razor, etc. |
+| -r              |   -sab | <root type=noun    root="nhe'engar" /> | to sing                    | nhe'engasaba  |                     place to sing, way of singing, etc. |
+| -i              |   -îab | <root type=noun        root="apiti" /> | to assassinate             | apitîaba      |                  time, place, method of assassination.  |
+| -u              |   -ûab | <root type=noun         root="aru" entryNumber=1 /> | to prevent/harm            | arûaba        |                time, place, purpose of harm/obstruction |
+| -y              |   -ŷab | <root type=noun         root="aby" entryNumber=3 /> | to violate/infringe        | abŷaba        |           time, place, etc. of violation; transgression |
+| -é              |  -esab | <root type=noun        root="aûîé" entryNumber=1 /> | to finish, perfect, mature | aûîesaba      |  conclusion; place, time, method of maturing/perfecting |
+| -ó              |  -osab | <root type=noun           root="só" /> | to go                      | sosaba        |                                   method, time of going |
+| -á              |  -asab | <root type=noun        root="mondá" /> | to steal                   | mondaba       |                                         what was stolen |
