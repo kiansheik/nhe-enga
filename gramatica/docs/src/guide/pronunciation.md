@@ -51,6 +51,6 @@ Click the **yellow words** to see Navarro's dictionary entry _(Portuguese)_
 | <sound sound="x" />   | ʃ       | <root root="ixé" /> | I |
 | <sound sound="y" />   | ɨ       | <root root="'y" /> | water, river |
 | <sound sound="ý" />   | ˈɨ      | <root root="gûaîaý" /> | feathered headdress |
-| <sound sound="ŷ" />   | ɨ       | <root type=noun root="apŷaba" /> | oven |
+| <sound sound="ŷ" />   | ɨ       | <root type=noun root="apŷaba" /> | man, male |
 | <sound sound="ỹ" />   | ɨ̃      | <root root="-e'ym" entryNumber=2 /> | without |
 

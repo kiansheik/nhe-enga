@@ -48,3 +48,27 @@ Now, if I want to use possession or agency with a __transitive__ root, as long a
 <!-- # Basic Nominalizing Suffix (-a)
 
 The most basic form of a noun will be referred to as the _Basic Nominalizing Suffix_. This will take the form as either `-a` or `-ø`, as shown above -->
+
+## Facility Form
+
+Nouns can recieve a suffix `-(s)aba` in order to express the time, location, instrument, place, etc. of a given root.
+
+The phonetic rules guiding this inflection are as follows:
+
+| Root Ending     | Suffix | Example Root | Translation                | Facility Form | Translation                                             |
+|-----------------|--------|--------------|----------------------------|---------------|---------------------------------------------------------|
+| Nasal Vowel     |    -ab |         arõ2 | to protect                 | tarõaba       |                            protection, safe place, etc. |
+| ng              |    -ab |      nhe'eng | to speak                   | nhe'engaba    |                proverb, discourse, place to speak, etc. |
+| Nasal Vowel + î |  -ndab |         enõî | to call, invoke            | enõîndaba     |            name, way of calling someone/something, etc. |
+| Vowel + î       |   -tab |       esaraî | to forget                  | esaraîtaba    |                                     something forgotten |
+| 'o              |   -ûab |      anga'o2 | to threaten                | angaûaba      |               the way, place, time or an insult, threat |
+| -b              |   -pab |         kuab | to know                    | kuapaba       | knowledge; time, place of knowing; school; encyclopedia |
+| -m              |  -mbab |          'am | to stand                   | 'ambaba       |    place to stand, way of standing, time to stand, etc. |
+| -n              |  -ndab |          pin | to scrape, shave           | pindaba       |              place to shave, tool to shave: razor, etc. |
+| -r              |   -sab |    nhe'engar | to sing                    | nhe'engasaba  |                     place to sing, way of singing, etc. |
+| -i              |   -îab |        apiti | to assassinate             | apitîaba      |                  time, place, method of assassination.  |
+| -u              |   -ûab |         aru1 | to prevent/harm            | arûaba        |                time, place, purpose of harm/obstruction |
+| -y              |   -ŷab |         aby3 | to violate/infringe        | abŷaba        |           time, place, etc. of violation; transgression |
+| -é              |  -esab |        aûîé1 | to finish, perfect, mature | aûîesaba      |  conclusion; place, time, method of maturing/perfecting |
+| -ó              |  -osab |           só | to go                      | sosaba        |                                   method, time of going |
+| -á              |  -asab |        mondá | to steal                   | mondaba       |                                         what was stolen |
