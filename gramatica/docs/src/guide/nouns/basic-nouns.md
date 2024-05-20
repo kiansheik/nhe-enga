@@ -57,18 +57,18 @@ The phonetic rules guiding this inflection are as follows:
 
 | Root Ending     | Suffix | Example Root | Translation                | Circumstantial Form | Translation                                             |
 |-----------------|--------|--------------|----------------------------|---------------|---------------------------------------------------------|
-| Nasal Vowel     |    -ab | <root type=noun         root="arõ" entryNumber=2 /> | to protect                 | tarõaba       |                            protection, safe place, etc. |
-| ng              |    -ab | <root type=noun      root="nhe'eng" /> | to speak                   | nhe'engaba    |                proverb, discourse, place to speak, etc. |
-| Nasal Vowel + î |  -ndab | <root type=noun         root="enõî" /> | to call, invoke            | enõîndaba     |            name, way of calling someone/something, etc. |
-| Vowel + î       |   -tab | <root type=noun       root="esaraî" /> | to forget                  | esaraîtaba    |                                     something forgotten |
-| 'o              |   -ûab | <root type=noun      root="anga'o" entryNumber=2 /> | to threaten                | angaûaba      |               the way, place, time or an insult, threat |
-| -b              |   -pab | <root type=noun         root="kuab" /> | to know                    | kuapaba       | knowledge; time, place of knowing; school; encyclopedia |
-| -m              |  -mbab | <root type=noun          root="'am" /> | to stand                   | 'ambaba       |    place to stand, way of standing, time to stand, etc. |
-| -n              |  -ndab | <root type=noun          root="pin" /> | to scrape, shave           | pindaba       |              place to shave, tool to shave: razor, etc. |
-| -r              |   -sab | <root type=noun    root="nhe'engar" /> | to sing                    | nhe'engasaba  |                     place to sing, way of singing, etc. |
-| -i              |   -îab | <root type=noun        root="apiti" /> | to assassinate             | apitîaba      |                  time, place, method of assassination.  |
-| -u              |   -ûab | <root type=noun         root="aru" entryNumber=1 /> | to prevent/harm            | arûaba        |                time, place, purpose of harm/obstruction |
-| -y              |   -ŷab | <root type=noun         root="aby" entryNumber=3 /> | to violate/infringe        | abŷaba        |           time, place, etc. of violation; transgression |
-| -é              |  -esab | <root type=noun        root="aûîé" entryNumber=1 /> | to finish, perfect, mature | aûîesaba      |  conclusion; place, time, method of maturing/perfecting |
-| -ó              |  -osab | <root type=noun           root="só" /> | to go                      | sosaba        |                                   method, time of going |
-| -á              |  -asab | <root type=noun        root="mondá" /> | to steal                   | mondaba       |                                         what was stolen |
+| Nasal Vowel     |    -ab | <root type=root         root="arõ" entryNumber=2 /> | to protect                 | tarõaba       |                            protection, safe place, etc. |
+| ng              |    -ab | <root type=root      root="nhe'eng" /> | to speak                   | nhe'engaba    |                proverb, discourse, place to speak, etc. |
+| Nasal Vowel + î |  -ndab | <root type=root         root="enõî" /> | to call, invoke            | enõîndaba     |            name, way of calling someone/something, etc. |
+| Vowel + î       |   -tab | <root type=root       root="esaraî" /> | to forget                  | esaraîtaba    |                                     something forgotten |
+| 'o              |   -ûab | <root type=root      root="anga'o" entryNumber=2 /> | to threaten                | angaûaba      |               the way, place, time or an insult, threat |
+| -b              |   -pab | <root type=root         root="kuab" /> | to know                    | kuapaba       | knowledge; time, place of knowing; school; encyclopedia |
+| -m              |  -mbab | <root type=root          root="'am" /> | to stand                   | 'ambaba       |    place to stand, way of standing, time to stand, etc. |
+| -n              |  -ndab | <root type=root          root="pin" /> | to scrape, shave           | pindaba       |              place to shave, tool to shave: razor, etc. |
+| -r              |   -sab | <root type=root    root="nhe'engar" /> | to sing                    | nhe'engasaba  |                     place to sing, way of singing, etc. |
+| -i              |   -îab | <root type=root        root="apiti" /> | to assassinate             | apitîaba      |                  time, place, method of assassination.  |
+| -u              |   -ûab | <root type=root         root="aru" entryNumber=1 /> | to prevent/harm            | arûaba        |                time, place, purpose of harm/obstruction |
+| -y              |   -ŷab | <root type=root         root="aby" entryNumber=3 /> | to violate/infringe        | abŷaba        |           time, place, etc. of violation; transgression |
+| -é              |  -esab | <root type=root        root="aûîé" entryNumber=1 /> | to finish, perfect, mature | aûîesaba      |  conclusion; place, time, method of maturing/perfecting |
+| -ó              |  -osab | <root type=root           root="só" /> | to go                      | sosaba        |                                   method, time of going |
+| -á              |  -asab | <root type=root        root="mondá" /> | to steal                   | mondaba       |                                         what was stolen |
