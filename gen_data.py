@@ -37,5 +37,5 @@ if __name__ == "__main__":
     found_occurrences = find_string_in_docx(docx_file_path)
     print(f"window.jsonData = {json.dumps(found_occurrences)};")
     # now save the occurrences to a file
-    with open("docs/dict-conjugated.json", "w") as f:
+    with open("docs/tupi_dict_navarro.json", "w") as f:
         f.write(json.dumps(found_occurrences))

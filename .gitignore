@@ -7,6 +7,7 @@ __pycache__/
 *.so
 anotated_results_nouns.json
 anotated_results.json
+anotated_tokens.json
 # Distribution / packaging
 .Python
 build/
