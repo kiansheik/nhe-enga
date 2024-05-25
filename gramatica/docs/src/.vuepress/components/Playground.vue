@@ -21,7 +21,7 @@
       @drop="onDrop"
     >
       <h3>Result</h3>
-      <py :key="selectedFunctions.join('')+word" >{{ applyFunctions(word, selectedFunctions) }}</py>
+      <div class='result'><py :key="selectedFunctions.join('')+word" >{{ applyFunctions(word, selectedFunctions) }}</py></div>
       <h3>Builder</h3>
       <div
         v-for="(fn, index) in selectedFunctions"
@@ -94,12 +94,13 @@ export default {
 #app {
   display: flex;
   gap: 20px;
+  flex-wrap: wrap;
 }
 
 .function-bank, .builder {
   border: 1px solid black;
   padding: 10px;
-  width: 200px;
+  /* width: 100%; */
 }
 
 .function-item, .builder-item {
@@ -112,6 +113,7 @@ export default {
 .builder-item button {
   margin-left: 10px;
 }
+
 /* Input styling */
 input {
     width: 100%;
@@ -120,5 +122,22 @@ input {
     box-sizing: border-box;
     border: 2px solid #ccc;
     border-radius: 4px;
+}
+
+.result {
+    font-size: 20px;
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Media query for screens larger than 600px */
+@media (min-width: 600px) {
+  .function-bank, .builder {
+    width: 200px;
+  }
 }
 </style>
