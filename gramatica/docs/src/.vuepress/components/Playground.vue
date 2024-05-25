@@ -90,7 +90,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #app {
   display: flex;
   gap: 20px;
