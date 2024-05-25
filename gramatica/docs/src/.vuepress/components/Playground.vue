@@ -28,7 +28,7 @@
       </div>
     </div>
     <div class="result">
-      <input v-model="wordbase" placeholder="só" type="text" />
+      <input v-model="wordbase" placeholder="root" type="text" />
       <h3>Result</h3>
       <py :key="selectedFunctions.join('')+word" >{{ applyFunctions(word, selectedFunctions) }}</py>
     </div>
@@ -39,7 +39,7 @@
 export default {
   data() {
     return {
-      wordbase: '',
+      wordbase: 'mba\'e',
       selectedFunctions: [],
       // functionNames: ['xe', '-saba', 'remi-', "-a"],
       functions: {
@@ -48,7 +48,7 @@ export default {
         '-sar': (word) => word + '.sara()',
         "-ba'e": (word) => word + '.bae()',
         '-pyr': (word) => word + '.pyr()',
-        '-reme': (word) => word + '.emi()',
+        '-reme': (word) => word + '.reme()',
         '-ram': (word) => word + '.ram()',
         '-puer': (word) => word + '.puer()',
         '-a': (word) => word + '.substantivo()',
@@ -75,6 +75,7 @@ export default {
       this.selectedFunctions.splice(index, 1);
     },
     applyFunctions(word, functions) {
+      if (this.wordbase === '') word = 'Noun("mba\'e", "")';
       let ret = functions.reduce((acc, fn) => this.functions[fn](acc), word);
       if (ret.endsWith('.substantivo()')){
         return ret;
