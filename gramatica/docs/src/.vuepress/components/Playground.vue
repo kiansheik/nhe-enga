@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <div class="function-bank">
+      <h3>Root Input</h3>
       <input v-model="wordbase" placeholder="root" type="text" />
       <h3>Function Bank</h3>
       <div
@@ -19,6 +20,8 @@
       @dragover="onDragOver"
       @drop="onDrop"
     >
+      <h3>Result</h3>
+      <py :key="selectedFunctions.join('')+word" >{{ applyFunctions(word, selectedFunctions) }}</py>
       <h3>Builder</h3>
       <div
         v-for="(fn, index) in selectedFunctions"
@@ -28,10 +31,6 @@
         {{ fn }}
         <button @click="removeFunction(index)">Remove</button>
       </div>
-    </div>
-    <div class="result">
-      <h3>Result</h3>
-      <py :key="selectedFunctions.join('')+word" >{{ applyFunctions(word, selectedFunctions) }}</py>
     </div>
   </div>
 </template>
@@ -112,5 +111,14 @@ export default {
 
 .builder-item button {
   margin-left: 10px;
+}
+/* Input styling */
+input {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
 }
 </style>
