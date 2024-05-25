@@ -108,7 +108,6 @@ export default {
         this.evBus.$on("pyReadyRender", (element, idx) => {
             this.elems.push(element);
             let cnt = this.countComponents();
-            // console.log('EMITED: ' + element.origText, cnt, idx, this.elems.length);
             if (this.pyodideReady && this.elems.length >= cnt) {
                 this.updateContent(true);
             }

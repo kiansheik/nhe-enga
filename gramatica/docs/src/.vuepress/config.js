@@ -100,6 +100,15 @@ module.exports = {
             'nouns/basic-nouns',
           ]
         },
+        {
+          title: 'Tools',
+          collapsable: true,
+          displayAllHeaders: true,
+          sidebarDepth: 6,
+          children: [
+            'tools/playground',
+          ]
+        },
       ],
     }
   },

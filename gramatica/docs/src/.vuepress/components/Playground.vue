@@ -1,0 +1,111 @@
+<template>
+  <div id="app">
+    <div class="function-bank">
+      <h3>Function Bank</h3>
+      <div
+        v-for="fn in Object.keys(functions)"
+        :key="fn"
+        class="function-item"
+        @dragstart="onDragStart($event, fn)"
+        draggable
+      >
+        {{ fn }}
+      </div>
+    </div>
+    <div
+      class="builder"
+      @dragover="onDragOver"
+      @drop="onDrop"
+    >
+      <h3>Builder</h3>
+      <div
+        v-for="(fn, index) in selectedFunctions"
+        :key="index"
+        class="builder-item"
+      >
+        {{ fn }}
+        <button @click="removeFunction(index)">Remove</button>
+      </div>
+    </div>
+    <div class="result">
+      <input v-model="wordbase" placeholder="só" type="text" />
+      <h3>Result</h3>
+      <py :key="selectedFunctions.join('')+word" >{{ applyFunctions(word, selectedFunctions) }}</py>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      wordbase: '',
+      selectedFunctions: [],
+      // functionNames: ['xe', '-saba', 'remi-', "-a"],
+      functions: {
+        'remi-': (word) => word + '.emi()',
+        '-sab': (word) => word + '.saba()',
+        '-sar': (word) => word + '.sara()',
+        "-ba'e": (word) => word + '.bae()',
+        '-pyr': (word) => word + '.pyr()',
+        '-reme': (word) => word + '.emi()',
+        '-ram': (word) => word + '.ram()',
+        '-puer': (word) => word + '.puer()',
+        '-a': (word) => word + '.substantivo()',
+      },
+    };
+  },
+  computed: {
+    word() {
+      return 'Noun("' + this.wordbase + '", "v. intr.")';
+    }
+  },
+  methods: {
+    onDragStart(event, functionName) {
+      event.dataTransfer.setData('functionName', functionName);
+    },
+    onDragOver(event) {
+      event.preventDefault();
+    },
+    onDrop(event) {
+      const functionName = event.dataTransfer.getData('functionName');
+      this.selectedFunctions.push(functionName);
+    },
+    removeFunction(index) {
+      this.selectedFunctions.splice(index, 1);
+    },
+    applyFunctions(word, functions) {
+      let ret = functions.reduce((acc, fn) => this.functions[fn](acc), word);
+      if (ret.endsWith('.substantivo()')){
+        return ret;
+      } else {
+        return ret + '.verbete()';
+      }
+    },
+  },
+};
+</script>
+
+<style>
+#app {
+  display: flex;
+  gap: 20px;
+}
+
+.function-bank, .builder {
+  border: 1px solid black;
+  padding: 10px;
+  width: 200px;
+}
+
+.function-item, .builder-item {
+  border: 1px solid gray;
+  padding: 5px;
+  margin-bottom: 5px;
+  cursor: move;
+}
+
+.builder-item button {
+  margin-left: 10px;
+}
+</style>

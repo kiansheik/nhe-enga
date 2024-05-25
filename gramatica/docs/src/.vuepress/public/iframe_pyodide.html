@@ -23,9 +23,9 @@ window.addEventListener('message', (event) => {
         // Sort the queue by order ID
         messageQueue.sort((a, b) => a.orderid - b.orderid);
         // Process messages in order
-        while (messageQueue.length > 0 && nextOrderId == messageQueue[0].orderid+1) {
-            messageQueue.shift();
-        }
+        // while (messageQueue.length > 0 && nextOrderId == messageQueue[0].orderid+1) {
+        //     messageQueue.shift();
+        // }
         if (messageQueue.length > 0 && nextOrderId > messageQueue[0].orderid) {
             nextOrderId = 0;
         }

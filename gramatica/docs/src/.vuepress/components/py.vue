@@ -21,7 +21,7 @@ export default {
             }
         } else {
             console.log('no layoutComponent')
-        }        
+        }  
         return {
             pyLoader: pl,
             pyRendered: false,
@@ -42,14 +42,10 @@ export default {
             }
         },
         updateContent() {
-            // if (this.pyRendered) {
-            //     return;
-            // }
             let cidx = this.getCurrentComponentIndex()
             if (cidx < 0) {
                 return;
             }
-            // console.log("comps "+cidx+`: `+ this.countComponents()+ ` ${this.origText}`)
             this.tText = this.origText;
             let iframe;
             if (this.pyLoader && this.pyLoader.$refs && this.pyLoader.$refs.pyodideiframe) {
@@ -78,8 +74,6 @@ export default {
         },
         getCurrentComponentIndex() {
             let allPyComponents = this.getAllPyComponents();
-            // console.log(allPyComponents)
-            // Return the index of the current component's div.python-output element in the array
             return allPyComponents.indexOf(this.$el);
         },
         countComponents() {
@@ -104,24 +98,8 @@ export default {
             return pl.pyodideReady;
         }
     },
-    // watch: {
-    //     pyodideReady(newVal, oldVal) {
-    //         if (newVal && !oldVal) {
-    //             this.$nextTick(() => {
-    //                 if (this.pyodideReady) {
-    //                     this.updateContent();
-    //                 }
-    //             });
-    //         }
-    //     },
-    // },
     mounted() {
         window.addEventListener('message', this.handleMessage);
-        // this.$nextTick(() => {
-        //     if (this.pyodideReady) {
-        //         this.updateContent();
-        //     }
-        // });
         this.alertReady();
     },
     beforeDestroy() {
