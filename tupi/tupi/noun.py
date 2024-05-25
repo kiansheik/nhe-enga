@@ -87,6 +87,11 @@ class Noun(TupiAntigo):
             parts = ret_noun.latest_verbete.split("[")
             start = "[".join(parts[:-1])
             ret_noun.latest_verbete = f"{start[:-1]}[{parts[-1]}{mod_vbt_an}"
+        elif vbt[-1] in self.nasais:
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            other = self.nasal_prefix_map.get(parts[-1][0], parts[-1][0])
+            ret_noun.latest_verbete = f"{start[:-1]}[{other}{parts[-1][1:]}{mod_vbt_an}"
 
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
