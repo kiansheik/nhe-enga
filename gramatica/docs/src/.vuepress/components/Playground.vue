@@ -133,11 +133,4 @@ input {
     border: 2px solid #ccc;
     border-radius: 4px;
 }
-
-/* Media query for screens larger than 600px */
-@media (min-width: 600px) {
-  .function-bank, .builder {
-    width: 200px;
-  }
-}
 </style>
