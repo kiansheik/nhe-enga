@@ -132,5 +132,6 @@ input {
     box-sizing: border-box;
     border: 2px solid #ccc;
     border-radius: 4px;
+    background-color: #fef9c3;
 }
 </style>
