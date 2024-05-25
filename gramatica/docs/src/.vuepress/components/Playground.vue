@@ -7,6 +7,7 @@
         :key="fn"
         class="function-item"
         @dragstart="onDragStart($event, fn)"
+        @click="addFunction(fn)"
         draggable
       >
         {{ fn }}
@@ -61,6 +62,9 @@ export default {
     }
   },
   methods: {
+    addFunction(fn) {
+      this.selectedFunctions.push(fn);
+    },
     onDragStart(event, functionName) {
       event.dataTransfer.setData('functionName', functionName);
     },
