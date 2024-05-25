@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <div class="function-bank">
+      <input v-model="wordbase" placeholder="root" type="text" />
       <h3>Function Bank</h3>
       <div
         v-for="fn in Object.keys(functions)"
@@ -29,7 +30,6 @@
       </div>
     </div>
     <div class="result">
-      <input v-model="wordbase" placeholder="root" type="text" />
       <h3>Result</h3>
       <py :key="selectedFunctions.join('')+word" >{{ applyFunctions(word, selectedFunctions) }}</py>
     </div>
