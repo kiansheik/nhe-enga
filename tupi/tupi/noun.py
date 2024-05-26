@@ -33,6 +33,12 @@ saba_consoante_map = {
     "í": "isab",
 }
 
+def ends_with_any(s, endings):
+    return any(s.endswith(ending) for ending in endings)
+
+def starts_with_any(s, endings):
+    return any(s.startswith(ending) for ending in endings)
+
 def tokenize_string(annotated_string):
     matches = re.findall(r'([^\s\[\]]+)?\[(.*?)\]', annotated_string)
     notes = [(token, annotation) for token, annotation in matches]
@@ -78,11 +84,17 @@ class Noun(TupiAntigo):
         vbt_an = ret_noun.verbete(anotated=True)
         mod_vbt = modifier.verbete()
         mod_vbt_an = modifier.verbete(anotated=True)
+        # Define some useful groups
+        vogais_orais = "á e é i í y ý o ó u ú".split(" ")
+        vogais_nasais =  "ã ẽ ĩ ỹ õ ũ".split(" ")
+        nasais = "m n ng".split(" ")
+        consoantes = "p b t s k ' m n r nh ng mb nd ng g û î ŷ".split(" ")
 
-        if vbt[-1] in self.vogais:
+        if ends_with_any(vbt, vogais_orais) and starts_with_any(mod_vbt, vogais_orais):
             parts = ret_noun.latest_verbete.split("[")
             start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{start}[{parts[-1]}{mod_vbt_an}"
+            last_letter = self.accent_map.get(start[-1], start[-1])
+            ret_noun.latest_verbete = f"{start[:-1]}{last_letter}[{parts[-1]}{mod_vbt_an}"
         elif vbt[-1] in self.consoantes:
             parts = ret_noun.latest_verbete.split("[")
             start = "[".join(parts[:-1])
