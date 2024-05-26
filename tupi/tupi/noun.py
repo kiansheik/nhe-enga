@@ -87,14 +87,24 @@ class Noun(TupiAntigo):
         # Define some useful groups
         vogais_orais = "á e é i í y ý o ó u ú".split(" ")
         vogais_nasais =  "ã ẽ ĩ ỹ õ ũ".split(" ")
-        nasais = "m n ng".split(" ")
-        consoantes = "p b t s k ' m n r nh ng mb nd ng g û î ŷ".split(" ")
+        nasais = "m n ng nh mb nd".split(" ")
+        consoantes = "p b t s k ' r gû û î ŷ".split(" ")
 
-        if ends_with_any(vbt, vogais_orais) and starts_with_any(mod_vbt, vogais_orais):
+        if ends_with_any(vbt, vogais_orais):
             parts = ret_noun.latest_verbete.split("[")
             start = "[".join(parts[:-1])
             last_letter = self.accent_map.get(start[-1], start[-1])
             ret_noun.latest_verbete = f"{start[:-1]}{last_letter}[{parts[-1]}{mod_vbt_an}"
+        elif ends_with_any(vbt, nasais) and starts_with_any(mod_vbt, vogais_orais+vogais_nasais):
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            ret_noun.latest_verbete = f"{start}[{parts[-1]}{mod_vbt_an}"
+        elif ends_with_any(vbt, nasais) and starts_with_any(mod_vbt, consoantes+nasais):
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            second_last_letter = self.nasal_map.get(start[-2], start[-2])
+            first_nasal = self.nasal_prefix_map.get(mod_vbt_an[0], mod_vbt_an[0])
+            ret_noun.latest_verbete = f"{start[:-2]}{second_last_letter}[{parts[-1]}{first_nasal}{mod_vbt_an[1:]}"
         elif vbt[-1] in self.consoantes:
             parts = ret_noun.latest_verbete.split("[")
             start = "[".join(parts[:-1])
