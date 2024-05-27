@@ -41,7 +41,7 @@ Let's define some terms for this process:
         -   it becomes a `î`:    <root root="ky'ynha" type=compose adjective="mirĩ" />
     1.  If the `base root` ends in <Tooltip content="any other nasal consonant">m n ng mb nd</Tooltip>:   <root root="nhe'eng" /> __+__ <root root=mirĩ />
         -   delete it:    <root root="nhe'eng" type=compose adjective="mirĩ" />
-    1.  If the modifier root does not already contain <Tooltip content="any nasals">m n ng nh mb nd ã ẽ ĩ ỹ õ ũ<</Tooltip>
+    1.  If the modifier root does not already contain <Tooltip content="any nasals">m n ng nh mb nd ã ẽ ĩ ỹ õ ũ</Tooltip>
         -  nasalize the first letter based on the following table, if needed:
     
         | Oral | Nasal | Base + Modifier | Composition |
