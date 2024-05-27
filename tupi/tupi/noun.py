@@ -100,7 +100,7 @@ class Noun(TupiAntigo):
         vogais_orais = "á e é i í y ý o ó u ú".split(" ")
         vogais_nasais =  "ã ẽ ĩ ỹ õ ũ".split(" ")
         nasais = "m n ng nh mb nd".split(" ")
-        consoantes = "p b t s k ' r gû û î ŷ".split(" ")
+        consoantes = "p b t s k r gû û î ŷ".split(" ")
 
         if ends_with_any(vbt, vogais_orais):
             parts = ret_noun.latest_verbete.split("[")
@@ -111,6 +111,10 @@ class Noun(TupiAntigo):
             parts = ret_noun.latest_verbete.split("[")
             start = "[".join(parts[:-1])
             ret_noun.latest_verbete = f"{start}[{parts[-1]}{mod_vbt_an}"
+        elif ends_with_any(vbt, nasais+consoantes) and starts_with_any(mod_vbt, ["'"]):
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            ret_noun.latest_verbete = f"{start}{second_last_letter}{semivogal}[{parts[-1]}{mod_vbt_an[1:]}"
         elif ends_with_any(vbt, nasais) and starts_with_any(mod_vbt, consoantes+nasais):
             parts = ret_noun.latest_verbete.split("[")
             start = "[".join(parts[:-1])
@@ -129,25 +133,11 @@ class Noun(TupiAntigo):
             parts = ret_noun.latest_verbete.split("[")
             start = "[".join(parts[:-1])
             ret_noun.latest_verbete = f"{start}[{parts[-1]}{mod_vbt_an}"
-        elif ends_with_any(vbt, consoantes) and starts_with_any(mod_vbt, ["'"]):
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            start = remove_ending_if_any(start, consoantes)
-            ret_noun.latest_verbete = f"{start}[{parts[-1]}{mod_vbt_an[1:]}"
         elif ends_with_any(vbt, consoantes) and starts_with_any(mod_vbt, consoantes):
             parts = ret_noun.latest_verbete.split("[")
             start = "[".join(parts[:-1])
             start = remove_ending_if_any(start, consoantes)
             ret_noun.latest_verbete = f"{start}[{parts[-1]}{mod_vbt_an}"
-        elif vbt[-1] in self.consoantes:
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{start[:-1]}[{parts[-1]}{mod_vbt_an}"
-        elif vbt[-1] in self.nasais:
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            other = self.nasal_prefix_map.get(parts[-1][0], parts[-1][0])
-            ret_noun.latest_verbete = f"{start[:-1]}[{other}{parts[-1][1:]}{mod_vbt_an}"
 
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
