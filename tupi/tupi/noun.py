@@ -125,6 +125,20 @@ class Noun(TupiAntigo):
             second_last_letter = self.nasal_map.get(start[-2], start[-2])
             first_nasal = self.nasal_prefix_map.get(mod_vbt_an[0], mod_vbt_an[0])
             ret_noun.latest_verbete = f"{start}[{parts[-1]}{first_nasal}{mod_vbt_an[1:]}"
+        elif ends_with_any(vbt, consoantes) and starts_with_any(mod_vbt, vogais_orais+vogais_nasais):
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            ret_noun.latest_verbete = f"{start}[{parts[-1]}{mod_vbt_an}"
+        elif ends_with_any(vbt, consoantes) and starts_with_any(mod_vbt, ["'"]):
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            start = remove_ending_if_any(start, consoantes)
+            ret_noun.latest_verbete = f"{start}[{parts[-1]}{mod_vbt_an[1:]}"
+        elif ends_with_any(vbt, consoantes) and starts_with_any(mod_vbt, consoantes):
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            start = remove_ending_if_any(start, consoantes)
+            ret_noun.latest_verbete = f"{start}[{parts[-1]}{mod_vbt_an}"
         elif vbt[-1] in self.consoantes:
             parts = ret_noun.latest_verbete.split("[")
             start = "[".join(parts[:-1])
