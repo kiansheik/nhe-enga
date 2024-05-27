@@ -22,22 +22,25 @@ Let's define some terms for this process:
 | Oral Vowels      | a á e é i í y ý o ó u ú |
 | Nasal Vowels     | ã ẽ ĩ ỹ õ ũ             |
 
+`Base root`: Noun
+`Modifier root`: Adjective
+
 ### Steps
 
-1.  If the `base root` ends in a <Tooltip content="tonic vowel">á é í ý ó ú</Tooltip>
-    -  then replace it with its <Tooltip content="non-tonic counterpart">a e i y o u</Tooltip>
+1.  If the base root ends in a <Tooltip content="tonic vowel">á é í ý ó ú</Tooltip>
+    -  replace it with its <Tooltip content="non-tonic counterpart">a e i y o u</Tooltip>
 1.  If there is an encounter of <Tooltip content="Oral Consonants">p b t s x k r gû û î ŷ</Tooltip>
-    -  then remove the base root's ending consonant
+    -  remove the base root's ending consonant
 1.  If the base root ends in <Tooltip content="Any Consonant">p b t s x k r gû û î ŷ m n ng nh mb nd</Tooltip> and the modifier starts with a `'`_(glottal stop)_
-    -  then remove the `'`_(glottal stop)_ from the modifier
+    -  remove the `'`_(glottal stop)_ from the modifier
 1.  If the base root ends with <Tooltip content="Any Nasal">m n ng nh mb nd ã ẽ ĩ ỹ õ ũ<</Tooltip> and the modifier starts with <Tooltip content="Any Consonant">p b t s x k r gû û î ŷ m n ng nh mb nd</Tooltip>
     1.  Nasalize the final vowel of the base root, if not already marked
     1.  If the `base root` ends in `nh` 
-        -   then it becomes a `î`
+        -   it becomes a `î`
     1.  If the `base root` ends in <Tooltip content="any other nasal consonant">m n ng mb nd</Tooltip>
-        -   then delete it
+        -   delete it
     1.  If the modifier root does not already contain <Tooltip content="any nasals">m n ng nh mb nd ã ẽ ĩ ỹ õ ũ<</Tooltip>
-        -  then nasalize the first letter based on the following table, if needed:
+        -  nasalize the first letter based on the following table, if needed:
     
         | Oral | Nasal |
         |------|-------|
@@ -46,6 +49,6 @@ Let's define some terms for this process:
         | t    | nd    |
         | s    | nd    |
 
-1.  After having considered the above cases, there is nothing left to do but put the base root and modifier root together `{base}{modifier}
+1.  After having considered the above cases, there is nothing left to do but put the base root and modifier root together `{base}{modifier}`
 
 That's composition!
