@@ -105,7 +105,7 @@ class Noun(TupiAntigo):
         start = "[".join(parts[:-1])
         start = self.remove_accent_last_vowel(start)
         print(start)
-        if starts_with_any(mod_vbt, consoantes):
+        if ends_with_any(vbt, consoantes) and starts_with_any(mod_vbt, consoantes):
             start = remove_ending_if_any(start, consoantes)
         elif ends_with_any(vbt, nasais+consoantes) and starts_with_any(mod_vbt, ["'"]):
             mod_vbt_an = mod_vbt_an[1:]
