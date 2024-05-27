@@ -51,6 +51,10 @@ Let's define some terms for this process:
         | t    | nd    | <root root="nhe'eng" /> __+__ <root root="tinga" /> | <root root="nhe'eng" type=compose adjective="tinga" /> |
         | s    | nd    | <root root="nhe'eng" /> __+__ <root root="supi" /> | <root root="nhe'eng" type=compose adjective="supi" /> |
 
+::: warning
+`ting` does not become `nding` in composition because the nasal letter `ng` is already present in the root, so it will remain unchanged by the nasalization process.
+:::
+
 1.  Any other case is as simple as just sticking them together with no phonetic changes
 
 That's composition!
