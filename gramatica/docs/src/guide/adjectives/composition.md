@@ -25,6 +25,8 @@ Let's define some terms for this process:
 `Base root`: Noun
 `Modifier root`: Adjective
 
+`Base Root`+`Modifier root`
+
 ### Steps
 
 1.  If the base root ends in a <Tooltip content="tonic vowel">á é í ý ó ú</Tooltip>
