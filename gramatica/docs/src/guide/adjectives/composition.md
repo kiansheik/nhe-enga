@@ -52,7 +52,7 @@ Let's define some terms for this process:
         | s    | nd    | <root root="nhe'eng" /> __+__ <root root="supi" /> | <root root="nhe'eng" type=compose adjective="supi" /> |
 
 ::: warning
-`ting` does not become `nding` in composition because the <Tooltip content="nasal letter">m n ng nh mb nd ã ẽ ĩ ỹ õ ũ</Tooltip> `ng` is already present in the modifier root, so it will remain unchanged by the nasalization process.
+`ting` does not become `nding` in composition because the <Tooltip content="nasal letter">m n ng nh mb nd ã ẽ ĩ ỹ õ ũ</Tooltip> `ng` is already present in the modifier root, thus it will remain unchanged by the nasalization process.
 :::
 
 1.  Any other case is as simple as just sticking them together with no phonetic changes
