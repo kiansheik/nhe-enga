@@ -39,6 +39,18 @@ def ends_with_any(s, endings):
 def starts_with_any(s, endings):
     return any(s.startswith(ending) for ending in endings)
 
+def remove_ending_if_any(s, endings):
+    for ending in endings:
+        if s.endswith(ending):
+            return s[:-len(ending)]
+    return s
+
+def remove_starting_if_any(s, endings):
+    for ending in endings:
+        if s.startswith(ending):
+            return s[len(ending):]
+    return s
+
 def tokenize_string(annotated_string):
     matches = re.findall(r'([^\s\[\]]+)?\[(.*?)\]', annotated_string)
     notes = [(token, annotation) for token, annotation in matches]
@@ -102,7 +114,8 @@ class Noun(TupiAntigo):
         elif ends_with_any(vbt, nasais) and starts_with_any(mod_vbt, consoantes+nasais):
             parts = ret_noun.latest_verbete.split("[")
             start = "[".join(parts[:-1])
-            second_last_letter = self.nasal_map.get(start[-2], start[-2])
+            start = remove_ending_if_any(start, nasais)
+            second_last_letter = self.nasal_map.get(start[-1], start[-1])
             first_nasal = self.nasal_prefix_map.get(mod_vbt_an[0], mod_vbt_an[0])
             ret_noun.latest_verbete = f"{start[:-2]}{second_last_letter}[{parts[-1]}{first_nasal}{mod_vbt_an[1:]}"
         elif ends_with_any(vbt, vogais_nasais):
