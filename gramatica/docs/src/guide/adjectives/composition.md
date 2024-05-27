@@ -34,7 +34,7 @@ Let's define some terms for this process:
     -  remove the __base root__'s ending consonant:    <root root=kutuk type=compose adjective=poxy />
 1.  If the __base root__ ends in <Tooltip content="Any Consonant">p b t s x k r gû û î ŷ m n ng nh mb nd</Tooltip> and the _modifier_ starts with a `'`_(glottal stop)_:  <root root=kutuk /> __+__ <root root="'anga" />
     -  remove the `'`_(glottal stop)_ from the _modifier_:    <root root=kutuk type=compose adjective="'anga" />
-1.  If the __base root__ ends with <Tooltip content="Any Nasal">m n ng nh mb nd ã ẽ ĩ ỹ õ ũ<</Tooltip> and the _modifier_ starts with <Tooltip content="Any Consonant">p b t s x k r gû û î ŷ m n ng nh mb nd</Tooltip>
+1.  If the __base root__ ends with <Tooltip content="Any Nasal">m n ng nh mb nd ã ẽ ĩ ỹ õ ũ</Tooltip> and the _modifier_ starts with <Tooltip content="Any Consonant">p b t s x k r gû û î ŷ m n ng nh mb nd</Tooltip>
     1.  If the final vowel of the __base root__ is not already marked with a `~`:   <root root=nhan /> __+__ <root root=mixyr />
         -   nasalize it:    <root root=nhan type=compose adjective="mixyr" />
     1.  If the __base root__ ends in `nh`:  <root type=noun root="ky'ynha" /> __+__ <root root=mirĩ />  
