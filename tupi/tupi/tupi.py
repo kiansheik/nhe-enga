@@ -103,7 +103,7 @@ class TupiAntigo(object):
                 } 
     semi_vogais = "û î ŷ".split(" ")
     nasais = "m n nh ng ã ẽ ĩ ỹ õ ũ".split(" ")
-    consoantes = "p b t s k ' m n r nh ng mb nd ng g û î ŷ".split(" ")
+    consoantes = "p b t s x k ' m n r nh ng mb nd ng g û î ŷ".split(" ")
     vogais_nasais = list(set(vogais).intersection(set(nasais)))
 
     def __init__(self, **kwargs):

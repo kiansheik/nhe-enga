@@ -100,7 +100,7 @@ class Noun(TupiAntigo):
         vogais_orais = "a á e é i í y ý o ó u ú".split(" ")
         vogais_nasais =  "ã ẽ ĩ ỹ õ ũ".split(" ")
         nasais = "m n ng nh mb nd".split(" ")
-        consoantes = "p b t s k r gû û î ŷ".split(" ")
+        consoantes = "p b t s x k r gû û î ŷ".split(" ")
         parts = ret_noun.latest_verbete.split("[")
         start = "[".join(parts[:-1])
         start = self.remove_accent_last_vowel(start)
@@ -111,7 +111,7 @@ class Noun(TupiAntigo):
         elif ends_with_any(vbt, nasais+vogais_nasais) and starts_with_any(mod_vbt, consoantes+nasais):
             semivogal = 'î' if start.endswith('nh') else ''
             start = remove_ending_if_any(start, nasais)
-            start = self.nasaliza_final(start)
+            start = self.nasaliza_final(start) + semivogal
             if not self.is_nasal(mod_vbt):
                 mod_vbt_an = self.nasaliza_prefixo(mod_vbt_an)
         ret_noun.latest_verbete = f"{start}[{parts[-1]}{mod_vbt_an}"
