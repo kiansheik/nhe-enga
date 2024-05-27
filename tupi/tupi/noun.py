@@ -105,8 +105,8 @@ class Noun(TupiAntigo):
         if ends_with_any(vbt, vogais_orais):
             parts = ret_noun.latest_verbete.split("[")
             start = "[".join(parts[:-1])
-            last_letter = self.accent_map.get(start[-1], start[-1])
-            ret_noun.latest_verbete = f"{start[:-1]}{last_letter}[{parts[-1]}{mod_vbt_an}"
+            start = self.remove_accent_last_vowel(start)
+            ret_noun.latest_verbete = f"{start}[{parts[-1]}{mod_vbt_an}"
         elif ends_with_any(vbt, nasais) and starts_with_any(mod_vbt, vogais_orais+vogais_nasais):
             parts = ret_noun.latest_verbete.split("[")
             start = "[".join(parts[:-1])
@@ -121,13 +121,13 @@ class Noun(TupiAntigo):
             semivogal = '' if start[-2:].lower() != 'nh' else 'î'
             start = remove_ending_if_any(start, nasais)
             second_last_letter = self.nasal_map.get(start[-1], start[-1])
-            first_nasal = self.nasal_prefix_map.get(mod_vbt_an[0], mod_vbt_an[0]) if mod_vbt_an[0] != "'" else ''
+            first_nasal = self.nasal_prefix_map.get(mod_vbt_an[0], mod_vbt_an[0]) if not self.is_nasal(mod_vbt) else mod_vbt_an[0]
             ret_noun.latest_verbete = f"{start[:-1]}{second_last_letter}{semivogal}[{parts[-1]}{first_nasal}{mod_vbt_an[1:]}"
         elif ends_with_any(vbt, vogais_nasais):
             parts = ret_noun.latest_verbete.split("[")
             start = "[".join(parts[:-1])
             second_last_letter = self.nasal_map.get(start[-2], start[-2])
-            first_nasal = self.nasal_prefix_map.get(mod_vbt_an[0], mod_vbt_an[0])
+            first_nasal = self.nasal_prefix_map.get(mod_vbt_an[0], mod_vbt_an[0]) if not self.is_nasal(mod_vbt) else mod_vbt_an[0]
             ret_noun.latest_verbete = f"{start}[{parts[-1]}{first_nasal}{mod_vbt_an[1:]}"
         elif ends_with_any(vbt, consoantes) and starts_with_any(mod_vbt, vogais_orais+vogais_nasais):
             parts = ret_noun.latest_verbete.split("[")

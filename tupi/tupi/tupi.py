@@ -102,7 +102,7 @@ class TupiAntigo(object):
                 "u": "ũ",
                 } 
     semi_vogais = "û î ŷ".split(" ")
-    nasais = "m n ng ã ẽ ĩ ỹ õ ũ".split(" ")
+    nasais = "m n nh ng ã ẽ ĩ ỹ õ ũ".split(" ")
     consoantes = "p b t s k ' m n r nh ng mb nd ng g û î ŷ".split(" ")
     vogais_nasais = list(set(vogais).intersection(set(nasais)))
 
@@ -148,6 +148,10 @@ class TupiAntigo(object):
 
     def remove_parens_and_contents(self, s):
         return re.sub(r'\(.*?\)', '', s)
+
+    def is_nasal(self, c):
+        # check if c has any of self.nasais present inside of it
+        return any(nasal in c for nasal in self.nasais)
 
     def fix_phonetics(self, input_str):
         replacements = {
