@@ -30,7 +30,7 @@ Let's define some terms for this process:
 
 1.  If the __base root__ ends in a <Tooltip content="Tonic Oral Vowel">á é í ý ó ú</Tooltip>:    <root root=îuká /> __+__ <root root=katu />
     -  replace it with its <Tooltip content="Non-Tonic Counterpart">a e i y o u</Tooltip>:    <root root=îuká type=compose adjective=katu />
-1.  If there is an encounter of <Tooltip content="Oral Consonants">p b t s x k r gû û î ŷ</Tooltip>:    <root root=kutuk /> __+__ <root root=poxy />
+1.  If there is an encounter of the base root ending in an <Tooltip content="Oral Consonant">p b t s x k r gû û î ŷ</Tooltip> and the modifier root starting with <Tooltip content="Any Consonant">p b t s x k r gû û î ŷ m n ng nh mb nd</Tooltip>:    <root root=kutuk /> __+__ <root root=poxy />
     -  remove the __base root__'s ending consonant:    <root root=kutuk type=compose adjective=poxy />
 1.  If the __base root__ ends in <Tooltip content="Any Consonant">p b t s x k r gû û î ŷ m n ng nh mb nd</Tooltip> and the _modifier_ starts with a `'`_(glottal stop)_:  <root root=kutuk /> __+__ <root root="'anga" />
     -  remove the `'`_(glottal stop)_ from the _modifier_:    <root root=kutuk type=compose adjective="'anga" />
