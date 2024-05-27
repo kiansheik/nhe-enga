@@ -114,6 +114,10 @@
       anotated: {
         type: String,
         default: ''
+      },
+      adjective: {
+        type: String,
+        default: ''
       }
     },
     computed: {
@@ -146,6 +150,9 @@
                 break;
             case 'absolute':
                 return `n.absoluta().substantivo(anotated=${this.anot})`
+                break;
+            case 'compose':
+                return `n.compose(Noun("${this.adjective}", "")).verbete(anotated=${this.anot})`
                 break;
             default:
                 return `n.verbete(anotated=${this.anot})`

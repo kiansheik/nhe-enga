@@ -19,38 +19,38 @@ Let's define some terms for this process:
 |------------------|-------------------------|
 | Oral Consonants  | p b t s x k r gû û î ŷ  |
 | Nasal Consonants | m n ng nh mb nd         |
-| Oral Vowels      | a á e é i í y ý o ó u ú |
+| Tonic Oral Vowels      | á é í ý ó ú |
+| Non-Tonic Oral Vowels      | a e i y o u |
 | Nasal Vowels     | ã ẽ ĩ ỹ õ ũ             |
-
-`Base root`: Noun
-`Modifier root`: Adjective
-
-`Base Root`+`Modifier root`
+| Base root | Noun |
+| Modifier root | Adjective |
+| Base+Modifier | Composition |
 
 ### Steps
 
-1.  If the base root ends in a <Tooltip content="tonic vowel">á é í ý ó ú</Tooltip>
-    -  replace it with its <Tooltip content="non-tonic counterpart">a e i y o u</Tooltip>
-1.  If there is an encounter of <Tooltip content="Oral Consonants">p b t s x k r gû û î ŷ</Tooltip>
-    -  remove the base root's ending consonant
-1.  If the base root ends in <Tooltip content="Any Consonant">p b t s x k r gû û î ŷ m n ng nh mb nd</Tooltip> and the modifier starts with a `'`_(glottal stop)_
-    -  remove the `'`_(glottal stop)_ from the modifier
+1.  If the base root ends in a <Tooltip content="tonic vowel">á é í ý ó ú</Tooltip>:    <root root=îuká /> __+__ <root root=katu />
+    -  replace it with its <Tooltip content="non-tonic counterpart">a e i y o u</Tooltip>:    <root root=îuká type=compose adjective=katu />
+1.  If there is an encounter of <Tooltip content="Oral Consonants">p b t s x k r gû û î ŷ</Tooltip>:    <root root=kutuk /> __+__ <root root=poxy />
+    -  remove the base root's ending consonant:    <root root=kutuk type=compose adjective=poxy />
+1.  If the base root ends in <Tooltip content="Any Consonant">p b t s x k r gû û î ŷ m n ng nh mb nd</Tooltip> and the modifier starts with a `'`_(glottal stop)_:  <root root=kutuk /> __+__ <root root="'anga" />
+    -  remove the `'`_(glottal stop)_ from the modifier:    <root root=kutuk type=compose adjective="'anga" />
 1.  If the base root ends with <Tooltip content="Any Nasal">m n ng nh mb nd ã ẽ ĩ ỹ õ ũ<</Tooltip> and the modifier starts with <Tooltip content="Any Consonant">p b t s x k r gû û î ŷ m n ng nh mb nd</Tooltip>
-    1.  Nasalize the final vowel of the base root, if not already marked
-    1.  If the `base root` ends in `nh` 
-        -   it becomes a `î`
-    1.  If the `base root` ends in <Tooltip content="any other nasal consonant">m n ng mb nd</Tooltip>
-        -   delete it
+    1.  If the final vowel of the base root is not already marked with a `~`:   <root root=nhan /> __+__ <root root=mixyr />
+        -   nasalize it:    <root root=nhan type=compose adjective="mixyr" />
+    1.  If the `base root` ends in `nh`:  <root type=noun root="ky'ynha" /> __+__ <root root=mirĩ />  
+        -   it becomes a `î`:    <root root="ky'ynha" type=compose adjective="mirĩ" />
+    1.  If the `base root` ends in <Tooltip content="any other nasal consonant">m n ng mb nd</Tooltip>:   <root root="nhe'eng" /> __+__ <root root=mirĩ />
+        -   delete it:    <root root="nhe'eng" type=compose adjective="mirĩ" />
     1.  If the modifier root does not already contain <Tooltip content="any nasals">m n ng nh mb nd ã ẽ ĩ ỹ õ ũ<</Tooltip>
         -  nasalize the first letter based on the following table, if needed:
     
-        | Oral | Nasal |
-        |------|-------|
-        | p    | mb    |
-        | k    | ng    |
-        | t    | nd    |
-        | s    | nd    |
+        | Oral | Nasal | Base + Modifier | Composition |
+        |------|-------|-----------------|-------------|
+        | p    | mb    | <root root="nhe'eng" /> __+__ <root root="poxy" /> | <root root="nhe'eng" type=compose adjective="poxy" /> |
+        | k    | ng    | <root root="nhe'eng" /> __+__ <root root="katu" /> | <root root="nhe'eng" type=compose adjective="katu" /> |
+        | t    | nd    | <root root="nhe'eng" /> __+__ <root root="tinga" /> | <root root="nhe'eng" type=compose adjective="tinga" /> |
+        | s    | nd    | <root root="nhe'eng" /> __+__ <root root="supi" /> | <root root="nhe'eng" type=compose adjective="supi" /> |
 
-1.  After having considered the above cases, there is nothing left to do but put the base root and modifier root together `{base}{modifier}`
+1.  Any other case is as simple as just sticking them together with no phonetic changes
 
 That's composition!
