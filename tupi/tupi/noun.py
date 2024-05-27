@@ -118,7 +118,7 @@ class Noun(TupiAntigo):
             start = remove_ending_if_any(start, nasais)
             second_last_letter = self.nasal_map.get(start[-1], start[-1])
             first_nasal = self.nasal_prefix_map.get(mod_vbt_an[0], mod_vbt_an[0]) if mod_vbt_an[0] != "'" else ''
-            ret_noun.latest_verbete = f"{start[:-1]}{semivogal}{second_last_letter}[{parts[-1]}{first_nasal}{mod_vbt_an[1:]}"
+            ret_noun.latest_verbete = f"{start[:-1]}{second_last_letter}{semivogal}[{parts[-1]}{first_nasal}{mod_vbt_an[1:]}"
         elif ends_with_any(vbt, vogais_nasais):
             parts = ret_noun.latest_verbete.split("[")
             start = "[".join(parts[:-1])
