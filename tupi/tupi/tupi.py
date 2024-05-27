@@ -286,11 +286,14 @@ class TupiAntigo(object):
             return input_string[:-1] + self.accent_map[input_string[-1]]
         return input_string
     def nasaliza_final(self, input_string):
-        vowels = "áéíýóú"
         # Check if the last character is an accented vowel
         if input_string[-1] in self.nasal_map.keys():
             # Remove the accent from the last vowel
             return input_string[:-1] + self.nasal_map[input_string[-1]]
+        return input_string
+    def nasaliza_prefixo(self, input_string):
+        if input_string[0] in self.nasal_prefix_map.keys():
+            return  self.nasal_prefix_map[input_string[0]] + input_string[1:]
         return input_string
     # Define a function which returns a randomly generated tupi antigo string between 1 and 3 syllables
     def random_tupi_antigo(self):
