@@ -28,8 +28,8 @@ Let's define some terms for this process:
 
 ### Steps
 
-1.  If the base root ends in a <Tooltip content="tonic vowel">á é í ý ó ú</Tooltip>:    <root root=îuká /> __+__ <root root=katu />
-    -  replace it with its <Tooltip content="non-tonic counterpart">a e i y o u</Tooltip>:    <root root=îuká type=compose adjective=katu />
+1.  If the base root ends in a <Tooltip content="Tonic Oral Vowel">á é í ý ó ú</Tooltip>:    <root root=îuká /> __+__ <root root=katu />
+    -  replace it with its <Tooltip content="Non-Tonic Counterpart">a e i y o u</Tooltip>:    <root root=îuká type=compose adjective=katu />
 1.  If there is an encounter of <Tooltip content="Oral Consonants">p b t s x k r gû û î ŷ</Tooltip>:    <root root=kutuk /> __+__ <root root=poxy />
     -  remove the base root's ending consonant:    <root root=kutuk type=compose adjective=poxy />
 1.  If the base root ends in <Tooltip content="Any Consonant">p b t s x k r gû û î ŷ m n ng nh mb nd</Tooltip> and the modifier starts with a `'`_(glottal stop)_:  <root root=kutuk /> __+__ <root root="'anga" />
@@ -51,9 +51,9 @@ Let's define some terms for this process:
         | t    | nd    | <root root="nhe'eng" /> __+__ <root root="tinga" /> | <root root="nhe'eng" type=compose adjective="tinga" /> |
         | s    | nd    | <root root="nhe'eng" /> __+__ <root root="supi" /> | <root root="nhe'eng" type=compose adjective="supi" /> |
 
-::: warning
-`ting` does not become `nding` in composition because the <Tooltip content="nasal letter">m n ng nh mb nd ã ẽ ĩ ỹ õ ũ</Tooltip> `ng` is already present in the modifier root, thus it will remain unchanged by the nasalization process.
-:::
+        ::: warning
+        `ting` does not become `nding` in composition because the <Tooltip content="nasal letter">m n ng nh mb nd ã ẽ ĩ ỹ õ ũ</Tooltip> `ng` is already present in the modifier root, thus it will remain unchanged by the nasalization process.
+        :::
 
 1.  Any other case is as simple as just sticking them together with no phonetic changes
 
