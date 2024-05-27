@@ -104,7 +104,6 @@ class Noun(TupiAntigo):
         parts = ret_noun.latest_verbete.split("[")
         start = "[".join(parts[:-1])
         start = self.remove_accent_last_vowel(start)
-        print(start)
         if ends_with_any(vbt, consoantes) and starts_with_any(mod_vbt, consoantes):
             start = remove_ending_if_any(start, consoantes)
         elif ends_with_any(vbt, nasais+consoantes) and starts_with_any(mod_vbt, ["'"]):
@@ -116,8 +115,6 @@ class Noun(TupiAntigo):
             if not self.is_nasal(mod_vbt):
                 mod_vbt_an = self.nasaliza_prefixo(mod_vbt_an)
         ret_noun.latest_verbete = f"{start}[{parts[-1]}{mod_vbt_an}"
-
-        print(start)
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun

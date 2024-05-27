@@ -89,6 +89,7 @@ module.exports = {
           sidebarDepth: 6,
           children: [
             'adjectives/2-class-verbs',
+            'adjectives/composition',
           ]
         },
         {
