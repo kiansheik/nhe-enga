@@ -114,7 +114,7 @@ class Verb(TupiAntigo):
                             elif self.monosilibica():
                                 dir_obj = f"îo[OBJECT:3p:MONOSYLLABIC]-"
                         else:
-                            dir_obj += f' {f"r[PLURIFORM_PREFIX:R]-" if self.pluriforme or self.ero else ""}'
+                            dir_obj += f'{f"r[PLURIFORM_PREFIX:R]-" if self.pluriforme or self.ero else ""}'
                     pref = dir_obj
                 if negative:
                     suf = "e'ym[NEGATION_SUFFIX]a[GERUND_SUFFIX:CLASS_1]"
@@ -159,8 +159,6 @@ class Verb(TupiAntigo):
                             obj = f"s[PLURIFORM_PREFIX:S]-"
                         else:
                             obj = f"{obj}r[PLURIFORM_PREFIX:R]-"
-                    else:
-                        obj += " "
             circ = (
                 f"[CIRCUMSTANTIAL_SUFFIX:NULL_ENDING]"
                 if self.verbete[-1] in "ûuũî"
@@ -257,7 +255,7 @@ class Verb(TupiAntigo):
                         if negative:
                             vb = self.negate_verb(vb, mode)
                         result = (
-                            f"{subj} {vb} {dir_obj}"
+                            f"{subj} x`{vb} {dir_obj}"
                         )
                     elif pos == "anteposto":
                         vb = f"{perm_suf[0]}{conj}-{pluriforme}-{vbt}"
