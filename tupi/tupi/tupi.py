@@ -2,12 +2,12 @@ import re, random
 class TupiAntigo(object):
     cv_patterns = ["CVC", "CV", "VC", "V"]
     personal_inflections = {
-        "1ps": ["ixé", "xe", "a-"],
-        "1ppi": ["îandé", "îandé", "îa-"],
-        "1ppe": ["oré", "oré", "oro-"],
-        "2ps": ["endé", "nde", "ere-", "oro-", "îepé"],
-        "2pp": ["peẽ", "pe", "pe-", "opo-", "peîepé"],
-        "3p": ["a'e", "i", "o-"],
+        "1ps": ["ixé", "xe", "a"],
+        "1ppi": ["îandé", "îandé", "îa"],
+        "1ppe": ["oré", "oré", "oro"],
+        "2ps": ["endé", "nde", "ere", "oro", "îepé"],
+        "2pp": ["peẽ", "pe", "pe", "opo", "peîepé"],
+        "3p": ["a'e", "i", "o"],
         "refl": ["îe"],
         "mut": ["îo"],
     }
@@ -24,24 +24,24 @@ class TupiAntigo(object):
     }
 
     permissivo = {
-        "1ps": ["t'", "ta "],
-        "1ppi": ["t'", "t'"],
-        "1ppe": ["t'", "t'"],
-        "2ps": ["t'", "ta "],
-        "2pp": ["ta ", "ta "],
-        "3p": ["t'", "ta "],
+        "1ps": ["t", "ta"],
+        "1ppi": ["t", "t"],
+        "1ppe": ["t", "t"],
+        "2ps": ["t", "ta"],
+        "2pp": ["ta", "ta"],
+        "3p": ["t", "ta"],
     }
     permissivo_anotado = {
-        "1ps": ["t'[PERMISSIVE_PREFIX:VOWEL]", "ta[PERMISSIVE_PARTICLE:CONSONANT] "],
-        "1ppi": ["t'[PERMISSIVE_PREFIX:VOWEL]", "t'[PERMISSIVE_PREFIX:VOWEL]"],
-        "1ppe": ["t'[PERMISSIVE_PREFIX:VOWEL]", "t'[PERMISSIVE_PREFIX:VOWEL]"],
-        "2ps": ["t'[PERMISSIVE_PREFIX:VOWEL]", "ta[PERMISSIVE_PARTICLE:CONSONANT] "],
-        "2pp": ["ta[PERMISSIVE_PARTICLE:CONSONANT] ", "ta[PERMISSIVE_PARTICLE:CONSONANT] "],
-        "3p": ["t'[PERMISSIVE_PREFIX:VOWEL]", "ta[PERMISSIVE_PARTICLE:CONSONANT] "],
+        "1ps": ["t[PERMISSIVE_PREFIX:VOWEL]", "ta[PERMISSIVE_PARTICLE:CONSONANT]"],
+        "1ppi": ["t[PERMISSIVE_PREFIX:VOWEL]", "t[PERMISSIVE_PREFIX:VOWEL]"],
+        "1ppe": ["t[PERMISSIVE_PREFIX:VOWEL]", "t[PERMISSIVE_PREFIX:VOWEL]"],
+        "2ps": ["t[PERMISSIVE_PREFIX:VOWEL]", "ta[PERMISSIVE_PARTICLE:CONSONANT]"],
+        "2pp": ["ta[PERMISSIVE_PARTICLE:CONSONANT]", "ta[PERMISSIVE_PARTICLE:CONSONANT]"],
+        "3p": ["t[PERMISSIVE_PREFIX:VOWEL]", "ta[PERMISSIVE_PARTICLE:CONSONANT]"],
     }
     imperativo = {
-        "2ps": ["e-", "nde "],
-        "2pp": ["pe-", "pe "],
+        "2ps": ["e", "nde"],
+        "2pp": ["pe", "pe"],
     }
 
     sound_graf = {

@@ -158,7 +158,7 @@ class Verb(TupiAntigo):
                         if object_tense == "3p" and dir_obj_raw is None:
                             obj = f"s[PLURIFORM_PREFIX:S]-"
                         else:
-                            obj = f"{obj} r[PLURIFORM_PREFIX:R]-"
+                            obj = f"{obj}r[PLURIFORM_PREFIX:R]-"
                     else:
                         obj += " "
             circ = (
@@ -216,7 +216,7 @@ class Verb(TupiAntigo):
             if object_tense in self.personal_inflections.keys():
                 if (subject_tense != '3p' and object_tense == subject_tense) or (object_tense in ('refl', 'mut')):
                     subj = (
-                        self.personal_inflections[subject_tense][1] if not '3p' == subject_tense else "a'e"
+                        self.personal_inflections[subject_tense][0] if not '3p' == subject_tense else "a'e"
                     ) + f"[SUBJECT:{subject_tense}]"
                     subj = subj if dir_subj_raw is None else dir_subj_raw + f"[SUBJECT:{subject_tense}:DIRECT]"
                     conj = (
@@ -274,7 +274,7 @@ class Verb(TupiAntigo):
                 if "2p" in object_tense:
                     if "1p" in subject_tense:
                         subj = (
-                            self.personal_inflections[subject_tense][1] + f"[SUBJECT:{subject_tense}]"
+                            self.personal_inflections[subject_tense][0] + f"[SUBJECT:{subject_tense}]"
                             if not dir_subj_raw
                             else dir_subj_raw + f"[SUBJECT:{subject_tense}:DIRECT]"
                         )
@@ -291,7 +291,7 @@ class Verb(TupiAntigo):
                         obj = self.personal_inflections[object_tense][1] + f"[OBJECT:{object_tense}]"
                         pluriforme = f"r[PLURIFORM_PREFIX:R]-" if self.pluriforme or self.ero else ""
                         vbt = f"{self.verbete}[ROOT]"
-                        vb = f"{perm_suf[1]}{obj} {pluriforme}{vbt}"
+                        vb = f"{perm_suf[1]}{obj}{pluriforme}{vbt}"
                         if negative:
                             vb = self.negate_verb(vb, mode)
                         result = f"{vb} {subj}"
@@ -309,7 +309,7 @@ class Verb(TupiAntigo):
                         )
                         pluriforme = f"r[PLURIFORM_PREFIX:R]-" if self.pluriforme or self.ero else ""
                         vbt = f"{self.verbete}[ROOT]"
-                        vb = f"{perm_suf[1]}{obj} {pluriforme}{vbt}"
+                        vb = f"{perm_suf[1]}{obj}{pluriforme}{vbt}"
                         if negative:
                             vb = self.negate_verb(vb, mode)
                         result = f"{vb} {subj if not pro_drop else ''}" if pos == "anteposto" else f"{subj if not pro_drop else ''} {vb}"
