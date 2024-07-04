@@ -146,8 +146,10 @@ class Verb(TupiAntigo):
             if self.transitivo:
                 if "3p" in subject_tense and dir_subj_raw is None:
                     subj = self.personal_inflections[subject_tense][0] + f"[SUBJECT:{subject_tense}]"
-                if subject_tense == object_tense:
+                if (subject_tense == object_tense and subject_tense != "3p") or object_tense == "refl":
                     obj = "îe" + f"[OBJECT:REFLEXIVE]"
+                elif object_tense == "mut":
+                    obj = "îo" + f"[OBJECT:MUTUAL]"
                 else:
                     obj = (
                         self.personal_inflections[object_tense][1] + f"[OBJECT:{object_tense}]"
@@ -213,6 +215,8 @@ class Verb(TupiAntigo):
                 raise Exception("Position Not Valid")
             if object_tense in self.personal_inflections.keys():
                 if (subject_tense != '3p' and object_tense == subject_tense) or (object_tense in ('refl', 'mut')):
+                    if object_tense == subject_tense:
+                        object_tense = 'refl'
                     subj = (
                         self.personal_inflections[subject_tense][0] if not '3p' == subject_tense else "a'e"
                     ) + f"[SUBJECT:{subject_tense}]"

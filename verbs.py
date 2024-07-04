@@ -350,7 +350,8 @@ for v in tqdm(
         ],
         "circunstancial": [
             # ixe
-            ("1ps", "1ps"),
+            ("1ps", "refl"),
+            ("1ps", "mut"),
             ("1ps", "1ppe"),
             ("1ps", "1ppi"),
             ("1ps", "2ps"),
@@ -358,13 +359,15 @@ for v in tqdm(
             ("1ps", "3p"),
             # oré
             ("1ppe", "1ps"),
-            ("1ppe", "1ppe"),
+            ("1ppe", "refl"),
+            ("1ppe", "mut"),
             ("1ppe", "2ps"),
             ("1ppe", "2pp"),
             ("1ppe", "3p"),
             # iande
             ("1ppi", "1ps"),
-            ("1ppi", "1ppi"),
+            ("1ppi", "refl"),
+            ("1ppi", "mut"),
             ("1ppi", "3p"),
             # a'e
             ("3p", "1ps"),
@@ -373,6 +376,8 @@ for v in tqdm(
             ("3p", "2ps"),
             ("3p", "2pp"),
             ("3p", "3p"),
+            ("3p", "refl"),
+            ("3p", "mut"),
         ],
         "imperativo": [
             # ende
