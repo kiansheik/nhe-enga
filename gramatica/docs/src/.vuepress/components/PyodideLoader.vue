@@ -5,6 +5,7 @@
 </template>
 <script>
 import { eventBus } from './eventBus.js';
+import pako from 'pako';
 
 export default {
     data() {
@@ -21,11 +22,13 @@ export default {
     methods: {
         async loadJson() {
             try {
-                const response = await fetch('/nhe-enga/docs/dict-conjugated.json');
+                const response = await fetch('/nhe-enga/docs/dict-conjugated.json.gz');
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                const json = await response.json();
+                const uint8Array = await response.arrayBuffer();
+                const decompressed = pako.inflate(uint8Array, { to: 'string' });
+                const json = JSON.parse(decompressed);
                 this.jsonData = json;
                 this.dictLoaded = true;
                 console.log('dict loaded!')
@@ -55,6 +58,7 @@ export default {
                 console.log("pyodide Loaded!");
                 // console.log("comps: "+ this.countComponents())
                 if (this.dictLoaded) {
+                    console.log("dict loaded!")
                     this.pyodideReady = true;
                     this.updateContent();
                 }
