@@ -32,12 +32,12 @@ class TupiAntigo(object):
         "3p": ["t", "ta"],
     }
     permissivo_anotado = {
-        "1ps": ["t[PERMISSIVE_PREFIX:VOWEL]", "ta[PERMISSIVE_PARTICLE:CONSONANT]"],
+        "1ps": ["t[PERMISSIVE_PREFIX:VOWEL]", "ta[PERMISSIVE_PREFIX:CONSONANT]"],
         "1ppi": ["t[PERMISSIVE_PREFIX:VOWEL]", "t[PERMISSIVE_PREFIX:VOWEL]"],
         "1ppe": ["t[PERMISSIVE_PREFIX:VOWEL]", "t[PERMISSIVE_PREFIX:VOWEL]"],
-        "2ps": ["t[PERMISSIVE_PREFIX:VOWEL]", "ta[PERMISSIVE_PARTICLE:CONSONANT]"],
-        "2pp": ["ta[PERMISSIVE_PARTICLE:CONSONANT]", "ta[PERMISSIVE_PARTICLE:CONSONANT]"],
-        "3p": ["t[PERMISSIVE_PREFIX:VOWEL]", "ta[PERMISSIVE_PARTICLE:CONSONANT]"],
+        "2ps": ["t[PERMISSIVE_PREFIX:VOWEL]", "ta[PERMISSIVE_PREFIX:CONSONANT]"],
+        "2pp": ["ta[PERMISSIVE_PREFIX:CONSONANT]", "ta[PERMISSIVE_PREFIX:CONSONANT]"],
+        "3p": ["t[PERMISSIVE_PREFIX:VOWEL]", "ta[PERMISSIVE_PREFIX:CONSONANT]"],
     }
     imperativo = {
         "2ps": ["e", "nde"],
@@ -73,6 +73,14 @@ class TupiAntigo(object):
     special_chars = list(enumerate("û î ŷ á é í ý ó ú ã ẽ ĩ ỹ õ ũ '".split(" ")))
     # Create a two-way dictionary
     special_chars_map = {char: index for index, char in list(enumerate(special_chars))+[(x,i)for i, x in list(enumerate(special_chars))]}
+
+    def choose_perm(self, inp_str, on=False):
+        if not on:
+            return ""
+        testr = inp_str[0]
+        if testr in (self.vogais + self.semi_vogais):
+            return "t[PERMISSIVE_PREFIX:VOWEL]"
+        return "ta[PERMISSIVE_PREFIX:CONSONANT]"
 
     vogais = "a á e é i í y ý o ó u ú ã ẽ ĩ ỹ õ ũ".split(" ")
     accent_map = {"á": "a",

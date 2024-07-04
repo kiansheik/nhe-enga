@@ -347,6 +347,8 @@ for v in tqdm(
             ("2ps", "2ps"),
             ("2pp", "2pp"),
             ("3p", "3p"),
+            ("refl", "refl"),
+            ("mut", "mut"),
         ],
         "circunstancial": [
             # ixe
