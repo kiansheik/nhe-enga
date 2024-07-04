@@ -13,9 +13,10 @@ sara_consoante_map = {
     "u": "ûar",
     "y": "ŷar",
     "é": "esar",
-    "ó": "osar",
+    "ó": "oar",
     "á": "asar",
     "í": "isar",
+    "ú": "usar",
 }
 saba_consoante_map = {
     "b": "pab",
@@ -28,9 +29,10 @@ saba_consoante_map = {
     "u": "ûab",
     "y": "ŷab",
     "é": "esab",
-    "ó": "osab",
+    "ó": "oab",
     "á": "asab",
     "í": "isab",
+    "ú": "usab",
 }
 
 def ends_with_any(s, endings):
