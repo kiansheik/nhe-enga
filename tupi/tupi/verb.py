@@ -20,7 +20,7 @@ class Verb(TupiAntigo):
         self.segunda_classe = (
             "2ª classe" in self.verb_class or "adj." in self.verb_class
         )
-        self.ero = self.verbete.startswith("ero") or self.verbete.startswith("eno") or self.verbete.startswith("eru")
+        self.ero = self.verbete.startswith("ero") or self.verbete.startswith("eno") or self.verbete.startswith("eru") or self.verbete.startswith("erekó") or self.verbete.startswith("ereko")
         self.vid = vid
     
     def object_marker(self):
