@@ -9,13 +9,19 @@ let question_count = 5;
 let modes = ['indicativo', 'permissivo', 'circunstancial', 'gerundio', 'imperativo'];
 let enviarButton = document.getElementById('enviar');
 
+
+function loadCompressedJSONSync(bytes) {
+    var decompressedData = pako.inflate(bytes, { to: 'string' });
+    return JSON.parse(decompressedData);
+}
+
 function startQuiz() {
     // Load the dataset from 'verbs.json'
-    fetch('../docs/dict-conjugated.json')
-        .then(response => response.json())
+    fetch('../docs/dict-conjugated.json.gz')
+        .then(response => response.arrayBuffer())
         .then(data => {
             // Assign the loaded data to the dataset variable
-            dataset = data;
+            dataset = loadCompressedJSONSync(data);
             dataset = dataset.filter(item => item.c !== undefined);
             dataset = dataset.flatMap(item => item.c.map(child => ({...child, d: `${item.f} - ${item.d}`})));
             // dataset = dataset.flatMap(item => item.c);

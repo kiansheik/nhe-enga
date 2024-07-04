@@ -10,6 +10,7 @@ sys.path.append('tupi')
 import tupi
 from tupi.verb import Verb
 import unicodedata
+import gzip
 
 def strip_accents(s):
     return ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
@@ -461,15 +462,25 @@ for v in tqdm(
                     pass
                     # print(f"\t({subj} -> {obj}):\tainda não desenvolvida", e)
 
-with open("quiz/quiz.json", "w") as f:
-    json.dump(quiz, f)
+def compress_data(data):
+    # Convert to JSON
+    json_data = json.dumps(data, separators=(',', ':'))
+    # Convert to bytes
+    encoded = json_data.encode('utf-8')
+    # Compress
+    return gzip.compress(encoded)
+
+with open("quiz/quiz.json.gz", "wb") as f:
+    c_quiz = compress_data(quiz)
+    f.write(c_quiz)
 
 processed_data = [
     {k[0]:v for k,v in obj.items()}
     for obj in dicc_dict.values()
 ]
-with open("docs/dict-conjugated.json", "w") as f:
-    json.dump(processed_data, f)
+with open("docs/dict-conjugated.json.gz", "wb") as f:
+    c_data = compress_data(processed_data)
+    f.write(c_data)
 
 breakpoint()
 
