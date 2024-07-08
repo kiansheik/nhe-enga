@@ -412,6 +412,15 @@
             dropdown.value = mode;
         }
 
+        function link_sources(definition) {
+            // VLB
+            const regex = /VLB, (I|II), (\d+)/g;
+            // Replace occurrences with HTML hyperlink
+            const replacedString = definition.replace(regex, '<a href="/nhe-enga/docs/primary_sources/?book_name=vlb&page_number=$2" target="_blank">$&</a>');
+            //  MORE TODO
+            return replacedString;
+        }
+
         function performSearch() {
             const query = searchInput.value.trim().toLowerCase(); // Convert query to lowercase
 
@@ -459,7 +468,8 @@
 
                     resultDiv.appendChild(link);
                     resultDiv.appendChild(optionalNumberSup);
-                    resultDiv.innerHTML += ` ${definition}`;
+                    const linked_definition = link_sources(definition);
+                    resultDiv.innerHTML += ` ${linked_definition}`;
                     if (result.exact_match) {
                         resultDiv.classList.add("exact-match");
                     } else {
