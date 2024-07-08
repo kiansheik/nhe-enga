@@ -36,10 +36,10 @@
                 text_link.id = 'text_link_src';
                 text_link.textContent = 'Ver essa página em texto';
                 const existinglink= document.querySelector('#text_link_src');
-                if (existinglink) {
-                    body.removeChild(existinglink);
-                }
                 const nav = document.querySelector('#navigation');
+                if (existinglink) {
+                    nav.removeChild(existinglink);
+                }
                 // Append the new image
                 nav.appendChild(text_link);
             }
