@@ -6,6 +6,7 @@ import json
 from tqdm import tqdm
 from collections import Counter
 from pdf2image import convert_from_path
+import os
 
 regex = r'\(.*?\)'
 
@@ -47,6 +48,7 @@ sorted_counts = sorted(counts, key=lambda x: x[0], reverse=True)
 for count in sorted_counts:
     print(count)
 
+print("Saving VLB citations")
 citations = Counter()
 malformed = Counter()
 # Process VLB
@@ -76,16 +78,77 @@ for citation, count in entry_map['vlb'].most_common():
         if not is_malformed:
             citations.update([(*elements[:3], page if elements[1] == 'i' else page + 154)])
 
-
-print("Saving VLB citations")
+output_dir = 'docs/primary_sources/'
 # open PDF "docs/primary_sources/vlb_drummond_1952.pdf" and save each page in "docs/primary_sources/vlb/{page_number_in_pdf}.png"
 # reader = PdfReader('docs/primary_sources/vlb_drummond_1952.pdf')
 # Path to your PDF file
-pdf_path = 'docs/primary_sources/vlb_drummond_1952.pdf'
-# Use pdf2image to convert each page of the PDF to an image
-images = convert_from_path(pdf_path)
 
-# Save each page as an image
-for i, image in tqdm(enumerate(images)):
-    image_path = f"docs/primary_sources/vlb/{i+1}.png"
-    image.save(image_path, 'PNG')
+pdf_path = 'docs/primary_sources/vlb_drummond_1952.pdf'
+vlb_output_dir = f'{output_dir}vlb/'
+# Check if the output directory is empty
+if len(os.listdir(vlb_output_dir)) == 0:
+    # Use pdf2image to convert each page of the PDF to an image
+    images = convert_from_path(pdf_path)
+    # Save each page as an image
+    for i, image in tqdm(enumerate(images)):
+        image_path = os.path.join(vlb_output_dir, f"{i+1}.png")
+        image.save(image_path, 'PNG')
+else:
+    print("Output directory is not empty. Skipping conversion.")
+
+print("Saving Anch. Arte citations")
+citations = Counter()
+malformed = Counter()
+# Process VLB
+for citation, count in entry_map['anch.'].most_common():
+    instances = [x.strip() for x in citation.split(';') if 'anch., arte' in x.lower()]
+    for instance in instances:
+        is_malformed = False
+        try:
+            elements = [x.strip() for x in instance.split(',')]
+            if elements[0] not in ('anch', 'anch.'):
+                # print("no vlb", elements)
+                malformed.update([citation])
+                is_malformed = True
+                continue
+            if elements[1] not in ('arte', 'arte.'):
+                # print("no i", elements)
+                malformed.update([citation])
+                is_malformed = True
+                continue
+            # if elements[2] is not a number, it's malformed
+            page = int(elements[2].strip('v'))
+        except Exception as e:
+            # print("oops", elements)
+            malformed.update([citation])
+            is_malformed = True
+            continue
+        if not is_malformed:
+            citations.update([(*elements[:3], elements[2].replace('v', 'a'))])
+
+def generate_ancharte_page(n):
+    if n == 0:
+        return ["1"]
+    if n == 58:
+        return ["58a"]
+    m = n + 1
+    if n < 10:
+        n = f"0{n}"
+    if m < 10:
+        m = f"0{m}"
+    return [f"{n}a", f"{m}"]
+
+pages = [generate_ancharte_page(i) for i in range(59)]
+
+pdf_path = 'docs/primary_sources/anchieta_arte_1595.pdf'
+ancharte_output_dir = f'{output_dir}ancharte/'
+# Check if the output directory is empty
+if len(os.listdir(ancharte_output_dir)) == 0:
+    # Use pdf2image to convert each page of the PDF to an image
+    images = convert_from_path(pdf_path)
+    # Save each page as an image
+    for i, image in tqdm(enumerate(images)):
+        image_path = os.path.join(ancharte_output_dir, f"{i}.png")
+        image.save(image_path, 'PNG')
+else:
+    print("Output directory is not empty. Skipping conversion.")
