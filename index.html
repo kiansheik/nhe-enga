@@ -416,7 +416,13 @@
             // VLB
             const regex = /VLB, (I|II), (\d+)/g;
             // Replace occurrences with HTML hyperlink
-            const replacedString = definition.replace(regex, '<a href="/nhe-enga/docs/primary_sources/?book_name=vlb&page_number=$2" target="_blank">$&</a>');
+            const replacedString = definition.replace(regex, function(match, p1, p2) {
+                if (p1 === "II") {
+                    return '<a href="/nhe-enga/docs/primary_sources/?book_name=vlb&page_number=' + (parseInt(p2) + 154) + '" target="_blank">' + match + '</a>';
+                } else {
+                    return '<a href="/nhe-enga/docs/primary_sources/?book_name=vlb&page_number=' + p2 + '" target="_blank">' + match + '</a>';
+                }
+            });
             //  MORE TODO
             return replacedString;
         }
