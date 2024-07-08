@@ -59,7 +59,7 @@ cover/
 # Translations
 *.mo
 *.pot
-
+*.pdf
 # Django stuff:
 *.log
 local_settings.py

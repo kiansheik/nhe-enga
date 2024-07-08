@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+    <script>
+        // Get the query parameters from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookName = urlParams.get('book_name');
+        const pageNumber = urlParams.get('page_number');
+
+        // Build the image URL
+        const imageUrl = `/nhe-enga/docs/primary_sources/${bookName}/${pageNumber}.png`;
+
+        // Create an image element and set its source to the generated URL
+        const image = document.createElement('img');
+        image.src = imageUrl;
+        image.alt = `Página ${pageNumber} de ${bookName}`;
+
+        // Append the image element to the body
+        document.body.appendChild(image);
+    </script>
+</body>
+</html>

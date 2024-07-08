@@ -547,12 +547,6 @@ if __name__ == "__main__":
     for noun_example, solution in noun_examples:
         if noun_example.sara().substantivo() not in solution:
             print(noun_example.verbete(), "\t", noun_example.sara(), "\t", solution)
-        # print("\tBase substantivo:\t", noun_example.substantivo())
-        # print("\tSaba form:\t", noun_example.saba())
-        # print(noun_example.verbete)
-        # print(noun_example.base_substantivo)
-        # print(noun_example.pluriforme)
-        # print(noun_example.saba())
     n = Noun("(a)pé", "(r, s)")
     print()
     print(n.recreate)
