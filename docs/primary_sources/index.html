@@ -3,22 +3,53 @@
 <head>
 </head>
 <body>
+    <div id="navigation">
+        <button id="prevPage">Última</button>
+        <button id="nextPage">Próxima</button>
+    </div>
     <script>
         // Get the query parameters from the URL
         const urlParams = new URLSearchParams(window.location.search);
-        const bookName = urlParams.get('book_name');
-        const pageNumber = urlParams.get('page_number');
+        let bookName = urlParams.get('book_name');
+        let pageNumber = parseInt(urlParams.get('page_number'), 10);
 
-        // Build the image URL
-        const imageUrl = `/nhe-enga/docs/primary_sources/${bookName}/${pageNumber}.png`;
+        // Function to update the image based on the current page number
+        function updateImage() {
+            const imageUrl = `/nhe-enga/docs/primary_sources/${bookName}/${pageNumber}.png`;
+            const image = document.createElement('img');
+            image.src = imageUrl;
+            image.alt = `Página ${pageNumber} de ${bookName}`;
+            const body = document.body;
+            // Remove the existing image if any
+            const existingImage = document.querySelector('img');
+            if (existingImage) {
+                body.removeChild(existingImage);
+            }
+            // Append the new image
+            body.appendChild(image);
+        }
 
-        // Create an image element and set its source to the generated URL
-        const image = document.createElement('img');
-        image.src = imageUrl;
-        image.alt = `Página ${pageNumber} de ${bookName}`;
+        // Initially load the image
+        updateImage();
 
-        // Append the image element to the body
-        document.body.appendChild(image);
+        // Add event listeners to buttons
+        document.getElementById('prevPage').addEventListener('click', () => {
+            if (pageNumber > 1) {
+                pageNumber--;
+                updateImage();
+                // Optionally, update the URL
+                urlParams.set('page_number', pageNumber);
+                window.history.replaceState(null, '', `${window.location.pathname}?${urlParams}`);
+            }
+        });
+
+        document.getElementById('nextPage').addEventListener('click', () => {
+            pageNumber++;
+            updateImage();
+            // Optionally, update the URL
+            urlParams.set('page_number', pageNumber);
+            window.history.replaceState(null, '', `${window.location.pathname}?${urlParams}`);
+        });
     </script>
 </body>
 </html>
