@@ -13,6 +13,7 @@
         const urlParams = new URLSearchParams(window.location.search);
         let bookName = urlParams.get('book_name');
         let pageNumber;
+        let pn;
         if (bookName === 'vlb') {
             pageNumber = parseInt(urlParams.get('page_number'), 10);
         } else if (bookName === 'ancharte') {
@@ -23,13 +24,15 @@
             }
             pageNumber = anchieta_arte_page_map.findIndex((pages) => pages.includes(pn));
             // Add a link to the text version here: http://www.etnolinguistica.org/arte:02a/
-            const text_link = document.createElement('a');
-            text_link.href = `http://www.etnolinguistica.org/arte:${pn}`;
-            text_link.textContent = 'Ver essa página em texto';
-            document.body.appendChild(text_link);
         }
         // Function to update the image based on the current page number
         function updateImage() {
+            const text_link = document.createElement('a');
+            pn = anchieta_arte_page_map[pageNumber][0];
+            text_link.href = `http://www.etnolinguistica.org/arte:${pn}`;
+            text_link.id = 'text_link_src';
+            text_link.textContent = 'Ver essa página em texto';
+
             const imageUrl = `/nhe-enga/docs/primary_sources/${bookName}/${pageNumber}.png`;
             const image = document.createElement('img');
             image.src = imageUrl;
@@ -39,9 +42,14 @@
             const existingImage = document.querySelector('img');
             if (existingImage) {
                 body.removeChild(existingImage);
+            }            
+            const existinglink= document.querySelector('#text_link_src');
+            if (existinglink) {
+                body.removeChild(existinglink);
             }
             // Append the new image
             body.appendChild(image);
+            body.appendChild(text_link);
         }
 
         // Initially load the image
