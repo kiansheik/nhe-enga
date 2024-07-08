@@ -12,15 +12,16 @@
         // Get the query parameters from the URL
         const urlParams = new URLSearchParams(window.location.search);
         let bookName = urlParams.get('book_name');
+        let pageNumber;
         if (bookName === 'vlb') {
-            let pageNumber = parseInt(urlParams.get('page_number'), 10);
+            pageNumber = parseInt(urlParams.get('page_number'), 10);
         } else if (bookName === 'ancharte') {
             let pn = urlParams.get('page_number').replace('v', 'a');
             // Find the index of the page number in the page map
             if (pn.replace('a', '').length < 2) {
                 pn = '0' + pn;
             }
-            let pageNumber = anchieta_arte_page_map.findIndex((pages) => pages.includes(pn));
+            pageNumber = anchieta_arte_page_map.findIndex((pages) => pages.includes(pn));
             // Add a link to the text version here: http://www.etnolinguistica.org/arte:02a/
             const text_link = document.createElement('a');
             text_link.href = `http://www.etnolinguistica.org/arte:${pn}`;
