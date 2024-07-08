@@ -25,6 +25,7 @@
             // Add a link to the text version here: http://www.etnolinguistica.org/arte:02a/
             const text_link = document.createElement('a');
             text_link.href = `http://www.etnolinguistica.org/arte:${pn}`;
+            document.body.appendChild(text_link);
         }
         // Function to update the image based on the current page number
         function updateImage() {
