@@ -47,9 +47,10 @@
             if (existinglink) {
                 body.removeChild(existinglink);
             }
+            const nav = document.querySelector('#navigation');
             // Append the new image
+            nav.appendChild(text_link);
             body.appendChild(image);
-            body.appendChild(text_link);
         }
 
         // Initially load the image
