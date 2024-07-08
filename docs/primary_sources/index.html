@@ -28,29 +28,32 @@
         }
         // Function to update the image based on the current page number
         function updateImage() {
-            const text_link = document.createElement('a');
-            pn = anchieta_arte_page_map[pageNumber][0];
-            text_link.href = `http://www.etnolinguistica.org/arte:${pn}`;
-            text_link.id = 'text_link_src';
-            text_link.textContent = 'Ver essa página em texto';
+            const body = document.body;
+            if (bookName === 'ancharte'){
+                const text_link = document.createElement('a');
+                pn = anchieta_arte_page_map[pageNumber][0];
+                text_link.href = `http://www.etnolinguistica.org/arte:${pn}`;
+                text_link.id = 'text_link_src';
+                text_link.textContent = 'Ver essa página em texto';
+                const existinglink= document.querySelector('#text_link_src');
+                if (existinglink) {
+                    body.removeChild(existinglink);
+                }
+                const nav = document.querySelector('#navigation');
+                // Append the new image
+                nav.appendChild(text_link);
+            }
 
             const imageUrl = `/nhe-enga/docs/primary_sources/${bookName}/${pageNumber}.png`;
             const image = document.createElement('img');
             image.src = imageUrl;
             image.alt = `Página ${pageNumber} de ${bookName}`;
-            const body = document.body;
             // Remove the existing image if any
             const existingImage = document.querySelector('img');
             if (existingImage) {
                 body.removeChild(existingImage);
             }            
-            const existinglink= document.querySelector('#text_link_src');
-            if (existinglink) {
-                body.removeChild(existinglink);
-            }
-            const nav = document.querySelector('#navigation');
-            // Append the new image
-            nav.appendChild(text_link);
+
             body.appendChild(image);
         }
 
