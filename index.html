@@ -467,7 +467,7 @@
                     const resultDiv = document.createElement("div");
 
                     // Case-insensitive highlighting of query word
-                    const definition = result.definition.replace(new RegExp(`(${query})`, "ig"), '<span class="highlighted">$1</span>');
+                    const linked_definition = link_sources(result.definition).replace(new RegExp(`(${query})`, "ig"), '<span class="highlighted">$1</span>');
                     // Create a link with query parameter
                     const link = document.createElement("a");
                     link.href = `${window.location.pathname}?query=${encodeURIComponent(result.first_word)}`;
@@ -480,7 +480,6 @@
 
                     resultDiv.appendChild(link);
                     resultDiv.appendChild(optionalNumberSup);
-                    const linked_definition = link_sources(definition);
                     resultDiv.innerHTML += ` ${linked_definition}`;
                     if (result.exact_match) {
                         resultDiv.classList.add("exact-match");
