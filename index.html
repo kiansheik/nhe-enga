@@ -429,6 +429,12 @@
             replacedString = replacedString.replace(regex, function(match, p1) {
                 return '<a href="/nhe-enga/docs/primary_sources/?book_name=ancharte&page_number=' + p1 + '" target="_blank">' + match + '</a>';
             });
+            // Araujo Cat 1618
+            regex = /Ar., Cat., (?!1686)(\d+v?)/g;
+            // Replace occurrences with HTML hyperlink
+            replacedString = replacedString.replace(regex, function(match, p1) {
+                return '<a href="/nhe-enga/docs/primary_sources/?book_name=arcat1618&page_number=' + p1 + '" target="_blank">' + match + '</a>';
+            });
             //  MORE TODO
             return replacedString;
         }

@@ -17,9 +17,14 @@
     </div>
     <script>
         function generateArcat1618Page(n) {
-            let page = parseInt(n.replace('v', '')) * 2 + 34;
+            let page = parseInt(n.replace('v', ''));
+            let over_129 = n >= 129;
+            page = page * 2 + 34;
             if (n.length !== n.replace('v', '').length) {
                 page += 1;
+            }
+            if (over_129) {
+                page -= 1;
             }
             return page;
         }
