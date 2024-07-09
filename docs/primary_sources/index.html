@@ -29,9 +29,16 @@
             if (bookName === 'arcat1618') {
                 let nValue;
                 if ((page - 35) % 2 === 0) {
-                    nValue = ((page - 35) / 2).toString() + 'v';
+                    nValue = ((page - 35) / 2).toString();
+                    if (+nValue >= 129) {
+                        nValue = +nValue + 1;
+                    }
+                    nValue += 'v';
                 } else {
                     nValue = ((page - 34) / 2).toString();
+                    if (+nValue >= 129) {
+                        nValue = +nValue + 1;
+                    }
                 }
                 return nValue;
             } else {
