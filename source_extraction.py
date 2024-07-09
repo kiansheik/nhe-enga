@@ -152,3 +152,59 @@ if len(os.listdir(ancharte_output_dir)) == 0:
         image.save(image_path, 'PNG')
 else:
     print("Output directory is not empty. Skipping conversion.")
+
+
+print("Saving Ar., Cat., 1618 citations")
+citations = Counter()
+malformed = Counter()
+# Process VLB
+for citation, count in entry_map['ar.'].most_common():
+    instances = [x.strip() for x in citation.split(';') if 'ar., cat' in x.lower() and "1686" not in x]
+    for instance in instances:
+        is_malformed = False
+        try:
+            elements = [x.strip() for x in instance.split(',')]
+            if elements[0] not in ('ar', 'ar.'):
+                # print("no vlb", elements)
+                malformed.update([citation])
+                is_malformed = True
+                continue
+            if elements[1] not in ('cat', 'cat.'):
+                # print("no i", elements)
+                malformed.update([citation])
+                is_malformed = True
+                continue
+            # if elements[2] is not a number, it's malformed
+            page = int(elements[2].strip('v'))
+        except Exception as e:
+            # print("oops", elements)
+            malformed.update([citation])
+            is_malformed = True
+            continue
+        if not is_malformed:
+            citations.update([(*elements[:3], elements[2])])
+
+def generate_arcat1618_page(n):
+    page = int(n.strip('v'))*2 + 34
+    if len(n) != len(n.strip('v')):
+        page += 1
+    return page
+
+pages = [generate_arcat1618_page(i) for i in range(59)]
+
+pdf_path = 'docs/primary_sources/ar.Cat.1618.pdf'
+arcat1618_output_dir = f'{output_dir}arcat1618/'
+# Maximum file size in bytes (e.g., 500KB)
+max_file_size = 700 * 1024  # 500KB
+# Minimum acceptable quality (to prevent infinite loop)
+min_quality = 10
+
+if len(os.listdir(arcat1618_output_dir)) == 0:
+    images = convert_from_path(pdf_path)
+    quality = 95
+    for i, image in enumerate(tqdm(images)):
+        image_path = os.path.join(arcat1618_output_dir, f"{i}.png")
+        # Start with high quality
+        image.save(image_path, 'PNG')
+else:
+    print("Output directory is not empty. Skipping conversion.")
