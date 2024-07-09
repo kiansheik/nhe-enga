@@ -221,7 +221,7 @@ main > div.content > div.actions > .toggle-container.disabled > .toggle-ball {
 
 .results > div > a {
 	color: #14532d;
-	padding: 4px;
+	padding: 0px;
 }
 .results > div > a:hover {
 	background-color: #14532d;
