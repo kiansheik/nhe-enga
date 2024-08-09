@@ -262,7 +262,7 @@ class Verb(TupiAntigo):
                         if negative:
                             vb = self.negate_verb(vb, mode)
                         result = (
-                            f"{subj} x`{vb} {dir_obj}"
+                            f"{subj} {vb} {dir_obj}"
                         )
                     elif pos == "anteposto":
                         perm = self.choose_perm(conj, perm_mode)
