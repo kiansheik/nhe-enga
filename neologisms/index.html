@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dicionário de Neologismos Tupis</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        p {
+            text-align: center;
+            font-size: 1.2em;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1em;
+            min-width: 600px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: white;
+        }
+        table thead {
+            background-color: #007BFF;
+            color: white;
+        }
+        table th, table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #dddddd;
+        }
+        table th {
+            font-weight: bold;
+        }
+        table tbody tr:nth-of-type(even) {
+            background-color: #f3f3f3;
+        }
+        table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        table tbody td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        @media (max-width: 768px) {
+            table thead {
+                display: none;
+            }
+            table, table tbody, table tr, table td {
+                display: block;
+                width: 100%;
+            }
+            table tr {
+                margin-bottom: 15px;
+            }
+            table td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+            }
+            table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 50%;
+                padding-left: 15px;
+                font-weight: bold;
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Dicionário de Neologismos Tupis</h1>
+    
+    <p><a href="https://forms.gle/dujJoMrh6FXQARJfA">Submit Neologisms</a></p>
+    
+    <table id="csvTable">
+        <thead></thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        doc_id = "1NH_SgkBYY-vAITMtxrZogzihZGsbhIXCaes6HJrcJww";
+        const sheetCsvUrl = 'https://docs.google.com/spreadsheets/d/'+doc_id+'/gviz/tq?tqx=out:csv&sheet=AdminWords';
+
+        fetch(sheetCsvUrl)
+        .then(response => response.text())
+        .then(csvText => {
+            Papa.parse(csvText, {
+                complete: function(results) {
+                    const rows = results.data;
+                    const tableHead = document.querySelector('#csvTable thead');
+                    const tableBody = document.querySelector('#csvTable tbody');
+
+                    // Create the header using the first row of the CSV
+                    const headerRow = document.createElement('tr');
+                    rows[0].forEach(headerCell => {
+                        const th = document.createElement('th');
+                        th.textContent = headerCell.trim();
+                        headerRow.appendChild(th);
+                    });
+                    tableHead.appendChild(headerRow);
+
+                    // Create the table body for the remaining rows
+                    rows.slice(1).forEach(row => {
+                        const newRow = document.createElement('tr');
+                        
+                        row.forEach(cell => {
+                            const newCell = document.createElement('td');
+                            newCell.textContent = cell.trim();
+                            newRow.appendChild(newCell);
+                        });
+
+                        tableBody.appendChild(newRow);
+                    });
+                },
+                skipEmptyLines: true,
+                header: false // We manually handle the header generation
+            });
+        });
+    </script>
+</body>
+</html>
