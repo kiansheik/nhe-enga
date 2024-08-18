@@ -5,80 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dicionário de Neologismos Tupis</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-        p {
-            text-align: center;
-            font-size: 1.2em;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            font-size: 1em;
-            min-width: 600px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-color: white;
-        }
-        table thead {
-            background-color: #007BFF;
-            color: white;
-        }
-        table th, table td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #dddddd;
-        }
-        table th {
-            font-weight: bold;
-        }
-        table tbody tr:nth-of-type(even) {
-            background-color: #f3f3f3;
-        }
-        table tbody tr:hover {
-            background-color: #f1f1f1;
-        }
-        table tbody td {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        @media (max-width: 768px) {
-            table thead {
-                display: none;
-            }
-            table, table tbody, table tr, table td {
-                display: block;
-                width: 100%;
-            }
-            table tr {
-                margin-bottom: 15px;
-            }
-            table td {
-                text-align: right;
-                padding-left: 50%;
-                position: relative;
-            }
-            table td::before {
-                content: attr(data-label);
-                position: absolute;
-                left: 0;
-                width: 50%;
-                padding-left: 15px;
-                font-weight: bold;
-                text-align: left;
-            }
-        }
-    </style>
 </head>
 <body>
     <h1>Dicionário de Neologismos Tupis</h1>
@@ -99,30 +25,68 @@
         .then(csvText => {
             Papa.parse(csvText, {
                 complete: function(results) {
-                    const rows = results.data;
-                    const tableHead = document.querySelector('#csvTable thead');
-                    const tableBody = document.querySelector('#csvTable tbody');
+                    // The first row contains the headers
+                    const headers = results.data[0];
+                    const jsonData = [];
 
-                    // Create the header using the first row of the CSV
-                    const headerRow = document.createElement('tr');
-                    rows[0].forEach(headerCell => {
-                        const th = document.createElement('th');
-                        th.textContent = headerCell.trim();
-                        headerRow.appendChild(th);
-                    });
-                    tableHead.appendChild(headerRow);
+                    // Loop through the rows starting from the second one (index 1)
+                    for (let i = 1; i < results.data.length; i++) {
+                        const row = results.data[i];
+                        const obj = {};
+                        const obj_dict = {};
 
-                    // Create the table body for the remaining rows
-                    rows.slice(1).forEach(row => {
-                        const newRow = document.createElement('tr');
-                        
-                        row.forEach(cell => {
-                            const newCell = document.createElement('td');
-                            newCell.textContent = cell.trim();
-                            newRow.appendChild(newCell);
+                        // Map each column to the corresponding header
+                        headers.forEach((header, index) => {
+                            obj[header] = row[index];
                         });
+                        first_word = obj['Verbete'];
+                        optional_number = "";
+                        con = "";
+                        // Render Pluriformity
+                        if (obj["Pluriforme"] == "Nenhuma") {
+                            obj['Pluriforme'] = "";
+                        }
+                        obj['Categoria Gramatical'] = obj['Categoria Gramatical'].toLowerCase()
+                        // Render transitivity 
+                        if (obj['Transitividade'] == "intr.-estativo (adjetivos, substantivos)"){
+                            if (obj['Categoria Gramatical'].includes("subs") || obj['Categoria Gramatical'].includes("noun")) {
+                                obj['Transitividade'] = "(s.)";
+                            } else if (obj['Categoria Gramatical'].includes("adv")) {
+                                obj['Transitividade'] = "(adv.)";
+                            } else {
+                                obj['Transitividade'] = "(v. da 2ª classe)";
+                            }
+                        } else if (obj['Transitividade'] == "tr.-activo"){
+                            obj['Transitividade'] = "(v.tr.)";
+                        } else if (obj['Transitividade'] == "intr.-activo"){
+                            obj['Transitividade'] = "(v. intr.)";
+                        } else {
+                            obj['Transitividade'] = "";
+                        }
+                        // Render etymology
+                        if (obj['Verbete(s) Base(s)'] !== "") {
+                            obj['Verbete(s) Base(s)'] = `(etim. - ${obj['Verbete(s) Base(s)']})`;
+                        }
+                        // Render categoria gramatical
+                        
+                        // if (obj['Categoria Gramatical'].toLowerCase().contains("substantivo")) {
+                        //     obj['Verbete(s) Base(s)'] = `(etim. - ${obj['Verbete(s) Base(s)']})`;
+                        // }
+                        definition = `${obj['Pluriforme']} ${obj['Verbete(s) Base(s)']} ${obj['Transitividade']} - PT: ${obj['Definição Portuguesa']} ENG: ${obj['English Definition']} "${obj['Atestação']}": ${obj['Tradução Portuguesa']}/${obj['Tradução Inglesa']} (${obj['Fonte']}, ${obj['Data da Fonte']}, ${obj['Pagina(s) na Fonte']}) (registrado ${obj['Timestamp']} by ${obj['Email Address']})`;
 
-                        tableBody.appendChild(newRow);
+                        obj_dict['first_word'] = first_word;
+                        obj_dict['optional_number'] = optional_number;
+                        obj_dict['con'] = con;
+                        obj_dict['definition'] = definition;
+
+                        // Add the row object to the jsonData array
+                        jsonData.push(obj_dict);
+                    }
+                    //sort jsonData on key first_word like a dictionary
+                    jsonData.sort(function(a, b){
+                        if(a.first_word < b.first_word) { return -1; }
+                        if(a.first_word > b.first_word) { return 1; }
+                        return 0;
                     });
                 },
                 skipEmptyLines: true,

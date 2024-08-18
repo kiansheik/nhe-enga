@@ -9,6 +9,7 @@
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DZYY8Y9076"></script>
+    <script src="/nhe-enga/js/papaparse.min.js"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
@@ -138,6 +139,75 @@
             }
             return null;
         }
+        function loadNeoJSONSync(sheetCsvUrl) {
+            // Synchronous XMLHttpRequest
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', sheetCsvUrl, false); // Make the request synchronous
+            xhr.send(null);
+            
+            if (xhr.status === 200) {
+                const csvText = xhr.responseText;
+                
+                // Manually parse the CSV using PapaParse
+                let results = Papa.parse(csvText, {
+                    skipEmptyLines: true,
+                    header: true,
+                    dynamicTyping: false,
+                });
+                const jsonData = [];
+
+                for (let i = 0; i < results.data.length; i++) {
+                    const obj = results.data[i];
+                    const obj_dict = {};
+
+                    let first_word = obj['Verbete'];
+                    let optional_number = "";
+                    let con = "";
+
+                    if (obj["Pluriforme"] === "Nenhuma") {
+                        obj['Pluriforme'] = "";
+                    }
+
+                    obj['Categoria Gramatical'] = obj['Categoria Gramatical'].toLowerCase();
+
+                    if (obj['Transitividade'] === "intr.-estativo (adjetivos, substantivos)") {
+                        if (obj['Categoria Gramatical'].includes("subs") || obj['Categoria Gramatical'].includes("noun")) {
+                            obj['Transitividade'] = "(s.)";
+                        } else if (obj['Categoria Gramatical'].includes("adv")) {
+                            obj['Transitividade'] = "(adv.)";
+                        } else {
+                            obj['Transitividade'] = "(v. da 2ª classe)";
+                        }
+                    } else if (obj['Transitividade'] === "tr.-activo") {
+                        obj['Transitividade'] = "(v.tr.)";
+                    } else if (obj['Transitividade'] === "intr.-activo") {
+                        obj['Transitividade'] = "(v. intr.)";
+                    } else {
+                        obj['Transitividade'] = "";
+                    }
+
+                    if (obj['Verbete(s) Base(s)'] !== "") {
+                        obj['Verbete(s) Base(s)'] = `(etim. - ${obj['Verbete(s) Base(s)']})`;
+                    }
+
+
+                    const definition = `${obj['Pluriforme']} ${obj['Verbete(s) Base(s)']} ${obj['Transitividade']} - pt: ${obj['Definição Portuguesa']} eng: ${obj['English Definition']} ${obj['Atestação']} - pt: ${obj['Tradução Portuguesa']} - eng: ${obj['Tradução Inglesa']} (${obj['Fonte']}, ${obj['Data da Fonte']}, ${obj['Pagina(s) na Fonte']}) (registrado ${obj['Timestamp']})`;
+                    // remove all spaces in definition which are more than one space
+                    obj['definition'] = definition.replace(/\s{2,}/g, ' ');
+                    obj_dict['first_word'] = first_word;
+                    obj_dict['optional_number'] = optional_number;
+                    obj_dict['con'] = con;
+                    obj_dict['definition'] = definition;
+
+                    console.log(obj)
+                    jsonData.push(obj_dict);
+                }
+                return jsonData; // Return the sorted data
+            } else {
+                console.error("Failed to fetch the CSV data.");
+                return null;
+            }
+        }
         function loadCompressedJSON(url, callback) {
             var xhr = new XMLHttpRequest();
             xhr.open('GET', url, true);  // `true` makes the request asynchronous
@@ -188,12 +258,17 @@
 
         return resultObject;
         }
-        window.jsonData = loadCompressedJSONSync('docs/dict-conjugated.json.gz').map(item => ({
+        const doc_id = "1NH_SgkBYY-vAITMtxrZogzihZGsbhIXCaes6HJrcJww";
+        const sheetCsvUrl = `https://docs.google.com/spreadsheets/d/${doc_id}/export?format=csv&sheet=AdminWords`;
+        const neos = loadNeoJSONSync(sheetCsvUrl)
+        const compressedData = loadCompressedJSONSync('docs/dict-conjugated.json.gz').map(item => ({
             "first_word": item.f || "",
             "optional_number": item.o || "",
             "definition": item.d || "",
             "con": item.c || ""
         }));
+        const combinedData = [...compressedData, ...neos];
+        window.jsonData = combinedData
     </script>
     <script>
         let modes = ['indicativo', 'permissivo', 'circunstancial', 'gerundio', 'imperativo'];
