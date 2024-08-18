@@ -191,7 +191,7 @@
                     }
 
 
-                    const definition = `${obj['Pluriforme']} ${obj['Verbete(s) Base(s)']} ${obj['Transitividade']} - pt: ${obj['Definição Portuguesa']} eng: ${obj['English Definition']} ${obj['Atestação']} - pt: ${obj['Tradução Portuguesa']} - eng: ${obj['Tradução Inglesa']} (${obj['Fonte']}, ${obj['Data da Fonte']}, ${obj['Pagina(s) na Fonte']}) (registrado ${obj['Timestamp']})`;
+                    const definition = `${obj['Pluriforme']} ${obj['Verbete(s) Base(s)']} ${obj['Transitividade']} - pt: ${obj['Definição Portuguesa']} | eng: ${obj['English Definition']} | ${obj['Atestação']} - pt: ${obj['Tradução Portuguesa']} - eng: ${obj['Tradução Inglesa']} (${obj['Fonte']}, ${obj['Data da Fonte']}, ${obj['Pagina(s) na Fonte']}) (registrado ${obj['Timestamp']})`;
                     // remove all spaces in definition which are more than one space
                     obj['definition'] = definition.replace(/\s{2,}/g, ' ');
                     obj_dict['first_word'] = first_word;
