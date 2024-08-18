@@ -198,6 +198,7 @@
                     obj_dict['optional_number'] = optional_number;
                     obj_dict['con'] = con;
                     obj_dict['definition'] = definition;
+                    obj_dict['type'] = 'neo';
 
                     console.log(obj)
                     jsonData.push(obj_dict);
@@ -556,7 +557,9 @@
             if (results.length > 0) {
                 results.forEach(result => {
                     const resultDiv = document.createElement("div");
-
+                    if (result.type !== undefined){
+                        resultDiv.classList.add(result.type);
+                    }
                     // Case-insensitive highlighting of query word
                     const linked_definition = link_sources(result.definition).replace(new RegExp(`(?<!="[^"]*)(${query})(?![^"]*")`, "ig"), '<span class="highlighted">$1</span>');
                     // Create a link with query parameter

@@ -207,6 +207,15 @@ main > div.content > div.actions > .toggle-container.disabled > .toggle-ball {
 	padding: 10px;
 }
 
+.results > div.neo:nth-of-type(odd) {
+	background-color: #e7f5ff;
+	border-radius: 20px;
+}
+.results > div.neo:nth-of-type(even) {
+	background-color: #c3e6fe;
+	border-radius: 20px;
+}
+
 .results > div:nth-of-type(odd) {
 	background-color: #fff;
 }
