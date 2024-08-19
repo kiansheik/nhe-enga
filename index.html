@@ -195,8 +195,8 @@
                     if (obj['Tradução Inglesa'] !== undefined || obj['Tradução Inglesa'] !== "") {
                         obj['Tradução Inglesa'] = `- eng: ${obj['Tradução Inglesa']}`;
                     }
-                    if (obj['Definição Inglesa'] !== undefined || obj['Definição Inglesa'] !== "") {
-                        obj['Definição Inglesa'] = `| eng: ${obj['Definição Inglesa']}`;
+                    if (obj['English Definition'] !== undefined || obj['English Definition'] !== "") {
+                        obj['English Definition'] = `| eng: ${obj['English Definition']}`;
                     }
                     
                     const definition = `${obj['Pluriforme']} ${obj['Verbete(s) Base(s)']} ${obj['Transitividade']} - pt: ${obj['Definição Portuguesa']} ${obj['English Definition']} | ${obj['Atestação']} ${obj['Tradução Portuguesa']} ${obj['Tradução Inglesa']} (${obj['Fonte']}, ${obj['Data da Fonte']}, ${obj['Pagina(s) na Fonte']}) (registrado ${obj['Timestamp']})`;
