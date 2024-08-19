@@ -269,7 +269,7 @@
         }
         // const doc_id = "1NH_SgkBYY-vAITMtxrZogzihZGsbhIXCaes6HJrcJww";
         // const sheetCsvUrl = `https://docs.google.com/spreadsheets/d/${doc_id}/export?format=csv&sheet=AdminWords`;
-        const neos = loadNeoJSONSync("/nhe'enga/neologisms.csv")
+        const neos = loadNeoJSONSync("/nhe-enga/neologisms.csv")
         const compressedData = loadCompressedJSONSync('docs/dict-conjugated.json.gz').map(item => ({
             "first_word": item.f || "",
             "optional_number": item.o || "",
