@@ -190,16 +190,16 @@
                         obj['Verbete(s) Base(s)'] = `(etim. - ${obj['Verbete(s) Base(s)']})`;
                     }
                     if (obj['Tradução Portuguesa'] !== undefined || obj['Tradução Portuguesa'] !== "") {
-                        obj['Tradução Portuguesa'] = `- pt: ${obj['Tradução Portuguesa']}`;
+                        obj['Tradução Portuguesa'] = `- ${obj['Tradução Portuguesa']}`;
                     }
                     if (obj['Tradução Inglesa'] !== undefined || obj['Tradução Inglesa'] !== "") {
-                        obj['Tradução Inglesa'] = `- eng: ${obj['Tradução Inglesa']}`;
+                        obj['Tradução Inglesa'] = `- ${obj['Tradução Inglesa']}`;
                     }
                     if (obj['English Definition'] !== undefined || obj['English Definition'] !== "") {
-                        obj['English Definition'] = `| eng: ${obj['English Definition']}`;
+                        obj['English Definition'] = `| ${obj['English Definition']}`;
                     }
                     
-                    const definition = `${obj['Pluriforme']} ${obj['Verbete(s) Base(s)']} ${obj['Transitividade']} - pt: ${obj['Definição Portuguesa']} ${obj['English Definition']} | ${obj['Atestação']} ${obj['Tradução Portuguesa']} ${obj['Tradução Inglesa']} (${obj['Fonte']}, ${obj['Data da Fonte']}, ${obj['Pagina(s) na Fonte']}) (registrado ${obj['Timestamp']})`;
+                    const definition = `${obj['Pluriforme']} ${obj['Verbete(s) Base(s)']} ${obj['Transitividade']} - ${obj['Definição Portuguesa']} ${obj['English Definition']} | ${obj['Atestação']} ${obj['Tradução Portuguesa']} ${obj['Tradução Inglesa']} (${obj['Fonte']}, ${obj['Data da Fonte']}, ${obj['Pagina(s) na Fonte']})`;
                     // remove all spaces in definition which are more than one space
                     obj['definition'] = definition.replace(/\s{2,}/g, ' ');
                     obj_dict['first_word'] = first_word;
