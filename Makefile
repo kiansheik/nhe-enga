@@ -12,6 +12,7 @@ lint:
 	cp -r gramatica/docs/src/.vuepress/dist/* gramatica/
 	echo 'kiansheik.io' > gramatica/CNAME
 	rm -rf gramatica/docs/src/.vuepress/dist/*
+	curl -L -o neologisms.csv "https://docs.google.com/spreadsheets/d/1NH_SgkBYY-vAITMtxrZogzihZGsbhIXCaes6HJrcJww/export?format=csv&sheet=AdminWords"
 
 push:
 	make lint
