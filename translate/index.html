@@ -245,8 +245,8 @@ function generateGPTPrompt(originalSentence, annotatedSentence, verbetes, target
                  `Here is the grammatically annotated version: ${annotatedSentence}\n` +
                  `The roots which appear in the sentence have the following dictionary entries:\n` +
                  `${verbetes.map(entry => `* ${entry}`).join('\n')}\n\n` +
-                 `Using all of this syntactic and semantic information provided, please do your best to provide a translation of this sentence into ${targetLanguage}.` +
-                 `Do not give an explanation, just the translation of the target phrase in ${targetLanguage}.` +
+                 `Using all of this syntactic and semantic information provided, please do your best to provide a translation of this sentence into ${targetLanguage}.\n` +
+                 `Do not give an explanation, just the translation of the target phrase in ${targetLanguage}.\n` +
                  `If there are multiple different entries shown for the semantic match, try to choose the one which makes most sense for the context of the sentence and syntax.`;
 
   return prompt;
@@ -268,6 +268,12 @@ async function getAIResponse(prompt) {
           { text: prompt }
         ]
       }
+    ],
+    safetySettings: [
+        {'category': "HARM_CATEGORY_SEXUALLY_EXPLICIT", 'threshold': "BLOCK_NONE"},
+        {'category': "HARM_CATEGORY_HATE_SPEECH", 'threshold': "BLOCK_NONE"},
+        {'category': "HARM_CATEGORY_HARASSMENT", 'threshold': "BLOCK_NONE"},
+        {'category': "HARM_CATEGORY_DANGEROUS_CONTENT", 'threshold': "BLOCK_NONE"},
     ]
   };
 
@@ -286,6 +292,7 @@ async function getAIResponse(prompt) {
 
     const data = await response.json();
     // Extracting the text from the response
+    console.log('respo gemeni:', data);
     const resultText = data.candidates[0].content.parts[0].text;
     return resultText;
 
@@ -375,7 +382,7 @@ async function fetchTranslation(inp, lang) {
                 // Display the result
                 document.getElementById('result').textContent = resultText;
             } catch (error) {
-                document.getElementById('result').textContent = 'An error occurred during translation.';
+                document.getElementById('result').textContent = 'An error occurred during translation.\n'+error;
                 console.error(error);
             } finally {
                 // Hide the spinner
