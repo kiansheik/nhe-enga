@@ -74,21 +74,22 @@ not_working = []
 with open('docs/all_nouns_verbs.json', 'r') as f:
     data = json.load(f)
 
-# run annotate on each string in data and save the results, use tqdm to track
-results = []
-for x in tqdm(data):
-    try:
-        results.append(anotate(x))
-    except Exception as e:
-        results.append("")
-        not_working.append((x, e))
 
-for i, res in enumerate(results):
+# # run annotate on each string in data and save the results, use tqdm to track
+# results = []
+# for x in tqdm(data):
+#     try:
+#         results.append(anotate(x))
+#     except Exception as e:
+#         results.append("")
+#         not_working.append((x, e))
 
-    vbt = res.aglutinantes[-2].verbete() if res else ""
-    if vbt != data[i]:
-        print("Diff: ", vbt, data[i])
-        not_working.append((data[i], vbt))
+# for i, res in enumerate(results):
 
-for x, y in not_working:
-    print("VBT: ", x, "\t\t\t", y)
+#     vbt = res.aglutinantes[-2].verbete() if res else ""
+#     if vbt != data[i]:
+#         print("Diff: ", vbt, data[i])
+#         not_working.append((data[i], vbt))
+
+# for x, y in not_working:
+#     print("VBT: ", x, "\t\t\t", y)

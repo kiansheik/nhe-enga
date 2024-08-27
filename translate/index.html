@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Tupi Verb Translator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+        }
+        .row {
+            margin-bottom: 10px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+        }
+        .result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .spinner {
+            display: none;
+            margin-top: 10px;
+        }
+        .spinner div {
+            width: 24px;
+            height: 24px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #3498db;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.3/pako.min.js"></script>
+    
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <label for="phrase">Phrase:</label>
+            <input type="text" id="phrase" placeholder="Enter phrase">
+        </div>
+        <div class="row">
+            <label for="targetLanguage">Target Language:</label>
+            <input type="text" id="targetLanguage" placeholder="Enter target language">
+        </div>
+        <button id="translateButton">Translate</button>
+        <div class="spinner" id="spinner"><div></div></div>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+async function getAnnotatedData(inputString) {
+  try {
+    // First POST request to get the EVENT_ID
+    const response = await fetch('https://kiansheik-tupi-verb-annotation.hf.space/call/predict', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ data: [inputString] })
+    });
+    
+    // Check if the response is okay
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    
+    // Extract the JSON from the response
+    const responseData = await response.json();
+    const eventId = responseData.event_id;
+    // Second GET request to fetch the annotated data
+    const resultResponse = await fetch(`https://kiansheik-tupi-verb-annotation.hf.space/call/predict/${eventId}`);
+    
+    // Check if the response is okay
+    if (!resultResponse.ok) {
+      throw new Error('Network response was not ok');
+    }
+    // console.log(2, resultResponse);
+    // Extract the JSON from the response
+    const resultData = await resultResponse.text();
+    const completeEventMatch = resultData.match(/(?<=event: complete\s*[\s\S]*?)data:\s*\["(.*?)"\]/s);
+    // Return the result data
+    return completeEventMatch[1].trim();
+    
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+}
+
+function parseParts(input) {
+    const regex = /([^\[]+)(\[[^\]]+\])/g;
+    let result = [];
+    let match;
+
+    while ((match = regex.exec(input)) !== null) {
+        let part1 = match[1].trim();  // Text before the bracket
+        let part2 = match[2];         // Text within the bracket
+        
+        // If part1 is not empty, add it to the result
+        if (part1) {
+            result.push([part1, part2]);
+        }
+    }
+
+    return result;
+}
+
+
+function findRootWords(partsList) {
+  // Filter and extract words associated with [ROOT] tags
+  const rootWords = partsList
+      .filter(([part, tag]) => tag === '[ROOT]')
+      .map(([part]) => part);
+
+  return rootWords;
+}
+
+// Function to load JSON from a file synchronously
+function loadJSONSync(url) {
+  var xhr = new XMLHttpRequest();
+  // xhr.overrideMimeType("application/json");
+  xhr.open('GET', url, false); // Make the request synchronous
+  xhr.send(null);
+  if (xhr.readyState == 4 && xhr.status == 200) {
+      return JSON.parse(xhr.responseText);
+  }
+  return null;
+}
+
+// Function to remove diacritics from a string
+function removeDiacritics(str) {
+  return removePunctuation(str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
+}
+function removePunctuation(str) {
+  return str
+  .replace(/[.,\/#!$%?^&*;:{}=\-_`~()]/g, "")
+  .trim();
+}
+
+function searchByFirstWordNoAccent(data, query) {
+    const queryNormalized = removeDiacritics(query.toLowerCase());
+    return data.filter(item => removeDiacritics(item.first_word.toLowerCase()) === queryNormalized);
+}
+function searchByFirstWordNoAccentNoA(data, query) {
+    const queryNormalized = removeDiacritics(query.toLowerCase());
+    return data.filter(item => removeDiacritics(item.first_word.toLowerCase().slice(0, -1)) === queryNormalized);
+}
+
+function loadCompressedJSONSync(url) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, false); // Make the request synchronous
+  xhr.overrideMimeType('text/plain; charset=x-user-defined'); // Treat the response as binary
+  xhr.send(null);
+  if (xhr.readyState === 4 && xhr.status === 200) {
+      var binaryString = xhr.responseText;
+      var len = binaryString.length;
+      var bytes = new Uint8Array(len);
+      for (var i = 0; i < len; i++) {
+          bytes[i] = binaryString.charCodeAt(i) & 0xFF;
+      }
+      var decompressedData = pako.inflate(bytes, { to: 'string' });
+      return JSON.parse(decompressedData);
+  }
+  return null;
+}
+
+window.jsonData = loadCompressedJSONSync('../docs/dict-conjugated.json.gz').map(item => ({
+  "first_word": item.f || "",
+  "optional_number": item.o || "",
+  "definition": item.d || "",
+  "con": item.c || ""
+}));
+
+const tupi_only = [];
+let include = false;
+const ban = [
+    "NOTA",
+    "Daí",
+    "De",
+    "OBSERVAÇÃO",
+    "Daí,",
+    "aba",
+    "-ab",
+    "abatiputá",
+    "-agûama",
+    "a'ebé",
+    "agûaîxima",
+    "agûaragûasu",
+    "agûy",
+    "ambûer",
+    "apyrĩ",
+    "ambype",
+    "gûaîá",
+    "eno-",
+    "îabotimirĩ",
+    "îapĩ",
+    "Maíra",
+    "memetipó",
+    "moro-",
+    "muresi",
+    "pyru'ã",
+    "POROROCA",
+    "sybyamumbyaré",
+    "Muitos",
+    "Há",
+    "O",
+    "Cardim,",
+]
+
+// Filter window.jsonData using the same logic
+window.jsonData = window.jsonData.filter(item => {
+    if (item.first_word === "ã") {
+        include = true;
+    }
+    if (item.first_word === "'yura") {
+        include = false;
+    }
+    if (include && !ban.includes(item.first_word)) {
+        return true;
+    }
+    return false;
+});
+
+function generateGPTPrompt(originalSentence, annotatedSentence, verbetes, targetLanguage) {
+  // Create the prompt with the provided information
+  const prompt = `The following sentence is in Tupi Antigo: ${originalSentence}\n` +
+                 `Here is the grammatically annotated version: ${annotatedSentence}\n` +
+                 `The roots which appear in the sentence have the following dictionary entries:\n` +
+                 `${verbetes.map(entry => `* ${entry}`).join('\n')}\n\n` +
+                 `Using all of this syntactic and semantic information provided, please do your best to provide a translation of this sentence into ${targetLanguage}.` +
+                 `Do not give an explanation, just the translation of the target phrase in ${targetLanguage}.` +
+                 `If there are multiple different entries shown for the semantic match, try to choose the one which makes most sense for the context of the sentence and syntax.`;
+
+  return prompt;
+}
+
+function formatVerbetes(verbetes) {
+    // go through each verbete and format it like "optional_number. first word - definition"
+    return verbetes.map((verbete, index) => `${verbete.optional_number} ${verbete.first_word} - ${verbete.definition}`.trim());
+}
+
+const greenlit = 'AIzaSyBpMxS3A2AcdkgjN5BBaZQJpqcBg79MVtE'; // Not safe but meh, it's a free access account
+async function getAIResponse(prompt) {
+  const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key='+greenlit;
+  
+  const requestBody = {
+    contents: [
+      {
+        parts: [
+          { text: prompt }
+        ]
+      }
+    ]
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestBody)
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    // Extracting the text from the response
+    const resultText = data.candidates[0].content.parts[0].text;
+    return resultText;
+
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+}
+
+async function getCompletion(prompt) {
+  const url = 'https://api.openai.com/v1/chat/completions';
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${openaiApiKey}`,
+  };
+  const body = JSON.stringify({
+    model: 'gpt-4o-mini',
+    messages: [
+      {
+        role: 'system',
+        content: prompt,
+      },
+    ],
+  });
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: headers,
+      body: body,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Request failed', error);
+    throw error;
+  }
+}
+
+async function fetchTranslation(inp, lang) {
+    try {
+        const result = await getAnnotatedData(inp);
+        let parsedResult = JSON.parse('"'+result+'"')
+        let parts = parseParts(parsedResult);
+        console.log(parts)
+
+        let rootWords = findRootWords(parts);
+        // remove all whitespace from rootWords[0]
+        const coreRoot = rootWords[0].replace(/\s/g, '');
+        console.log("CORE:", coreRoot);
+        const verbete_results_diacritic = [...searchByFirstWordNoAccent(window.jsonData, coreRoot), ...searchByFirstWordNoAccentNoA(window.jsonData, coreRoot)]
+        console.log("VOCAB:", verbete_results_diacritic);
+        console.log("WINDOW:", window.jsonData);
+        const prompt = generateGPTPrompt(inp, parsedResult, formatVerbetes(verbete_results_diacritic), lang);
+        console.log(prompt);
+        const data = await getAIResponse(prompt);
+        console.log(data);
+        return data;
+    } catch (error) {
+        console.error('Error fetching translation:', error);
+        throw error;
+    }
+}
+    </script>
+
+
+    <script>
+        // Ensure the translate function is defined in the global scope
+        window.translate = async function() {
+            // Get input values
+            const phrase = document.getElementById('phrase').value;
+            const targetLanguage = document.getElementById('targetLanguage').value;
+
+            // Show the spinner and hide result
+            document.getElementById('spinner').style.display = 'block';
+            document.getElementById('result').textContent = '';
+
+            try {
+                // Simulate a translation process with a delay
+                const resultText = await fetchTranslation(phrase, targetLanguage);
+
+                // Display the result
+                document.getElementById('result').textContent = resultText;
+            } catch (error) {
+                document.getElementById('result').textContent = 'An error occurred during translation.';
+                console.error(error);
+            } finally {
+                // Hide the spinner
+                document.getElementById('spinner').style.display = 'none';
+            }
+        };
+
+        // Simulated async function to mimic translation process
+        async function simulateTranslation(phrase, targetLanguage) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(`Translated '${phrase}' to ${targetLanguage}: [translation result]`);
+                }, 2000); // Simulate a delay
+            });
+        }
+
+        // Attach the translate function to the button's click event
+        document.getElementById('translateButton').addEventListener('click', translate);
+    </script>
+</body>
+</html>

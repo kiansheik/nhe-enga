@@ -602,19 +602,22 @@ with open('anotated_results_nouns.json', 'r') as f:
     # use json to write to file
     nouns = json.load(f)
 
+print("check nouns")
+# breakpoint()
+
 results = []
 test_cases_map["permissivo"] = test_cases_map["indicativo"]
 verbs = [Verb("apysyk", "adj.", "gostar"), Verb("nhe'eng", "v. intr.", "gostar"), Verb("enõî", "v.tr. (r, s)", "gostar"),]
 vobjs_intr = [x for x in vobjs if not x.transitivo]
 for modo, test_cases in tqdm([(x[0], x[1]) for x in test_cases_map.items()]):
     for pro_drop in [True, False]:
-        for dir_subj_raw in [True, False]:
+        for dir_subj_raw in [False]:
             for v in vobjs:
                 for neg in [True, False]:
                     # Print the result
                     if v.transitivo:
                         for pos in ["posposto", "incorporado", "anteposto"]:
-                            for dir_obj_raw in [True, False]:
+                            for dir_obj_raw in [False]:
                                 for subj, obj in test_cases:
                                     try:
 
@@ -625,8 +628,8 @@ for modo, test_cases in tqdm([(x[0], x[1]) for x in test_cases_map.items()]):
                                             pro_drop=pro_drop,
                                             pos=pos,
                                             negative=neg,
-                                            dir_subj_raw=f"({random.choice(nouns)['anotated'] if dir_subj_raw and '3p' in subj else None})",
-                                            dir_obj_raw=f"({random.choice(nouns)['anotated'] if dir_obj_raw and '3p' in obj else None})",
+                                            dir_subj_raw=f"{random.choice(nouns)['label']}" if dir_subj_raw and '3p' in subj else None,
+                                            dir_obj_raw=f"{random.choice(nouns)['label']}" if dir_obj_raw and '3p' in obj else None,
                                             anotar=True
                                         )
                                         # print(f"{res}")
@@ -640,7 +643,7 @@ for modo, test_cases in tqdm([(x[0], x[1]) for x in test_cases_map.items()]):
                                     subject_tense=subj,
                                     pro_drop=pro_drop,
                                     mode=modo,
-                                    dir_subj_raw=f"({random.choice(nouns)['anotated'] if dir_subj_raw and '3p' in subj else None})",
+                                    dir_subj_raw=f"{random.choice(nouns)['label']}" if dir_subj_raw and '3p' in subj else None,
                                     negative=neg,
                                     anotar=True
                                 )
@@ -652,14 +655,14 @@ for modo, test_cases in tqdm([(x[0], x[1]) for x in test_cases_map.items()]):
 import json, re
 # Write results to file
 print("simplifying tags...")
-results = [{"anotated":x[0], "label":x[1]} for x in tqdm(set([(x['anotated'], x['label']) for x in results+nouns]))]
+results = [{"anotated":x[0], "label":x[1]} for x in tqdm(set([(x['anotated'], x['label']) for x in results]))]
 with open('anotated_results.json', 'w') as f:
     # use json to write to file
     json.dump(results, f)
 
 def tokenize_string(annotated_string):
     matches = re.findall(r'([^\s\[\]\(\)]+)?(\[.*?\])', annotated_string)
-    notes = {(token, annotation) for token, annotation in matches if '[VERB]' not in annotation and '[ROOT]' not in annotation and 'DIRECT' not in annotation}
+    notes = {(token, annotation) for token, annotation in matches if '[VERB]' not in annotation and 'DIRECT' not in annotation and '[ROOT]' not in annotation}
     for tag in {(None, annotation) for _, annotation in matches}:
         notes.add(tag)
     return notes
@@ -671,9 +674,8 @@ for res in results:
     c.update(tokenize_string(res['anotated']))
 for mc in c.most_common(25):
     print(mc)
-
 # Write the .keys contents of c to a file as a json list
 with open('anotated_tokens.json', 'w') as f:
     # use json to write to file
-    json.dump(list(set([y for x in c.keys() for y in x if y])), f)
+    json.dump(list(set([y for x in c.keys() for y in x if y and '(None)' not in x[1] and '(r, s)' not in x[1] and '(t, t)' not in x[1] and '(t)' not in x[1] and '(s, r, s)' not in x[1]])), f)
 [print(x) for x in sorted(c.keys(), key=lambda x:x[1])]
