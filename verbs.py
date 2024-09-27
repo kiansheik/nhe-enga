@@ -674,8 +674,10 @@ for res in results:
     c.update(tokenize_string(res['anotated']))
 for mc in c.most_common(25):
     print(mc)
+
+base_noun = {Noun(v.remove_brackets_and_contents(x['anotated']), '').verbete() for x in tqdm(nouns)}
 # Write the .keys contents of c to a file as a json list
 with open('anotated_tokens.json', 'w') as f:
     # use json to write to file
-    json.dump(list(set([y for x in c.keys() for y in x if y and '(None)' not in x[1] and '(r, s)' not in x[1] and '(t, t)' not in x[1] and '(t)' not in x[1] and '(s, r, s)' not in x[1]])), f)
+    json.dump(list(base_noun.union(set([y for x in c.keys() for y in x if y and '(None)' not in x[1] and '(r, s)' not in x[1] and '(t, t)' not in x[1] and '(t)' not in x[1] and '(s, r, s)' not in x[1]]))), f)
 [print(x) for x in sorted(c.keys(), key=lambda x:x[1])]

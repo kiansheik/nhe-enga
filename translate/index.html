@@ -116,7 +116,7 @@ function parseParts(input) {
         
         // If part1 is not empty, add it to the result
         if (part1) {
-            result.push([part1, part2]);
+            result.push([part1.replace(/\s/g, ''), part2.replace(/\s/g, '')]);
         }
     }
 
@@ -126,8 +126,8 @@ function parseParts(input) {
 
 function findRootWords(partsList) {
   // Filter and extract words associated with [ROOT] tags
-  const rootWords = partsList
-      .filter(([part, tag]) => tag === '[ROOT]' || tag === '[OBJECT:DIRECT]' || tag === '[SUBJECT:DIRECT]')
+  const rootWords = partsList  
+      .filter(([part, tag]) => tag === '[ROOT]' || (tag.includes('DIRECT') && (tag.includes('SUBJECT') || tag.includes('OBJECT'))))
       .map(([part]) => part);
 
   return rootWords;
@@ -242,19 +242,26 @@ window.jsonData = window.jsonData.filter(item => {
 function generateGPTPrompt(originalSentence, annotatedSentence, verbetes, targetLanguage) {
   // Create the prompt with the provided information
   const prompt = `The following sentence is in Tupi Antigo: ${originalSentence}\n` +
-                 `Here is the grammatically annotated version: ${annotatedSentence}\n` +
-                 `The roots which appear in the sentence have the following dictionary entries:\n` +
+                 `The roots, direct objects, and direct subjects which appear in the sentence have the following dictionary entries:\n` +
                  `${verbetes.map(entry => `* ${entry}`).join('\n')}\n\n` +
                  `Using all of this syntactic and semantic information provided, please do your best to provide a translation of this sentence into ${targetLanguage}.\n` +
                  `Do not give an explanation, just the translation of the target phrase in ${targetLanguage}.\n` +
-                 `If there are multiple different entries shown for the semantic match, try to choose the one which makes most sense for the context of the sentence and syntax.`;
+                 `If there are multiple different entries shown for the semantic match, try to choose the one which makes most sense for the context of the sentence and syntax.\n\n`+
+
+
+                 `Here is the grammatically annotated version in the followoing structure: "morpheme->[ANNOTATION] ...": ${annotatedSentence}\n` +
+                 `The grammatical annotations provided are to be strictly followed and should be regarded as absolute for this translation.\n` +
+                 `Do not infer subject-object relationships from sentence structure alone; follow the grammatical roles indicated exactly as they are marked.\n` +
+                 `Prioritize the marked grammatical roles (e.g., subject, object, etc.) over any assumptions based on sentence structure or word order in other languages.\n` +
+                 `Make a distinction between 'you' (2ps) and 'y'all' (2pp), and 'oré' (1ppe) 1st person plural excluding 2p, and 'îandé' (1ppi) which is 1st person plural which includes the 2p  in your translations.\n` +
+                 '';
 
   return prompt;
 }
 
 function formatVerbetes(verbetes) {
     // go through each verbete and format it like "optional_number. first word - definition"
-    return verbetes.map((verbete, index) => `${verbete.optional_number} ${verbete.first_word} - ${verbete.definition}`.trim());
+    return verbetes.map((verbete, index) => `${verbete.optional_number} ${verbete.first_word} - ${verbete.definition.slice(0, 100)}`.trim());
 }
 
 const greenlit = 'AIzaSyBpMxS3A2AcdkgjN5BBaZQJpqcBg79MVtE'; // Not safe but meh, it's a free access account
@@ -342,6 +349,12 @@ async function fetchTranslation(inp, lang) {
         const result = await getAnnotatedData(inp);
         let parsedResult = JSON.parse('"'+result+'"')
         let parts = parseParts(parsedResult);
+        let resultString = "";
+        for (let i = 0; i < parts.length; i++) {
+            const [part, tag] = parts[i];
+            resultString += `${part}->${tag} `;
+        }
+        console.log(resultString.trim());
         console.log(parts)
 
         let rootWords = findRootWords(parts);
@@ -355,7 +368,7 @@ async function fetchTranslation(inp, lang) {
         }
         console.log("VOCAB:", verbete_results_diacritic);
         console.log("WINDOW:", window.jsonData);
-        const prompt = generateGPTPrompt(inp, parsedResult, formatVerbetes(verbete_results_diacritic), lang);
+        const prompt = generateGPTPrompt(inp, resultString, formatVerbetes(verbete_results_diacritic), lang);
         console.log(prompt);
         const data = await getAIResponse(prompt);
         console.log(data);
