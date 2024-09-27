@@ -127,7 +127,7 @@ function parseParts(input) {
 function findRootWords(partsList) {
   // Filter and extract words associated with [ROOT] tags
   const rootWords = partsList
-      .filter(([part, tag]) => tag === '[ROOT]')
+      .filter(([part, tag]) => tag === '[ROOT]' || tag === '[OBJECT:DIRECT]' || tag === '[SUBJECT:DIRECT]')
       .map(([part]) => part);
 
   return rootWords;
@@ -346,9 +346,13 @@ async function fetchTranslation(inp, lang) {
 
         let rootWords = findRootWords(parts);
         // remove all whitespace from rootWords[0]
-        const coreRoot = rootWords[0].replace(/\s/g, '');
-        console.log("CORE:", coreRoot);
-        const verbete_results_diacritic = [...searchByFirstWordNoAccent(window.jsonData, coreRoot), ...searchByFirstWordNoAccentNoA(window.jsonData, coreRoot)]
+        const verbete_results_diacritic = [];
+        for (let i = 0; i < rootWords.length; i++) {
+            const coreRoot = rootWords[i].replace(/\s/g, '');
+            console.log("CORE:", coreRoot);
+            const verbete_results = [...searchByFirstWordNoAccent(window.jsonData, coreRoot), ...searchByFirstWordNoAccentNoA(window.jsonData, coreRoot)];
+            verbete_results_diacritic.push(...verbete_results);
+        }
         console.log("VOCAB:", verbete_results_diacritic);
         console.log("WINDOW:", window.jsonData);
         const prompt = generateGPTPrompt(inp, parsedResult, formatVerbetes(verbete_results_diacritic), lang);

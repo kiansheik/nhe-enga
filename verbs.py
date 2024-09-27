@@ -603,21 +603,21 @@ with open('anotated_results_nouns.json', 'r') as f:
     nouns = json.load(f)
 
 print("check nouns")
-# breakpoint()
+breakpoint()
 
 results = []
 test_cases_map["permissivo"] = test_cases_map["indicativo"]
-verbs = [Verb("apysyk", "adj.", "gostar"), Verb("nhe'eng", "v. intr.", "gostar"), Verb("enõî", "v.tr. (r, s)", "gostar"),]
+# verbs = [Verb("apysyk", "adj.", "gostar"), Verb("nhe'eng", "v. intr.", "gostar"), Verb("enõî", "v.tr. (r, s)", "gostar"),]
 vobjs_intr = [x for x in vobjs if not x.transitivo]
 for modo, test_cases in tqdm([(x[0], x[1]) for x in test_cases_map.items()]):
     for pro_drop in [True, False]:
-        for dir_subj_raw in [False]:
+        for dir_subj_raw in [False, True]:
             for v in vobjs:
                 for neg in [True, False]:
                     # Print the result
                     if v.transitivo:
                         for pos in ["posposto", "incorporado", "anteposto"]:
-                            for dir_obj_raw in [False]:
+                            for dir_obj_raw in [False, True]:
                                 for subj, obj in test_cases:
                                     try:
 
@@ -628,8 +628,8 @@ for modo, test_cases in tqdm([(x[0], x[1]) for x in test_cases_map.items()]):
                                             pro_drop=pro_drop,
                                             pos=pos,
                                             negative=neg,
-                                            dir_subj_raw=f"{random.choice(nouns)['label']}" if dir_subj_raw and '3p' in subj else None,
-                                            dir_obj_raw=f"{random.choice(nouns)['label']}" if dir_obj_raw and '3p' in obj else None,
+                                            dir_subj_raw=f"{Noun(v.remove_brackets_and_contents(random.choice(nouns)['anotated']),'').random_tupi_antigo()}" if dir_subj_raw and '3p' in subj else None,
+                                            dir_obj_raw=f"{Noun(v.remove_brackets_and_contents(random.choice(nouns)['anotated']),'').random_tupi_antigo()}" if dir_obj_raw and '3p' in obj else None,
                                             anotar=True
                                         )
                                         # print(f"{res}")
@@ -643,7 +643,7 @@ for modo, test_cases in tqdm([(x[0], x[1]) for x in test_cases_map.items()]):
                                     subject_tense=subj,
                                     pro_drop=pro_drop,
                                     mode=modo,
-                                    dir_subj_raw=f"{random.choice(nouns)['label']}" if dir_subj_raw and '3p' in subj else None,
+                                    dir_subj_raw=f"{Noun(v.remove_brackets_and_contents(random.choice(nouns)['anotated']),'').random_tupi_antigo()}" if dir_subj_raw and '3p' in subj else None,
                                     negative=neg,
                                     anotar=True
                                 )
