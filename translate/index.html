@@ -248,22 +248,24 @@ function classifyParts(parts) {
             vd.subject_tense = "Same tense as main verb";
             vd.subject = "Same subject as Main Verb";
         }
-        formattedDescription += `Subject Noun: ${vd.subject? vd.subject : "(pro_drop)"} (${vd.subject_tense? vd.subject_tense : "3rd person (singular or plural, must decide based on context)"})\nObject Noun: ${vd.object? vd.object : "(pro_drop)"} (${vd.object_tense? vd.object_tense : "None, intransitive verb"})`;
+        formattedDescription += `Subject Noun: ${vd.subject? vd.subject : "(pro_drop)"} (${vd.subject_tense? vd.subject_tense : "3rd person (singular or plural, must decide based on context)"})\nObject Noun: ${vd.object? vd.object :vd.object_tense? "(pro_drop)": "(No object)"} (${vd.object_tense? vd.object_tense : "intransitive verb"})`;
         if (vd.negative) {
-            formattedDescription += "\nThe verb is negated.";
+            formattedDescription += `\nThe verb "${vd.root}" is negated.`;
         }
         if (vd.permissive) {
-            formattedDescription += "\nThe verb is in a subjunctive mood, used to show wishes/hopes 'I hope that ...', to show finality when used as a subordinate clause '[MAIN_VERB] in order to ... [SUB_VERB]', '[MAIN_VERB] so that [SUB_VERB:SUBJECT] may...[SUB_VERB]'";
+            let mainUse = "Used to show wishes/hopes 'I hope that [VERB]'" 
+            let subUse = "Used to show finality when used as a subordinate clause '[MAIN_VERB] in order to ... [SUB_VERB]', '[MAIN_VERB] so that [SUB_VERB:SUBJECT] may...[SUB_VERB]'"
+            formattedDescription += `\nThe verb "${vd.root}" is in a subjunctive mood. ${i==0? mainUse : subUse}`;
         }
         if (vd.imperative) {
-            formattedDescription += "\nThe verb is in an imperative mood, used to give commands 'DO [MAIN_VERB]'. The subject is always in the second person, singular or plural.";
+            formattedDescription += `\nThe verb "${vd.root}" is in an imperative mood, used to give commands 'DO [MAIN_VERB]'.`;
         }
         if (vd.gerund) {
-            formattedDescription += "\nThe verb is in a gerund form, used to show continuous and/or simultaneous actions '[MAIN_VERB] while [SUB_VERB]ing'. It can also represent finality '[MAIN_VERB] in order to [SUB_VERB]' or cause '[SUB_VERB] happened, causing [MAIN_VERB]', depending on the context. The gerund is always used as an adjunct to another verb. The subject will always be the same as the main verb.";
+            formattedDescription += `\nThe verb "${vd.root}" is in a gerund form, always augmenting the main verb. Used to show continuous and/or simultaneous actions '[MAIN_VERB] while [SUB_VERB]ing'. It can also represent finality '[MAIN_VERB] in order to [SUB_VERB]' or cause '[SUB_VERB] happened, causing [MAIN_VERB]', depending on the context.`;
         }
         formattedDescription += "\n\n";
     }
-    return formattedDescription;
+    return "\n" + formattedDescription;
 }
 
 
