@@ -163,17 +163,17 @@ function classifyParts(parts) {
         }
 
         // Explain subject tense
-        if (tag.includes("[SUBJECT_PREFIX:1ps]")) {
+        if (tag.includes("[SUBJECT:1ps]") || tag.includes("[SUBJECT_PREFIX:1ps]")) {
             verbData.subject_tense += "1st person singular";
-        } else if (tag.includes("[SUBJECT_PREFIX:1ppe]")) {
+        } else if (tag.includes("[SUBJECT:1ppe]") || tag.includes("[SUBJECT_PREFIX:1ppe]")) {
             verbData.subject_tense += "1st person plural (excluding 2nd person)";
-        } else if (tag.includes("[SUBJECT_PREFIX:1ppi]")) {
+        } else if (tag.includes("[SUBJECT:1ppi]") || tag.includes("[SUBJECT_PREFIX:1ppi]")) {
             verbData.subject_tense += "1st person plural (including 2nd person)";
-        } else if (tag.includes("[SUBJECT_PREFIX:2ps]")) {
+        } else if (tag.includes("[SUBJECT:2ps]") || tag.includes("[SUBJECT_PREFIX:2ps]")) {
             verbData.subject_tense += "2nd person singular";
-        } else if (tag.includes("[SUBJECT_PREFIX:2pp]")) {
+        } else if (tag.includes("[SUBJECT:2pp]") || tag.includes("[SUBJECT_PREFIX:2pp]")) {
             verbData.subject_tense += "2nd person plural";
-        } else if (tag.includes("[SUBJECT_PREFIX:3p]")) {
+        } else if (tag.includes("[SUBJECT:3p]") || tag.includes("[SUBJECT_PREFIX:3p]")) {
             verbData.subject_tense += "3rd person (singular or plural, must decide based on context)";
         } else if (tag.includes("[SUBJECT:2ps:OBJECT_1P]")) {
             verbData.subject_tense += "2nd person singular";
@@ -502,7 +502,7 @@ async function fetchTranslation(inp, lang) {
         console.log(parts)
 
         let promptString = classifyParts(parts);
-        promptString = parsedResult + "\n\n" + promptString;
+        // promptString = parsedResult + "\n\n" + promptString;
 
         let rootWords = findRootWords(parts);
         // remove all whitespace from rootWords[0]
