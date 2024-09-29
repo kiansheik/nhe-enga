@@ -169,9 +169,9 @@ function classifyParts(parts) {
             verbData.subject_tense += "1st person plural (excluding 2nd person)";
         } else if (tag.includes("[SUBJECT:1ppi]") || tag.includes("[SUBJECT_PREFIX:1ppi]")) {
             verbData.subject_tense += "1st person plural (including 2nd person)";
-        } else if (tag.includes("[SUBJECT:2ps]") || tag.includes("[SUBJECT_PREFIX:2ps]")) {
+        } else if (tag.includes("[SUBJECT:2ps]") || tag.includes("[SUBJECT_PREFIX:2ps]") || tag.includes("[IMPERATIVE_PREFIX:2ps]")) {
             verbData.subject_tense += "2nd person singular";
-        } else if (tag.includes("[SUBJECT:2pp]") || tag.includes("[SUBJECT_PREFIX:2pp]")) {
+        } else if (tag.includes("[SUBJECT:2pp]") || tag.includes("[SUBJECT_PREFIX:2pp]") || tag.includes("[IMPERATIVE_PREFIX:2pp]")) {
             verbData.subject_tense += "2nd person plural";
         } else if (tag.includes("[SUBJECT:3p]") || tag.includes("[SUBJECT_PREFIX:3p]")) {
             verbData.subject_tense += "3rd person (singular or plural, must decide based on context)";
@@ -248,7 +248,7 @@ function classifyParts(parts) {
             vd.subject_tense = "Same tense as main verb";
             vd.subject = "Same subject as Main Verb";
         }
-        formattedDescription += `Subject Noun: ${vd.subject? vd.subject : "(pro_drop)"} (${vd.subject_tense? vd.subject_tense : "3rd person (singular or plural, must decide based on context)"})\nObject Noun: ${vd.object? vd.object : "(pro_drop)"} (${vd.object_tense? vd.object_tense : "None, intransitive verb"})\n`;
+        formattedDescription += `Subject Noun: ${vd.subject? vd.subject : "(pro_drop)"} (${vd.subject_tense? vd.subject_tense : "3rd person (singular or plural, must decide based on context)"})\nObject Noun: ${vd.object? vd.object : "(pro_drop)"} (${vd.object_tense? vd.object_tense : "None, intransitive verb"})`;
         if (vd.negative) {
             formattedDescription += "\nThe verb is negated.";
         }
@@ -492,6 +492,7 @@ async function fetchTranslation(inp, lang) {
     try {
         const result = await getAnnotatedData(inp);
         let parsedResult = JSON.parse('"'+result+'"')
+        console.log("Model output: ", parsedResult)
         let parts = parseParts(parsedResult);
         let resultString = "";
         for (let i = 0; i < parts.length; i++) {
