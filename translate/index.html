@@ -106,28 +106,171 @@ async function getAnnotatedData(inputString) {
 }
 
 function parseParts(input) {
-    const regex = /([^\[]+)(\[[^\]]+\])/g;
+    const regex = /([^\[]*)\s*(\[[^\]]+\])/g;
     let result = [];
     let match;
 
     while ((match = regex.exec(input)) !== null) {
-        let part1 = match[1].trim();  // Text before the bracket
+        let part1 = match[1].trim();  // Text before the bracket, can be empty
         let part2 = match[2];         // Text within the bracket
-        
-        // If part1 is not empty, add it to the result
-        if (part1) {
-            result.push([part1.replace(/\s/g, ''), part2.replace(/\s/g, '')]);
+
+        // Handle the case where part1 is empty
+        if (!part1) {
+            part1 = "";  // Ensure part1 is an empty string if nothing was found
         }
+        
+        // Add both parts (including empty part1) to the result
+        result.push([part1.replace(/\s/g, ''), part2.replace(/\s/g, '')]);
     }
 
     return result;
+}
+
+function classifyParts(parts) {
+    var baseVerbData = {
+        subject: "",
+        subject_tense: "",
+        object: "",
+        object_tense: "",
+        negative: false,
+        permissive: false,
+        imperative: false,
+        gerund: false,
+        root: "",
+    };
+    // deep clone the verb data 
+    var verbData = JSON.parse(JSON.stringify(baseVerbData));
+    var verbOn = false;
+    var mainVerbOn = false;
+    let verbObjs = [];
+    for (let i = 0; i < parts.length; i++) {
+        const [part, tag] = parts[i];
+        // Check for the [MAIN_VERB] tags which open and close the main verb
+        if (tag.includes("[MAIN_VERB]") || tag.includes("[SUB_VERB]")) {
+            verbOn = !verbOn;
+            if (verbOn) {
+                verbData = JSON.parse(JSON.stringify(baseVerbData));
+            } else {
+                // Prepend verbData to verbObjs
+                if (tag.includes("[MAIN_VERB]")) {
+                    verbObjs.unshift(verbData);
+                } else {
+                    verbObjs.push(verbData);
+                }
+            }
+            // Keep going to next i in the loop, skipping the rest
+            continue;
+        }
+
+        // Explain subject tense
+        if (tag.includes("[SUBJECT_PREFIX:1ps]")) {
+            verbData.subject_tense += "1st person singular";
+        } else if (tag.includes("[SUBJECT_PREFIX:1ppe]")) {
+            verbData.subject_tense += "1st person plural (excluding 2nd person)";
+        } else if (tag.includes("[SUBJECT_PREFIX:1ppi]")) {
+            verbData.subject_tense += "1st person plural (including 2nd person)";
+        } else if (tag.includes("[SUBJECT_PREFIX:2ps]")) {
+            verbData.subject_tense += "2nd person singular";
+        } else if (tag.includes("[SUBJECT_PREFIX:2pp]")) {
+            verbData.subject_tense += "2nd person plural";
+        } else if (tag.includes("[SUBJECT_PREFIX:3p]")) {
+            verbData.subject_tense += "3rd person (singular or plural, must decide based on context)";
+        } else if (tag.includes("[SUBJECT:2ps:OBJECT_1P]")) {
+            verbData.subject_tense += "2nd person singular";
+            verbData.object_tense += " 1st person";
+        }  else if (tag.includes("[SUBJECT:2pp:OBJECT_1P]")) {
+            verbData.subject_tense += "2nd person plural";
+            verbData.object_tense += " 1st person";
+        } 
+        // Get direct subject if any
+        if (tag.includes("[SUBJECT:")) {
+            verbData.subject = part;
+        }
+
+        // Explain object tense
+        if (tag.includes("[OBJECT:2ps:SUBJECT_1P]")) {
+            verbData.subject_tense += " 1st person";
+            verbData.object_tense += "2nd person singular";
+        } else if (tag.includes("[OBJECT:2pp:SUBJECT_1P]")) {
+            verbData.subject_tense += " 1st person";
+            verbData.object_tense += "2nd person plural";
+        } else if (tag.includes("[OBJECT:1ppi]")) {
+            verbData.object_tense += "1st person plural (including 2nd person)";
+        } else if (tag.includes("[OBJECT:1ppe]")) {
+            verbData.object_tense += "1st person plural (excluding 2nd person)";
+        } else if (tag.includes("[OBJECT:2ps]")) {
+            verbData.object_tense += "2nd person singular";
+        } else if (tag.includes("[OBJECT:2pp]")) {
+            verbData.object_tense += "2nd person plural";
+        } else if (tag.includes("[OBJECT:3p]")) {
+            verbData.object_tense += "3rd person (singular or plural, must decide based on context)";
+        } else if (tag.includes("[OBJECT:1ps]")) {
+            verbData.object_tense += "1st person singular";
+        } else if (tag.includes("[PLURIFORM_PREFIX:S]")) {
+            verbData.object_tense += "3rd person (singular or plural, must decide based on context)";
+        } else if (tag.includes("OBJECT_MARKER:3p")) {
+            verbData.object_tense += "3rd person (singular or plural, must decide based on context)";
+        }
+        if (tag.includes("[OBJECT:DIRECT]") || tag.includes("[OBJECT:3p]")) {
+            verbData.object = part;
+        }
+        // Get negation status
+        if (tag.includes("NEGATION")) {
+            verbData.negative = true;
+        }
+        // Get negation status
+        if (tag.includes("PERMISSIVE")) {
+            verbData.permissive = true;
+        }
+        if (tag.includes("IMPERATIVE")) {
+            verbData.imperative = true;
+        }
+        if (tag.includes("GERUND")) {
+            verbData.gerund = true;
+        }
+        if (tag.includes("[ROOT]")) {
+            verbData.root = part;
+        }
+    }
+    var formattedDescription = "";
+    // for vd in verbObjs in JS
+    for (let i = 0; i < verbObjs.length; i++) {
+        let vd = verbObjs[i];
+        if (i == 0) {
+            formattedDescription += "Main Verb: ";
+        } else {
+            formattedDescription += "Auxiliary Verb: ";
+        }
+        // Root info
+        formattedDescription += `${vd.root}\n`;
+        // Subject and object info
+        if (vd.gerund) {
+            vd.subject_tense = "Same tense as main verb";
+            vd.subject = "Same subject as Main Verb";
+        }
+        formattedDescription += `Subject Noun: ${vd.subject? vd.subject : "(pro_drop)"} (${vd.subject_tense? vd.subject_tense : "3rd person (singular or plural, must decide based on context)"})\nObject Noun: ${vd.object? vd.object : "(pro_drop)"} (${vd.object_tense? vd.object_tense : "None, intransitive verb"})\n`;
+        if (vd.negative) {
+            formattedDescription += "\nThe verb is negated.";
+        }
+        if (vd.permissive) {
+            formattedDescription += "\nThe verb is in a permissive mood, used to show wishes/hopes, to show finality when used as a subordinate clause, or to give permission to do something (but not commands, do NOT translate this as an imperative)";
+        }
+        if (vd.imperative) {
+            formattedDescription += "\nThe verb is in an imperative mood, used to give commands.";
+        }
+        if (vd.gerund) {
+            formattedDescription += "\nThe verb is in a gerund form, used to show continuous and/or simultaneous actions. It can also represent finality or cause, depending on the context. The gerund is always used as an ajunct to another verb in the same clause and the subject will always be the same as said verb.";
+        }
+        formattedDescription += "\n\n";
+    }
+    return formattedDescription;
 }
 
 
 function findRootWords(partsList) {
   // Filter and extract words associated with [ROOT] tags
   const rootWords = partsList  
-      .filter(([part, tag]) => tag === '[ROOT]' || (tag.includes('DIRECT') && (tag.includes('SUBJECT') || tag.includes('OBJECT'))))
+      .filter(([part, tag]) => tag === '[ROOT]' || (tag.includes('DIRECT') && (tag.includes('SUBJECT') || tag.includes('OBJECT'))) || (tag.includes('OBJECT:3p') && part != "a'e" && part != 'i' && part != 'î') )
       .map(([part]) => part);
 
   return rootWords;
@@ -242,19 +385,20 @@ window.jsonData = window.jsonData.filter(item => {
 function generateGPTPrompt(originalSentence, annotatedSentence, verbetes, targetLanguage) {
   // Create the prompt with the provided information
   const prompt = `The following sentence is in Tupi Antigo: ${originalSentence}\n` +
-                 `The roots, direct objects, and direct subjects which appear in the sentence have the following dictionary entries:\n` +
-                 `${verbetes.map(entry => `* ${entry}`).join('\n')}\n\n` +
-                 `Using all of this syntactic and semantic information provided, please do your best to provide a translation of this sentence into ${targetLanguage}.\n` +
-                 `Do not give an explanation, just the translation of the target phrase in ${targetLanguage}.\n` +
-                 `If there are multiple different entries shown for the semantic match, try to choose the one which makes most sense for the context of the sentence and syntax.\n\n`+
+
+        `Here is syntactic breakdown of the sentence in general linguistics terms: ${annotatedSentence}\n` +
+        `The grammatical annotations provided are to be strictly followed and should be regarded as absolute for this translation.\n` +
+        `Do not infer subject-object relationships from sentence structure alone; follow the grammatical roles indicated exactly as they are marked.\n` +
+        `Prioritize the marked grammatical roles (e.g., subject, object, etc.) over any assumptions based on sentence structure or word order in other languages.\n` +
+        `Make a distinction between 'you' (2ps) and 'y'all' (2pp), and 'oré' (1ppe) 1st person plural excluding 2p, and 'îandé' (1ppi) which is 1st person plural which includes the 2p  in your translations.\n` +
 
 
-                 `Here is the grammatically annotated version in the followoing structure: "morpheme->[ANNOTATION] ...": ${annotatedSentence}\n` +
-                 `The grammatical annotations provided are to be strictly followed and should be regarded as absolute for this translation.\n` +
-                 `Do not infer subject-object relationships from sentence structure alone; follow the grammatical roles indicated exactly as they are marked.\n` +
-                 `Prioritize the marked grammatical roles (e.g., subject, object, etc.) over any assumptions based on sentence structure or word order in other languages.\n` +
-                 `Make a distinction between 'you' (2ps) and 'y'all' (2pp), and 'oré' (1ppe) 1st person plural excluding 2p, and 'îandé' (1ppi) which is 1st person plural which includes the 2p  in your translations.\n` +
-                 '';
+        `The roots, direct objects, and direct subjects which appear in the sentence have the following dictionary entries (there may be superfluou entries, decide which one applies most given the context):\n` +
+        `${verbetes.map(entry => `* ${entry}`).join('\n')}\n\n` +
+        `Using all of this syntactic and semantic information provided, please do your best to provide a translation of this sentence into ${targetLanguage}.\n` +
+        `Do not give an explanation, just the translation of the target phrase in ${targetLanguage}.\n` +
+        `If there are multiple different entries shown for the semantic match, try to choose the one which makes most sense for the context of the sentence and syntax.\n\n`+
+        '';
 
   return prompt;
 }
@@ -357,6 +501,9 @@ async function fetchTranslation(inp, lang) {
         console.log(resultString.trim());
         console.log(parts)
 
+        let promptString = classifyParts(parts);
+        promptString = parsedResult + "\n\n" + promptString;
+
         let rootWords = findRootWords(parts);
         // remove all whitespace from rootWords[0]
         const verbete_results_diacritic = [];
@@ -368,7 +515,7 @@ async function fetchTranslation(inp, lang) {
         }
         console.log("VOCAB:", verbete_results_diacritic);
         console.log("WINDOW:", window.jsonData);
-        const prompt = generateGPTPrompt(inp, resultString, formatVerbetes(verbete_results_diacritic), lang);
+        const prompt = generateGPTPrompt(inp, promptString, formatVerbetes(verbete_results_diacritic), lang);
         console.log(prompt);
         const data = await getAIResponse(prompt);
         console.log(data);

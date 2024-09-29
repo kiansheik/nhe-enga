@@ -598,12 +598,23 @@ test_cases_map = {
     #     negative=False,
     #     anotar=False,
 # Write the .keys contents of c to a file as a json list
+import csv
+
 with open('anotated_results_nouns.json', 'r') as f:
     # use json to write to file
     nouns = json.load(f)
 
+baby_names_raw = set()
+
+with open('docs/baby-names.csv', 'r') as file:
+    reader = csv.DictReader(file)
+    for row in reader:
+        baby_names_raw.add(row['name'].lower())
+
+baby_names = list(baby_names_raw)
+
 print("check nouns")
-breakpoint()
+# breakpoint()
 
 results = []
 test_cases_map["permissivo"] = test_cases_map["indicativo"]
@@ -614,48 +625,162 @@ for modo, test_cases in tqdm([(x[0], x[1]) for x in test_cases_map.items()]):
         for dir_subj_raw in [False, True]:
             for v in vobjs:
                 for neg in [True, False]:
-                    # Print the result
-                    if v.transitivo:
-                        for pos in ["posposto", "incorporado", "anteposto"]:
-                            for dir_obj_raw in [False, True]:
-                                for subj, obj in test_cases:
-                                    try:
+                    for sub in [None, "permissivo", "gerundio"]:
+                        # Print the result
+                        if v.transitivo:
+                            for pos in ["posposto", "incorporado", "anteposto"]:
+                                for dir_obj_raw in [False, True]:
+                                    for subj, obj in test_cases:
+                                        try:
+                                            res = v.conjugate(
+                                                subject_tense=subj,
+                                                object_tense=obj,
+                                                mode=modo,
+                                                pro_drop=pro_drop,
+                                                pos=pos,
+                                                negative=neg,
+                                                dir_subj_raw=f"{random.choice(baby_names)}" if dir_subj_raw and '3p' in subj else None,
+                                                dir_obj_raw=f"{random.choice(baby_names)}" if dir_obj_raw and '3p' in obj else None,
+                                                anotar=True
+                                            )
+                                            # print(f"{res}")
+                                            results.append({"anotated":res, "label":v.remove_brackets_and_contents(res)})
+                                        except Exception as e:
+                                            pass
+                        else:
+                            for subj in sorted({x[0] for x in test_cases}):
+                                try:
+                                    res = v.conjugate(
+                                        subject_tense=subj,
+                                        pro_drop=pro_drop,
+                                        mode=modo,
+                                        dir_subj_raw=f"{random.choice(baby_names)}" if dir_subj_raw and '3p' in subj else None,
+                                        negative=neg,
+                                        anotar=True
+                                    )
+                                    # print(f"{res}")
+                                    results.append({"anotated":res, "label":v.remove_brackets_and_contents(res)})
+                                except Exception as e:
+                                    pass
 
-                                        res = v.conjugate(
-                                            subject_tense=subj,
-                                            object_tense=obj,
-                                            mode=modo,
-                                            pro_drop=pro_drop,
-                                            pos=pos,
-                                            negative=neg,
-                                            dir_subj_raw=f"{Noun(v.remove_brackets_and_contents(random.choice(nouns)['anotated']),'').random_tupi_antigo()}" if dir_subj_raw and '3p' in subj else None,
-                                            dir_obj_raw=f"{Noun(v.remove_brackets_and_contents(random.choice(nouns)['anotated']),'').random_tupi_antigo()}" if dir_obj_raw and '3p' in obj else None,
-                                            anotar=True
-                                        )
-                                        # print(f"{res}")
-                                        results.append({"anotated":res, "label":v.remove_brackets_and_contents(res)})
-                                    except Exception as e:
-                                        pass
-                    else:
-                        for subj in sorted({x[0] for x in test_cases}):
-                            try:
-                                res = v.conjugate(
-                                    subject_tense=subj,
-                                    pro_drop=pro_drop,
-                                    mode=modo,
-                                    dir_subj_raw=f"{Noun(v.remove_brackets_and_contents(random.choice(nouns)['anotated']),'').random_tupi_antigo()}" if dir_subj_raw and '3p' in subj else None,
-                                    negative=neg,
-                                    anotar=True
-                                )
-                                # print(f"{res}")
-                                results.append({"anotated":res, "label":v.remove_brackets_and_contents(res)})
-                            except Exception as e:
-                                pass
+
+
+import random
+def complex_sentences(results):
+    sample_n = 10
+    def sample_list(star, sample_n=10):
+        return random.sample(star, len(star)//(sample_n*4))
+    complex_results = []
+    gerunds = []
+    imperatives = []
+    permissives = []
+    circumstancials = []
+    indicatives = []
+    # Separate the sentences based on their verb mood types
+    for res in results:
+        if 'GERUND' in res['anotated']:
+            gerunds.append(res)
+        elif 'IMPERATIVE' in res['anotated']:
+            imperatives.append(res)
+        elif 'PERMISSIVE' in res['anotated']:
+            permissives.append(res)
+        elif 'CIRCUMSTANCIAL' in res['anotated']:
+            circumstancials.append(res)
+        else:
+            indicatives.append(res)
+    # indicatives
+    for mainVerb in tqdm(sample_list(indicatives)):
+        complex_results.append({"anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{mainVerb['label']}"})
+        for sub in random.sample(permissives, sample_n):
+            complex_results.append({"anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]", "label":f"{mainVerb['label']} {sub['label']}"})
+            if 'SUBJECT:3p' not in mainVerb['anotated'] and 'SUBJECT_PREFIX:3p' not in mainVerb['anotated']:
+                complex_results.append({"anotated":f"[MAIN_VERB]{sub['anotated']}[MAIN_VERB] {mainVerb['anotated']}", "label":f"{sub['label']} {mainVerb['label']}"})
+        for sub in random.sample(gerunds, sample_n):
+            if 'GERUND_SUBJECT_PREFIX' not in sub['anotated']:
+                complex_results.append({"anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]", "label":f"{mainVerb['label']} {sub['label']}"})
+                if 'SUBJECT:3p' not in mainVerb['anotated'] and 'SUBJECT_PREFIX:3p' not in mainVerb['anotated']:
+                    complex_results.append({"anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+            else:
+                # Find the tag like "[GERUND_SUBJECT_PREFIX:****]" and extract the subject tense from the ****
+                subject_tense_gerund = sub['anotated'].split('GERUND_SUBJECT_PREFIX:')[1].split(']')[0]
+                subject_tense_main = ""
+                if "[SUBJECT:" in mainVerb['anotated']:
+                    subject_tense_main = mainVerb['anotated'].split('SUBJECT:')[1].split(']')[0].split(":")[0]
+                elif "[SUBJECT_PREFIX:" in mainVerb['anotated']:
+                    subject_tense_main = mainVerb['anotated'].split('SUBJECT_PREFIX:')[1].split(']')[0]
+                if subject_tense_gerund == subject_tense_main and subject_tense_main != '3p':
+                    complex_results.append({"anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]", "label":f"{mainVerb['label']} {sub['label']}"})
+                    complex_results.append({"anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+    # Imperatives
+    for mainVerb in sample_list(imperatives):
+        complex_results.append({"anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{mainVerb['label']}"})
+        for sub in random.sample(permissives, sample_n):
+            complex_results.append({"anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]", "label":f"{mainVerb['label']} {sub['label']}"})
+            complex_results.append({"anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+        for sub in random.sample(gerunds, sample_n):
+            if 'GERUND_SUBJECT_PREFIX' not in sub['anotated']:
+                complex_results.append({"anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]", "label":f"{mainVerb['label']} {sub['label']}"})
+                complex_results.append({"anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+            else:
+                # Find the tag like "[GERUND_SUBJECT_PREFIX:****]" and extract the subject tense from the ****
+                subject_tense_gerund = sub['anotated'].split('GERUND_SUBJECT_PREFIX:')[1].split(']')[0]
+                subject_tense_main = ""
+                if "[IMPERATIVE_PREFIX:" in mainVerb['anotated']:
+                    subject_tense_main = mainVerb['anotated'].split('IMPERATIVE_PREFIX:')[1].split(']')[0].split(":")[0]
+                if subject_tense_gerund == subject_tense_main:
+                    complex_results.append({"anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]", "label":f"{mainVerb['label']} {sub['label']}"})
+                    complex_results.append({"anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+    # Permissives
+    for mainVerb in sample_list(permissives):
+        complex_results.append({"anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{mainVerb['label']}"})
+        for sub in random.sample(permissives, sample_n):
+            complex_results.append({"anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]", "label":f"{mainVerb['label']} {sub['label']}"})
+            complex_results.append({"anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+        for sub in random.sample(gerunds, sample_n):
+            if 'GERUND_SUBJECT_PREFIX' not in sub['anotated']:
+                complex_results.append({"anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]", "label":f"{mainVerb['label']} {sub['label']}"})
+                complex_results.append({"anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+            else:
+                # Find the tag like "[GERUND_SUBJECT_PREFIX:****]" and extract the subject tense from the ****
+                subject_tense_gerund = sub['anotated'].split('GERUND_SUBJECT_PREFIX:')[1].split(']')[0]
+                subject_tense_main = ""
+                if "[SUBJECT:" in mainVerb['anotated']:
+                    subject_tense_main = mainVerb['anotated'].split('SUBJECT:')[1].split(']')[0].split(":")[0]
+                elif "[SUBJECT_PREFIX:" in mainVerb['anotated']:
+                    subject_tense_main = mainVerb['anotated'].split('SUBJECT_PREFIX:')[1].split(']')[0]
+                if subject_tense_gerund == subject_tense_main:
+                    complex_results.append({"anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]", "label":f"{mainVerb['label']} {sub['label']}"})
+                    complex_results.append({"anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+    # Circunstancials
+    for mainVerb in sample_list(circumstancials):
+        complex_results.append({"anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{mainVerb['label']}"})
+        for sub in random.sample(permissives, sample_n):
+            complex_results.append({"anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+        for sub in random.sample(gerunds, sample_n):
+            if 'GERUND_SUBJECT_PREFIX' not in sub['anotated']:
+                complex_results.append({"anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+            else:
+                # Find the tag like "[GERUND_SUBJECT_PREFIX:****]" and extract the subject tense from the ****
+                subject_tense_gerund = sub['anotated'].split('GERUND_SUBJECT_PREFIX:')[1].split(']')[0]
+                subject_tense_main = ""
+                if "[SUBJECT:" in mainVerb['anotated']:
+                    subject_tense_main = mainVerb['anotated'].split('SUBJECT:')[1].split(']')[0].split(":")[0]
+                elif "[SUBJECT_PREFIX:" in mainVerb['anotated']:
+                    subject_tense_main = mainVerb['anotated'].split('SUBJECT_PREFIX:')[1].split(']')[0]
+                if subject_tense_gerund == subject_tense_main:
+                    complex_results.append({"anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+    # Remove duplicates from complex_results
+    complex_results = list(set([(x['anotated'], x['label']) for x in complex_results]))
+    return complex_results
 
 import json, re
 # Write results to file
 print("simplifying tags...")
-results = [{"anotated":x[0], "label":x[1]} for x in tqdm(set([(x['anotated'], x['label']) for x in results]))]
+pre_res = [{"anotated":x[0], "label":x[1]} for x in tqdm(set([(x['anotated'], x['label']) for x in results]))]
+
+results = [{"anotated":x[0], "label":x[1]} for x in tqdm(complex_sentences(pre_res))]
+
+
 with open('anotated_results.json', 'w') as f:
     # use json to write to file
     json.dump(results, f)
@@ -675,7 +800,7 @@ for res in results:
 for mc in c.most_common(25):
     print(mc)
 
-base_noun = {Noun(v.remove_brackets_and_contents(x['anotated']), '').verbete() for x in tqdm(nouns)}
+base_noun = set() # {Noun(v.remove_brackets_and_contents(x['anotated']), '').verbete() for x in tqdm(nouns)}
 # Write the .keys contents of c to a file as a json list
 with open('anotated_tokens.json', 'w') as f:
     # use json to write to file
