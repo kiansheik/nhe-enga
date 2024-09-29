@@ -253,13 +253,13 @@ function classifyParts(parts) {
             formattedDescription += "\nThe verb is negated.";
         }
         if (vd.permissive) {
-            formattedDescription += "\nThe verb is in a permissive mood, used to show wishes/hopes, to show finality when used as a subordinate clause, or to give permission to do something (but not commands, do NOT translate this as an imperative)";
+            formattedDescription += "\nThe verb is in a subjunctive mood, used to show wishes/hopes 'I hope that ...', to show finality when used as a subordinate clause '[MAIN_VERB] in order to ... [SUB_VERB]', '[MAIN_VERB] so that [SUB_VERB:SUBJECT] may...[SUB_VERB]'";
         }
         if (vd.imperative) {
-            formattedDescription += "\nThe verb is in an imperative mood, used to give commands.";
+            formattedDescription += "\nThe verb is in an imperative mood, used to give commands 'DO [MAIN_VERB]'. The subject is always in the second person, singular or plural.";
         }
         if (vd.gerund) {
-            formattedDescription += "\nThe verb is in a gerund form, used to show continuous and/or simultaneous actions. It can also represent finality or cause, depending on the context. The gerund is always used as an ajunct to another verb in the same clause and the subject will always be the same as said verb.";
+            formattedDescription += "\nThe verb is in a gerund form, used to show continuous and/or simultaneous actions '[MAIN_VERB] while [SUB_VERB]ing'. It can also represent finality '[MAIN_VERB] in order to [SUB_VERB]' or cause '[SUB_VERB] happened, causing [MAIN_VERB]', depending on the context. The gerund is always used as an adjunct to another verb. The subject will always be the same as the main verb.";
         }
         formattedDescription += "\n\n";
     }
