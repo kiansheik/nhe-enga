@@ -4,8 +4,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proposta de dicionário nheengatu português</title>
     <link rel="icon" href="/nhe-enga/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="/nhe-enga/styles.css">
+    <!-- <link rel="manifest" href="/nhe-enga/manifest.json"> -->
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DZYY8Y9076"></script>
@@ -58,14 +58,14 @@
                     color: #551A8B; /* Darker blue on hover */
                 }
             </style>
-            <a href="/nhe-enga/quiz">Quiz</a><br>
-            <a href="/nhe-enga/gramatica">Gramática</a><br>
+            <a href="/nhe-enga/">Tupi Antigo</a><br>
+            <!-- <a href="/nhe-enga/gramatica">Gramática</a><br>
             <a href="/nhe-enga/gramatica/guide/tools/playground.html">Playground</a><br>
             <div class="calendar-link">
                 <a href="#" id="calendar-toggle">Class Calendar</a><span>: </span>
                 <a target="_blank" href="https://calendar.google.com/calendar/u/0?cid=ZWM0MTE4MmQ2YzZmYWNhODQ1ZjJmYmUzZGViOTNjYzEwYWI1ZTM4OGY5OTM3YjY2MGY0NmI2YzNmNzA5NTRlY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t"><img border="0" src="https://www.google.com/calendar/images/ext/gc_button1_en.gif"></a>
                 <br><a href="https://calendar.google.com/calendar/ical/ec41182d6c6faca845f2fbe3deb93cc10ab5e388f9937b660f46b6c3f70954ec%40group.calendar.google.com/public/basic.ics" class="ical-link" target="_blank">(Non-google users):<img border="0" width="40px" height="40px" src="ical.png"></a>
-            </div>
+            </div> -->
             <br>
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
@@ -91,10 +91,10 @@
                 <div class='search_input'><input type="text" id="searchInput" placeholder="Digite a palavra a ser pesquisada" /></div>
                 <div class='actions'>
                     <button class="search" id="searchButton">Pesquisar</button>
-                    <div onclick="toggleAllOptionsContainers()" class="toggle-container disabled" id="toggleContainer">
+                    <!-- <div onclick="toggleAllOptionsContainers()" class="toggle-container disabled" id="toggleContainer">
                         <div class="toggle-ball" id="toggleBall"></div>
                     <div class="toggle-label">Mostrar Conjugações</div>
-                    </div>
+                    </div> -->
                 </div>
             <section class='results' id="results">
                 <ul></ul>
@@ -270,7 +270,7 @@
         // const doc_id = "1NH_SgkBYY-vAITMtxrZogzihZGsbhIXCaes6HJrcJww";
         // const sheetCsvUrl = `https://docs.google.com/spreadsheets/d/${doc_id}/export?format=csv&sheet=AdminWords`;
         // const neos = loadNeoJSONSync("/nhe-enga/neologisms.csv")
-        const compressedData = loadCompressedJSONSync('docs/extracted_entries_nheengatu.tar.gz').map(item => ({
+        const compressedData = loadCompressedJSONSync('/nhe-enga/docs/extracted_entries_nheengatu.tar.gz').map(item => ({
             "first_word": item.f || "",
             "optional_number": item.o || "",
             "definition": item.d || "",
