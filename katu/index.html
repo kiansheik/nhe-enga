@@ -375,12 +375,18 @@
 
         function searchAllDefinitions(data, query) {
             const regex = new RegExp(`\\b${query}\\b`, 'i'); // Create a case-insensitive regex
-            return data.filter(item => (
+            new_data = data.filter(item => (
                 item.first_word.toLowerCase() !== query.toLowerCase() &&
                 regex.test(item.definition.toLowerCase())
             ));
+            // sort new data by the position of the query in the word, returning sooner those with the query apearing sooner in the string definition
+            new_data.sort((a, b) => {
+                const a_index = a.definition.toLowerCase().indexOf(query.toLowerCase());
+                const b_index = b.definition.toLowerCase().indexOf(query.toLowerCase());
+                return a_index - b_index;
+            });
+            return new_data;
         }
-
         // Function to remove diacritics from a string
         function removeDiacritics(str) {
             return removePunctuation(str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
@@ -398,7 +404,14 @@
 
         function searchAllDefinitionsNoAccent(data, query) {
             const queryNormalized = removeDiacritics(query.toLowerCase());
-            return data.filter(item => (removeDiacritics(item.first_word.toLowerCase()) !== queryNormalized) && removeDiacritics(item.definition.toLowerCase()).includes(queryNormalized));
+            new_data = data.filter(item => (removeDiacritics(item.first_word.toLowerCase()) !== queryNormalized) && removeDiacritics(item.definition.toLowerCase()).includes(queryNormalized));
+            // sort new data by the position of the query in the word, returning sooner those with the query apearing sooner in the string definition
+            new_data.sort((a, b) => {
+                const a_index = a.definition.toLowerCase().indexOf(query.toLowerCase());
+                const b_index = b.definition.toLowerCase().indexOf(query.toLowerCase());
+                return a_index - b_index;
+            });
+            return new_data;
         }
 
         const searchButton = document.getElementById("searchButton");
