@@ -9,6 +9,7 @@ import sys
 sys.path.append('tupi')
 import tupi
 from tupi.verb import Verb
+from tupi.orth import ALT_ORTS
 import unicodedata
 import gzip
 
@@ -618,12 +619,13 @@ print("check nouns")
 
 results = []
 test_cases_map["permissivo"] = test_cases_map["indicativo"]
+orthos = ["IPA"] + list(ALT_ORTS.keys())
 # verbs = [Verb("apysyk", "adj.", "gostar"), Verb("nhe'eng", "v. intr.", "gostar"), Verb("enõî", "v.tr. (r, s)", "gostar"),]
 vobjs_intr = [x for x in vobjs if not x.transitivo]
 for modo, test_cases in tqdm([(x[0], x[1]) for x in test_cases_map.items()]):
     for pro_drop in [True, False]:
         for dir_subj_raw in [False, True]:
-            for v in vobjs:
+            for v in random.sample(vobjs, 100):
                 for neg in [True, False]:
                     for sub in [None, "permissivo", "gerundio"]:
                         # Print the result
@@ -632,6 +634,7 @@ for modo, test_cases in tqdm([(x[0], x[1]) for x in test_cases_map.items()]):
                                 for dir_obj_raw in [False, True]:
                                     for subj, obj in test_cases:
                                         try:
+                                            ortho = random.choice(orthos)
                                             res = v.conjugate(
                                                 subject_tense=subj,
                                                 object_tense=obj,
@@ -644,12 +647,13 @@ for modo, test_cases in tqdm([(x[0], x[1]) for x in test_cases_map.items()]):
                                                 anotar=True
                                             )
                                             # print(f"{res}")
-                                            results.append({"anotated":res, "label":v.remove_brackets_and_contents(res)})
+                                            results.append({"anotated":res, "label":v.map_orthography(v.remove_brackets_and_contents(res), ortho)})
                                         except Exception as e:
                                             pass
                         else:
                             for subj in sorted({x[0] for x in test_cases}):
                                 try:
+                                    ortho = random.choice(orthos)
                                     res = v.conjugate(
                                         subject_tense=subj,
                                         pro_drop=pro_drop,
@@ -659,13 +663,10 @@ for modo, test_cases in tqdm([(x[0], x[1]) for x in test_cases_map.items()]):
                                         anotar=True
                                     )
                                     # print(f"{res}")
-                                    results.append({"anotated":res, "label":v.remove_brackets_and_contents(res)})
+                                    results.append({"anotated":res, "label":v.map_orthography(v.remove_brackets_and_contents(res), ortho)})
                                 except Exception as e:
                                     pass
 
-
-
-import random
 def complex_sentences(results):
     sample_n = 10
     def sample_list(star, sample_n=10):

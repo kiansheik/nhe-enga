@@ -1,3 +1,5 @@
+from .orth import ALT_ORTS
+
 import re, random
 class TupiAntigo(object):
     cv_patterns = ["CVC", "CV", "VC", "V"]
@@ -116,14 +118,17 @@ class TupiAntigo(object):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.ipa_map = sorted(
-            [
-                (self.sound_graf["navarro"][i], self.sound_graf["ipa"][i])
-                for i in range(len(self.sound_graf["ipa"]))
-            ],
-            key=lambda x: len(x[0]),
-            reverse=True,
-        )
+        self.orthographies = {
+            "ipa": dict(sorted(
+                [
+                    (self.sound_graf["navarro"][i], self.sound_graf["ipa"][i])
+                    for i in range(len(self.sound_graf["ipa"]))
+                ],
+                key=lambda x: len(x[0]),
+                reverse=True,
+            ))
+        }
+        self.ipa_map = self.orthographies["ipa"]
         self.siliba_map = sorted(
             [
                 (
@@ -242,11 +247,55 @@ class TupiAntigo(object):
         return result_string
 
     def ipa(self, inp=None):
+        return self.transliterate('ipa', inp=inp)
+    
+    def map_orthography(self, text, orth='anchieta_1'):
+        if orth.lower() == 'ipa':
+            orthography_map = self.ipa_map
+        else:
+            orthography_map = ALT_ORTS[orth.upper()]
+        result = []
+        i = 0
+        while i < len(text):
+            # Check for bracketed section
+            if text[i] == '[':
+                closing_bracket_index = text.find(']', i)
+                if closing_bracket_index != -1:
+                    # Append the entire bracketed section
+                    result.append(text[i:closing_bracket_index + 1])
+                    i = closing_bracket_index + 1
+                    continue
+                else:
+                    # If no closing bracket is found, treat it as a normal character
+                    result.append(text[i])
+                    i += 1
+                    continue
+
+            # Existing logic for mapping orthography
+            match = None
+            match_length = 0
+            for cluster, replacement in orthography_map.items():
+                if text[i:i+len(cluster)].lower() == cluster and len(cluster) > match_length:
+                    match = replacement
+                    match_length = len(cluster)
+            
+            if match:
+                result.append(match)
+                i += match_length
+            else:
+                result.append(text[i])
+                i += 1
+        
+        return ''.join(result)
+
+    def transliterate(self, codex, inp=None):
         if inp is None:
             inp = self.verbete if type(self.verbete) == str else self.verbete()
-        sorted_clusters = [x[0] for x in self.ipa_map]
+        codex_map = list(self.orthographies[codex].items())
+        sorted_clusters = sorted(codex_map, key=lambda x: len(x[0]), reverse=True)
+        sorted_clusters = [x[0] for x in sorted_clusters]
         result_string = inp.replace("-", "")
-        cluster_mapping = dict(self.ipa_map)
+        cluster_mapping = dict(codex_map)
         replaced_positions = set()
 
         for cluster in sorted_clusters:

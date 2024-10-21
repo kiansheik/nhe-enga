@@ -1,4 +1,6 @@
+import random
 from .tupi import TupiAntigo
+from .tupi import ALT_ORTS
 import re
 
 
@@ -425,6 +427,7 @@ if __name__ == "__main__":
         ],
     }
     results = []
+    orthos = list(ALT_ORTS.keys()) + ["IPA", "ANCHIETA_1"]
     test_cases_map["permissivo"] = test_cases_map["indicativo"]
     verbs = [Verb("apysyk", "adj.", "gostar"), Verb("nhe'eng", "v. intr.", "gostar"), Verb("enõî", "v.tr. (r, s)", "gostar"),]
     for modo, test_cases in [(x[0], x[1]) for x in test_cases_map.items()]:
@@ -432,6 +435,8 @@ if __name__ == "__main__":
             # Print the result
             if v.transitivo:
                 for subj, obj in test_cases:
+                    # get a random othro name with random.choice
+                    ortho = random.choice(orthos)
                     try:
                         res = v.conjugate(
                             subject_tense=subj,

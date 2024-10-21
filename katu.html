@@ -1,0 +1,669 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposta de dicionário nheengatu português</title>
+    <link rel="icon" href="/nhe-enga/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DZYY8Y9076"></script>
+    <script src="/nhe-enga/js/papaparse.min.js"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-DZYY8Y9076');
+    </script>
+</head>
+<!--    The following HTML document is an academic paper which seaks to explore a methods in which on might be able to represent a book which such authors as Marcel Twardowsky Avila have written.
+    His monumental work titled "Proposta de dicionário nheengatu português" has allowed many in the world to be able to study the ancestral language of Brasil.
+    In this vain, I would like to explore theoretical ways in which one might be able to allow even more people to access that information.
+-->
+<body>
+    <main>
+        <div class='content'>
+            <style>
+                .calendar-link {
+                    display: inline-block;
+                    padding: inherit;
+                    /* background-color: #4285F4; Google's blue color */
+                    /* color: white;
+                    text-decoration: none;
+                    border-radius: 50px;
+                    font-weight: bold;
+                    transition: background-color 0.3s ease; */
+                }
+            
+                .calendar-link > a:hover {
+                    background-color: #2B7DE9; /* Darker blue on hover */
+                }
+            
+                .calendar-link > a > img {
+                    vertical-align: middle;
+                    margin-left: 10px;
+                }
+                .hidden {
+                    display: none;
+                }
+                .calendar-link > a {
+                    color: #0000EE;
+                    text-decoration: underline;
+                    cursor: pointer;
+                }
+
+                .calendar-link > a:visited {
+                    color: #551A8B; /* Darker blue on hover */
+                }
+            </style>
+            <a href="/nhe-enga/quiz">Quiz</a><br>
+            <a href="/nhe-enga/gramatica">Gramática</a><br>
+            <a href="/nhe-enga/gramatica/guide/tools/playground.html">Playground</a><br>
+            <div class="calendar-link">
+                <a href="#" id="calendar-toggle">Class Calendar</a><span>: </span>
+                <a target="_blank" href="https://calendar.google.com/calendar/u/0?cid=ZWM0MTE4MmQ2YzZmYWNhODQ1ZjJmYmUzZGViOTNjYzEwYWI1ZTM4OGY5OTM3YjY2MGY0NmI2YzNmNzA5NTRlY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t"><img border="0" src="https://www.google.com/calendar/images/ext/gc_button1_en.gif"></a>
+                <br><a href="https://calendar.google.com/calendar/ical/ec41182d6c6faca845f2fbe3deb93cc10ab5e388f9937b660f46b6c3f70954ec%40group.calendar.google.com/public/basic.ics" class="ical-link" target="_blank">(Non-google users):<img border="0" width="40px" height="40px" src="ical.png"></a>
+            </div>
+            <br>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                var toggle = document.getElementById('calendar-toggle');
+                var calendarLinkChildren = document.querySelector('.calendar-link').children;
+                Array.from(calendarLinkChildren).forEach(function(child) {
+                        if (child.id !== 'calendar-toggle') {
+                            child.classList.toggle('hidden');
+                        }
+                    });
+                toggle.addEventListener('click', function() {
+                    Array.from(calendarLinkChildren).forEach(function(child) {
+                        if (child.id !== 'calendar-toggle') {
+                            child.classList.toggle('hidden');
+                        }
+                    });
+                });
+            });
+            </script>
+            Citando
+            <div class='title'><h1>Proposta de dicionário nheengatu-português</h1></div>
+            <!-- <div class='subtitle'><h2></h2></div> -->
+                <div class='search_input'><input type="text" id="searchInput" placeholder="Digite a palavra a ser pesquisada" /></div>
+                <div class='actions'>
+                    <button class="search" id="searchButton">Pesquisar</button>
+                    <div onclick="toggleAllOptionsContainers()" class="toggle-container disabled" id="toggleContainer">
+                        <div class="toggle-ball" id="toggleBall"></div>
+                    <div class="toggle-label">Mostrar Conjugações</div>
+                    </div>
+                </div>
+            <section class='results' id="results">
+                <ul></ul>
+            </section>
+        </div>
+    </main>
+    <div class='credits'>Dicionário por Marcel Twardowsky Avilao</div>
+
+    <!-- The following citations will cite the text for which you can find all of the specific instances referenced in this research paper. -->
+    <meta name="citation_title" content="Proposta de dicionário nheengatu-português">
+    <meta name="citation_author" content="Marcel Twardowsky Avilao">
+    <meta name="citation_publication_date" content="2021">
+    <meta name="citation_publisher" content="Tese (Doutorado)- Faculdade de Filosofia, Letras e Ciências Humanas da Universidade de São Paulo. Departamento de Letras Modernas. Área de concentração: Estudos da Tradução.">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.3/pako.min.js"></script>
+    <script>
+        // Function to load JSON from a file
+        function loadJSON(url, callback) {
+            var xhr = new XMLHttpRequest();
+            // xhr.overrideMimeType("application/json");
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                callback(JSON.parse(xhr.responseText));
+            }
+            };
+            xhr.send(null);
+        }
+        function loadCompressedJSONSync(url) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, false); // Make the request synchronous
+            xhr.overrideMimeType('text/plain; charset=x-user-defined'); // Treat the response as binary
+            xhr.send(null);
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var binaryString = xhr.responseText;
+                var len = binaryString.length;
+                var bytes = new Uint8Array(len);
+                for (var i = 0; i < len; i++) {
+                    bytes[i] = binaryString.charCodeAt(i) & 0xFF;
+                }
+                var decompressedData = pako.inflate(bytes, { to: 'string' });
+                return JSON.parse(decompressedData);
+            }
+            return null;
+        }
+        function loadNeoJSONSync(sheetCsvUrl) {
+            // Synchronous XMLHttpRequest
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', sheetCsvUrl, false); // Make the request synchronous
+            xhr.send(null);
+            
+            if (xhr.status === 200) {
+                const csvText = xhr.responseText;
+                
+                // Manually parse the CSV using PapaParse
+                let results = Papa.parse(csvText, {
+                    skipEmptyLines: true,
+                    header: true,
+                    dynamicTyping: false,
+                });
+                const jsonData = [];
+
+                for (let i = 0; i < results.data.length; i++) {
+                    const obj = results.data[i];
+                    const obj_dict = {};
+
+                    let first_word = obj['Verbete'];
+                    let optional_number = "";
+                    let con = "";
+
+                    if (obj["Pluriforme"] === "Nenhuma") {
+                        obj['Pluriforme'] = "";
+                    }
+
+                    obj['Categoria Gramatical'] = obj['Categoria Gramatical'].toLowerCase();
+
+                    if (obj['Transitividade'] === "intr.-estativo (adjetivos, substantivos)") {
+                        if (obj['Categoria Gramatical'].includes("subs") || obj['Categoria Gramatical'].includes("noun")) {
+                            obj['Transitividade'] = "(s.)";
+                        } else if (obj['Categoria Gramatical'].includes("adv")) {
+                            obj['Transitividade'] = "(adv.)";
+                        } else {
+                            obj['Transitividade'] = "(v. da 2ª classe)";
+                        }
+                    } else if (obj['Transitividade'] === "tr.-activo") {
+                        obj['Transitividade'] = "(v.tr.)";
+                    } else if (obj['Transitividade'] === "intr.-activo") {
+                        obj['Transitividade'] = "(v. intr.)";
+                    } else {
+                        obj['Transitividade'] = "";
+                    }
+
+                    if (obj['Verbete(s) Base(s)'] !== "") {
+                        obj['Verbete(s) Base(s)'] = `(etim. - ${obj['Verbete(s) Base(s)']})`;
+                    }
+                    if (obj['Tradução Portuguesa'] !== undefined || obj['Tradução Portuguesa'] !== "") {
+                        obj['Tradução Portuguesa'] = `- ${obj['Tradução Portuguesa']}`;
+                    }
+                    if (obj['Tradução Inglesa'] !== undefined || obj['Tradução Inglesa'] !== "") {
+                        obj['Tradução Inglesa'] = `- ${obj['Tradução Inglesa']}`;
+                    }
+                    if (obj['English Definition'] !== undefined || obj['English Definition'] !== "") {
+                        obj['English Definition'] = `| ${obj['English Definition']}`;
+                    }
+                    
+                    const definition = `${obj['Pluriforme']} ${obj['Verbete(s) Base(s)']} ${obj['Transitividade']} - ${obj['Definição Portuguesa']} ${obj['English Definition']} | ${obj['Atestação']} ${obj['Tradução Portuguesa']} ${obj['Tradução Inglesa']} (${obj['Fonte']}, ${obj['Data da Fonte']}, ${obj['Pagina(s) na Fonte']})`;
+                    // remove all spaces in definition which are more than one space
+                    obj['definition'] = definition.replace(/\s{2,}/g, ' ');
+                    obj_dict['first_word'] = first_word;
+                    obj_dict['optional_number'] = optional_number;
+                    obj_dict['con'] = con;
+                    obj_dict['definition'] = definition;
+                    obj_dict['type'] = 'neo';
+
+                    console.log(obj)
+                    jsonData.push(obj_dict);
+                }
+                return jsonData; // Return the sorted data
+            } else {
+                console.error("Failed to fetch the CSV data.");
+                return null;
+            }
+        }
+        function loadCompressedJSON(url, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);  // `true` makes the request asynchronous
+            xhr.responseType = 'arraybuffer';
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    try {
+                        var compressedData = new Uint8Array(xhr.response);
+                        var decompressedData = pako.inflate(compressedData, { to: 'string' });
+                        var jsonData = JSON.parse(decompressedData);
+                        callback(null, jsonData);
+                    } catch (error) {
+                        callback(error, null);
+                    }
+                } else {
+                    callback(new Error('Failed to load data: ' + xhr.statusText), null);
+                }
+            };
+
+            xhr.onerror = function () {
+                callback(new Error('Network error'), null);
+            };
+
+            xhr.send();
+        }
+
+        // Function to load JSON from a file synchronously
+        function loadJSONSync(url) {
+            var xhr = new XMLHttpRequest();
+            // xhr.overrideMimeType("application/json");
+            xhr.open('GET', url, false); // Make the request synchronous
+            xhr.send(null);
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                return JSON.parse(xhr.responseText);
+            }
+            return null;
+        }
+        
+        function transformConjList(mode, list, negar) {
+            const resultObject = {};
+            list.forEach(obj => {
+                if (obj.m.slice(0, 2) === mode.slice(0, 2)) {
+                const key = [obj.s, obj.o];
+                resultObject[JSON.stringify(key)] = negar? obj.n: obj.f;
+                }
+            });
+
+        return resultObject;
+        }
+        // const doc_id = "1NH_SgkBYY-vAITMtxrZogzihZGsbhIXCaes6HJrcJww";
+        // const sheetCsvUrl = `https://docs.google.com/spreadsheets/d/${doc_id}/export?format=csv&sheet=AdminWords`;
+        // const neos = loadNeoJSONSync("/nhe-enga/neologisms.csv")
+        const compressedData = loadCompressedJSONSync('docs/extracted_entries_nheengatu.tar.gz').map(item => ({
+            "first_word": item.f || "",
+            "optional_number": item.o || "",
+            "definition": item.d || "",
+            "con": item.c || ""
+        }));
+        const combinedData = [...compressedData];
+        window.jsonData = combinedData
+    </script>
+    <script>
+        let modes = ['indicativo', 'permissivo', 'circunstancial', 'gerundio', 'imperativo'];
+        let subj_pref_map = {
+            'ø': null,
+            'ixé': '1ps',
+            'endé': '2ps',
+            "a'e": '3p',
+            'oré': '1ppe',
+            'îandé': '1ppi',
+            "peẽ": '2pp',
+        };
+        let obj_pref_map = {
+            'ø': null,
+            'xe': '1ps',
+            'nde': '2ps',
+            "i": '3p',
+            'oré': '1ppe',
+            'îandé': '1ppi',
+            "pe": '2pp',
+            "îe": 'refl',
+            "îo": 'mut',
+        };
+        function generateConjugationTable(mode, conjugations_b, un_id, ne) {
+            let negar = ne || false;
+            const filteredConjugations = conjugations_b.filter(item => item.m === mode.slice(0, 2));
+            const uniqueSubjects = new Set(filteredConjugations.map(item => item.s));
+            const uniqueObjects = new Set(filteredConjugations.map(item => item.o));
+            let conjugations =  transformConjList(mode, filteredConjugations, negar);
+            let subj_m = subj_pref_map;
+            let obj_m = obj_pref_map;
+            if (mode === 'imperativo'){
+                subj_m = {
+                    'endé': '2ps',
+                    "peẽ": '2pp',
+                };
+            } else if (mode === 'circunstancial'){
+                subj_m = {
+                    'ø': null,
+                    'ixé': '1ps',
+                    'oré': '1ppe',
+                    'îandé': '1ppi',
+                    "a'e": '3p'
+                };
+            }
+            const subjects_vals = Object.entries(subj_m)
+                .filter(item => uniqueSubjects.has(item[1]))
+                .map(([key, value]) => value);
+            const objects_vals = Object.entries(obj_m)
+                .filter(item => uniqueObjects.has(item[1]))
+                .map(([key, value]) => value);
+            const subjects = Object.entries(subj_m)
+                .filter(item => uniqueSubjects.has(item[1]))
+                .map(([key, value]) => key);
+            const objects = Object.entries(obj_m)
+                .filter(item => uniqueObjects.has(item[1]))
+                .map(([key, value]) => key);
+            let htmlString = `<table class="options-container" id="conj-${un_id}">`;
+                htmlString += `<tr><th>
+                    Modo<br><select id="mode-${un_id}" class="option">
+                    <!-- Add options dynamically using JavaScript -->
+                </select><br>
+                    <input type="checkbox" id="negarCheckbox-${un_id}" ${negar?"checked":""} name="negarCheckbox">
+                    <label for="negarCheckbox">Negar</label>
+                </th><th class="label" style="background-color: #e4ffe4;" colspan="${(objects.length + 1)}">Objeto</th></tr>`;
+            htmlString += `<th style="background-color: #fef9c3ab;" class="label">
+                Sujeito</th>`;
+            for (const object of objects) {
+                htmlString += `<th style="background-color: #e4ffe4;">${object}</th>`;
+            }
+            htmlString += '</tr>';
+            for (let i = 0; i < subjects.length; i++) {
+                htmlString += `<tr><th style="background-color: #fef9c3ab;">${subjects[i]}</th>`;
+                const subj = subjects_vals[i];
+                for (let j = 0; j < objects.length; j++) {
+                    const obj = objects_vals[j];
+                    let conj = conjugations[JSON.stringify([subj, obj])] || '-'
+                    htmlString += `<td>${conj}</td>`;
+                }
+                htmlString += '</tr>';
+            }
+            htmlString += '</table>';
+            return htmlString;
+        }
+
+        function searchByFirstWord(data, query) {
+            const clean_query = removePunctuation(query)
+            return data.filter(item => removePunctuation(item.first_word).toLowerCase() === clean_query.toLowerCase());
+        }
+
+        function searchInFirstWord(data, query) {
+            const clean_query = removePunctuation(query).toLowerCase();
+            return data.filter(item => removePunctuation(item.first_word).toLowerCase().includes(clean_query));
+        }
+
+        function searchAllDefinitions(data, query) {
+            const regex = new RegExp(`\\b${query}\\b`, 'i'); // Create a case-insensitive regex
+            return data.filter(item => (
+                item.first_word.toLowerCase() !== query.toLowerCase() &&
+                regex.test(item.definition.toLowerCase())
+            ));
+        }
+
+        // Function to remove diacritics from a string
+        function removeDiacritics(str) {
+            return removePunctuation(str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
+        }
+        function removePunctuation(str) {
+                return str
+                .replace(/[.,\/#!$%?^&*;:{}=\-_`~()]/g, "")
+                .trim();
+        }
+
+        function searchByFirstWordNoAccent(data, query) {
+            const queryNormalized = removeDiacritics(query.toLowerCase());
+            return data.filter(item => removeDiacritics(item.first_word.toLowerCase()) === queryNormalized);
+        }
+
+        function searchAllDefinitionsNoAccent(data, query) {
+            const queryNormalized = removeDiacritics(query.toLowerCase());
+            return data.filter(item => (removeDiacritics(item.first_word.toLowerCase()) !== queryNormalized) && removeDiacritics(item.definition.toLowerCase()).includes(queryNormalized));
+        }
+
+        const searchButton = document.getElementById("searchButton");
+        const searchInput = document.getElementById("searchInput");
+        const resultsDiv = document.getElementById("results");
+
+        searchButton.addEventListener("click", performSearch);
+        searchInput.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                performSearch();
+            }
+        });
+
+        window.addEventListener("load", function() {
+            searchInput.focus();
+            searchInput.click();
+        });
+
+
+        function createConjugateFunction(un_id, data) {
+            // Create the divId based on the provided un_id
+            var divId = 'conj-' + un_id;
+
+            // Get the div element
+            var divElement = document.getElementById(divId);
+            var negarCheckbox = document.getElementById(`negarCheckbox-${un_id}`);
+            // Get the button element inside the div
+            var selectElement = divElement.querySelector('select');
+            // Define the function to append 'f' value as text to the end of the div
+            function appendFValue() {
+                // Get the values for mode, subject, and subject using the provided un_id
+                var modeValue = selectElement.value;
+                appendOptionsToResultDiv(divElement.parentElement, data, modeValue, negarCheckbox.checked);
+                divElement.remove();
+            }
+            // Attach the function to the div
+            divElement.dataset.conjugateFunction = appendFValue;
+            // var selectElement = document.getElementById("mySelect");
+            // Add a change event listener
+            selectElement.addEventListener("change", appendFValue)
+            negarCheckbox.addEventListener("change", appendFValue)
+        }
+
+        function toggleAllOptionsContainers(dry) {
+            var is_dry = dry || false;
+            if(!is_dry){
+                // Find all elements with the class .options-container
+                var optionsContainers = document.querySelectorAll('.options-container');
+
+                // Toggle the visibility of each options container
+                optionsContainers.forEach(function(optionsContainer) {
+                    optionsContainer.style.display = (optionsContainer.style.display === 'none' || optionsContainer.style.display === '') ? 'flex' : 'none';
+                });
+            }
+
+            // Find the toggle container and ball elements
+            var toggleContainer = document.getElementById('toggleContainer');
+            var toggleBall = document.getElementById('toggleBall');
+            // Toggle the disabled class on the toggle container
+            toggleContainer.classList.toggle('disabled');
+
+            // Toggle the position of the toggle ball
+            var newPosition = !toggleContainer.classList.contains('disabled') ? '100%' : '0';
+            toggleBall.style.transform = 'translate(' + newPosition + ', -50%)';
+            setCookie('conjugationToggle', toggleContainer.classList.contains('disabled') ? 'disabled' : 'enabled', 30);
+        }
+        // Function to append the HTML string to resultDiv
+        function appendOptionsToResultDiv(resultDiv, con, mode, ne) {
+            // HTML string representing the options container
+            const un_id = Math.random().toString(36).substring(2, 10);
+            const htmlString = '';
+            // Create a temporary container element
+            const tempContainer = document.createElement("div");
+            // Set innerHTML of the container to the HTML string
+            tempContainer.innerHTML = generateConjugationTable(mode, con, un_id, ne);
+            var storedState = getCookie('conjugationToggle');
+            if (storedState === 'enabled') {
+                tempContainer.firstChild.style.display = 'flex';
+            } else {
+                tempContainer.firstChild.style.display = 'none';
+            }
+
+            // Append the child nodes of the container to the resultDiv
+            while (tempContainer.firstChild) {
+                resultDiv.appendChild(tempContainer.firstChild);
+            }
+            // // Populate dropdown options
+            populateDropdown(`mode-${un_id}`, modes, mode);
+            // populateDropdown(`subject-${un_id}`, ['ø', 'endé', 'ixé', 'oré', 'îandé', "peẽ", "a'e"]);
+            // populateDropdown(`object-${un_id}`, ['ø', 'xe', 'nde', 'oré', 'îandé', "pe", "i"]);
+
+            createConjugateFunction(un_id, con)
+            
+        }
+
+        function populateDropdown(id, options, mode) {
+            const dropdown = document.getElementById(id);
+            
+            options.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option;
+                optionElement.text = option;
+                dropdown.add(optionElement);
+            });
+            dropdown.value = mode;
+        }
+
+        function link_sources(definition) {
+            // VLB
+            let regex = /VLB, (I|II), (\d+)/g;
+            // Replace occurrences with HTML hyperlink
+            let replacedString = definition.replace(regex, function(match, p1, p2) {
+                if (p1 === "II") {
+                    return '<a href="/nhe-enga/docs/primary_sources/?book_name=vlb&page_number=' + (parseInt(p2) + 154) + '" target="_blank">' + match + '</a>';
+                } else {
+                    return '<a href="/nhe-enga/docs/primary_sources/?book_name=vlb&page_number=' + p2 + '" target="_blank">' + match + '</a>';
+                }
+            });
+            // Anchieta Arte
+            regex = /Anch., Arte, (\d+v?)/g;
+            // Replace occurrences with HTML hyperlink
+            replacedString = replacedString.replace(regex, function(match, p1) {
+                return '<a href="/nhe-enga/docs/primary_sources/?book_name=ancharte&page_number=' + p1 + '" target="_blank">' + match + '</a>';
+            });
+            // Araujo Cat 1618
+            regex = /Ar., Cat., (?!1686)(\d+v?)/g;
+            // Replace occurrences with HTML hyperlink
+            replacedString = replacedString.replace(regex, function(match, p1) {
+                return '<a href="/nhe-enga/docs/primary_sources/?book_name=arcat1618&page_number=' + p1 + '" target="_blank">' + match + '</a>';
+            });
+            //  MORE TODO
+            return replacedString;
+        }
+
+        function performSearch() {
+            const query = searchInput.value.trim().toLowerCase(); // Convert query to lowercase
+
+            if (!query) {
+                alert('Ops, é necessário preencher algo para pesquisar!')
+                return;
+            }
+
+            const verbete_results_exact = searchByFirstWord(window.jsonData, query);
+            const def_results_exact = searchAllDefinitions(window.jsonData, query);
+            const verbete_results_in = searchInFirstWord(window.jsonData, query);
+            
+            // Perform diacritic-insensitive searches
+            const verbete_results_diacritic = searchByFirstWordNoAccent(window.jsonData, query);
+            const def_results_diacritic = searchAllDefinitionsNoAccent(window.jsonData, query);
+            
+            // Combine and prioritize results
+            const combinedResults = Array.from(new Set([...verbete_results_exact, ...verbete_results_diacritic, ...def_results_exact, ...verbete_results_in, ...def_results_diacritic]));
+            // Add the 'exact_match' property based on source
+            const results = combinedResults.map(result => {
+                const sourceIsVerbete = verbete_results_exact.includes(result) || def_results_exact.includes(result);
+                return {
+                    ...result,
+                    exact_match: sourceIsVerbete
+                };
+            });
+            resultsDiv.innerHTML = ""; // Clear previous results
+            resultsDiv.style.display = "block";
+
+            if (results.length > 0) {
+                results.forEach(result => {
+                    const resultDiv = document.createElement("div");
+                    if (result.type !== undefined){
+                        resultDiv.classList.add(result.type);
+                    }
+                    // Case-insensitive highlighting of query word
+                    const linked_definition = link_sources(result.definition).replace(new RegExp(`(?<!="[^"]*)(${query})(?![^"]*")`, "ig"), '<span class="highlighted">$1</span>');
+                    // Create a link with query parameter
+                    const link = document.createElement("a");
+                    link.href = `${window.location.pathname}?query=${encodeURIComponent(result.first_word)}`;
+                    link.innerText = result.first_word;
+                    link.classList.add("search-link");
+                    
+                    // Create superscript for optional_number
+                    const optionalNumberSup = document.createElement("sup");
+                    optionalNumberSup.innerText = result.optional_number;
+
+                    resultDiv.appendChild(link);
+                    resultDiv.appendChild(optionalNumberSup);
+                    resultDiv.innerHTML += ` ${linked_definition}`;
+                    if (result.exact_match) {
+                        resultDiv.classList.add("exact-match");
+                    } else {
+                        resultDiv.classList.add("approximate-match");
+                    }
+                    resultsDiv.appendChild(resultDiv);
+                    if (result.con) {
+                        appendOptionsToResultDiv(resultDiv, result.con, 'indicativo', false);
+                    }
+                });
+                const newUrl = `${window.location.pathname}?query=${encodeURIComponent(query)}`;
+                history.pushState(null, null, newUrl);
+            } else {
+                resultsDiv.innerHTML = "Não foram encontrados resultados.";
+            }
+        }
+
+        // Read query parameter from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const queryParam = urlParams.get('query');
+
+        if (queryParam) {
+            // Preload results based on the query parameter
+            searchInput.value = queryParam;
+            performSearch();
+        }
+        function setCookie(name, value, days) {
+            var expires = '';
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = '; expires=' + date.toUTCString();
+            }
+            document.cookie = name + '=' + value + expires + '; path=/';
+        }
+
+        // Function to get the value of a cookie by name
+        function getCookie(name) {
+            var nameEQ = name + '=';
+            var ca = document.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null;
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            var toggleContainer = document.getElementById('toggleContainer');
+            var storedState = getCookie('conjugationToggle');
+            if (storedState === 'enabled') {
+                toggleAllOptionsContainers(true)
+            }
+        });
+        // Function to handle the popstate event
+        function handlePopstate(event) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const queryParam = urlParams.get('query');
+
+            if (queryParam) {
+                // Update the search bar with the query parameter
+                searchInput.value = queryParam;
+                // Trigger the search function
+                performSearch();
+            }
+        }
+        // Attach the popstate event listener
+        window.addEventListener('popstate', handlePopstate);
+        document.addEventListener('click', function(event) {
+        // Check if the clicked element has the "search-link" class
+        if (event.target.classList.contains('search-link')) {
+            // Prevent the default link behavior
+            event.preventDefault();
+            // Get the innerHTML of the clicked link and set it as the search input value
+            searchInput.value = event.target.innerText;
+            // Call the performSearch() function (assuming it's defined)
+            performSearch();
+            // return to top to see results
+            window.scrollTo(0, 0);
+        }
+        });
+    </script>
+</body>
+</html>
