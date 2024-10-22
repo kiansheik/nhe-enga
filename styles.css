@@ -38,6 +38,7 @@ footer, header, hgroup, menu, nav, section {
 .options-container {
     display: none;
     flex-wrap: wrap;
+	overflow:auto;
 }
 body {
 	line-height: 1;
