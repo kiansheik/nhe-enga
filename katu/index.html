@@ -656,6 +656,7 @@
             } else {
                 resultsDiv.innerHTML = "Não foram encontrados resultados.";
             }
+            updateShowMoreLinks()
         }
 
         // Read query parameter from URL
@@ -688,13 +689,13 @@
             }
             return null;
         }
-        document.addEventListener('DOMContentLoaded', function() {
-            var toggleContainer = document.getElementById('toggleContainer');
-            var storedState = getCookie('conjugationToggle');
-            if (storedState === 'enabled') {
-                toggleAllOptionsContainers(true)
-            }
-        });
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     var toggleContainer = document.getElementById('toggleContainer');
+        //     var storedState = getCookie('conjugationToggle');
+        //     if (storedState === 'enabled') {
+        //         toggleAllOptionsContainers(true)
+        //     }
+        // });
         // Function to handle the popstate event
         function handlePopstate(event) {
             const urlParams = new URLSearchParams(window.location.search);
