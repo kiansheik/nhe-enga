@@ -241,7 +241,7 @@ a:hover {
 }
 
 div.preview {
-	max-height: 80vh;
+	max-height: 70vh;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: wrap;
