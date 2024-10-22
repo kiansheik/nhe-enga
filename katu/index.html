@@ -58,7 +58,7 @@
                     color: #551A8B; /* Darker blue on hover */
                 }
             </style>
-            <a href="/nhe-enga/">Tupi Antigo</a><br>
+            <a href="/nhe-enga/" class="retain-query">Tupi Antigo</a><br>
             <!-- <a href="/nhe-enga/gramatica">Gramática</a><br>
             <a href="/nhe-enga/gramatica/guide/tools/playground.html">Playground</a><br>
             <div class="calendar-link">
@@ -570,6 +570,18 @@
             } else {
                 showMoreLink.style.display = 'none'; // Hide the link if content fits
             }
+            });
+
+            // carry query params
+            const links = document.querySelectorAll('.retain-query');
+            links.forEach(link => {
+                const currentQuery = window.location.search; // Get current query params (e.g., ?query=agora)
+                // Remove existing query parameters from the href
+                link.href = link.href.split('?')[0];
+                // Append the query params to the href if they exist
+                if (currentQuery) {
+                    link.href += currentQuery;
+                }
             });
         }
           // Initial check when the page loads

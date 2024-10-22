@@ -61,7 +61,7 @@
             <a href="/nhe-enga/quiz">Quiz</a><br>
             <a href="/nhe-enga/gramatica">Gramática</a><br>
             <a href="/nhe-enga/gramatica/guide/tools/playground.html">Playground</a><br>
-            <a href="/nhe-enga/katu">Nheengatu</a><br>
+            <a href="/nhe-enga/katu" class="retain-query">Nheengatu</a><br>
             <!-- <div class="calendar-link">
                 <a href="#" id="calendar-toggle">Class Calendar</a><span>: </span>
                 <a target="_blank" href="https://calendar.google.com/calendar/u/0?cid=ZWM0MTE4MmQ2YzZmYWNhODQ1ZjJmYmUzZGViOTNjYzEwYWI1ZTM4OGY5OTM3YjY2MGY0NmI2YzNmNzA5NTRlY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t"><img border="0" src="https://www.google.com/calendar/images/ext/gc_button1_en.gif"></a>
@@ -572,6 +572,17 @@
             } else {
                 showMoreLink.style.display = 'none'; // Hide the link if content fits
             }
+            });
+            // carry query params
+            const links = document.querySelectorAll('.retain-query');
+            links.forEach(link => {
+                const currentQuery = window.location.search; // Get current query params (e.g., ?query=agora)
+                // Remove existing query parameters from the href
+                link.href = link.href.split('?')[0];
+                // Append the query params to the href if they exist
+                if (currentQuery) {
+                    link.href += currentQuery;
+                }
             });
         }
           // Initial check when the page loads
