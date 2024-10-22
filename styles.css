@@ -241,12 +241,12 @@ a:hover {
 }
 
 div.preview {
-    max-height: 3em;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: wrap;
-    transition: max-height 0.3s;
-  }
+	max-height: 80vh;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: wrap;
+	transition: max-height 0.3s;
+}
 
 div.preview.expanded {
 	max-height: none;
