@@ -68,7 +68,7 @@
                 <br><a href="https://calendar.google.com/calendar/ical/ec41182d6c6faca845f2fbe3deb93cc10ab5e388f9937b660f46b6c3f70954ec%40group.calendar.google.com/public/basic.ics" class="ical-link" target="_blank">(Non-google users):<img border="0" width="40px" height="40px" src="ical.png"></a>
             </div> -->
             <br>
-            <script>
+            <!-- <script>
                 document.addEventListener('DOMContentLoaded', function() {
                 var toggle = document.getElementById('calendar-toggle');
                 var calendarLinkChildren = document.querySelector('.calendar-link').children;
@@ -85,7 +85,7 @@
                     });
                 });
             });
-            </script>
+            </script> -->
             Citando
             <div class='title'><h1>Dicionário de Tupi antigo</h1></div>
             <div class='subtitle'><h2>A língua indígena clássica do Brasil</h2></div>
@@ -548,6 +548,39 @@
             return replacedString;
         }
 
+        function toggleContent(event, link) {
+            event.preventDefault(); // Prevent soft navigation
+            const preview = link.previousElementSibling; // Get the .preview div
+            preview.classList.toggle('expanded'); // Toggle 'expanded' class
+
+            // Update the link text based on the expanded state
+            link.textContent = preview.classList.contains('expanded') 
+            ? 'Mostrar menos...' 
+            : 'Mostrar mais...';
+        }
+
+        function updateShowMoreLinks() {
+            const entries = document.querySelectorAll('.entry');
+
+            entries.forEach(entry => {
+            const preview = entry.querySelector('.preview');
+            const showMoreLink = entry.querySelector('.show-more');
+
+            // Check if content is overflowing
+            if (preview.scrollHeight > preview.clientHeight) {
+                showMoreLink.style.display = 'inline'; // Show the link if content is truncated
+            } else {
+                showMoreLink.style.display = 'none'; // Hide the link if content fits
+            }
+            });
+        }
+          // Initial check when the page loads
+        document.addEventListener("DOMContentLoaded", updateShowMoreLinks);
+
+        // Update on window resize or orientation change
+        window.addEventListener("resize", updateShowMoreLinks);
+        window.addEventListener("orientationchange", updateShowMoreLinks);
+
         function performSearch() {
             const query = searchInput.value.trim().toLowerCase(); // Convert query to lowercase
 
@@ -579,7 +612,11 @@
 
             if (results.length > 0) {
                 results.forEach(result => {
+                    const upperResultDiv = document.createElement("div");
+                    upperResultDiv.classList.add("entry");
                     const resultDiv = document.createElement("div");
+                    resultDiv.classList.add("preview");
+                    upperResultDiv.appendChild(resultDiv);
                     if (result.type !== undefined){
                         resultDiv.classList.add(result.type);
                     }
@@ -603,7 +640,15 @@
                     } else {
                         resultDiv.classList.add("approximate-match");
                     }
-                    resultsDiv.appendChild(resultDiv);
+                    resultsDiv.appendChild(upperResultDiv);
+                    show_more = document.createElement("a");
+                    show_more.classList.add("show-more");
+                    show_more.style = 'display: none;';
+                    show_more.onclick = function(event) {
+                        toggleContent(event, this);
+                    };
+                    show_more.textContent = "Mostrar mais...";
+                    upperResultDiv.appendChild(show_more);
                     if (result.con) {
                         appendOptionsToResultDiv(resultDiv, result.con, 'indicativo', false);
                     }

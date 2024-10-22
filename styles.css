@@ -239,10 +239,32 @@ main > div.content > div.actions > .toggle-container.disabled > .toggle-ball {
 
 }
 
+#results > div > div {
+    max-height: 3em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: wrap;
+    transition: max-height 0.3s;
+  }
 
+#results > div > div.expanded {
+max-height: none;
+}
 
-
-
+.show-more {
+	display: block; /* Makes it occupy the full width for consistent alignment */
+	margin-top: 4px; /* Adds subtle spacing from the text */
+	font-size: 0.85em; /* Slightly smaller than the main text */
+	color: #666; /* A neutral grey color */
+	text-decoration: underline; /* Keep subtle underline for readability */
+	cursor: pointer; /* Change cursor on hover */
+	transition: color 0.2s ease-in-out; /* Smooth transition on hover */
+  }
+  
+  .show-more:hover {
+	color: #444; /* Slightly darker grey on hover */
+  }
+  
 
 
 table {
