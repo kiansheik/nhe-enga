@@ -228,18 +228,18 @@ main > div.content > div.actions > .toggle-container.disabled > .toggle-ball {
 	background-color: #7dd3fc;
 }
 
-.results > div > a {
+a {
 	color: #14532d;
 	padding: 0px;
 }
-.results > div > a:hover {
+a:hover {
 	background-color: #14532d;
 	color: #fff;
 	text-decoration: none;
 
 }
 
-#results > div > div {
+div.preview {
     max-height: 3em;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -247,22 +247,22 @@ main > div.content > div.actions > .toggle-container.disabled > .toggle-ball {
     transition: max-height 0.3s;
   }
 
-#results > div > div.expanded {
-max-height: none;
+div.preview.expanded {
+	max-height: none;
 }
 
 .show-more {
 	display: block; /* Makes it occupy the full width for consistent alignment */
 	margin-top: 4px; /* Adds subtle spacing from the text */
 	font-size: 0.85em; /* Slightly smaller than the main text */
-	color: #666; /* A neutral grey color */
+	color: #165730e7;; /* A neutral grey color */
 	text-decoration: underline; /* Keep subtle underline for readability */
 	cursor: pointer; /* Change cursor on hover */
 	transition: color 0.2s ease-in-out; /* Smooth transition on hover */
   }
   
   .show-more:hover {
-	color: #444; /* Slightly darker grey on hover */
+	color: #165730e7; /* Slightly darker grey on hover */
   }
   
 
