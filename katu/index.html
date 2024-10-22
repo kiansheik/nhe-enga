@@ -663,11 +663,11 @@
                         appendOptionsToResultDiv(resultDiv, result.con, 'indicativo', false);
                     }
                 });
-                const newUrl = `${window.location.pathname}?query=${encodeURIComponent(query)}`;
-                history.pushState(null, null, newUrl);
             } else {
                 resultsDiv.innerHTML = "Não foram encontrados resultados.";
-            }
+            }        
+            const newUrl = `${window.location.pathname}?query=${encodeURIComponent(query)}`;
+            history.pushState(null, null, newUrl);
             updateShowMoreLinks()
         }
 
