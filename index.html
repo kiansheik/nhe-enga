@@ -375,7 +375,7 @@
         }
 
         function searchAllDefinitions(data, query) {
-            const regex = new RegExp(`\\b${query}\\b`, 'i'); // Create a case-insensitive regex
+            const regex = new RegExp(`(^|[\\s.,;:!?()\"])${query}($|[\\s.,;:!?()\"])`, 'i'); // Create a case-sensitive regex
             new_data = data.filter(item => (
                 item.first_word.toLowerCase() !== query.toLowerCase() &&
                 regex.test(item.definition.toLowerCase())
@@ -406,14 +406,22 @@
 
         function searchAllDefinitionsNoAccent(data, query) {
             const queryNormalized = removeDiacritics(query.toLowerCase());
-            new_data = data.filter(item => (removeDiacritics(item.first_word.toLowerCase()) !== queryNormalized) && removeDiacritics(item.definition.toLowerCase()).includes(queryNormalized));
-            // sort new data by the position of the query in the word, returning sooner those with the query apearing sooner in the string definition
-            new_data.sort((a, b) => {
-                const a_index = a.definition.toLowerCase().indexOf(query.toLowerCase());
-                const b_index = b.definition.toLowerCase().indexOf(query.toLowerCase());
-                return a_index - b_index;
+            // create a new copy of data with the items having been passed through removeDiacritics
+            new_data = data.map(item => {
+                const new_item = {...item};
+                new_item.definition_orig = item.definition;
+                new_item.definition = removeDiacritics(item.definition);
+                new_item.first_word_orig = removeDiacritics(item.first_word);
+                new_item.first_word_orig = item.first_word;
+                return new_item;
             });
-            return new_data;
+            new_data = searchAllDefinitions(new_data, queryNormalized);
+            return new_data.map(item => {
+                const new_item = {...item};
+                new_item.definition = item.definition_orig;
+                new_item.first_word = item.first_word_orig;
+                return new_item;
+            });
         }
 
         const searchButton = document.getElementById("searchButton");
