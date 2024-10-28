@@ -389,6 +389,36 @@
             return new_data;
         }
 
+        function searchAllDefinitionsNoBounds(data, query) {
+            query = removeDiacritics(query.toLowerCase());
+            // create a new copy of data with the items having been passed through removeDiacritics
+            data = data.map(item => {
+                const new_item = {...item};
+                new_item.definition_orig = item.definition;
+                new_item.definition = removeDiacritics(item.definition);
+                new_item.first_word_orig = removeDiacritics(item.first_word);
+                new_item.first_word_orig = item.first_word;
+                return new_item;
+            });
+            const regex = new RegExp(`${query}`, 'i'); // Create a case-sensitive regex
+            new_data = data.filter(item => (
+                item.first_word.toLowerCase() !== query.toLowerCase() &&
+                regex.test(item.definition.toLowerCase())
+            ));
+            // sort new data by the position of the query in the word, returning sooner those with the query apearing sooner in the string definition
+            new_data.sort((a, b) => {
+                const a_index = a.definition.toLowerCase().indexOf(query.toLowerCase());
+                const b_index = b.definition.toLowerCase().indexOf(query.toLowerCase());
+                return a_index - b_index;
+            });
+            return new_data.map(item => {
+                const new_item = {...item};
+                new_item.definition = item.definition_orig;
+                new_item.first_word = item.first_word_orig;
+                return new_item;
+            });
+        }
+
         // Function to remove diacritics from a string
         function removeDiacritics(str) {
             return removePunctuation(str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
@@ -615,9 +645,10 @@
             // Perform diacritic-insensitive searches
             const verbete_results_diacritic = searchByFirstWordNoAccent(window.jsonData, query);
             const def_results_diacritic = searchAllDefinitionsNoAccent(window.jsonData, query);
+            const def_results_no_bounds = searchAllDefinitionsNoBounds(window.jsonData, query);
             
             // Combine and prioritize results
-            const combinedResults = Array.from(new Set([...verbete_results_exact, ...verbete_results_diacritic, ...def_results_exact, ...verbete_results_in, ...def_results_diacritic]));
+            const combinedResults = Array.from(new Set([...verbete_results_exact, ...verbete_results_diacritic, ...def_results_exact, ...verbete_results_in, ...def_results_diacritic, ...def_results_no_bounds]));
             // Add the 'exact_match' property based on source
             const results = combinedResults.map(result => {
                 const sourceIsVerbete = verbete_results_exact.includes(result) || def_results_exact.includes(result);
