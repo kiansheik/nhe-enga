@@ -412,11 +412,10 @@
                 return a_index - b_index;
             });
             return new_data.map(item => {
-                item.definition = item.definition_orig;
-                item.first_word = item.first_word_orig;
-                delete item.definition_orig;
-                delete item.first_word_orig;
-                return item;
+                const new_item = {...item};
+                new_item.definition = item.definition_orig;
+                new_item.first_word = item.first_word_orig;
+                return new_item;
             });
         }
 
@@ -439,19 +438,19 @@
             const queryNormalized = removeDiacritics(query.toLowerCase());
             // create a new copy of data with the items having been passed through removeDiacritics
             new_data = data.map(item => {
-                item.definition_orig = item.definition;
-                item.definition = removeDiacritics(item.definition);
-                item.first_word_orig = item.first_word;
-                item.first_word = removeDiacritics(item.first_word);
-                return item;
+                const new_item = {...item};
+                new_item.definition_orig = item.definition;
+                new_item.definition = removeDiacritics(item.definition);
+                new_item.first_word = removeDiacritics(item.first_word);
+                new_item.first_word_orig = item.first_word;
+                return new_item;
             });
             new_data = searchAllDefinitions(new_data, queryNormalized);
             return new_data.map(item => {
-                item.definition = item.definition_orig;
-                item.first_word = item.first_word_orig;
-                delete item.definition_orig;
-                delete item.first_word_orig;
-                return item;
+                const new_item = {...item};
+                new_item.definition = item.definition_orig;
+                new_item.first_word = item.first_word_orig;
+                return new_item;
             });
         }
 
@@ -656,7 +655,6 @@
                         t.definition === item.definition
                     ))
                 );
-            console.log("dupes", combinedResults)
             // Add the 'exact_match' property based on source
             const results = combinedResults.map(result => {
                 const sourceIsVerbete = verbete_results_exact.includes(result) || def_results_exact.includes(result);
