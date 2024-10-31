@@ -38,7 +38,7 @@ Second class verbs recieve the following _subject prefixes_:
 | Y'all | 2pp           | <py>Noun.personal_inflections["2pp"][1]</py>(r)     |
 | They  | 3p            | <py>Noun.personal_inflections["3p"][1]</py>/(s)      |
 
-![On Wednesdays, _we_ wear pink](https://i.imgflip.com/8zj48b.jpg)
+<!-- ![On Wednesdays, _we_ wear pink](https://i.imgflip.com/8zj48b.jpg) -->
 
 ::: warning
 There is no **pro drop** form of second class verbs, which is another reason we consider these to be **prefixes** and not _pronouns_. They are _necessary_.

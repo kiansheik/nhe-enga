@@ -69,7 +69,7 @@
 async function getAnnotatedData(inputString) {
   try {
     // First POST request to get the EVENT_ID
-    const response = await fetch('https://kiansheik-tupi-verb-annotation.hf.space/call/predict', {
+    const response = await fetch('http://127.0.0.1:7860/gradio_api/call/predict', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -86,7 +86,7 @@ async function getAnnotatedData(inputString) {
     const responseData = await response.json();
     const eventId = responseData.event_id;
     // Second GET request to fetch the annotated data
-    const resultResponse = await fetch(`https://kiansheik-tupi-verb-annotation.hf.space/call/predict/${eventId}`);
+    const resultResponse = await fetch(`http://127.0.0.1:7860/gradio_api/call/predict/${eventId}`);
     
     // Check if the response is okay
     if (!resultResponse.ok) {
@@ -164,23 +164,23 @@ function classifyParts(parts) {
 
         // Explain subject tense
         if (tag.includes("[SUBJECT:1ps]") || tag.includes("[SUBJECT_PREFIX:1ps]")) {
-            verbData.subject_tense += "1st person singular";
+            verbData.subject_tense += "1st person singular - I";
         } else if (tag.includes("[SUBJECT:1ppe]") || tag.includes("[SUBJECT_PREFIX:1ppe]")) {
-            verbData.subject_tense += "1st person plural (excluding 2nd person)";
+            verbData.subject_tense += "1st person plural (excluding 2nd person) - we, not you";
         } else if (tag.includes("[SUBJECT:1ppi]") || tag.includes("[SUBJECT_PREFIX:1ppi]")) {
-            verbData.subject_tense += "1st person plural (including 2nd person)";
+            verbData.subject_tense += "1st person plural (including 2nd person) - we all";
         } else if (tag.includes("[SUBJECT:2ps]") || tag.includes("[SUBJECT_PREFIX:2ps]") || tag.includes("[IMPERATIVE_PREFIX:2ps]")) {
-            verbData.subject_tense += "2nd person singular";
+            verbData.subject_tense += "2nd person singular - you";
         } else if (tag.includes("[SUBJECT:2pp]") || tag.includes("[SUBJECT_PREFIX:2pp]") || tag.includes("[IMPERATIVE_PREFIX:2pp]")) {
-            verbData.subject_tense += "2nd person plural";
+            verbData.subject_tense += "2nd person plural - y'all";
         } else if (tag.includes("[SUBJECT:3p]") || tag.includes("[SUBJECT_PREFIX:3p]")) {
-            verbData.subject_tense += "3rd person (singular or plural, must decide based on context)";
+            verbData.subject_tense += "3rd person (singular or plural, must decide based on context) - He/She/It/They";
         } else if (tag.includes("[SUBJECT:2ps:OBJECT_1P]")) {
-            verbData.subject_tense += "2nd person singular";
-            verbData.object_tense += " 1st person";
+            verbData.subject_tense += "2nd person singular - you";
+            verbData.object_tense += " 1st person - me/us";
         }  else if (tag.includes("[SUBJECT:2pp:OBJECT_1P]")) {
-            verbData.subject_tense += "2nd person plural";
-            verbData.object_tense += " 1st person";
+            verbData.subject_tense += "2nd person plural - y'all";
+            verbData.object_tense += " 1st person - me/us";
         } 
         // Get direct subject if any
         if (tag.includes("[SUBJECT:")) {
@@ -189,27 +189,27 @@ function classifyParts(parts) {
 
         // Explain object tense
         if (tag.includes("[OBJECT:2ps:SUBJECT_1P]")) {
-            verbData.subject_tense += " 1st person";
-            verbData.object_tense += "2nd person singular";
+            verbData.subject_tense += " 1st person - I/we";
+            verbData.object_tense += "2nd person singular - you";
         } else if (tag.includes("[OBJECT:2pp:SUBJECT_1P]")) {
-            verbData.subject_tense += " 1st person";
-            verbData.object_tense += "2nd person plural";
+            verbData.subject_tense += " 1st person - I/we";
+            verbData.object_tense += "2nd person plural - y'all";
         } else if (tag.includes("[OBJECT:1ppi]")) {
-            verbData.object_tense += "1st person plural (including 2nd person)";
+            verbData.object_tense += "1st person plural (including 2nd person) - we all";
         } else if (tag.includes("[OBJECT:1ppe]")) {
-            verbData.object_tense += "1st person plural (excluding 2nd person)";
+            verbData.object_tense += "1st person plural (excluding 2nd person) - we, not you";
         } else if (tag.includes("[OBJECT:2ps]")) {
-            verbData.object_tense += "2nd person singular";
+            verbData.object_tense += "2nd person singular - you";
         } else if (tag.includes("[OBJECT:2pp]")) {
-            verbData.object_tense += "2nd person plural";
+            verbData.object_tense += "2nd person plural - y'all";
         } else if (tag.includes("[OBJECT:3p]")) {
-            verbData.object_tense += "3rd person (singular or plural, must decide based on context)";
+            verbData.object_tense += "3rd person (singular or plural, must decide based on context) - Him/Her/It/Them";
         } else if (tag.includes("[OBJECT:1ps]")) {
-            verbData.object_tense += "1st person singular";
+            verbData.object_tense += "1st person singular - me";
         } else if (tag.includes("[PLURIFORM_PREFIX:S]")) {
-            verbData.object_tense += "3rd person (singular or plural, must decide based on context)";
+            verbData.object_tense += "3rd person (singular or plural, must decide based on context) - Him/Her/It/Them";
         } else if (tag.includes("OBJECT_MARKER:3p")) {
-            verbData.object_tense += "3rd person (singular or plural, must decide based on context)";
+            verbData.object_tense += "3rd person (singular or plural, must decide based on context) - Him/Her/It/Them";
         }
         if (tag.includes("[OBJECT:DIRECT]") || tag.includes("[OBJECT:3p]")) {
             verbData.object = part;
@@ -237,18 +237,18 @@ function classifyParts(parts) {
     for (let i = 0; i < verbObjs.length; i++) {
         let vd = verbObjs[i];
         if (i == 0) {
-            formattedDescription += "Main Verb: ";
+            formattedDescription += "Main Verb: (present or past tense)";
         } else {
             formattedDescription += "Auxiliary Verb: ";
         }
         // Root info
-        formattedDescription += `${vd.root}\n`;
+        formattedDescription += ` ${vd.root}\n`;
         // Subject and object info
         if (vd.gerund) {
             vd.subject_tense = "Same tense as main verb";
             vd.subject = "Same subject as Main Verb";
         }
-        formattedDescription += `Subject Noun: ${vd.subject? vd.subject : "(pro_drop)"} (${vd.subject_tense? vd.subject_tense : "3rd person (singular or plural, must decide based on context)"})\nObject Noun: ${vd.object? vd.object :vd.object_tense? "(pro_drop)": "(No object)"} (${vd.object_tense? vd.object_tense : "intransitive verb"})`;
+        formattedDescription += `Subject Noun: ${vd.subject? vd.subject : ""} (${vd.subject_tense? vd.subject_tense : "3rd person (singular or plural, must decide based on context) - He/She/It/Them"})\nObject Noun: ${vd.object? vd.object :vd.object_tense? "": "(No object)"} (${vd.object_tense? vd.object_tense : "intransitive verb"})`;
         if (vd.negative) {
             formattedDescription += `\nThe verb "${vd.root}" is negated.`;
         }
@@ -389,18 +389,19 @@ function generateGPTPrompt(originalSentence, annotatedSentence, verbetes, target
   const prompt = `The following sentence is in Tupi Antigo: ${originalSentence}\n` +
 
         `Here is syntactic breakdown of the sentence in general linguistics terms: ${annotatedSentence}\n` +
-        `The grammatical annotations provided are to be strictly followed and should be regarded as absolute for this translation.\n` +
-        `Do not infer subject-object relationships from sentence structure alone; follow the grammatical roles indicated exactly as they are marked.\n` +
-        `Prioritize the marked grammatical roles (e.g., subject, object, etc.) over any assumptions based on sentence structure or word order in other languages.\n` +
-        `Make a distinction between 'you' (2ps) and 'y'all' (2pp), and 'oré' (1ppe) 1st person plural excluding 2p, and 'îandé' (1ppi) which is 1st person plural which includes the 2p  in your translations.\n` +
+        // `The grammatical annotations provided are to be strictly followed and should be regarded as absolute for this translation.\n` +
+        // `Do not infer subject-object relationships from sentence structure alone; follow the grammatical roles indicated exactly as they are marked.\n` +
+        // `Prioritize the marked grammatical roles (e.g., subject, object, etc.) over any assumptions based on sentence structure or word order in other languages.\n` +
+        // `Make a distinction between 'you' (2ps) and 'y'all' (2pp), and 'we (not you)' (1ppe) 1st person plural excluding 2p, and 'we all (including you)' (1ppi) which is 1st person plural which includes the 2p in your translations.\n` +
 
 
         `The roots, direct objects, and direct subjects which appear in the sentence have the following dictionary entries (there may be superfluou entries, decide which one applies most given the context):\n` +
         `${verbetes.map(entry => `* ${entry}`).join('\n')}\n\n` +
-        `Using all of this syntactic and semantic information provided, please do your best to provide a translation of this sentence into ${targetLanguage}.\n` +
-        `Do not give an explanation, just the translation of the target phrase in ${targetLanguage}.\n` +
-        `If there are multiple different entries shown for the semantic match, try to choose the one which makes most sense for the context of the sentence and syntax.\n\n`+
-        '';
+        // `Using all of this syntactic and semantic information provided, please do your best to provide a translation of this sentence into ${targetLanguage}.\n` +
+        // `Do not give an explanation, just the translation of the target phrase in ${targetLanguage}.\n` +
+        // `If there are multiple different entries shown for the semantic match, try to choose the one which makes most sense for the context of the sentence and syntax.\n\n`+
+        `I am looking for the most natural translation which would get the meaning across in the target language ${targetLanguage}, not a word-for-word translation.`+
+        `Without describing your rationale, give me 5 potential solutions in separate lines\n`;
 
   return prompt;
 }
@@ -547,7 +548,7 @@ async function fetchTranslation(inp, lang) {
                 const resultText = await fetchTranslation(phrase, targetLanguage);
 
                 // Display the result
-                document.getElementById('result').textContent = resultText;
+                document.getElementById('result').innerText = resultText;
             } catch (error) {
                 document.getElementById('result').textContent = 'An error occurred during translation.\n'+error;
                 console.error(error);
