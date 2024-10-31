@@ -177,7 +177,7 @@ class Verb(TupiAntigo):
             if negative:
                 circ = "e'ym[NEGATION_SUFFIX]i[CIRCUMSTANTIAL_SUFFIX:CONSONANT_ENDING]"
             vbt = f"{self.verbete}[ROOT]"
-            result = f"{subj if not pro_drop else ''}{' ' if not self.segunda_classe else ''}{obj}{vbt}{circ}"
+            result = f"{subj}{' ' if not self.segunda_classe else ''}{obj}{vbt}{circ}"
         elif self.segunda_classe:
             subj_prefix = (
                 self.personal_inflections[subject_tense][1] + f"[SUBJECT_PREFIX:{subject_tense}]"

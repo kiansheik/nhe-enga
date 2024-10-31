@@ -754,7 +754,7 @@ def complex_sentences(results):
                     complex_results.append({"anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
     # Circunstancials
     for mainVerb in sample_list(circumstancials):
-        complex_results.append({"anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{mainVerb['label']}"})
+        # complex_results.append({"anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{mainVerb['label']}"})
         for sub in random.sample(permissives, sample_n):
             complex_results.append({"anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
         for sub in random.sample(gerunds, sample_n):

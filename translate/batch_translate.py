@@ -5,6 +5,7 @@ import unicodedata
 import requests
 from ratelimit import limits, sleep_and_retry
 import anthropic
+import csv
 # Define rate limits
 ONE_MINUTE = 60
 ONE_DAY = 86400  # 24 hours in seconds
@@ -208,11 +209,11 @@ def classify_parts(parts):
         formatted_description += "Main Verb: (present or past tense) " if i == 0 else "Auxiliary Verb: "
         formatted_description += f"{vd['root']}\n"
         if vd["gerund"]:
-            vd["subject_tense"] = "Same tense as main verb"
+            vd["subject_tense"] = ""
             vd["subject"] = "Same subject as Main Verb"
         formatted_description += f"Subject Noun: {vd['subject'] or ''} Type({vd['subject_tense'] or '3rd person (singular or plural) - He/She/It/Them'})\n"
-        if vd['object_tense']:
-            formatted_description += f"Object Noun: {vd['object'] or ''} Type({vd['object_tense'] or 'intransitive verb'})"
+        if vd['object'] or vd['object_tense']:
+            formatted_description += f"Object Noun: {vd['object'] or vd['object_tense']}"
         if vd["negative"]:
             formatted_description += f"\nThe verb '{vd['root']}' is negated."
         if vd["permissive"]:
@@ -222,7 +223,7 @@ def classify_parts(parts):
         if vd["imperative"]:
             formatted_description += f"\nThe verb '{vd['root']}' is in an imperative mood, used to give commands 'DO [MAIN_VERB]'."
         if vd["gerund"]:
-            formatted_description += f"\nThe verb '{vd['root']}' is in a gerund form, always augmenting the main verb. Used to show continuous and/or simultaneous actions '[MAIN_VERB] while [SUB_VERB]ing'. It can also represent finality '[MAIN_VERB] in order to [SUB_VERB]' or cause '[SUB_VERB] happened, causing [MAIN_VERB]', depending on the context."
+            formatted_description += f"\nThe verb '{vd['root']}' is in a form used to show continuous and/or simultaneous actions '[MAIN_VERB] while [SUB_VERB]ing'. It can also represent finality '[MAIN_VERB] in order to [SUB_VERB]' or cause '[SUB_VERB] happened, causing [MAIN_VERB]', depending on the context."
 
         formatted_description += "\n\n"
 
@@ -288,7 +289,7 @@ def anthropicResponse(prompt):
 if __name__ == "__main__":
     with open("/Users/kian/code/nhe-enga/anotated_results.json", 'r') as f:
         data = json.load(f)
-        for annotated in sorted({x['anotated'] for x in data}):
+        for annotated in sorted({x['anotated'] for x in data})[2:]:
             print(annotated)
             orig = clean_annotation(annotated)
             parts = parse_parts(annotated)
@@ -299,5 +300,11 @@ if __name__ == "__main__":
             prompt = generate_gpt_prompt(orig, classified, format_verbetes(root_defs), "English")
             print(prompt)
             print("\n\n")
-            print(anthropicResponse(prompt))
+            response = anthropicResponse(prompt)
+            print(response)
             breakpoint()
+            # save to file, appending each time to a csv file: orig, annotated, response
+            with open("tupi_to_eng.csv", "a") as f:
+                writer = csv.writer(f)
+                for resp in response.split("\n"):
+                    writer.writerow([orig, annotated, resp])
