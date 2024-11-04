@@ -588,6 +588,12 @@
             replacedString = replacedString.replace(regex, function(match, p1) {
                 return '<a href="/nhe-enga/docs/primary_sources/?book_name=betcomp&page_number=' + (+p1 + 9) + '" target="_blank">' + match + '</a>';
             });
+            // Lery Histoire
+            regex = /L[é|e]ry, Histoire, (\d+v?)/g;
+            // Replace occurrences with HTML hyperlink
+            replacedString = replacedString.replace(regex, function(match, p1) {
+                return '<a href="/nhe-enga/docs/primary_sources/?book_name=lerhist&page_number=' + (+p1 + (341-287)) + '" target="_blank">' + match + '</a>';
+            });
             //  MORE TODO
             return replacedString;
         }

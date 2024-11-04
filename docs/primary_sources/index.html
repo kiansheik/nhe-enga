@@ -58,6 +58,10 @@
         if (bookName === 'betcomp') {
             pageNumber = parseInt(urlParams.get('page_number'), 10);
             filetype = ".jpg";
+        }
+        if (bookName === 'lerhist') {
+            pageNumber = parseInt(urlParams.get('page_number'), 10);
+            filetype = ".jpg";
         } else if (bookName === 'arcat1618') {
             pageNumber = generateArcat1618Page(urlParams.get('page_number'))
         } else if (bookName === 'ancharte') {
