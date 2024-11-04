@@ -582,6 +582,12 @@
             replacedString = replacedString.replace(regex, function(match, p1) {
                 return '<a href="/nhe-enga/docs/primary_sources/?book_name=arcat1618&page_number=' + p1 + '" target="_blank">' + match + '</a>';
             });
+            // Bettendorf compendio
+            regex = /Bettendorff, Compêndio, (\d+v?)/g;
+            // Replace occurrences with HTML hyperlink
+            replacedString = replacedString.replace(regex, function(match, p1) {
+                return '<a href="/nhe-enga/docs/primary_sources/?book_name=betcomp&page_number=' + (+p1 + 9) + '" target="_blank">' + match + '</a>';
+            });
             //  MORE TODO
             return replacedString;
         }

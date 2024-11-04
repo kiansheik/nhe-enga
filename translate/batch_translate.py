@@ -12,6 +12,14 @@ ONE_DAY = 86400  # 24 hours in seconds
 
 greenlit = 'AIzaSyBpMxS3A2AcdkgjN5BBaZQJpqcBg79MVtE'  # Not safe but for a free access account
 
+system = (
+    "You are a linguist for tupi-guaranian languages. I will give you an old tupi/tupinambá sentence in addition to a lengthty linguistic analysis. The definitions are in portuguese.\n"
+    f"I am looking for the most natural translation which would get the meaning across in the target language listed in the prompt, not a word-for-word translation.\n"
+    "Without describing your rationale, give me 5 potential translations in separate lines"
+)
+
+with open("tag_prompt_map.json", "r") as f:
+    tag_prompt_map = json.load(f)
 
 @sleep_and_retry
 @limits(calls=15, period=ONE_MINUTE)
@@ -27,6 +35,11 @@ def get_ai_response(prompt):
                 ]
             }
         ],
+        "systemInstruction":{
+                "parts": [
+                    {"text": system}
+                ]
+            },
         "safetySettings": [
             {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
             {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
@@ -66,6 +79,17 @@ def format_verbetes(verbetes):
         formatted_verbetes.append(formatted)
     return formatted_verbetes
 
+def format_verbetes_all(verbetes):
+    formatted_verbetes = []
+    for verbete in verbetes:
+        # Extract and concatenate definitions
+        full_definition = verbete['d']
+        # Use concatenated definition if available, otherwise fallback to the raw definition
+        definition_to_use = full_definition.strip()
+        # Format as "optional_number. first word - definition"
+        formatted = f"{verbete.get('optional_number', '')} {verbete['f']} - {definition_to_use}".strip()
+        formatted_verbetes.append(formatted)
+    return formatted_verbetes
 
 def remove_diacritics(input_str):
     return ''.join(
@@ -82,6 +106,15 @@ def search_by_first_word_no_accent_no_a(data, query):
     return [item for item in data if remove_diacritics(item["f"].lower()[:-1]) == query_normalized]
 
 def get_root_defs(root_words, dictionary):
+    verbete_results_diacritic = []
+    for root_word in root_words:
+        core_root = root_word.replace(" ", "")
+        verbete_results = search_by_first_word_no_accent(dictionary, core_root) + search_by_first_word_no_accent_no_a(dictionary, core_root)
+        verbete_results_diacritic.extend(verbete_results)
+    
+    return verbete_results_diacritic
+
+def get_root_defs_all(root_words, dictionary):
     verbete_results_diacritic = []
     for root_word in root_words:
         core_root = root_word.replace(" ", "")
@@ -211,9 +244,13 @@ def classify_parts(parts):
         if vd["gerund"]:
             vd["subject_tense"] = ""
             vd["subject"] = "Same subject as Main Verb"
-        formatted_description += f"Subject Noun: {vd['subject'] or ''} Type({vd['subject_tense'] or '3rd person (singular or plural) - He/She/It/Them'})\n"
+        formatted_description += f"Subject Noun: {vd['subject'] or ''}"
+        if vd['subject_tense']:
+            formatted_description += f" Type({vd['subject_tense']})" #'3rd person (singular or plural) - He/She/It/Them'
         if vd['object'] or vd['object_tense']:
-            formatted_description += f"Object Noun: {vd['object'] or vd['object_tense']}"
+            if vd['object']:
+                vd['object'] = f"{vd['object']} (proper noun)"
+            formatted_description += f"\nObject Noun: {vd['object'] or vd['object_tense']}"
         if vd["negative"]:
             formatted_description += f"\nThe verb '{vd['root']}' is negated."
         if vd["permissive"]:
@@ -244,7 +281,7 @@ def generate_gpt_prompt(original_sentence, annotated_sentence, verbetes, target_
         f"The following source sentence is in Old Tupi: {original_sentence}\n"
         f"\n{annotated_sentence}\n"
         f"The roots, direct objects, and direct subjects which appear in the sentence have the following dictionary entries (there may be superfluous entries, decide which one applies most given the context):\n"
-        + "\n".join([f"* {entry}" for entry in verbetes]) + "\n\n"
+        + "\n".join([f"* {entry}\n" for entry in verbetes]) + "\n\n"
     )
     return prompt
 
@@ -259,13 +296,9 @@ def clean_annotation(annotated):
     # Step 4: Replace [SPACE] with a single space
     return cleaned_text.replace('[SPACE]', ' ')
 
+@sleep_and_retry
+@limits(calls=7, period=ONE_MINUTE)
 def anthropicResponse(prompt):
-    system = (
-        "You are a linguist for tupi-guaranian languages. I will give you an old tupi/tupinambá sentence in addition to a lengthty linguistic analysis. The definitions are in portuguese.\n"
-        f"I am looking for the most natural translation which would get the meaning across in the target language listed in the prompt, not a word-for-word translation.\n"
-        "Without describing your rationale, give me 5 potential translations in separate lines"
-    )
-
     client = anthropic.Anthropic()
     message = client.messages.create(
         model="claude-3-5-sonnet-20241022",
@@ -286,25 +319,61 @@ def anthropicResponse(prompt):
     )
     return message.content[0].text
 
+def classify_parts_json(parts):
+    exceptions = ["[SUBJECT:3p:DIRECT]", "[ROOT]", "[OBJECT:DIRECT]"]
+    resp = ""
+    main_verb = False
+    sub_verb = False
+    for part in parts:
+        if part[1] == "[MAIN_VERB]":
+            main_verb = not main_verb
+            if main_verb:
+                resp += "Main Verb Breakdown:\n"
+            else:
+                resp += "\n"
+        elif part[1] == "[SUB_VERB]":
+            sub_verb = not sub_verb
+            if sub_verb:
+                resp += "Subordinate Verb Breakdown:\n"
+            else:
+                resp += "\n"
+        else:
+            found = False
+            for tag in tag_prompt_map:
+                if (part[0] == tag['value'] and part[1] == tag['tag']) or (part[1] in exceptions and tag['tag'] == part[1]):
+                    resp += f"{part[0]}:\n\t{tag['translation']}\n"
+                    found = True
+            if not found:
+                print("No match: ", part)
+    return resp
+
+seen = set()
 if __name__ == "__main__":
     with open("/Users/kian/code/nhe-enga/anotated_results.json", 'r') as f:
         data = json.load(f)
-        for annotated in sorted({x['anotated'] for x in data})[2:]:
+        for row in data:
+            annotated = row["anotated"]
+            definitions = [{"f":x[0], "d":x[1]} for x in row["definitions"]]
+            if annotated in seen:
+                continue
+            seen.add(annotated)
             print(annotated)
             orig = clean_annotation(annotated)
             parts = parse_parts(annotated)
-            classified = classify_parts(parts)
+            classified = classify_parts_json(parts)
             roots = find_root_words(parts)
             root_defs = get_root_defs(roots, dictionary)
             print()
-            prompt = generate_gpt_prompt(orig, classified, format_verbetes(root_defs), "English")
+            prompt = generate_gpt_prompt(orig, classified, format_verbetes_all(definitions), "English").strip()
             print(prompt)
-            print("\n\n")
+            print(f"The prompt is {len(prompt)} characters long")
+            prompt = prompt
+            # breakpoint()
             response = anthropicResponse(prompt)
             print(response)
-            breakpoint()
             # save to file, appending each time to a csv file: orig, annotated, response
-            with open("tupi_to_eng.csv", "a") as f:
+            with open("tupi_to_eng_anth_NEW_METHOD.csv", "a") as f:
                 writer = csv.writer(f)
                 for resp in response.split("\n"):
-                    writer.writerow([orig, annotated, resp])
+                    writer.writerow([orig, annotated, resp, prompt])
+            # breakpoint()

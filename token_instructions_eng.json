@@ -1,0 +1,697 @@
+[
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:2pp]",
+        "value": null,
+        "translation": "The subject prefix pe- (the one performing the subordinate verb) is to be interpreted as y'all. ex. pegûatábo pe'u pirá - y'all are walking while y'all eat fish. Here the subject is y'all in both verbs because it will always be SAME SUBJECT when this tag is present."
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:CONSONANT]",
+        "value": null,
+        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
+    },
+    {
+        "tag": "[PLURIFORM_PREFIX:S]",
+        "value": null,
+        "translation": "This tag indicates a relationship with the 3rd person and the word that it prefixes. It indicates either and adjective being applied to a 3rd person, or a 3rd person possessive. i.e. s-un - he/she/they/it is/has black; s-una - he/she/they/it's blackness"
+    },
+    {
+        "tag": "[SUBJECT:2ps]",
+        "value": null,
+        "translation": "This tag nde/endé indicates that the subject of this verb should be translated as you. ex. endé ere'u pirá - you are eating fish. ndé pirá 'uû - you are eating fish. You is the subject of the verb are, while fish is the object."
+    },
+    {
+        "tag": "[SUBJECT:1ppe]",
+        "value": "or\u00e9",
+        "translation": "This tag indicates that the subject is 1st person plural exclusive. This means that the subject is we, but not including the person being spoken to. English does not have that distinction, often opting to use tone or emphasis to get this point across. ex. oré oro'u pirá - we are eating fish, but not you."
+    },
+    {
+        "tag": "[OBJECT:3p]",
+        "value": "i",
+        "translation": "This tag means that the 'i' is a 3rd person pronoun and the object of the verb. This means that the verb is being done to some 3rd person. ex. xe i îukáû - I killed him/her/them/it. The object could equally refer to a previously mention or implied him/her/it/they"
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:3p]",
+        "value": "o",
+        "translation": "The subject (the one performing the subordinate verb) is to be interpreted as he/him/her/they/it or a previously mentioned 3rd person Proper Noun. The subject of this verb will always be the same as the subject of the main verb. ex. Onhana, John Pedro repîaki  - While John was running, John saw Pedro. We know that the o- here refers to John and not Pedro because John is the subject of the main verb and this verb form will ALWAYS have the same subject as the main verb."
+    },
+    {
+        "tag": "[SUBJECT:3p:DIRECT]",
+        "value": null,
+        "translation": "This tag indicates that the subject of the sentence is the Noun it is tagging. It is to be conjugated like a 3rd person subject in English, and treated as a direct noun subject. i.e. Kian is eating fish - Kian is a direct noun subject."
+    },
+    {
+        "tag": "[OBJECT_MARKER:3p:PLURIFORM_PREFIX:MONOSYLLABIC]",
+        "value": "\u00eeos",
+        "translation": "This tag means that the object of this verb is another word in the sentence, not within the verb nucleus. It is just a marker to show that the verb is transitive and the object is elsewhere, as opposed to incorporates. i.e a-îos-ũî. - I burned it/him/them/her. The îos here is refering to some implied or previously mentioned 3rd person Noun. Pedro a-îos-ũî. - I burned Pedro. The îos here is refering to Pedro. a-îos-ũî Pedro. - I burned Pedro. The îos here is still refering to Pedro as the object of the sentence."
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:2ps]",
+        "value": null,
+        "translation": "This tag indicates that the subject of this verb should be translated as you. ex. you are eating fish. You is the subject of the verb are, while fish is the object."
+    },
+    {
+        "tag": "[OBJECT:2pp:SUBJECT_1P]",
+        "value": null,
+        "translation": "This tag indicates that the opo- prefix is to be translated as y'all as the object of the verb. It means that the subject of the verb is 1st person, plural or singular depending on if any pronouns are present, or if context can clarify. When unclear, better to translate in the singular. i.e. opo-aûsub - I love y'all. Here I am the subject, implied by opo-, and y'all is the object. oré opoaûsub - We love y'all. Here we is the subject because an explicit pronoun is used, and y'all is the object."
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:1ppi]",
+        "value": null,
+        "translation": "This tag indicates that the subject is 1st person plural inclusive. This means that the subject is we, including the person being spoken to. English does not have that distinction, often opting to use tone or emphasis to get this point across. This is different from oré which is exclusive. ex. oré oro'u pirá - we are eating fish, but not you. Here oré, the other 1st person plural pronoun, is not including the second person. îandé îa'u pirá - we are all eating fish, including you. You can see the difference with îandé and îa- is that they include who is being spoken to."
+    },
+    {
+        "tag": "[NEGATION_SUFFIX]",
+        "value": "e'ym",
+        "translation": "This tag indicates a negation applied directly to the root of the verb as a suffix e'ym. i.e. xe s-aûsubi - I love him/her/it/them. xe s-aûsub-e'ymi - I don't love him/her/it/them."
+    },
+    {
+        "tag": "[OBJECT:REFLEXIVE]",
+        "value": null,
+        "translation": "This tag indicates that îe- or nhe- as a reflexive object is present. This means that the subject of the verb is also the object of the verb. The subject is performing the verb to oneself i.e. a-nhe-aûsub - I love myself. a-îe-aûsub - I love myself. Here I is the subject and the object of the verb becasue îe or nhe is present in the space of the object."
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:B]",
+        "value": null,
+        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:1ps]",
+        "value": null,
+        "translation": "The subject prefix gûi- (the one performing the subordinate verb) is to be interpreted as I in English. The subject of this verb will always be the same as the subject of the main verb. In times of ambiguity, this fact can help to clarify. ex. gûinhana, xe Pedro repîaki  - While I was running, I saw Pedro."
+    },
+    {
+        "tag": "[NEGATION_SUFFIX:VOWEL_ENDING]",
+        "value": null,
+        "translation": "This tag indicates an -i (vowel ending)/-î (consonant ending) suffix at the end of a verb which aids to negate the verb in parallel with the n(a)- prefix. i.e. xe aruru - I am sad. nda xe aruruî - I am not sad. xe roryb - I am happy. nda xe rorybi - I am not happy."
+    },
+    {
+        "tag": "[SUBJECT:2pp]",
+        "value": "pe\u1ebd",
+        "translation": "This tag indicates that the subject of the verb is pe\u1ebd/pe which should be translated as y'all in English. i.e. pe\u1ebd pearuru - Y'all are sad. pe xe repîaki - Y'all saw me. pe îe-aûsub - Y'all love yourselves."
+    },
+    {
+        "tag": "[OBJECT_MARKER:3p:DEFAULT]",
+        "value": "\u00ee",
+        "translation": "This tag means that the object of this verb is another word in the sentence, not within the verb nucleus. It is just a marker to show that the verb is transitive and the object is elsewhere, as opposed to incorporates. i.e a-î-kuab. - I know it/him/them/her. The î- here is refering to some implied or previously mentioned 3rd person Noun. a-î-kuab Pedro. - I know Pedro. The î here is refering to Pedro. Pedro a-î-kuab. - I know Pedro. The î here is still refering to Pedro as the object of the sentence."
+    },
+    {
+        "tag": "[SUBJECT:1ppe]",
+        "value": null,
+        "translation": "This tag indicates that the subject is 1st person plural exclusive. This means that the subject is we, but not including the person being spoken to. English does not have that distinction, often opting to use tone or emphasis to get this point across. ex. oré oro'u pirá - we are eating fish, but not you."
+    },
+    {
+        "tag": "[SUBJECT:2pp:OBJECT_1P]",
+        "value": "pe\u00eeep\u00e9",
+        "translation": "This tag indicates that the subject of the verb is pe\u1ebd/pe which should be translated as y'all in English. It additionally indicates that the object of the verb MUST be of the first person (xe/oré- me/us). The object it's will also be explicitly right before the verb root. i.e. xe repîak peîepé - Y'all saw me. oré repîak peîepé - Y'all saw us."
+    },
+    {
+        "tag": "[NEGATION_SUFFIX]",
+        "value": null,
+        "translation": "This tag indicates an -i (vowel ending)/-î (consonat ending) suffix at the end of a verb which aids to negate the verb in parallel with the n(a)- prefix. i.e. xe aruru - I am sad. nda xe aruruî - I am not sad. xe roryb - I am happy. nda xe rorybi - I am not happy."
+    },
+    {
+        "tag": "[SUBJECT:1ps]",
+        "value": null,
+        "translation": "This subject pronoun ixé/xe is translated as I in English. i.e. ixé a-s-aûsub - I love it/that/him/her/them. Ixé Kian - I am Kian (my name)"
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:3p]",
+        "value": null,
+        "translation": "This tag indicates that the subject of the verb is 3rd person and if there is not already a stated subject elsewhere, it can be translated as he/she/it/they. This prefix is used with verbs that translate more like adjective in english. i.e. i aruru - he/she/it/they are sad. Pedro iaruru - Pedro is sad. iaruru xe ruba - my dad is sad."
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:2ps]",
+        "value": "ere",
+        "translation": "This tag ere- indicates that the subject of this verb should be translated as you. ex. ere'u pirá - You are eating fish. You is the subject of the verb are, while fish is the object."
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:1ppi]",
+        "value": "\u00eea",
+        "translation": "The subject prefix îa- (the one performing the subordinate verb) is to be interpreted as we all (inclusive of the second person, you/y'all, as opposed to oré). ex. îagûatábo îa'u pirá - we all are walking while we all eat fish. Here the subject is we all in both verbs because it will always be SAME SUBJECT when this tag is present."
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:1ppe]",
+        "value": "oro",
+        "translation": "The subject prefix oro- (the one performing the subordinate verb) is to be interpreted as we, not you (exclusive of the second person, as opposed to îandé). ex. orogûatábo oro'u pirá - we, not you, are walking while we eat fish. Here the subject is we, not you, in both verbs because it will always be SAME SUBJECT when this tag is present."
+    },
+    {
+        "tag": "[NEGATION_PREFIX]",
+        "value": null,
+        "translation": "This tag indicates that the verb will be negated by the n-/n'-/na prefix. This works in tandem with the -i/-î suffix. i.e. xe aruru - I am sad. nda xe aruruî - I am not sad. xe roryb - I am happy. nda xe rorybi - I am not happy. aîpotar - I want it/her/him/them. naîpotarî - I don't want it/her/him/them."
+    },
+    {
+        "tag": "[OBJECT:1ps]",
+        "value": "xe",
+        "translation": "This tag indicates that xe- as a prefix to a transative verb is the object of the verb. That means it is what is suffering the verb, not what is doing the verb. It should be translated as me in English. i.e. xe repîak Pedro - Pedro saw me. Pedro xerepîak - Pedro saw me."
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:IYU]",
+        "value": "abo",
+        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
+    },
+    {
+        "tag": "[OBJECT:2ps]",
+        "value": "nde",
+        "translation": "This tag indicates that nde- as a prefix to a transative verb is the object of the verb. That means it is what is suffering the verb, not what is doing the verb. It should be translated as you in English. i.e. nde-repîak Pedro - Pedro saw you. Pedro nderepîak - Pedro saw you."
+    },
+    {
+        "tag": "[SUB_VERB]",
+        "value": "",
+        "translation": "Indicates the boundaries of a subordinate verb."
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:2pp]",
+        "value": "pe",
+        "translation": "This tag pe- indicates that the subject of this verb should be translated as y'all. ex. pe aruru - Y'all are sad. pe-nhan - y'all ran"
+    },
+    {
+        "tag": "[SUBJECT:1ps]",
+        "value": "xe",
+        "translation": "This subject pronoun ixé/xe is translated as I in English. i.e. ixé a-s-aûsub - I love it/that/him/her/them. Ixé Kian - I am Kian (my name)"
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:R]",
+        "value": null,
+        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
+    },
+    {
+        "tag": "[CIRCUMSTANTIAL_SUFFIX:VOWEL_ENDING]",
+        "value": "\u00fb",
+        "translation": "This tag indicates that a subordinate verb was topicalized before before this verb."
+    },
+    {
+        "tag": "[PERMISSIVE_PREFIX:CONSONANT]",
+        "value": null,
+        "translation": "This tag indicates a different meaning depending on if it's a subordinate verb or the main verb. If it's the main verb, the t-/ta- prefix/particle means that the speaker hopes or desires this verb to happen. i.e. tasó - I hope I go. tasó - May I go. If it's subordinate then it expresses finalty. i.e. akaru tasó - I eat so that I may go. asó takaru - I go so that I may eat. terekaru asó - so that you may eat, I go. The subjects of the subordinate form in this mood may or may not be the same as the main verb."
+    },
+    {
+        "tag": "[CIRCUMSTANTIAL_SUFFIX:CONSONANT_ENDING]",
+        "value": null,
+        "translation": "This tag indicates that a subordinate verb was topicalized before before this verb."
+    },
+    {
+        "tag": "[OBJECT:2ps:SUBJECT_1P]",
+        "value": "oro",
+        "translation": "This tag indicates that the oro- prefix is to be translated as you as the object of the verb. It means that the subject of the verb is 1st person, plural or singular depending on if any pronouns are present, or if context can clarify. When unclear, better to translate the subject in the singular. i.e. oro-aûsub - I love you. Here I am the subject, implied by oro-, and y'all is the object. oré oroaûsub - We love you. Here we is the subject because an explicit pronoun is used, and you is the object."
+    },
+    {
+        "tag": "[OBJECT:1ppe]",
+        "value": "or\u00e9",
+        "translation": "This tag indicates that oré- as a prefix to a transative verb is the object of the verb. That means it is what is suffering the verb, not what is doing the verb. It should be translated as us, not you in English. i.e. oré repîak Pedro - Pedro saw us, not you. Pedro orérepîak - Pedro saw us not you."
+    },
+    {
+        "tag": "[CIRCUMSTANTIAL_SUFFIX:NULL_ENDING]",
+        "value": "",
+        "translation": "This tag indicates that a subordinate verb was topicalized before before this verb."
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:IYU]",
+        "value": null,
+        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
+    },
+    {
+        "tag": "[SUBJECT:2ps]",
+        "value": "nde",
+        "translation": "This tag nde/endé indicates that the subject of this verb should be translated as you. ex. endé ere'u pirá - you are eating fish. ndé pirá 'uû - you are eating fish. You is the subject of the verb are, while fish is the object."
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1]",
+        "value": null,
+        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
+    },
+    {
+        "tag": "[NEGATION_SUFFIX:CONSONANT_ENDING]",
+        "value": "i",
+        "translation": "This tag indicates an -i (vowel ending)/-î (consonat ending) suffix at the end of a verb which aids to negate the verb in parallel with the n(a)- prefix. i.e. xe aruru - I am sad. nda xe aruruî - I am not sad. xe roryb - I am happy. nda xe rorybi - I am not happy."
+    },
+    {
+        "tag": "[PLURIFORM_PREFIX:R]",
+        "value": "r",
+        "translation": "This tag indicates a genitive relationship. What comes before the r is the object of a verb. What comes after is the verb itself. i.e. xe repîak peîepé - Y'all saw me. Here me is the object because it is before the r-. The verb to see is epîak, the r is not a part of the verb."
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:1ps]",
+        "value": "xe",
+        "translation": "This tag indicates that the xe- prefix/pronoun may be attached to the verb or separate. xe- means I in English and is the subject of an adjective-like phrase. i.e. xearuru - I am sad. nda xe aruruî - I am not sad. xe roryb - I am happy."
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:CONSONANT]",
+        "value": "a",
+        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
+    },
+    {
+        "tag": "[PLURIFORM_PREFIX:S]",
+        "value": "s",
+        "translation": "This tag indicates a relationship with the 3rd person and the word that it prefixes. It indicates either and adjective being applied to a 3rd person, or a 3rd person possessive. i.e. s-un - he/she/they/it is/has black; s-una - he/she/they/it's blackness"
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:2ps]",
+        "value": "nde",
+        "translation": "This tag nde- indicates that the subject of this verb should be translated as you, and that the verb will act more like an adjective in English. ex. nde aruru - You are sad. You is the subject of the verb are, while sad as a verb looks more like an adjective in the English translation."
+    },
+    {
+        "tag": "[OBJECT:1ppi]",
+        "value": "\u00eeand\u00e9",
+        "translation": "This tag indicates that îandé- as a prefix to a transative verb is the object of the verb. That means it is what is suffering the verb, not what is doing the verb. It should be translated as us all in English. i.e. îandé repîak Pedro - Pedro saw us all. Pedro îandérepîak - Pedro saw us all."
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:ORAL_VOWEL]",
+        "value": null,
+        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:1ppi]",
+        "value": "\u00eeand\u00e9",
+        "translation": "This tag indicates that the subject is 1st person plural inclusive. This means that the subject is we, including the person being spoken to. English does not have that distinction, often opting to use tone or emphasis to get this point across. This is different from oré which is exclusive. This prefix is used for verbs which act like adjectives in English. i.e. îandé aruru - We are all sad"
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:NASAL_VOWEL]",
+        "value": "mo",
+        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
+    },
+    {
+        "tag": "[OBJECT_MARKER:3p:MONOSYLLABIC]",
+        "value": null,
+        "translation": "This tag means that the object of this verb is another word in the sentence, not within the verb nucleus. It is just a marker to show that the verb is transitive and the object is elsewhere, as opposed to incorporates. i.e a-îo-gûang. - I stained it/him/them/her red. The îo here is refering to some implied or previously mentioned 3rd person Noun. a-îo-gûang Pedro. - I stained Pedro red. The îo here is refering to Pedro. Pedro a-îo-gûang. - I stained Pedro red. The îo here is still refering to Pedro as the object of the sentence. This îo only occurs in monosyllable words, it is identical to î- and s- in function."
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:R]",
+        "value": "\u0301",
+        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
+    },
+    {
+        "tag": "[NEGATION_PARTICLE:UME]",
+        "value": "um\u1ebd",
+        "translation": "This tag indicates the negation particle um\u1ebd is present, which means the verb is either an imperative or hortative (if t/ta- prefix is present, then verb is hortative. Otherwise, imperative). i.e. t-a-s-epîak um\u1ebd - I hope I do not see it/that/him/her/them. esepîak um\u1ebd - Don't look at it/that/him/her/them"
+    },
+    {
+        "tag": "[SUBJECT:3p]",
+        "value": "a'e",
+        "translation": "This tag indicates that the pronoun a'e is the subject of the sentence, which could translate into English as that/it/he/she/they depending on the context. i.e. a'e oker - he/she/they/it/that is sleeping. Pedro a'e - That/He is Pedro"
+    },
+    {
+        "tag": "[OBJECT:MUTUAL]",
+        "value": null,
+        "translation": "This tag indicates the mutual prefix îo/nho- is the object of the verb. This means that the subject (necessarily a plural subject) is doing the verb, one unto another. i.e. a'e o-îo-îuká - They murdered one another. îandé îa-îo-epîak - We all saw one another."
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:2pp]",
+        "value": null,
+        "translation": "This tag pe- indicates that the subject of this verb should be translated as y'all. ex. pe aruru - Y'all are sad. pe-nhan - y'all ran"
+    },
+    {
+        "tag": "[IMPERATIVE_PREFIX:2pp]",
+        "value": "pe",
+        "translation": "This tag indicates that the imperative subject prefix e- is going to translate to y'all in English. It will be used for standard imperative purposes, like commands (Get me water), invitations (Come in and have a seat), or requests (Pass the salt). i.e. pesepîak - Look at that/him/her/them/it. A negative imperative is formed by simply adding umẽ at the end. pesepîak umẽ - Don't look at that/him/her/them/it."
+    },
+    {
+        "tag": "[SUB_VERB]",
+        "value": null,
+        "translation": "Indicates the boundaries of a subordinate verb."
+    },
+    {
+        "tag": "[OBJECT:REFLEXIVE]",
+        "value": "\u00eee",
+        "translation": "This tag indicates that îe- or nhe- as a reflexive object is present. This means that the subject of the verb is also the object of the verb. The subject is performing the verb to oneself i.e. a-nhe-aûsub - I love myself. a-îe-aûsub - I love myself. Here I is the subject and the object of the verb becasue îe or nhe is present in the space of the object."
+    },
+    {
+        "tag": "[OBJECT:1ps]",
+        "value": null,
+        "translation": "This tag indicates that xe- as a prefix to a transative verb is the object of the verb. That means it is what is suffering the verb, not what is doing the verb. It should be translated as me in English. i.e. xe repîak Pedro - Pedro saw me. Pedro xerepîak - Pedro saw me."
+    },
+    {
+        "tag": "[OBJECT:1ppe]",
+        "value": null,
+        "translation": "This tag indicates that oré- as a prefix to a transative verb is the object of the verb. That means it is what is suffering the verb, not what is doing the verb. It should be translated as us, not you in English. i.e. oré repîak Pedro - Pedro saw us, not you. Pedro orérepîak - Pedro saw us not you."
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:3p]",
+        "value": null,
+        "translation": "The subject (the one performing the subordinate verb) is to be interpreted as he/him/her/they/it or a previously mentioned 3rd person Proper Noun. The subject of this verb will always be the same as the subject of the main verb. ex. Onhana, John Pedro repîaki  - While John was running, John saw Pedro. We know that the o- here refers to John and not Pedro because John is the subject of the main verb and this verb form will ALWAYS have the same subject as the main verb."
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:B]",
+        "value": "pa",
+        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_2:NASAL_VOWEL_ENDING]",
+        "value": null,
+        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
+    },
+    {
+        "tag": "[CIRCUMSTANTIAL_SUFFIX:NULL_ENDING]",
+        "value": null,
+        "translation": "This tag indicates that a subordinate verb was topicalized before before this verb."
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_2:NASAL_VOWEL_ENDING]",
+        "value": "namo",
+        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:1ppi]",
+        "value": "\u00eea",
+        "translation": "This tag indicates that the subject is 1st person plural inclusive. This means that the subject is we, including the person being spoken to. English does not have that distinction, often opting to use tone or emphasis to get this point across. This is different from oré which is exclusive. ex. oré oro'u pirá - we are eating fish, but not you. Here oré, the other 1st person plural pronoun, is not including the second person. îandé îa'u pirá - we are all eating fish, including you. You can see the difference with îandé and îa- is that they include who is being spoken to."
+    },
+    {
+        "tag": "[IMPERATIVE_PREFIX:2ps]",
+        "value": null,
+        "translation": "This tag indicates that the imperative subject prefix e- is going to translate to you in English. It will be used for standard imperative purposes, like commands (Get me water), invitations (Come in and have a seat), or requests (Pass the salt). i.e. esepîak - Look at that/him/her/them/it. A negative imperative is formed by simply adding umẽ at the end. pesepîak umẽ - Don't look at that/him/her/them/it."
+    },
+    {
+        "tag": "[SUBJECT:2pp]",
+        "value": null,
+        "translation": "This tag indicates that the subject of the verb is pe\u1ebd/pe which should be translated as y'all in English. i.e. pe\u1ebd pearuru - Y'all are sad. pe xe repîaki - Y'all saw me. pe îe-aûsub - Y'all love yourselves."
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:NASAL_IYU]",
+        "value": "amo",
+        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:1ps]",
+        "value": "g\u00fbi",
+        "translation": "The subject prefix gûi- (the one performing the subordinate verb) is to be interpreted as I in English. The subject of this verb will always be the same as the subject of the main verb. In times of ambiguity, this fact can help to clarify. ex. gûinhana, xe Pedro repîaki  - While I was running, I saw Pedro."
+    },
+    {
+        "tag": "[PLURIFORM_PREFIX:R]",
+        "value": null,
+        "translation": "This tag indicates a genitive relationship. What comes before the r is the object of a verb. What comes after is the verb itself. i.e. xe repîak peîepé - Y'all saw me. Here me is the object because it is before the r-. The verb to see is epîak, the r is not a part of the verb."
+    },
+    {
+        "tag": "[OBJECT:2pp:SUBJECT_1P]",
+        "value": "opo",
+        "translation": "This tag indicates that the opo- prefix is to be translated as y'all as the object of the verb. It means that the subject of the verb is 1st person, plural or singular depending on if any pronouns are present, or if context can clarify. When unclear, better to translate in the singular. i.e. opo-aûsub - I love y'all. Here I am the subject, implied by opo-, and y'all is the object. oré opoaûsub - We love y'all. Here we is the subject because an explicit pronoun is used, and y'all is the object."
+    },
+    {
+        "tag": "[SUBJECT:1ppi]",
+        "value": null,
+        "translation": "This tag indicates that the subject of the verb is îandé/nhandé which should be translated as we all in English. As opposed to oré which means we, not you (excluding the second person), îandé is inclusive of the second person. i.e. îandé aruru - We are all sad. îandé s-epîaki - We all saw it/that/him/them/her. îandé îa-îe-aûsub - We all love ourselves."
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:1ps]",
+        "value": null,
+        "translation": "This tag indicates that the a- prefix, xe or ixé means I. It is the subject of the verb. i.e. a-s-aûsub Júlia - I love Júlia. ixé a-s-aûsub - I love him/her/it/them. xe n-a-s-aûsub-î - I don't love him/her/it/them. xe s-aûsubi - I love him/her/it/them."
+    },
+    {
+        "tag": "[OBJECT:3p]",
+        "value": null,
+        "translation": "This tag indicates that the pronoun a'e is the object of the sentence, which could translate into English as that/it/him/her/them depending on the context. i.e. a'e asepîak - I saw him/her/them/it/that."
+    },
+    {
+        "tag": "[SUBJECT:3p]",
+        "value": "i",
+        "translation": "This tag indicates that the pronoun i is the subject of the sentence, which could translate into English as that/it/he/she/they depending on the context. i.e. i-keri - he/she/they/it/that is sleeping. i aruru - he/she/they/it/that is sad"
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:1ps]",
+        "value": "a",
+        "translation": "This tag indicates that the a- prefix means I in English and is the subject of the verb may or may not be accompanied by xe or ixé. i.e. a-s-aûsub Júlia - I love Júlia. ixé a-s-aûsub - I love him/her/it/them. xe n-a-s-aûsub-î - I don't love him/her/it/them. xe s-aûsubi - I love him/her/it/them."
+    },
+    {
+        "tag": "[PERMISSIVE_PREFIX:VOWEL]",
+        "value": null,
+        "translation": "This tag indicates a different meaning depending on if it's a subordinate verb or the main verb. If it's the main verb, the t-/ta- prefix/particle means that the speaker hopes or desires this verb to happen. i.e. tasó - I hope I go. tasó - May I go. If it's subordinate then it expresses finalty. i.e. akaru tasó - I eat so that I may go. asó takaru - I go so that I may eat. terekaru asó - so that you may eat, I go. The subjects of the subordinate form in this mood may or may not be the same as the main verb."
+    },
+    {
+        "tag": "[IMPERATIVE_PREFIX:2pp]",
+        "value": null,
+        "translation": "This tag indicates that the imperative subject prefix e- is going to translate to y'all in English. It will be used for standard imperative purposes, like commands (Get me water), invitations (Come in and have a seat), or requests (Pass the salt). i.e. pesepîak - Look at that/him/her/them/it. A negative imperative is formed by simply adding umẽ at the end. pesepîak umẽ - Don't look at that/him/her/them/it."
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:1ppe]",
+        "value": null,
+        "translation": "The subject prefix oro- (the one performing the subordinate verb) is to be interpreted as we, not you (exclusive of the second person, as opposed to îandé). ex. orogûatábo oro'u pirá - we, not you, are walking while we eat fish. Here the subject is we, not you, in both verbs because it will always be SAME SUBJECT when this tag is present."
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:1ppe]",
+        "value": "oro",
+        "translation": "This tag indicates that the subject of verb is oro-/oré which in English doesn't have an exact translation, but it means we, not including you. We call it first person plural exclusive. i.e. oré oronhan - We, not you, ran. oro-s-epîak- We, not you, saw it/him/her/them/that"
+    },
+    {
+        "tag": "[SUBJECT:2pp:OBJECT_1P]",
+        "value": null,
+        "translation": "This tag indicates that the subject of the verb is pe\u1ebd/pe which should be translated as y'all in English. It additionally indicates that the object of the verb MUST be of the first person (xe/oré- me/us). The object it's will also be explicitly right before the verb root. i.e. xe repîak peîepé - Y'all saw me. oré repîak peîepé - Y'all saw us."
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:3p]",
+        "value": "o",
+        "translation": "The subject (the one performing the subordinate verb) is to be interpreted as he/him/her/they/it or a previously mentioned 3rd person Proper Noun. The subject of this verb will always be the same as the subject of the main verb. ex. Onhana, John Pedro repîaki  - While John was running, John saw Pedro. We know that the o- here refers to John and not Pedro because John is the subject of the main verb and this verb form will ALWAYS have the same subject as the main verb."
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:2ps]",
+        "value": "e",
+        "translation": "The subject prefix e- (the one performing the subordinate verb) is to be interpreted as you in English. The subject of this verb will always be the same as the subject of the main verb. In times of ambiguity, this fact can help to clarify. ex. enhana, nde Pedro repîaki  - While you were running, you saw Pedro."
+    },
+    {
+        "tag": "[OBJECT:3p:MONOSYLLABIC]",
+        "value": "\u00eeo",
+        "translation": "This tag means that the object of this verb is another word in the sentence, not within the verb nucleus. It is just a marker to show that the verb is transitive and the object is elsewhere, as opposed to incorporates. i.e a-îo-gûang. - I stained it/him/them/her red. The îo here is refering to some implied or previously mentioned 3rd person Noun. a-îo-gûang Pedro. - I stained Pedro red. The îo here is refering to Pedro. Pedro a-îo-gûang. - I stained Pedro red. The îo here is still refering to Pedro as the object of the sentence. This îo only occurs in monosyllable words, it is identical to î- and s- in function."
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1]",
+        "value": "a",
+        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
+    },
+    {
+        "tag": "[NEGATION_PARTICLE:NA]",
+        "value": "na",
+        "translation": "This tag indicates that the verb will be negated by the n-/na- prefix. This works in tandem with the -i/-î suffix. i.e. xe aruru - I am sad. nda xe aruruî - I am not sad. xe roryb - I am happy. nda xe rorybi - I am not happy. aîpotar - I want it/her/him/them. naîpotarî - I don't want it/her/him/them."
+    },
+    {
+        "tag": "[NEGATION_PARTICLE:UME]",
+        "value": null,
+        "translation": "This tag indicates the negation particle um\u1ebd is present, which means the verb is either an imperative or hortative (if t/ta- prefix is present, then verb is hortative. Otherwise, imperative). i.e. t-a-s-epîak um\u1ebd - I hope I do not see it/that/him/her/them. esepîak um\u1ebd - Don't look at it/that/him/her/them"
+    },
+    {
+        "tag": "[SUBJECT:2pp]",
+        "value": "pe",
+        "translation": "This tag indicates that the subject of the verb is pe\u1ebd/pe which should be translated as y'all in English. i.e. pe\u1ebd pearuru - Y'all are sad. pe xe repîaki - Y'all saw me. pe îe-aûsub - Y'all love yourselves."
+    },
+    {
+        "tag": "[SUBJECT:2ps:OBJECT_1P]",
+        "value": "\u00eeep\u00e9",
+        "translation": "This tag indicates that the subject of the verb is pe\u1ebd/pe which should be translated as you in English. It additionally indicates that the object of the verb MUST be of the first person (xe/oré- me/us). The object it's will also be explicitly right before the verb root. i.e. xe repîak îepé - You saw me. oré repîak îepé - You saw us."
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_2:DEFAULT]",
+        "value": "amo",
+        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_2:ORAL_VOWEL_ENDING]",
+        "value": "ramo",
+        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
+    },
+    {
+        "tag": "[SUBJECT:3p]",
+        "value": "o",
+        "translation": "The subject (the one performing the subordinate verb) is to be interpreted as he/him/her/they/it or a previously mentioned 3rd person Proper Noun. The subject of this verb will always be the same as the subject of the main verb. ex. Onhana, John Pedro repîaki  - While John was running, John saw Pedro. We know that the o- here refers to John and not Pedro because John is the subject of the main verb and this verb form will ALWAYS have the same subject as the main verb."
+    },
+    {
+        "tag": "[MAIN_VERB]",
+        "value": "",
+        "translation": "This tag indicates the boundarias of the main verb."
+    },
+    {
+        "tag": "[OBJECT:2ps:SUBJECT_1P]",
+        "value": null,
+        "translation": "This tag indicates that the oro- prefix is to be translated as you as the object of the verb. It means that the subject of the verb is 1st person, plural or singular depending on if any pronouns are present, or if context can clarify. When unclear, better to translate the subject in the singular. i.e. oro-aûsub - I love you. Here I am the subject, implied by oro-, and y'all is the object. oré oroaûsub - We love you. Here we is the subject because an explicit pronoun is used, and you is the object."
+    },
+    {
+        "tag": "[OBJECT_MARKER:3p:PLURIFORM_PREFIX:MONOSYLLABIC]",
+        "value": null,
+        "translation": "This tag means that the object of this verb is another word in the sentence, not within the verb nucleus. It is just a marker to show that the verb is transitive and the object is elsewhere, as opposed to incorporates. i.e a-îos-ũî. - I burned it/him/them/her. The îos here is refering to some implied or previously mentioned 3rd person Noun. Pedro a-îos-ũî. - I burned Pedro. The îos here is refering to Pedro. a-îos-ũî Pedro. - I burned Pedro. The îos here is still refering to Pedro as the object of the sentence."
+    },
+    {
+        "tag": "[ROOT]",
+        "value": null,
+        "translation": "This tog means this word is the root dicitonary form of a tupi word. Refer to the section below for a Portuguese dictionary entry of this word, if available. If not, use it in your translation directly as a loan word."
+    },
+    {
+        "tag": "[PERMISSIVE_PREFIX:VOWEL]",
+        "value": "t",
+        "translation": "This tag indicates a different meaning depending on if it's a subordinate verb or the main verb. If it's the main verb, the t-/ta- prefix/particle means that the speaker hopes or desires this verb to happen. i.e. tasó - I hope I go. tasó - May I go. If it's subordinate then it expresses finalty. i.e. akaru tasó - I eat so that I may go. asó takaru - I go so that I may eat. terekaru asó - so that you may eat, I go. The subjects of the subordinate form in this mood may or may not be the same as the main verb."
+    },
+    {
+        "tag": "[NEGATION_SUFFIX:VOWEL_ENDING]",
+        "value": "\u00ee",
+        "translation": "This tag indicates an -i (vowel ending)/-î (consonant ending) suffix at the end of a verb which aids to negate the verb in parallel with the n(a)- prefix. i.e. xe aruru - I am sad. nda xe aruruî - I am not sad. xe roryb - I am happy. nda xe rorybi - I am not happy."
+    },
+    {
+        "tag": "[NEGATION_SUFFIX:VOWEL_ENDING]",
+        "value": "i",
+        "translation": "This tag indicates an -i (vowel ending)/-î (consonant ending) suffix at the end of a verb which aids to negate the verb in parallel with the n(a)- prefix. i.e. xe aruru - I am sad. nda xe aruruî - I am not sad. xe roryb - I am happy. nda xe rorybi - I am not happy."
+    },
+    {
+        "tag": "[OBJECT:DIRECT]",
+        "value": null,
+        "translation": "This tag indicates that it's morpheme is a direct object. There may be a dictionary definition of this noun below to aid in your translation. Otherwise, use this in your translation directly as a loan word or Proper noun/name."
+    },
+    {
+        "tag": "[SUBJECT:1ppi]",
+        "value": "\u00eeand\u00e9",
+        "translation": "This tag indicates that the subject of the verb is îandé/nhandé which should be translated as we all in English. As opposed to oré which means we, not you (excluding the second person), îandé is inclusive of the second person. i.e. îandé aruru - We are all sad. îandé s-epîaki - We all saw it/that/him/them/her. îandé îa-îe-aûsub - We all love ourselves."
+    },
+    {
+        "tag": "[NEGATION_PREFIX]",
+        "value": "n'",
+        "translation": "This tag indicates that the verb will be negated by the n-/n'-/na prefix. This works in tandem with the -i/-î suffix. i.e. xe aruru - I am sad. nda xe aruruî - I am not sad. xe roryb - I am happy. nda xe rorybi - I am not happy. aîpotar - I want it/her/him/them. naîpotarî - I don't want it/her/him/them."
+    },
+    {
+        "tag": "[OBJECT_MARKER:3p:MONOSYLLABIC]",
+        "value": "\u00eeo",
+        "translation": "This tag means that the object of this verb is another word in the sentence, not within the verb nucleus. It is just a marker to show that the verb is transitive and the object is elsewhere, as opposed to incorporates. i.e a-îo-gûang. - I stained it/him/them/her red. The îo here is refering to some implied or previously mentioned 3rd person Noun. a-îo-gûang Pedro. - I stained Pedro red. The îo here is refering to Pedro. Pedro a-îo-gûang. - I stained Pedro red. The îo here is still refering to Pedro as the object of the sentence. This îo only occurs in monosyllable words, it is identical to î- and s- in function."
+    },
+    {
+        "tag": "[PERMISSIVE_PREFIX:CONSONANT]",
+        "value": "ta",
+        "translation": "This tag indicates a different meaning depending on if it's a subordinate verb or the main verb. If it's the main verb, the t-/ta- prefix/particle means that the speaker hopes or desires this verb to happen. i.e. tasó - I hope I go. tasó - May I go. If it's subordinate then it expresses finalty. i.e. akaru tasó - I eat so that I may go. asó takaru - I go so that I may eat. terekaru asó - so that you may eat, I go. The subjects of the subordinate form in this mood may or may not be the same as the main verb."
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:3p]",
+        "value": "i",
+        "translation": "This tag indicates that the subject of the verb is 3rd person and if there is not already a stated subject elsewhere, it can be translated as he/she/it/they. This prefix is used with verbs that translate more like adjective in english. i.e. i aruru - he/she/it/they are sad. Pedro iaruru - Pedro is sad. iaruru xe ruba - my dad is sad."
+    },
+    {
+        "tag": "[SUBJECT:1ps]",
+        "value": "ix\u00e9",
+        "translation": "This subject pronoun ixé/xe is translated as I in English. i.e. ixé a-s-aûsub - I love it/that/him/her/them. Ixé Kian - I am Kian (my name)"
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:NASAL_IYU]",
+        "value": null,
+        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
+    },
+    {
+        "tag": "[NEGATION_SUFFIX:CONSONANT_ENDING]",
+        "value": null,
+        "translation": "This tag indicates an -i (vowel ending)/-î (consonant ending) suffix at the end of a verb which aids to negate the verb in parallel with the n(a)- prefix. i.e. xe aruru - I am sad. nda xe aruruî - I am not sad. xe roryb - I am happy. nda xe rorybi - I am not happy."
+    },
+    {
+        "tag": "[MAIN_VERB]",
+        "value": null,
+        "translation": "This tag indicates the boundarias of the main verb."
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:1ppe]",
+        "value": "or\u00e9",
+        "translation": "This tag indicates that the subject of verb is oré which in English doesn't have an exact translation, but it means we, not including you. We call it first person plural exclusive. When this specific form of the prefix is used, it's best translated as an adjective in English. i.e. oré aruru - We, not you, are sad. oréroryb - we, not you, are happy."
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:NASAL_VOWEL]",
+        "value": null,
+        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
+    },
+    {
+        "tag": "[CIRCUMSTANTIAL_SUFFIX:CONSONANT_ENDING]",
+        "value": "i",
+        "translation": "This tag indicates that a subordinate verb was topicalized before before this verb."
+    },
+    {
+        "tag": "[OBJECT:2pp]",
+        "value": "pe",
+        "translation": "This tag indicates that pe- as a prefix to a transative verb is the object of the verb. That means it is what is suffering the verb, not what is doing the verb. It should be translated as y'all in English. i.e. pe repîak Pedro - Pedro saw y'all. Pedro perepîak - Pedro saw y'all."
+    },
+    {
+        "tag": "[OBJECT:1ppi]",
+        "value": null,
+        "translation": "This tag indicates that îandé- as a prefix to a transative verb is the object of the verb. That means it is what is suffering the verb, not what is doing the verb. It should be translated as us all in English. i.e. îandé repîak Pedro - Pedro saw us all. Pedro îandérepîak - Pedro saw us all."
+    },
+    {
+        "tag": "[IMPERATIVE_PREFIX:2ps]",
+        "value": "e",
+        "translation": "This tag indicates that the imperative subject prefix e- is going to translate to you in English. It will be used for standard imperative purposes, like commands (Get me water), invitations (Come in and have a seat), or requests (Pass the salt). i.e. esepîak - Look at that/him/her/them/it. A negative imperative is formed by simply adding umẽ at the end. pesepîak umẽ - Don't look at that/him/her/them/it."
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:1ppi]",
+        "value": null,
+        "translation": "The subject prefix îa- (the one performing the subordinate verb) is to be interpreted as we all (inclusive of the second person, you/y'all, as opposed to oré). ex. îagûatábo îa'u pirá - we all are walking while we all eat fish. Here the subject is we all in both verbs because it will always be SAME SUBJECT when this tag is present."
+    },
+    {
+        "tag": "[OBJECT_MARKER:3p:DEFAULT]",
+        "value": null,
+        "translation": "This tag means that the object of this verb is another word in the sentence, not within the verb nucleus. It is just a marker to show that the verb is transitive and the object is elsewhere, as opposed to incorporates. i.e a-î-kuab. - I know it/him/them/her. The î- here is refering to some implied or previously mentioned 3rd person Noun. a-î-kuab Pedro. - I know Pedro. The î here is refering to Pedro. Pedro a-î-kuab. - I know Pedro. The î here is still refering to Pedro as the object of the sentence."
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_2:DEFAULT]",
+        "value": null,
+        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:2pp]",
+        "value": "pe",
+        "translation": "The subject prefix pe- (the one performing the subordinate verb) is to be interpreted as y'all. ex. pegûatábo pe'u pirá - y'all are walking while y'all eat fish. Here the subject is y'all in both verbs because it will always be SAME SUBJECT when this tag is present."
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:ORAL_VOWEL]",
+        "value": "bo",
+        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:2ps]",
+        "value": null,
+        "translation": "The subject prefix e- (the one performing the subordinate verb) is to be interpreted as you in English. The subject of this verb will always be the same as the subject of the main verb. In times of ambiguity, this fact can help to clarify. ex. enhana, nde Pedro repîaki  - While you were running, you saw Pedro."
+    },
+    {
+        "tag": "[CIRCUMSTANTIAL_SUFFIX:VOWEL_ENDING]",
+        "value": null,
+        "translation": "This tag indicates that a subordinate verb was topicalized before before this verb."
+    },
+    {
+        "tag": "[NEGATION_PARTICLE:NA]",
+        "value": null,
+        "translation": "This tag indicates that the verb will be negated by the n-/n'-/na prefix. This works in tandem with the -i/-î suffix. i.e. xe aruru - I am sad. nda xe aruruî - I am not sad. xe roryb - I am happy. nda xe rorybi - I am not happy. aîpotar - I want it/her/him/them. naîpotarî - I don't want it/her/him/them."
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:1ppe]",
+        "value": null,
+        "translation": "This tag indicates that the subject of verb is oro-/oré which in English doesn't have an exact translation, but it means we, not including you. We call it first person plural exclusive. i.e. oré oronhan - We, not you, ran. oro-s-epîak- We, not you, saw it/him/her/them/that"
+    },
+    {
+        "tag": "[OBJECT:3p]",
+        "value": "a'e",
+        "translation": "This tag indicates that the pronoun a'e is the object of the sentence, which could translate into English as that/it/him/her/them depending on the context. i.e. a'e asepîak - I saw him/her/them/it/that."
+    },
+    {
+        "tag": "[SUBJECT:2ps:OBJECT_1P]",
+        "value": null,
+        "translation": "This tag indicates that the subject of the verb is pe\u1ebd/pe which should be translated as you in English. It additionally indicates that the object of the verb MUST be of the first person (xe/oré- me/us). The object it's will also be explicitly right before the verb root. i.e. xe repîak îepé - You saw me. oré repîak îepé - You saw us."
+    },
+    {
+        "tag": "[OBJECT:3p:MONOSYLLABIC]",
+        "value": null,
+        "translation": "This tag means that the object of this verb is another word in the sentence, not within the verb nucleus. It is just a marker to show that the verb is transitive and the object is elsewhere, as opposed to incorporates. i.e a-îo-gûang. - I stained it/him/them/her red. The îo here is refering to some implied or previously mentioned 3rd person Noun. a-îo-gûang Pedro. - I stained Pedro red. The îo here is refering to Pedro. Pedro a-îo-gûang. - I stained Pedro red. The îo here is still refering to Pedro as the object of the sentence. This îo only occurs in monosyllable words, it is identical to î- and s- in function."
+    },
+    {
+        "tag": "[SUBJECT:3p]",
+        "value": null,
+        "translation": "This tag indicates that the pronoun a'e is the subject of the sentence, which could translate into English as that/it/he/she/they depending on the context. i.e. a'e oker - he/she/they/it/that is sleeping. Pedro a'e - That/He is Pedro"
+    },
+    {
+        "tag": "[SUBJECT:2ps]",
+        "value": "end\u00e9",
+        "translation": "This tag nde/endé indicates that the subject of this verb should be translated as you. ex. endé ere'u pirá - you are eating fish. ndé pirá 'uû - you are eating fish. You is the subject of the verb are, while fish is the object."
+    },
+    {
+        "tag": "[OBJECT:2ps]",
+        "value": null,
+        "translation": "This tag indicates that nde- as a prefix to a transative verb is the object of the verb. That means it is what is suffering the verb, not what is doing the verb. It should be translated as you in English. i.e. nde-repîak Pedro - Pedro saw you. Pedro nderepîak - Pedro saw you."
+    },
+    {
+        "tag": "[OBJECT:MUTUAL]",
+        "value": "\u00eeo",
+        "translation": "This tag indicates the mutual prefix îo/nho- is the object of the verb. This means that the subject (necessarily a plural subject) is doing the verb, one unto another. i.e. a'e o-îo-îuká - They murdered one another. îandé îa-îo-epîak - We all saw one another."
+    },
+    {
+        "tag": "[OBJECT:2pp]",
+        "value": null,
+        "translation": "This tag indicates that pe- as a prefix to a transative verb is the object of the verb. That means it is what is suffering the verb, not what is doing the verb. It should be translated as y'all in English. i.e. pe repîak Pedro - Pedro saw y'all. Pedro perepîak - Pedro saw y'all."
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_2:ORAL_VOWEL_ENDING]",
+        "value": null,
+        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
+    }
+]

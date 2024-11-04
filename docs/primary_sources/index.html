@@ -51,8 +51,13 @@
         let bookName = urlParams.get('book_name');
         let pageNumber;
         let pn;
+        let filetype = ".png";
         if (bookName === 'vlb') {
             pageNumber = parseInt(urlParams.get('page_number'), 10);
+        }
+        if (bookName === 'betcomp') {
+            pageNumber = parseInt(urlParams.get('page_number'), 10);
+            filetype = ".jpg";
         } else if (bookName === 'arcat1618') {
             pageNumber = generateArcat1618Page(urlParams.get('page_number'))
         } else if (bookName === 'ancharte') {
@@ -82,7 +87,7 @@
                 nav.appendChild(text_link);
             }
 
-            const imageUrl = `/nhe-enga/docs/primary_sources/${bookName}/${pageNumber}.png`;
+            const imageUrl = `/nhe-enga/docs/primary_sources/${bookName}/${pageNumber}${filetype}`;
             const image = document.createElement('img');
             image.src = imageUrl;
             image.alt = `Página ${pageNumber} de ${bookName}`;

@@ -125,7 +125,7 @@ class Verb(TupiAntigo):
                     self.personal_inflections[subject_tense][1]
                     if "3p" not in subject_tense
                     else "o"
-                ) + f"[SUBJECT:{subject_tense}]"
+                ) + f"[GERUND_SUBJECT_PREFIX:{subject_tense}]"
                 suf = "amo" + f"[GERUND_SUFFIX:CLASS_2:DEFAULT]"
                 vbt = self.verbete + f"[ROOT]"
                 if self.verbete[-1] in self.vogais_nasais:
