@@ -202,9 +202,6 @@ class TupiAntigo(object):
     def add_accent(self, word=None):
         if not word:
             word = self.verbete
-        # Check if the word ends in -i or -u (oxítona)
-        if word[-1] in ["i", "u", "y"]:
-            return word  # Assume it's already oxítona, no changes needed
         # Find vowels in the word and their positions
         vowels = [(i, c) for i, c in enumerate(word) if c in self.vogais + self.accented_vogais]
         if len(vowels) < 2:
@@ -214,6 +211,8 @@ class TupiAntigo(object):
         last_vowel_idx, last_vowel = vowels[-1]
         penultimate_vowel_idx, penultimate_vowel = vowels[-2]
         antepenultimate_vowel_idx, antepenultimate_vowel = vowels[-3] if len(vowels) > 2 else (None, None)
+        if last_vowel in ["i", "u", "y"]:
+            return word  # Assume it's already oxítona, no changes needed
 
         # Check if the last and antepenultimate vowels are unaccented
         if last_vowel not in self.accented_vogais and (antepenultimate_vowel is None or antepenultimate_vowel not in self.accented_vogais):
