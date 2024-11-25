@@ -203,7 +203,7 @@ class TupiAntigo(object):
         if not word:
             word = self.verbete
         # Check if the word ends in -i or -u (oxítona)
-        if word[-1] in ["i", "u"]:
+        if word[-1] in ["i", "u", "y"]:
             return word  # Assume it's already oxítona, no changes needed
         # Find vowels in the word and their positions
         vowels = [(i, c) for i, c in enumerate(word) if c in self.vogais + self.accented_vogais]
