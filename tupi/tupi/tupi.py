@@ -207,6 +207,9 @@ class TupiAntigo(object):
         if len(vowels) < 2:
             # If there are fewer than 2 vowels, no need to accent
             return word
+        if word[0] == "'":
+            # If the word starts with a glottal stop, remove it
+            word = word[1:]
         # Identify the last, penultimate, and antepenultimate vowels
         last_vowel_idx, last_vowel = vowels[-1]
         penultimate_vowel_idx, penultimate_vowel = vowels[-2]
