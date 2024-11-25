@@ -85,6 +85,7 @@ class TupiAntigo(object):
         return "ta[PERMISSIVE_PREFIX:CONSONANT]"
 
     vogais = "a á e é i í y ý o ó u ú ã ẽ ĩ ỹ õ ũ".split(" ")
+    accented_vogais = "á é í ý ó ú ã ẽ ĩ ỹ õ ũ".split(" ")
     accent_map = {"á": "a",
                   "é": "e",
                     "í": "i",
@@ -194,6 +195,37 @@ class TupiAntigo(object):
         new_str = ''.join(parts)
 
         return new_str.strip()
+
+    def add_accent_ta(self, input_str=None):
+        if not input_str:
+            input_str = self.verbete
+        # Check if the word ends in -i or -u (oxítona)
+        if word[-1] in ["i", "u"]:
+            return word  # Assume it's already oxítona, no changes needed
+        # Find vowels in the word and their positions
+        vowels = [(i, c) for i, c in enumerate(word) if c in self.vogais + self.accented_vogais]
+        if len(vowels) < 2:
+            # If there are fewer than 2 vowels, no need to accent
+            return word
+        # Identify the last, penultimate, and antepenultimate vowels
+        last_vowel_idx, last_vowel = vowels[-1]
+        penultimate_vowel_idx, penultimate_vowel = vowels[-2]
+        antepenultimate_vowel_idx, antepenultimate_vowel = vowels[-3] if len(vowels) > 2 else (None, None)
+
+        # Check if the last and antepenultimate vowels are unaccented
+        if last_vowel not in self.accented_vogais and (antepenultimate_vowel is None or antepenultimate_vowel not in self.accented_vogais):
+            # Determine if the penultimate vowel should be nasalized or accented
+            if penultimate_vowel_idx + 1 < len(word) and word[penultimate_vowel_idx + 1:penultimate_vowel_idx + 3] in self.nasais:
+                # Nasalize the penultimate vowel
+                accented_vowel = self.nasal_map.get(penultimate_vowel, penultimate_vowel)
+            else:
+                # Add an acute accent to the penultimate vowel
+                accented_vowel = self.accent_map.get(penultimate_vowel, penultimate_vowel)
+
+            # Replace the penultimate vowel with its accented or nasalized form
+            word = word[:penultimate_vowel_idx] + accented_vowel + word[penultimate_vowel_idx + 1:]
+
+        return word
 
     def silibas(self):
         silibas = self.siliba_string()
