@@ -196,9 +196,9 @@ class TupiAntigo(object):
 
         return new_str.strip()
 
-    def add_accent_ta(self, input_str=None):
-        if not input_str:
-            input_str = self.verbete
+    def add_accent_ta(self, word=None):
+        if not word:
+            word = self.verbete
         # Check if the word ends in -i or -u (oxítona)
         if word[-1] in ["i", "u"]:
             return word  # Assume it's already oxítona, no changes needed
