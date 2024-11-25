@@ -21,4 +21,4 @@ push:
 	git push origin HEAD
 
 gen_data:
-	python3 gen_data.py > docs/tupi_dict_navarro.js
+	python3.11 gen_data.py > docs/tupi_dict_navarro.js
