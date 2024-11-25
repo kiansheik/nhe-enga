@@ -102,7 +102,7 @@ ALT_ORTS["ANCHIETA_1"] = ANCHIETA_1
 
 def load_ort(ort):
     res = dict()
-    with open(os.path.join(alt_ort_dir, f"{ort}.csv"), "r") as f:
+    with open(os.path.join(alt_ort_dir, f"{ort}.csv"), "r", encoding="utf-8") as f:
         # skip header of f, column 0 is the keys of the dict, column 1 the values of PHONEMIC_OT_FINBOW
         reader = csv.reader(f)
         next(reader)
