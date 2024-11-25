@@ -93,6 +93,9 @@ class TupiAntigo(object):
                     "ó": "o",
                     "ú": "u",
                   }
+    accent_map_reverse = {
+        "a": "á", "e": "é", "i": "í", "y": "ý", "o": "ó", "u": "ú"
+    }
     nasal_prefix_map = {
         "p": "mb",
         "k": "ng",
@@ -220,7 +223,7 @@ class TupiAntigo(object):
                 accented_vowel = self.nasal_map.get(penultimate_vowel, penultimate_vowel)
             else:
                 # Add an acute accent to the penultimate vowel
-                accented_vowel = self.accent_map.get(penultimate_vowel, penultimate_vowel)
+                accented_vowel = self.accent_map_reverse.get(penultimate_vowel, penultimate_vowel)
 
             # Replace the penultimate vowel with its accented or nasalized form
             word = word[:penultimate_vowel_idx] + accented_vowel + word[penultimate_vowel_idx + 1:]
