@@ -237,7 +237,7 @@ class TupiAntigo(object):
                 accented_vowel = self.accent_map_reverse.get(penultimate_vowel, penultimate_vowel)
 
             # Replace the penultimate vowel with its accented or nasalized form
-            word = word[:penultimate_vowel_idx] + accented_vowel + word[penultimate_vowel_idx + 1:] + suffix
+            word = word[:penultimate_vowel_idx] + accented_vowel + word[penultimate_vowel_idx + 1:]
 
         return word + suffix
 
