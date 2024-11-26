@@ -213,7 +213,7 @@ class TupiAntigo(object):
             word = word[1:]
         if word[-2:].startswith("'"):
             # If the penultimate character is a glottal stop, make the vowel following it accented and return
-            return word[:-1] + self.accent_map.get(word[-1], word[-1]) + suffix
+            return word[:-1] + self.accent_map_reverse.get(word[-1], word[-1]) + suffix
         vowels = [(i, c) for i, c in enumerate(word) if c in self.vogais + self.accented_vogais]
         if len(vowels) < 2:
             # If there are fewer than 2 vowels, no need to accent
