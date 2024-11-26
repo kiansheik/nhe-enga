@@ -204,12 +204,12 @@ class TupiAntigo(object):
             word = self.verbete
         # Find vowels in the word and their positions
         suffix = ""
-        vowels = [(i, c) for i, c in enumerate(word) if c in self.vogais + self.accented_vogais]
         # if the word ends in -eme or -amo, remove the final two characters before passing through the process, save for later
         if True in [word.endswith(suf) for suf in ["eme", "amo"]]:
             suffix = word[-2:]
             word = word[:-2]
 
+        vowels = [(i, c) for i, c in enumerate(word) if c in self.vogais + self.accented_vogais]
         if word[0] == "'":
             # If the word starts with a glottal stop, remove it
             word = word[1:]
