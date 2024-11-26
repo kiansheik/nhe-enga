@@ -213,15 +213,18 @@ class TupiAntigo(object):
         if word[0] == "'":
             # If the word starts with a glottal stop, remove it
             word = word[1:]
+        if word[-2] == "'":
+            # If the penultimate character is a glottal stop, make the vowel following it accented and return
+            return word[:-1] + self.accent_map.get(word[-1], word[-1]) + suffix
         if len(vowels) < 2:
             # If there are fewer than 2 vowels, no need to accent
-            return word
+            return word + suffix
         # Identify the last, penultimate, and antepenultimate vowels
         last_vowel_idx, last_vowel = vowels[-1]
         penultimate_vowel_idx, penultimate_vowel = vowels[-2]
         antepenultimate_vowel_idx, antepenultimate_vowel = vowels[-3] if len(vowels) > 2 else (None, None)
         if last_vowel in ["i", "u", "y"]:
-            return word  # Assume it's already oxítona, no changes needed
+            return word + suffix  # Assume it's already oxítona, no changes needed
 
         # Check if the last and antepenultimate vowels are unaccented
         if last_vowel not in self.accented_vogais and (antepenultimate_vowel is None or antepenultimate_vowel not in self.accented_vogais):
@@ -236,7 +239,7 @@ class TupiAntigo(object):
             # Replace the penultimate vowel with its accented or nasalized form
             word = word[:penultimate_vowel_idx] + accented_vowel + word[penultimate_vowel_idx + 1:] + suffix
 
-        return word
+        return word + suffix
 
     def silibas(self):
         silibas = self.siliba_string()
