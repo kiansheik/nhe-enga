@@ -206,7 +206,7 @@ class TupiAntigo(object):
         suffix = ""
         vowels = [(i, c) for i, c in enumerate(word) if c in self.vogais + self.accented_vogais]
         # if the word ends in -eme or -amo, remove the final two characters before passing through the process, save for later
-        if word.ends_with(word, ["eme", "amo"]):
+        if word.endswith(word, ["eme", "amo"]):
             suffix = word[-2:]
             word = word[:-2]
 
