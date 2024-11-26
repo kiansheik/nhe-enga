@@ -203,7 +203,13 @@ class TupiAntigo(object):
         if not word:
             word = self.verbete
         # Find vowels in the word and their positions
+        suffix = ""
         vowels = [(i, c) for i, c in enumerate(word) if c in self.vogais + self.accented_vogais]
+        # if the word ends in -eme or -amo, remove the final two characters before passing through the process, save for later
+        if word.ends_with(word, ["eme", "amo"]):
+            suffix = word[-2:]
+            word = word[:-2]
+
         if word[0] == "'":
             # If the word starts with a glottal stop, remove it
             word = word[1:]
@@ -228,7 +234,7 @@ class TupiAntigo(object):
                 accented_vowel = self.accent_map_reverse.get(penultimate_vowel, penultimate_vowel)
 
             # Replace the penultimate vowel with its accented or nasalized form
-            word = word[:penultimate_vowel_idx] + accented_vowel + word[penultimate_vowel_idx + 1:]
+            word = word[:penultimate_vowel_idx] + accented_vowel + word[penultimate_vowel_idx + 1:] + suffix
 
         return word
 
