@@ -117,7 +117,7 @@ def load_all_ort():
         if file.endswith(".csv"):
             load_ort(file[:-4])
 
-with open(os.path.join(alt_ort_dir, "nasal_î_scores.json"), "r", encoding="utf-8") as f:
+with open(os.path.join(alt_ort_dir, "nasal_cluster_scores.json"), "r", encoding="utf-8") as f:
     help_score = json.load(f)
 
 def calculate_weighted_nasality_probability(string):
