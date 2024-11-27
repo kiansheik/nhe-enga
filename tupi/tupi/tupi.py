@@ -1,4 +1,4 @@
-from .orth import ALT_ORTS
+from .orth import ALT_ORTS, get_nasality_î
 
 import re, random
 class TupiAntigo(object):
@@ -116,7 +116,7 @@ class TupiAntigo(object):
                 "u": "ũ",
                 } 
     semi_vogais = "û î ŷ".split(" ")
-    nasais = "m n nh ng ã ẽ ĩ ỹ õ ũ".split(" ")
+    nasais = "m n nh ng ã ẽ ĩ ỹ õ ũ mb nd".split(" ")
     consoantes = "p b t s x k ' m n r nh ng mb nd ng g û î ŷ".split(" ")
     vogais_nasais = list(set(vogais).intersection(set(nasais)))
 
