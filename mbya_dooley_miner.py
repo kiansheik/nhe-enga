@@ -26,13 +26,14 @@ def parse_dictionary_with_indentation(pdf_path):
     is_verbete = False
     current_definition = ""
     current_verbete = ""
+    last_x0 = 0
     with pdfplumber.open(pdf_path) as pdf:
         for page in tqdm(pdf.pages):
             for elem in page.parse_objects()['char']:
                 letter, font, color, x0 = elem['text'], elem['fontname'], elem['stroking_color'], elem['x0']
-                if abs(x0 - 76.67996932800001) < 0.01 and color == (0, 0, 1) and font == 'Times-Bold':
+                if last_x0 > x0 and color == (0, 0, 1) and font == 'Times-Bold':
                     if current_verbete:
-                        current_entry = {"verbete": current_verbete, "definition": current_definition}
+                        current_entry = {"verbete": current_verbete.strip(), "definition": current_definition.strip()}
                         parsed_data.append(deepcopy(current_entry))
                     is_verbete = True
                     current_verbete = letter
@@ -42,7 +43,8 @@ def parse_dictionary_with_indentation(pdf_path):
                 else:
                     is_verbete = False
                     current_definition += letter
-    current_entry = {"verbete": current_verbete, "definition": current_definition}
+                last_x0 = x0
+    current_entry = {"verbete": current_verbete.strip(), "definition": current_definition.strip()}
     parsed_data.append(deepcopy(current_entry))
     return parsed_data
 
