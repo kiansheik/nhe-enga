@@ -2,10 +2,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dicionário de tupi antigo: A língua indígena clássica do Brasil</title>
+    <title>Proposta de dicionário mbyá português</title>
     <link rel="icon" href="/nhe-enga/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="/nhe-enga/styles.css">
+    <!-- <link rel="manifest" href="/nhe-enga/manifest.json"> -->
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DZYY8Y9076"></script>
@@ -18,8 +18,8 @@
         gtag('config', 'G-DZYY8Y9076');
     </script>
 </head>
-<!--    The following HTML document is an academic paper which seaks to explore a methods in which on might be able to represent a book which such authors as Eudardo Navarro have written.
-    His monumental work titled "Dicionário de Tupi antigo: A língua indígena clássica do Brasil" has allowed many in the world to be able to study the ancestral language of Brasil.
+<!--    The following HTML document is an academic paper which seaks to explore a methods in which on might be able to represent a book which such authors as Marcel Twardowsky Avila have written.
+    His monumental work titled "LÉXICO GUARANI, DIALETO MBYÁ" has allowed many in the world to be able to study the ancestral language of Brasil.
     In this vain, I would like to explore theoretical ways in which one might be able to allow even more people to access that information.
 -->
 <body>
@@ -58,12 +58,10 @@
                     color: #551A8B; /* Darker blue on hover */
                 }
             </style>
-            <a href="/nhe-enga/quiz">Quiz</a><br>
-            <a href="/nhe-enga/gramatica">Gramática</a><br>
+            <a href="/nhe-enga/" class="retain-query">Tupi Antigo</a><br>
+            <!-- <a href="/nhe-enga/gramatica">Gramática</a><br>
             <a href="/nhe-enga/gramatica/guide/tools/playground.html">Playground</a><br>
-            <a href="/nhe-enga/katu" class="retain-query">Nheengatu</a><br>
-            <a href="/nhe-enga/mbya" class="retain-query">Mbyá</a><br>
-            <!-- <div class="calendar-link">
+            <div class="calendar-link">
                 <a href="#" id="calendar-toggle">Class Calendar</a><span>: </span>
                 <a target="_blank" href="https://calendar.google.com/calendar/u/0?cid=ZWM0MTE4MmQ2YzZmYWNhODQ1ZjJmYmUzZGViOTNjYzEwYWI1ZTM4OGY5OTM3YjY2MGY0NmI2YzNmNzA5NTRlY0Bncm91cC5jYWxlbmRhci5nb29nbGUuY29t"><img border="0" src="https://www.google.com/calendar/images/ext/gc_button1_en.gif"></a>
                 <br><a href="https://calendar.google.com/calendar/ical/ec41182d6c6faca845f2fbe3deb93cc10ab5e388f9937b660f46b6c3f70954ec%40group.calendar.google.com/public/basic.ics" class="ical-link" target="_blank">(Non-google users):<img border="0" width="40px" height="40px" src="ical.png"></a>
@@ -88,28 +86,28 @@
             });
             </script> -->
             Citando
-            <div class='title'><h1>Dicionário de Tupi antigo</h1></div>
-            <div class='subtitle'><h2>A língua indígena clássica do Brasil</h2></div>
+            <div class='title'><h1>Léxico Guaraní, Dialeto Mbyá</h1></div>
+            <!-- <div class='subtitle'><h2></h2></div> -->
                 <div class='search_input'><input type="text" id="searchInput" placeholder="Digite a palavra a ser pesquisada" /></div>
                 <div class='actions'>
                     <button class="search" id="searchButton">Pesquisar</button>
-                    <div onclick="toggleAllOptionsContainers()" class="toggle-container disabled" id="toggleContainer">
+                    <!-- <div onclick="toggleAllOptionsContainers()" class="toggle-container disabled" id="toggleContainer">
                         <div class="toggle-ball" id="toggleBall"></div>
                     <div class="toggle-label">Mostrar Conjugações</div>
-                    </div>
+                    </div> -->
                 </div>
             <section class='results' id="results">
                 <ul></ul>
             </section>
         </div>
     </main>
-    <div class='credits'>Dicionário por Eduardo de Almeida Navarro</div>
+    <div class='credits'>Léxico por Robert A. Dooley</div>
 
     <!-- The following citations will cite the text for which you can find all of the specific instances referenced in this research paper. -->
-    <meta name="citation_title" content="Tupi Antigo: A Língua Indígena Clássica do Brasil">
-    <meta name="citation_author" content="Eduardo de Almeida Navarro">
-    <meta name="citation_publication_date" content="2007">
-    <meta name="citation_publisher" content="Global Editora e Distribuidora Ltda.">
+    <meta name="citation_title" content="LÉXICO GUARANI, DIALETO MBYÁ">
+    <meta name="citation_author" content="Robert A. Dooley">
+    <meta name="citation_publication_date" content="2006">
+    <meta name="citation_publisher" content="SIL">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.3/pako.min.js"></script>
     <script>
         // Function to load JSON from a file
@@ -271,14 +269,14 @@
         }
         // const doc_id = "1NH_SgkBYY-vAITMtxrZogzihZGsbhIXCaes6HJrcJww";
         // const sheetCsvUrl = `https://docs.google.com/spreadsheets/d/${doc_id}/export?format=csv&sheet=AdminWords`;
-        const neos = loadNeoJSONSync("/nhe-enga/neologisms.csv")
-        const compressedData = loadCompressedJSONSync('docs/dict-conjugated.json.gz').map(item => ({
+        // const neos = loadNeoJSONSync("/nhe-enga/neologisms.csv")
+        const compressedData = loadCompressedJSONSync('/nhe-enga/docs/dooley_2006_mbya_dic.json.gz').map(item => ({
             "first_word": item.f || "",
             "optional_number": item.o || "",
             "definition": item.d || "",
             "con": item.c || ""
         }));
-        const combinedData = [...compressedData, ...neos];
+        const combinedData = [...compressedData];
         window.jsonData = combinedData
     </script>
     <script>
@@ -389,7 +387,21 @@
             });
             return new_data;
         }
+        // Function to remove diacritics from a string
+        function removeDiacritics(str) {
+            return removePunctuation(str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
+        }
+        function removePunctuation(str) {
+                return str
+                .replace(/[.,\/#!$%?^&*;:{}=\-_`~()]/g, "")
+                .trim();
+        }
 
+        function searchByFirstWordNoAccent(data, query) {
+            const queryNormalized = removeDiacritics(query.toLowerCase());
+            return data.filter(item => removeDiacritics(item.first_word.toLowerCase()) === queryNormalized);
+        }
+        
         function searchAllDefinitionsNoBounds(data, query) {
             query = removeDiacritics(query.toLowerCase());
             // create a new copy of data with the items having been passed through removeDiacritics
@@ -418,21 +430,6 @@
                 new_item.first_word = item.first_word_orig;
                 return new_item;
             });
-        }
-
-        // Function to remove diacritics from a string
-        function removeDiacritics(str) {
-            return removePunctuation(str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
-        }
-        function removePunctuation(str) {
-                return str
-                .replace(/[.,\/#!$%?^&*;:{}=\-_`~()]/g, "")
-                .trim();
-        }
-
-        function searchByFirstWordNoAccent(data, query) {
-            const queryNormalized = removeDiacritics(query.toLowerCase());
-            return data.filter(item => removeDiacritics(item.first_word.toLowerCase()) === queryNormalized);
         }
 
         function searchAllDefinitionsNoAccent(data, query) {
@@ -559,7 +556,7 @@
             });
             dropdown.value = mode;
         }
-
+        
         function link_sources(definition) {
             // VLB
             let regex = /VLB, (I|II), (\d+)/g;
@@ -582,18 +579,6 @@
             // Replace occurrences with HTML hyperlink
             replacedString = replacedString.replace(regex, function(match, p1) {
                 return '<a href="/nhe-enga/docs/primary_sources/?book_name=arcat1618&page_number=' + p1 + '" target="_blank">' + match + '</a>';
-            });
-            // Bettendorf compendio
-            regex = /Bettendorff, Compêndio, (\d+v?)/g;
-            // Replace occurrences with HTML hyperlink
-            replacedString = replacedString.replace(regex, function(match, p1) {
-                return '<a href="/nhe-enga/docs/primary_sources/?book_name=betcomp&page_number=' + (+p1 + 9) + '" target="_blank">' + match + '</a>';
-            });
-            // Lery Histoire
-            regex = /L[é|e]ry, Histoire, (\d+v?)/g;
-            // Replace occurrences with HTML hyperlink
-            replacedString = replacedString.replace(regex, function(match, p1) {
-                return '<a href="/nhe-enga/docs/primary_sources/?book_name=lerhist&page_number=' + (+p1 + (341-287)) + '" target="_blank">' + match + '</a>';
             });
             //  MORE TODO
             return replacedString;
@@ -624,6 +609,7 @@
                 showMoreLink.style.display = 'none'; // Hide the link if content fits
             }
             });
+
             // carry query params
             const links = document.querySelectorAll('.retain-query');
             links.forEach(link => {
@@ -642,7 +628,7 @@
         // Update on window resize or orientation change
         window.addEventListener("resize", updateShowMoreLinks);
         window.addEventListener("orientationchange", updateShowMoreLinks);
-
+        
         function performSearch() {
             const query = searchInput.value.trim().toLowerCase(); // Convert query to lowercase
 
@@ -668,7 +654,6 @@
                         t.definition === item.definition
                     ))
                 );
-            // Add the 'exact_match' property based on source
             const results = combinedResults.map(result => {
                 const sourceIsVerbete = verbete_results_exact.includes(result) || def_results_exact.includes(result);
                 return {
@@ -712,7 +697,7 @@
                     resultsDiv.appendChild(upperResultDiv);
                     show_more = document.createElement("a");
                     show_more.classList.add("show-more");
-                    show_more.style = 'display: none;';
+                    // show_more.style = 'display: none;';
                     show_more.onclick = function(event) {
                         toggleContent(event, this);
                     };
@@ -724,7 +709,7 @@
                 });
             } else {
                 resultsDiv.innerHTML = "Não foram encontrados resultados.";
-            }
+            }        
             const newUrl = `${window.location.pathname}?query=${encodeURIComponent(query)}`;
             history.pushState(null, null, newUrl);
             updateShowMoreLinks()
@@ -760,13 +745,13 @@
             }
             return null;
         }
-        document.addEventListener('DOMContentLoaded', function() {
-            var toggleContainer = document.getElementById('toggleContainer');
-            var storedState = getCookie('conjugationToggle');
-            if (storedState === 'enabled') {
-                toggleAllOptionsContainers(true)
-            }
-        });
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     var toggleContainer = document.getElementById('toggleContainer');
+        //     var storedState = getCookie('conjugationToggle');
+        //     if (storedState === 'enabled') {
+        //         toggleAllOptionsContainers(true)
+        //     }
+        // });
         // Function to handle the popstate event
         function handlePopstate(event) {
             const urlParams = new URLSearchParams(window.location.search);
