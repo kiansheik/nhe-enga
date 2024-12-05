@@ -9,6 +9,24 @@ import pprint
 from collections import Counter
 import unicodedata
 
+def extract_trailing_int(s):
+    """
+    Extracts a trailing integer from a string.
+
+    Args:
+        s (str): Input string.
+
+    Returns:
+        tuple: (str, int or None) where the string has the integer removed (if present),
+               and the integer if found, otherwise None.
+    """
+    match = re.search(r'(\d+)$', s)  # Matches digits at the end of the string
+    if match:
+        trailing_int = int(match.group(1))  # Extract the integer
+        stripped_string = s[:match.start()]  # Remove the integer from the string
+        return stripped_string, trailing_int
+    return s, None
+
 pdf_path = "docs/primary_sources/GNDicLex.pdf"
 
 def compress_data(data):
@@ -37,7 +55,7 @@ cid_map = {
     'IYBEET+TTE299D410t00': {'(cid:1)': ' '},
     'JGLEET+TTE2A45DA8t00': {'(cid:1)': 'ẽ'},
     'NDZEET+TTE2AA58D8t00': {
-        '(cid:1)': '-',
+                            '(cid:1)': '-',
                             '(cid:10)': 'a',
                             '(cid:11)': 'm',
                             '(cid:12)': '\u0303',
@@ -100,7 +118,9 @@ def parse_dictionary_with_indentation(pdf_path):
                 if last_x0 > x0 and color == (0, 0, 1) and "bold" in font.lower() and int(elem['size']) == 10:
                     size_counter.append(elem['size'])
                     if current_verbete:
-                        current_entry = {"verbete": normalize(current_verbete), "definition": normalize(current_definition)}
+                        current_verbete = normalize(current_verbete)
+                        vbt, num = extract_trailing_int(current_verbete)
+                        current_entry = {"verbete": vbt, "definition": normalize(current_definition), "number": num}
                         parsed_data.append(deepcopy(current_entry))
                     is_verbete = True
                     current_verbete = letter
@@ -111,7 +131,9 @@ def parse_dictionary_with_indentation(pdf_path):
                     is_verbete = False
                     current_definition += letter
                 last_x0 = x0
-    current_entry = {"verbete": normalize(current_verbete), "definition": normalize(current_definition)}
+    current_verbete = normalize(current_verbete)
+    vbt, num = extract_trailing_int(current_verbete)
+    current_entry = {"verbete": vbt, "definition": normalize(current_definition), "number": num}
     parsed_data.append(deepcopy(current_entry))
     # print(Counter(size_counter))
     return parsed_data
@@ -131,7 +153,7 @@ with open(output_path, 'w', encoding='utf-8') as f:
     json.dump(parsed_data, f, ensure_ascii=False, indent=4)
 
 # Save the modified data to a new JSON file as .tar.gz
-compressed_data = compress_data([{"f":x["verbete"], "d":x["definition"]} for x in parsed_data])
+compressed_data = compress_data([{"f":x["verbete"], "d":x["definition"], "o":x["number"]} for x in parsed_data])
 with open("docs/dooley_2006_mbya_dic.json.gz", "wb") as f:
     f.write(compressed_data)
 
