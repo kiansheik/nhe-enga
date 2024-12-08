@@ -1,0 +1,50 @@
+digraph {
+	rankdir=TB
+	fontname="Helvetica-Bold" fontsize=24 label="abá ixé abé nhõ Pedro Pindobasu abé abé" labelloc=t
+	Root [label=IP]
+	"conjunction_abé_271873777" [label="conjunction
+abé" parent_name=Root]
+	Root -> "conjunction_abé_271873777"
+	"conjunction_abé_272429257" [label="conjunction
+abé" parent_name=Root]
+	"conjunction_abé_271873777" -> "conjunction_abé_272429257" [label="Arg 1"]
+	"noun_abá_272429261" [label="noun
+abá" parent_name=Root]
+	"conjunction_abé_272429257" -> "noun_abá_272429261" [label="Arg 1"]
+	{
+		rank=same
+	}
+	"noun_ixé_272429297" [label="noun
+ixé" parent_name=Root]
+	"conjunction_abé_272429257" -> "noun_ixé_272429297" [label="Arg 2"]
+	{
+		rank=same
+	}
+	"Adjunct_nhõ_272429349" [label="PP
+nhõ"]
+	{
+		rank=same
+		"conjunction_abé_272429257" -> "Adjunct_nhõ_272429349" [label="+" arrowhead=none]
+	}
+	"conjunction_abé_272429377" [label="conjunction
+abé" parent_name=Root]
+	"conjunction_abé_271873777" -> "conjunction_abé_272429377" [label="Arg 2"]
+	noun_Pedro_272429385 [label="noun
+Pedro" parent_name=Root]
+	"conjunction_abé_272429377" -> noun_Pedro_272429385 [label="Arg 1"]
+	{
+		rank=same
+	}
+	noun_Pindobasu_272429413 [label="noun
+Pindobasu" parent_name=Root]
+	"conjunction_abé_272429377" -> noun_Pindobasu_272429413 [label="Arg 2"]
+	{
+		rank=same
+	}
+	{
+		rank=same
+	}
+	{
+		rank=same
+	}
+}
