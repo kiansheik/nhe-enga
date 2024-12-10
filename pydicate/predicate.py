@@ -25,8 +25,6 @@ class Predicate:
         self.negated = False
         self.definition = definition
 
-    
-
     def copy(self):
         """
         Create a deep copy of the predicate.

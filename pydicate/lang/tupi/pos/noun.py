@@ -5,10 +5,13 @@ sys.path.append("/Users/kian/code/nhe-enga/tupi")
 from tupi import Noun as TupiNoun
 from .copula import Copula
 
+
 class Noun(Predicate):
     def __init__(self, value, inflection="3p", pro_drop=False, definition=""):
         """Initialize a Noun object."""
-        super().__init__(verbete=value, category="noun", min_args=0, definition=definition)
+        super().__init__(
+            verbete=value, category="noun", min_args=0, definition=definition
+        )
         self.noun = TupiNoun(value, definition)
         self._inflection = inflection
         self.pro_drop = pro_drop

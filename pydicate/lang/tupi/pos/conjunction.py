@@ -4,6 +4,7 @@ import sys
 
 sys.path.append("/Users/kian/code/nhe-enga/tupi")
 
+
 class Conjunction(Noun):
     def __init__(self, value):
         """Initialize a Conjunction object."""

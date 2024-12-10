@@ -8,7 +8,13 @@ from tupi import Verb as TupiVerb
 class Verb(Predicate):
     def __init__(self, value, verb_class="", definition=""):
         """Initialize a Verb object."""
-        super().__init__(verbete=value, category="verb", min_args=1, max_args=2, definition=definition)
+        super().__init__(
+            verbete=value,
+            category="verb",
+            min_args=1,
+            max_args=2,
+            definition=definition,
+        )
         self.verb = TupiVerb(value, verb_class, self.definition)
 
     def subject(self):
