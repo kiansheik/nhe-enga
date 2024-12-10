@@ -516,6 +516,21 @@ class Noun(TupiAntigo):
         ret_noun.transitivo = False
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
+    def eym(self):
+        frame = inspect.currentframe()
+        func_name = frame.f_code.co_name
+        args, _, _, values = inspect.getargvalues(frame)
+        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        ret_noun = copy.deepcopy(self)
+        ret_noun.aglutinantes[-1] = self
+        # --------------------------------
+        vbt = self.verbete()
+        ret_noun.latest_verbete = f"{ret_noun.latest_verbete}e'ym"
+
+        ret_noun.latest_verbete += "[ROOT_NEGATION_SUFFIX]"
+        ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.recreate += f".{func_name}({args_str})"
+        return ret_noun
     
 if __name__ == "__main__":
     # Example usage:
