@@ -45,7 +45,7 @@ class Verb(TupiAntigo):
         last_tag = spleet[-1]
         result = '['.join(spleet[:-1])
         if result[0] in TupiAntigo.vogais or result[0] == 'î':
-            result = f"n'[NEGATION_PREFIX]{result}"
+            result = f"n[NEGATION_PREFIX]{result}"
         else:
             result = f"na[NEGATION_PARTICLE:NA] {result}"
         if result[-1] == 'i' or result[-1] == 'î':

@@ -1,6 +1,6 @@
 digraph {
 	rankdir=TB
-	fontname="Helvetica-Bold" fontsize=24 label="a'e osó koritei" labelloc=t
+	fontname="Helvetica-Bold" fontsize=24 label="osó koritei" labelloc=t
 	Root [label=IP]
 	"verb_só_838" [label="verb
 só" parent_name=Root]
@@ -8,9 +8,9 @@ só" parent_name=Root]
 	{
 		rank=same
 	}
-	"noun_a'e_734" [label="noun
+	"pronoun_a'e_734" [label="pronoun
 a'e" parent_name=Root]
-	"verb_só_838" -> "noun_a'e_734" [label="Arg 1"]
+	"verb_só_838" -> "pronoun_a'e_734" [label="Arg 1"]
 	{
 		rank=same
 	}

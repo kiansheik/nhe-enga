@@ -1,5 +1,6 @@
 from ....predicate import Predicate
 
+
 class Adverb(Predicate):
     def __init__(self, value):
         """Initialize a Adverb object."""
@@ -8,7 +9,9 @@ class Adverb(Predicate):
     def eval(self):
         """Evaluate the Adverb object."""
         return self.verbete
-    
+
+    def __add__(self, other):
+        return other.__addpre__(self)
+
     def __repr__(self):
         return f"Adverb({self.verbete})"
-
