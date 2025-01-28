@@ -482,7 +482,7 @@ class Noun(TupiAntigo):
             start = "[".join(parts[:-1])
             ret_noun.latest_verbete = f"{start}[{parts[-1]}reme"
             if vbt[-1] in self.vogais_nasais:
-                ret_noun.latest_verbete = f"{start}[{parts[-1]}reme"
+                ret_noun.latest_verbete = f"{start}[{parts[-1]}neme"
         else:
             ret_noun.latest_verbete = f"{ret_noun.latest_verbete}eme"
         ret_noun.latest_verbete += "[CIRCUMSTANCE_SUBSTANTATIVE_SUFFIX]"
@@ -514,6 +514,21 @@ class Noun(TupiAntigo):
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.segunda_classe = True
         ret_noun.transitivo = False
+        ret_noun.recreate += f".{func_name}({args_str})"
+        return ret_noun
+    def eym(self):
+        frame = inspect.currentframe()
+        func_name = frame.f_code.co_name
+        args, _, _, values = inspect.getargvalues(frame)
+        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        ret_noun = copy.deepcopy(self)
+        ret_noun.aglutinantes[-1] = self
+        # --------------------------------
+        vbt = self.verbete()
+        ret_noun.latest_verbete = f"{ret_noun.latest_verbete}e'ym"
+
+        ret_noun.latest_verbete += "[ROOT_NEGATION_SUFFIX]"
+        ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
     

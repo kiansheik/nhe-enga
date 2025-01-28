@@ -483,7 +483,7 @@ with open("docs/dict-conjugated.json.gz", "wb") as f:
     c_data = compress_data(processed_data)
     f.write(c_data)
 
-breakpoint()
+# breakpoint()
 
 print("Testing -aba")
 from tupi import Noun

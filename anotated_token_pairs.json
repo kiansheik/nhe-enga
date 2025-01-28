@@ -1,81 +1,16 @@
 [
     {
-        "tag": "[GERUND_SUBJECT_PREFIX:2pp]",
+        "tag": "[GERUND_SUFFIX:CLASS_1:ORAL_VOWEL]",
+        "value": "bo",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:1ps]",
         "value": null,
-        "translation": "The subject (the one performing the subordinate verb) is to be interpreted as y'all. ex. y'all are eating fish while y'all walk. Here the subject is y'all in both verbs because it will always be SAME SUBJECT when this tag is present."
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_1:CONSONANT]",
-        "value": null,
-        "translation": "This tag means that this verb should be treated as extra information describing the nature the main verb i.e. simultaneous action, cause of main verb, motive to do main verb, etc."
-    },
-    {
-        "tag": "[PLURIFORM_PREFIX:S]",
-        "value": null,
-        "translation": "This tag indicates a relationship with the 3rd person and the word that it prefixes. It indicates either and adjective being applied to a 3rd person, or a 3rd person possessive. i.e. s-un - he/she/they/it is/has black; s-una - he/she/they/it's blackness"
-    },
-    {
-        "tag": "[SUBJECT:2ps]",
-        "value": null,
-        "translation": "This tag indicates that the subject of this verb should be translated as you. ex. you are eating fish. You is the subject of the verb are, while fish is the object."
-    },
-    {
-        "tag": "[SUBJECT:1ppe]",
-        "value": "or\u00e9",
-        "translation": "This tag indicates that the subject is 1st person plural exclusive. This means that the subject is we, but not including the person being spoken to. English does not have that distinction, often opting to use tone or emphasis to get this point across. ex. oré oro'u pirá - we are eating fish, but not you."
-    },
-    {
-        "tag": "[OBJECT:3p]",
-        "value": "i",
-        "translation": "This tag means that the 'i' is a 3rd person pronoun and the object of the verb. This means that the verb is being done to some 3rd person. ex. xe i îukáû - I killed him/her/them/it. The object could equally refer to a previously mention or implied him/her/it/they"
+        "translation": ""
     },
     {
         "tag": "[GERUND_SUBJECT_PREFIX:3p]",
-        "value": "o",
-        "translation": "The subject (the one performing the subordinate verb) is to be interpreted as he/him/her/they/it or a previously mentioned 3rd person Proper Noun. The subject of this verb will always be the same as the subject of the main verb. ex. Onhana, John Pedro repîaki  - While John was running, John saw Pedro. We know that the o- here refers to John and not Pedro because John is the subject of the main verb and this verb form will ALWAYS have the same subject as the main verb."
-    },
-    {
-        "tag": "[SUBJECT:3p:DIRECT]",
-        "value": null,
-        "translation": "This tag indicates that the subject of the sentence is the Noun it is tagging. It is to be conjugated like a 3rd person subject in English, and treated as a direct noun subject. i.e. Kian is eating fish - Kian is a direct noun subject."
-    },
-    {
-        "tag": "[OBJECT_MARKER:3p:PLURIFORM_PREFIX:MONOSYLLABIC]",
-        "value": "\u00eeos",
-        "translation": "This tag means that the object of this verb is another word in the sentence, not within the verb nucleus. It is just a marker to show that the verb is transitive and the object is elsewhere, as opposed to incorporates. i.e a-îos-ũî. - I burned it/him/them/her. The îos here is refering to some implied or previously mentioned 3rd person Noun. Pedro a-îos-ũî. - I burned Pedro. The îos here is refering to Pedro. a-îos-ũî Pedro. - I burned Pedro. The îos here is still refering to Pedro as the object of the sentence. "
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:2ps]",
-        "value": null,
-        "translation": "This tag indicates that the subject of this verb should be translated as you. ex. you are eating fish. You is the subject of the verb are, while fish is the object."
-    },
-    {
-        "tag": "[OBJECT:2pp:SUBJECT_1P]",
-        "value": null,
-        "translation": "This tag indicates that the opo- prefix is to be translated as y'all as the object of the verb. It means that the subject of the verb is 1st person, plural or singular depending on if any pronouns are present, or if context can clarify. When unclear, better to translate in the singular. i.e. opo-aûsub - I love y'all. Here I am the subject, implied by opo-, and y'all is the object. oré opoaûsub - We love y'all. Here we is the subject because an explicit pronoun is used, and y'all is the object."
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:1ppi]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[NEGATION_SUFFIX]",
-        "value": "e'ym",
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:REFLEXIVE]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_1:B]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUBJECT_PREFIX:1ps]",
         "value": null,
         "translation": ""
     },
@@ -85,102 +20,17 @@
         "translation": ""
     },
     {
-        "tag": "[SUBJECT:2pp]",
-        "value": "pe\u1ebd",
+        "tag": "[OBJECT:MUTUAL]",
+        "value": "\u00eeo",
         "translation": ""
     },
     {
-        "tag": "[OBJECT_MARKER:3p:DEFAULT]",
-        "value": "\u00ee",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT:1ppe]",
+        "tag": "[MAIN_VERB]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[SUBJECT:2pp:OBJECT_1P]",
-        "value": "pe\u00eeep\u00e9",
-        "translation": ""
-    },
-    {
-        "tag": "[NEGATION_SUFFIX]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT:1ps]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:3p]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:2ps]",
-        "value": "ere",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUBJECT_PREFIX:1ppi]",
-        "value": "\u00eea",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUBJECT_PREFIX:1ppe]",
-        "value": "oro",
-        "translation": ""
-    },
-    {
-        "tag": "[NEGATION_PREFIX]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:1ps]",
-        "value": "xe",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_1:IYU]",
-        "value": "abo",
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:2ps]",
-        "value": "nde",
-        "translation": ""
-    },
-    {
-        "tag": "[SUB_VERB]",
-        "value": "",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:2pp]",
-        "value": "pe",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT:1ps]",
-        "value": "xe",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_1:R]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[CIRCUMSTANTIAL_SUFFIX:VOWEL_ENDING]",
-        "value": "\u00fb",
-        "translation": ""
-    },
-    {
-        "tag": "[PERMISSIVE_PREFIX:CONSONANT]",
+        "tag": "[GERUND_SUFFIX:CLASS_1:NASAL_IYU]",
         "value": null,
         "translation": ""
     },
@@ -190,32 +40,267 @@
         "translation": ""
     },
     {
-        "tag": "[OBJECT:2ps:SUBJECT_1P]",
-        "value": "oro",
-        "translation": "This tag indicates that the oro- prefix is to be translated as you as the object of the verb. It means that the subject of the verb is 1st person, plural or singular depending on if any pronouns are present, or if context can clarify. When unclear, better to translate the subject in the singular. i.e. oro-aûsub - I love you. Here I am the subject, implied by oro-, and y'all is the object. oré oroaûsub - We love you. Here we is the subject because an explicit pronoun is used, and you is the object."
-    },
-    {
-        "tag": "[OBJECT:1ppe]",
-        "value": "or\u00e9",
-        "translation": ""
-    },
-    {
-        "tag": "[CIRCUMSTANTIAL_SUFFIX:NULL_ENDING]",
-        "value": "",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_1:IYU]",
+        "tag": "[OBJECT:DIRECT]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[SUBJECT:2ps]",
+        "tag": "[NEGATION_SUFFIX:VOWEL_ENDING]",
+        "value": "i",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:3p:MONOSYLLABIC]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:1ppi]",
+        "value": "\u00eeand\u00e9",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:2pp]",
+        "value": "pe",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:2ps]",
+        "value": "e",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:3p]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:2ps]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[NEGATION_SUFFIX:VOWEL_ENDING]",
+        "value": "\u00ee",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:1ppi]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:3p]",
+        "value": "i",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:MUTUAL]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:2pp:OBJECT_1P]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:1ps]",
+        "value": "g\u00fbi",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:1ps]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:3p:DIRECT]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:3p]",
+        "value": "o",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:1ppe]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:R]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:REFLEXIVE]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT_MARKER:3p:DEFAULT]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:3p]",
+        "value": "o",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:1ppe]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[NEGATION_PARTICLE:NA]",
+        "value": "na",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:CONSONANT]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT_MARKER:3p:DEFAULT]",
+        "value": "\u00ee",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:2ps]",
+        "value": "ere",
+        "translation": ""
+    },
+    {
+        "tag": "[IMPERATIVE_PREFIX:2ps]",
+        "value": "e",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:2pp:SUBJECT_1P]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[CIRCUMSTANTIAL_SUFFIX:VOWEL_ENDING]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[PLURIFORM_PREFIX:S]",
+        "value": "s",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:2pp]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:1ppi]",
+        "value": "\u00eea",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:CONSONANT]",
+        "value": "a",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:2ps]",
         "value": "nde",
         "translation": ""
     },
     {
-        "tag": "[GERUND_SUFFIX:CLASS_1]",
+        "tag": "[OBJECT:3p]",
+        "value": "a'e",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT_MARKER:3p:MONOSYLLABIC]",
+        "value": "\u00eeo",
+        "translation": ""
+    },
+    {
+        "tag": "[SUB_VERB]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_2:ORAL_VOWEL_ENDING]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:2ps]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:NASAL_VOWEL]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:2pp:OBJECT_1P]",
+        "value": "pe\u00eeep\u00e9",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:2ps:SUBJECT_1P]",
+        "value": "oro",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:2pp]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[MAIN_VERB]",
+        "value": "",
+        "translation": ""
+    },
+    {
+        "tag": "[PLURIFORM_PREFIX:R]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:1ppe]",
+        "value": "or\u00e9",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:NASAL_IYU]",
+        "value": "amo",
+        "translation": ""
+    },
+    {
+        "tag": "[NEGATION_SUFFIX:CONSONANT_ENDING]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[SUB_VERB]",
+        "value": "",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:2pp]",
+        "value": "pe",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:1ppi]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[IMPERATIVE_PREFIX:2ps]",
         "value": null,
         "translation": ""
     },
@@ -225,38 +310,13 @@
         "translation": ""
     },
     {
-        "tag": "[PLURIFORM_PREFIX:R]",
-        "value": "r",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:1ps]",
-        "value": "xe",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_1:CONSONANT]",
-        "value": "a",
-        "translation": ""
-    },
-    {
         "tag": "[PLURIFORM_PREFIX:S]",
-        "value": "s",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:2ps]",
-        "value": "nde",
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:1ppi]",
-        "value": "\u00eeand\u00e9",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_1:ORAL_VOWEL]",
         "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:1ppe]",
+        "value": "or\u00e9",
         "translation": ""
     },
     {
@@ -265,18 +325,48 @@
         "translation": ""
     },
     {
-        "tag": "[GERUND_SUFFIX:CLASS_1:NASAL_VOWEL]",
-        "value": "mo",
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT_MARKER:3p:MONOSYLLABIC]",
+        "tag": "[SUBJECT:2ps]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[GERUND_SUFFIX:CLASS_1:R]",
-        "value": "\u0301",
+        "tag": "[CIRCUMSTANTIAL_SUFFIX:VOWEL_ENDING]",
+        "value": "\u00fb",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:2ps]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:1ps]",
+        "value": "xe",
+        "translation": ""
+    },
+    {
+        "tag": "[NEGATION_PARTICLE:NA]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:1ps]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[NEGATION_PARTICLE:UME]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[PERMISSIVE_PREFIX:CONSONANT]",
+        "value": "ta",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:1ppi]",
+        "value": null,
         "translation": ""
     },
     {
@@ -285,17 +375,22 @@
         "translation": ""
     },
     {
-        "tag": "[SUBJECT:3p]",
-        "value": "a'e",
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:MUTUAL]",
+        "tag": "[OBJECT:1ppe]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[SUBJECT_PREFIX:2pp]",
+        "tag": "[OBJECT:2ps:SUBJECT_1P]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[PERMISSIVE_PREFIX:VOWEL]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[ROOT]",
         "value": null,
         "translation": ""
     },
@@ -305,33 +400,13 @@
         "translation": ""
     },
     {
-        "tag": "[SUB_VERB]",
-        "value": null,
+        "tag": "[SUBJECT_PREFIX:1ppe]",
+        "value": "oro",
         "translation": ""
     },
     {
-        "tag": "[OBJECT:REFLEXIVE]",
-        "value": "\u00eee",
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:1ps]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:1ppe]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUBJECT_PREFIX:3p]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_1:B]",
-        "value": "pa",
+        "tag": "[SUBJECT_PREFIX:1ps]",
+        "value": "a",
         "translation": ""
     },
     {
@@ -340,8 +415,38 @@
         "translation": ""
     },
     {
-        "tag": "[CIRCUMSTANTIAL_SUFFIX:NULL_ENDING]",
-        "value": null,
+        "tag": "[NEGATION_PREFIX]",
+        "value": "n",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:1ps]",
+        "value": "ix\u00e9",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:2pp]",
+        "value": "pe\u1ebd",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:1ps]",
+        "value": "xe",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:REFLEXIVE]",
+        "value": "\u00eee",
+        "translation": ""
+    },
+    {
+        "tag": "[PERMISSIVE_PREFIX:VOWEL]",
+        "value": "t",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:1ppi]",
+        "value": "\u00eeand\u00e9",
         "translation": ""
     },
     {
@@ -355,93 +460,28 @@
         "translation": ""
     },
     {
-        "tag": "[IMPERATIVE_PREFIX:2ps]",
+        "tag": "[GERUND_SUFFIX:CLASS_1]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[SUBJECT:2pp]",
+        "tag": "[OBJECT:2pp]",
         "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_1:NASAL_IYU]",
-        "value": "amo",
         "translation": ""
     },
     {
         "tag": "[GERUND_SUBJECT_PREFIX:1ps]",
-        "value": "g\u00fbi",
-        "translation": ""
-    },
-    {
-        "tag": "[PLURIFORM_PREFIX:R]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[OBJECT:2pp:SUBJECT_1P]",
-        "value": "opo",
-        "translation": "This tag indicates that the opo- prefix is to be translated as y'all as the object of the verb. It means that the subject of the verb is 1st person, plural or singular depending on if any pronouns are present, or if context can clarify. When unclear, better to translate in the singular. i.e. opo-aûsub - I love y'all. Here I am the subject, implied by opo-, and y'all is the object. oré opoaûsub - We love y'all. Here we is the subject because an explicit pronoun is used, and y'all is the object."
-    },
-    {
-        "tag": "[SUBJECT:1ppi]",
+        "tag": "[OBJECT_MARKER:3p:MONOSYLLABIC]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[SUBJECT_PREFIX:1ps]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:3p]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT:3p]",
-        "value": "i",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:1ps]",
-        "value": "a",
-        "translation": ""
-    },
-    {
-        "tag": "[PERMISSIVE_PREFIX:VOWEL]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[IMPERATIVE_PREFIX:2pp]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUBJECT_PREFIX:1ppe]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:1ppe]",
-        "value": "oro",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT:2pp:OBJECT_1P]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:3p]",
-        "value": "o",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUBJECT_PREFIX:2ps]",
-        "value": "e",
+        "tag": "[GERUND_SUFFIX:CLASS_1:NASAL_VOWEL]",
+        "value": "mo",
         "translation": ""
     },
     {
@@ -450,28 +490,23 @@
         "translation": ""
     },
     {
-        "tag": "[GERUND_SUFFIX:CLASS_1]",
-        "value": "a",
-        "translation": ""
-    },
-    {
-        "tag": "[NEGATION_PARTICLE:NA]",
-        "value": "na",
-        "translation": ""
-    },
-    {
-        "tag": "[NEGATION_PARTICLE:UME]",
+        "tag": "[NEGATION_PREFIX]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[SUBJECT:2pp]",
-        "value": "pe",
+        "tag": "[GERUND_SUFFIX:CLASS_1:ORAL_VOWEL]",
+        "value": null,
         "translation": ""
     },
     {
-        "tag": "[SUBJECT:2ps:OBJECT_1P]",
-        "value": "\u00eeep\u00e9",
+        "tag": "[SUBJECT:3p]",
+        "value": "i",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:2ps]",
+        "value": "nde",
         "translation": ""
     },
     {
@@ -480,73 +515,93 @@
         "translation": ""
     },
     {
-        "tag": "[GERUND_SUFFIX:CLASS_2:ORAL_VOWEL_ENDING]",
-        "value": "ramo",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT:3p]",
-        "value": "o",
-        "translation": ""
-    },
-    {
-        "tag": "[MAIN_VERB]",
-        "value": "",
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:2ps:SUBJECT_1P]",
-        "value": null,
-        "translation": "This tag indicates that the oro- prefix is to be translated as you as the object of the verb. It means that the subject of the verb is 1st person, plural or singular depending on if any pronouns are present, or if context can clarify. When unclear, better to translate the subject in the singular. i.e. oro-aûsub - I love you. Here I am the subject, implied by oro-, and y'all is the object. oré oroaûsub - We love you. Here we is the subject because an explicit pronoun is used, and you is the object."
-    },
-    {
-        "tag": "[OBJECT_MARKER:3p:PLURIFORM_PREFIX:MONOSYLLABIC]",
+        "tag": "[SUBJECT_PREFIX:1ppe]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[ROOT]",
+        "tag": "[OBJECT:1ppe]",
+        "value": "or\u00e9",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:2ps]",
+        "value": "end\u00e9",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1]",
+        "value": "a",
+        "translation": ""
+    },
+    {
+        "tag": "[NEGATION_SUFFIX]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[PERMISSIVE_PREFIX:VOWEL]",
-        "value": "t",
+        "tag": "[SUBJECT_PREFIX:1ps]",
+        "value": "xe",
         "translation": ""
     },
     {
-        "tag": "[NEGATION_SUFFIX:VOWEL_ENDING]",
-        "value": "\u00ee",
+        "tag": "[PLURIFORM_PREFIX:R]",
+        "value": "r",
         "translation": ""
     },
     {
-        "tag": "[NEGATION_SUFFIX:VOWEL_ENDING]",
+        "tag": "[SUBJECT:2ps:OBJECT_1P]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:R]",
+        "value": "\u00ed",
+        "translation": ""
+    },
+    {
+        "tag": "[CIRCUMSTANTIAL_SUFFIX:NULL_ENDING]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[CIRCUMSTANTIAL_SUFFIX:CONSONANT_ENDING]",
         "value": "i",
         "translation": ""
     },
     {
-        "tag": "[OBJECT:DIRECT]",
+        "tag": "[NEGATION_SUFFIX]",
+        "value": "e'ym",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:3p]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[SUBJECT:1ppi]",
-        "value": "\u00eeand\u00e9",
+        "tag": "[GERUND_SUFFIX:CLASS_1:R]",
+        "value": "\u0301",
         "translation": ""
     },
     {
-        "tag": "[NEGATION_PREFIX]",
-        "value": "n'",
+        "tag": "[IMPERATIVE_PREFIX:2pp]",
+        "value": null,
         "translation": ""
     },
     {
-        "tag": "[OBJECT_MARKER:3p:MONOSYLLABIC]",
-        "value": "\u00eeo",
+        "tag": "[CIRCUMSTANTIAL_SUFFIX:NULL_ENDING]",
+        "value": "",
         "translation": ""
     },
     {
-        "tag": "[PERMISSIVE_PREFIX:CONSONANT]",
-        "value": "ta",
+        "tag": "[OBJECT:2ps]",
+        "value": "nde",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:2ps:OBJECT_1P]",
+        "value": "\u00eeep\u00e9",
         "translation": ""
     },
     {
@@ -555,67 +610,17 @@
         "translation": ""
     },
     {
-        "tag": "[SUBJECT:1ps]",
-        "value": "ix\u00e9",
+        "tag": "[GERUND_SUFFIX:CLASS_1:B]",
+        "value": "pa",
         "translation": ""
     },
     {
-        "tag": "[GERUND_SUFFIX:CLASS_1:NASAL_IYU]",
+        "tag": "[GERUND_SUFFIX:CLASS_1:B]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[NEGATION_SUFFIX:CONSONANT_ENDING]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[MAIN_VERB]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:1ppe]",
-        "value": "or\u00e9",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_1:NASAL_VOWEL]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[CIRCUMSTANTIAL_SUFFIX:CONSONANT_ENDING]",
-        "value": "i",
-        "translation": "This tag indicates that a subordinate verb came before this verb."
-    },
-    {
-        "tag": "[OBJECT:2pp]",
-        "value": "pe",
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:1ppi]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[IMPERATIVE_PREFIX:2ps]",
-        "value": "e",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUBJECT_PREFIX:1ppi]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT_MARKER:3p:DEFAULT]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_2:DEFAULT]",
+        "tag": "[SUBJECT_PREFIX:1ppi]",
         "value": null,
         "translation": ""
     },
@@ -625,43 +630,38 @@
         "translation": ""
     },
     {
-        "tag": "[GERUND_SUFFIX:CLASS_1:ORAL_VOWEL]",
-        "value": "bo",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUBJECT_PREFIX:2ps]",
+        "tag": "[GERUND_SUFFIX:CLASS_2:DEFAULT]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[CIRCUMSTANTIAL_SUFFIX:VOWEL_ENDING]",
+        "tag": "[GERUND_SUBJECT_PREFIX:2pp]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[NEGATION_PARTICLE:NA]",
+        "tag": "[GERUND_SUBJECT_PREFIX:1ps]",
+        "value": "xe",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:2pp:SUBJECT_1P]",
+        "value": "opo",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:3p]",
+        "value": "a'e",
+        "translation": ""
+    },
+    {
+        "tag": "[PERMISSIVE_PREFIX:CONSONANT]",
         "value": null,
         "translation": ""
     },
     {
         "tag": "[SUBJECT_PREFIX:1ppe]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:3p]",
-        "value": "a'e",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT:2ps:OBJECT_1P]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:3p:MONOSYLLABIC]",
-        "value": null,
+        "value": "or\u00e9",
         "translation": ""
     },
     {
@@ -670,28 +670,18 @@
         "translation": ""
     },
     {
-        "tag": "[SUBJECT:2ps]",
-        "value": "end\u00e9",
+        "tag": "[OBJECT:1ppi]",
+        "value": "\u00eeand\u00e9",
         "translation": ""
     },
     {
-        "tag": "[OBJECT:2ps]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:MUTUAL]",
-        "value": "\u00eeo",
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:2pp]",
-        "value": null,
+        "tag": "[GERUND_SUBJECT_PREFIX:1ppe]",
+        "value": "oro",
         "translation": ""
     },
     {
         "tag": "[GERUND_SUFFIX:CLASS_2:ORAL_VOWEL_ENDING]",
-        "value": null,
+        "value": "ramo",
         "translation": ""
     }
 ]

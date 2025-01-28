@@ -45,7 +45,7 @@ class Verb(TupiAntigo):
         last_tag = spleet[-1]
         result = '['.join(spleet[:-1])
         if result[0] in TupiAntigo.vogais or result[0] == 'î':
-            result = f"n'[NEGATION_PREFIX]{result}"
+            result = f"n[NEGATION_PREFIX]{result}"
         else:
             result = f"na[NEGATION_PARTICLE:NA] {result}"
         if result[-1] == 'i' or result[-1] == 'î':
@@ -81,7 +81,9 @@ class Verb(TupiAntigo):
                 )
                 suf = "bo[GERUND_SUFFIX:CLASS_1:ORAL_VOWEL]"
                 vbt = self.verbete
-                if self.verbete[-1] in "ĩ ỹ ũ":
+                if negative:
+                    suf = "e'ym[NEGATION_SUFFIX]a[GERUND_SUFFIX:CLASS_1]"
+                elif self.verbete[-1] in "ĩ ỹ ũ":
                     suf = f"amo[GERUND_SUFFIX:CLASS_1:NASAL_IYU]"
                 elif self.verbete[-1] in "i í y ý u ú":
                     suf = f"abo[GERUND_SUFFIX:CLASS_1:IYU]"
@@ -116,8 +118,6 @@ class Verb(TupiAntigo):
                         else:
                             dir_obj += f'{f"r[PLURIFORM_PREFIX:R]-" if self.pluriforme or self.ero else ""}'
                     pref = dir_obj
-                if negative:
-                    suf = "e'ym[NEGATION_SUFFIX]a[GERUND_SUFFIX:CLASS_1]"
                 vbt += f"[ROOT]"
                 result = f"{pref}{vbt}{suf}"
             else:
@@ -138,6 +138,48 @@ class Verb(TupiAntigo):
                 if negative:
                     suf = "e'ym[NEGATION_SUFFIX]amo[GERUND_SUFFIX:CLASS_2:DEFAULT]"
                 result = f"{subj}{pluriforme}{vbt}{suf}"
+        elif mode == "conjuntivo":
+            subj = self.personal_inflections[subject_tense][1] + f"[SUBJECT:{subject_tense}]"
+            if "3p" in subject_tense and dir_subj_raw:
+                subj = dir_subj_raw + f"[SUBJECT:{subject_tense}:DIRECT]"
+            obj = ""
+            if self.transitivo:
+                if "3p" in subject_tense and dir_subj_raw is None:
+                    subj = self.personal_inflections[subject_tense][0] + f"[SUBJECT:{subject_tense}]"
+                if (subject_tense == object_tense and subject_tense != "3p") or object_tense == "refl":
+                    obj = "îe" + f"[OBJECT:REFLEXIVE]"
+                elif object_tense == "mut":
+                    obj = "îo" + f"[OBJECT:MUTUAL]"
+                else:
+                    obj = (
+                        self.personal_inflections[object_tense][1] + f"[OBJECT:{object_tense}]"
+                        if dir_obj_raw is None
+                        else f"{dir_obj_raw}" + f"[OBJECT:DIRECT]"
+                    ) 
+                    if self.pluriforme or self.ero:
+                        if object_tense == "3p" and dir_obj_raw is None:
+                            obj = f"s[PLURIFORM_PREFIX:S]-"
+                        else:
+                            obj = f"{obj}r[PLURIFORM_PREFIX:R]-"
+            vbt = self.verbete
+            if negative:
+                eme = "e'ym[NEGATION_SUFFIX]e[CONJUNCTIVE_SUFFIX:NEGATIVE]"
+            else:
+                if vbt[-1] in self.vogais_nasais:
+                    vbt += "n"
+                elif vbt[-1] in self.vogais:
+                    vbt += "r"
+                eme = (
+                    "eme" + f"[CONJUNCTIVE_SUFFIX]"
+                )
+            if self.pluriforme and not self.transitivo:
+                if "3p" in subject_tense and dir_subj_raw is None:
+                    obj = f"s[PLURIFORM_PREFIX:S]-"
+                    subj = ""
+                else:
+                    obj += f"r[PLURIFORM_PREFIX:R]-"
+            vbt = f"{vbt}[ROOT]"
+            result = f"{subj if not pro_drop else ''}{' ' if not self.segunda_classe else ''}{obj}{vbt}{eme}"
         elif "2p" not in subject_tense and mode == "circunstancial":
             subj = self.personal_inflections[subject_tense][1] + f"[SUBJECT:{subject_tense}]"
             if "3p" in subject_tense and dir_subj_raw:
@@ -177,7 +219,7 @@ class Verb(TupiAntigo):
             if negative:
                 circ = "e'ym[NEGATION_SUFFIX]i[CIRCUMSTANTIAL_SUFFIX:CONSONANT_ENDING]"
             vbt = f"{self.verbete}[ROOT]"
-            result = f"{subj}{' ' if not self.segunda_classe else ''}{obj}{vbt}{circ}"
+            result = f"{subj if not pro_drop else ''}{' ' if not self.segunda_classe else ''}{obj}{vbt}{circ}"
         elif self.segunda_classe:
             subj_prefix = (
                 self.personal_inflections[subject_tense][1] + f"[SUBJECT_PREFIX:{subject_tense}]"
