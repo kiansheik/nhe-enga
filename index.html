@@ -178,7 +178,7 @@
                         } else if (obj['Categoria Gramatical'].includes("adv")) {
                             obj['Transitividade'] = "(adv.)";
                         } else {
-                            obj['Transitividade'] = "(v. da 2ª classe)";
+                            obj['Transitividade'] = "(xe) (v. da 2ª classe)";
                         }
                     } else if (obj['Transitividade'] === "tr.-activo") {
                         obj['Transitividade'] = "(v.tr.)";
@@ -201,7 +201,7 @@
                         obj['English Definition'] = `| ${obj['English Definition']}`;
                     }
                     
-                    const definition = `${obj['Pluriforme']} ${obj['Verbete(s) Base(s)']} ${obj['Transitividade']} - ${obj['Definição Portuguesa']} ${obj['English Definition']} | ${obj['Atestação']} ${obj['Tradução Portuguesa']} ${obj['Tradução Inglesa']} (${obj['Fonte']}, ${obj['Data da Fonte']}, ${obj['Pagina(s) na Fonte']})`;
+                    const definition = `${obj['Pluriforme']} ${obj['Transitividade']} ${obj['Verbete(s) Base(s)']} - ${obj['Definição Portuguesa']} ${obj['English Definition']} | ${obj['Atestação']} ${obj['Tradução Portuguesa']} ${obj['Tradução Inglesa']} (${obj['Fonte']}, ${obj['Data da Fonte']}, ${obj['Pagina(s) na Fonte']}) - neologismo`;
                     // remove all spaces in definition which are more than one space
                     obj['definition'] = definition.replace(/\s{2,}/g, ' ');
                     obj_dict['first_word'] = first_word;
