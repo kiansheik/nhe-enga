@@ -6,7 +6,7 @@ class Adverb(Predicate):
         """Initialize a Adverb object."""
         super().__init__(verbete=value, category="adverb", min_args=0, max_args=None)
 
-    def eval(self):
+    def preval(self):
         """Evaluate the Adverb object."""
         return self.verbete
 

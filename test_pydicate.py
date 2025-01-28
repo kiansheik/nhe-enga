@@ -111,18 +111,31 @@ print(hego.eval()) # a'e osó koritei
 hego_circ = Adverb("koritei") + go * ~ae
 print(hego_circ.eval()) # koritei i sóû
 
-ver = Verb("epîak", "v.tr. (s)", definition="to see")
-eté = Noun("eté", definition="very")
-mateus = Noun("Mateus")
-euepedro = (abé * Noun("Pedro") * ixé)
-me_n_pedro = -ver * (mateus/eté) * euepedro
-print(me_n_pedro.eval()) # Mateus sees Pedro
-vergo =  Noun("Mateus") == Noun("Pedro")
-vergo_neg =  Noun("Mateus") != Noun("Pedro")
-print("ble: ", (vergo).eval()) 
+want = Verb("potar", "v.tr.", definition="to want")
 
-build_graphviz(hego).render("and_predicate1", view=True)
-build_graphviz(hego_circ).render("and_predicate_circ1", view=True)
+ver = Verb("epîak", "v.tr. (s)", definition="to see")
+
+tl = ver * ixé * endé << go * ixé
+print(tl.eval()) # ixé endé epîak só
+
+ver_circ = ~-go/want * ixé >> -ver * +ixé * endé
+print(ver_circ.eval()) # ixé endé epîak só
+
+
+ver_circ =  endé * koty + ixé * -go + sosé * ixé
+print(ver_circ.eval()) # ixé endé epîak só
+
+
+
+# euepedro = (abé * Noun("Pedro") * ixé)
+# me_n_pedro = -ver * (mateus * euepedro)
+# print(me_n_pedro.eval()) # Mateus sees Pedro
+# vergo =  Noun("Mateus") == Noun("Pedro")
+# vergo_neg =  Noun("Mateus") != Noun("Pedro")
+# print("ble: ", (vergo).eval()) 
+
+# build_graphviz(hego).render("and_predicate1", view=True)
+# build_graphviz(hego_circ).render("and_predicate_circ1", view=True)
 
 
 

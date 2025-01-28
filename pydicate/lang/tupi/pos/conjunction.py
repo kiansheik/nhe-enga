@@ -13,7 +13,7 @@ class Conjunction(Noun):
         self.min_args = 2
         self.max_args = None
 
-    def eval(self):
+    def preval(self):
         """Evaluate the Conjunction object."""
         nec = " ".join([x.eval() for x in self.arguments]) + f" {self.verbete}"
         if self.post_adjuncts:

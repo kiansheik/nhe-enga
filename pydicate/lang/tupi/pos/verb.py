@@ -3,7 +3,8 @@ import sys
 
 sys.path.append("/Users/kian/code/nhe-enga/tupi")
 from tupi import Verb as TupiVerb
-
+from tupi import Noun as TupiNoun
+from .noun import pronoun_verbetes
 
 class Verb(Predicate):
     def __init__(self, value, verb_class="", definition=""):
@@ -18,18 +19,26 @@ class Verb(Predicate):
         self.verb = TupiVerb(value, verb_class, self.definition)
 
     def subject(self):
-        if self.verb.transitivo:
-            return self.arguments[0]
+        return self.arguments[0]
+    
+    def object(self):
+        return self.arguments[1]
 
     def refresh_verbete(self, new_verbete):
         self.verbete = new_verbete
         self.verb = TupiVerb(self.verbete, self.verb.verb_class, self.definition)
 
-    def eval(self, mood="indicativo"):
+    def preval(self, mood="indicativo"):
         """Evaluate the Verb object."""
         retval = ""
+        obj_delocated = ""
         arglen = len(self.arguments)
-        if mood == "indicativo":
+        if self.is_subordinated():
+            if self.same_subject():
+                mood = "gerundio"
+            else:
+                mood = "conjuntivo"
+        elif mood == "indicativo":
             mood = self.indicative()
         if arglen == 0:
             retval = self.verb.verbete
@@ -71,9 +80,8 @@ class Verb(Predicate):
             obj = self.arguments[1]
             arg0 = suj.eval()
             infl0 = suj.inflection()
-            arg1 = None if obj.pro_drop else obj.eval()
+            arg1 = None if (obj.pro_drop or obj.eval() in pronoun_verbetes) else obj.eval()
             infl1 = obj.inflection()
-            obj_delocated = ""
             if obj.category == "conjunction":
                 arg1 = None
                 obj_delocated = None if obj.pro_drop else obj.eval()
@@ -86,8 +94,8 @@ class Verb(Predicate):
                 negative=self.negated,
                 pro_drop=suj.pro_drop,
             )
-            if obj_delocated:
-                retval = retval + " " + obj_delocated
+        if obj_delocated:
+            retval = retval + " " + obj_delocated
         # deal with adverbs
         # We need to know if the adverb was added before the verb or after: `go * Noun("Endé") + Adverb("koritei")` or `Adverb("koritei") + go * Noun("Endé")`
         for adj in self.pre_adjuncts:

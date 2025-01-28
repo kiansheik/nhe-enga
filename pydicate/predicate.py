@@ -24,6 +24,8 @@ class Predicate:
         self.post_adjuncts = []
         self.negated = False
         self.definition = definition
+        self.principal = None
+        self.rua = False
 
     def copy(self):
         """
@@ -59,7 +61,7 @@ class Predicate:
     def refresh_verbete(self, new_verbete):
         self.verbete = new_verbete
 
-    def __truediv__(self, modifier):
+    def compose(self, modifier):
         """
         use the / operator to compose predicates
         :return: Self (to enable chaining).
@@ -73,6 +75,9 @@ class Predicate:
         orig.compositions += [modifier]
         orig.refresh_verbete(new_n)
         return orig
+
+    def __truediv__(self, modifier):
+        return self.compose(modifier)
 
     def __neg__(self):
         """
@@ -135,6 +140,21 @@ class Predicate:
         )
 
     def eval(self):
+        pre = self.preval()
+        if self.rua:
+            pre = f"nda {pre} ruã"
+        return pre
+
+    def __invert__(self):
+        """
+        Mark noun as negative copula the predicate using the ~ operator.
+        :return: Self (to enable chaining).
+        """
+        neg = self.copy()
+        neg.rua = True
+        return neg
+
+    def preval(self):
         """
         Evaluate the predicate by applying the arguments and adjuncts.
         Default response: f"{self.verbete}(args...) + adjunct1 + adjunct2 + ..."
@@ -162,6 +182,30 @@ class Predicate:
             else post_adjuncts_repr
         )
         return pre_adjuncts_repr
+    
+    def is_subordinated(self):
+        return self.principal is not None
+      
+    def same_subject(self):
+        if self.is_subordinated():
+            return self.subject().verbete == self.principal.subject().verbete
+        return None
+    
+    def same_subject(self):
+        return self.subject().verbete == self.principal.subject().verbete
 
-    # def __str__(self):
-    #     return self.eval()
+    def subordinate(self, sub, pre=True):
+        subordinated = sub.copy()
+        principalled = self.copy()
+        subordinated.principal = principalled
+        if pre:
+            principalled.pre_adjuncts.append(subordinated)
+        else:
+            principalled.post_adjuncts.append(subordinated)
+        return principalled
+
+    def __lshift__(self, other):
+        return self.subordinate(other, pre=False)
+    
+    def __rshift__(self, other):
+        return other.subordinate(self, pre=True)

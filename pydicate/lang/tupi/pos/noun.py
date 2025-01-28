@@ -24,7 +24,7 @@ class Noun(Predicate):
         self.verbete = new_verbete
         self.noun = TupiNoun(self.verbete, self.definition)
 
-    def __invert__(self):
+    def __pos__(self):
         """
         Mark noun as pro_drop the predicate using the ~ operator.
         :return: Self (to enable chaining).
@@ -33,13 +33,16 @@ class Noun(Predicate):
         neg.pro_drop = True
         return neg
 
-    def eval(self):
+    def preval(self):
         """Evaluate the Noun object."""
         vbt = self.noun.substantivo()
         if self.negated:
-            neg_prefix = "nd" if vbt[0] in self.noun.vogais else "nda"
-            vbt = f"{neg_prefix} {vbt} ruã"
+            # neg_prefix = "nd" if vbt[0] in self.noun.vogais else "nda"
+            vbt = f"{vbt}e'yma"
         return vbt
+
+    def __mul__(self, other):
+        return other * self
 
     def __eq__(self, other):
         # Make sure both are Noun objects
@@ -71,3 +74,5 @@ oré = Pronoun("1ppe")
 endé = Pronoun("2ps")
 pee = Pronoun("2pp")
 ae = Pronoun("3p")
+
+pronoun_verbetes = [x.verbete for x in [ixé, îandé, oré, endé, pee, ae]]

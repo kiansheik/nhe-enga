@@ -3,19 +3,20 @@ import sys
 
 sys.path.append("/Users/kian/code/nhe-enga/tupi")
 
+from tupi import Noun as TupiNoun
 
 class Copula(Predicate):
     def __init__(self):
         """Initialize a Copula object."""
-        super().__init__(verbete="=", category="Copula", min_args=2, max_args=None)
+        super().__init__(verbete="=", category="Copula", min_args=1, max_args=None)
         self.negated = False
 
-    def eval(self):
+    def preval(self):
         """Evaluate the Copula object."""
         first = self.arguments[0]
-        vbt = first.noun.verbete()
+        vbt = first.eval()
         if self.negated:
-            neg_prefix = "nd" if vbt[0] in first.noun.vogais else "nda"
+            neg_prefix = "nd" if vbt[0] in TupiNoun.vogais else "nda"
             vbt = f"{neg_prefix} {vbt} ruã"
         nec = " ".join([x.eval() for x in self.arguments[1:]])
         nec = f"{vbt} {nec}"
@@ -36,3 +37,9 @@ class Copula(Predicate):
 
     def __repr__(self):
         return f"Copula({self.verbete})"
+
+def ruã(pred):
+    new_pred = pred.copy()
+    new_pred.rua = True
+    return new_pred
+

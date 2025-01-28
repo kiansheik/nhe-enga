@@ -1,6 +1,8 @@
 from .noun import *
-from .adverb import Adverb
-from .conjunction import Conjunction
-from .verb import Verb
+from .adverb import *
+from .postposition import *
+from .conjunction import *
+from .verb import *
+from .copula import *
 
 abé = Conjunction("abé")  # Tupi for "and"

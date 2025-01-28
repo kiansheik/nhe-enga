@@ -482,7 +482,7 @@ class Noun(TupiAntigo):
             start = "[".join(parts[:-1])
             ret_noun.latest_verbete = f"{start}[{parts[-1]}reme"
             if vbt[-1] in self.vogais_nasais:
-                ret_noun.latest_verbete = f"{start}[{parts[-1]}reme"
+                ret_noun.latest_verbete = f"{start}[{parts[-1]}neme"
         else:
             ret_noun.latest_verbete = f"{ret_noun.latest_verbete}eme"
         ret_noun.latest_verbete += "[CIRCUMSTANCE_SUBSTANTATIVE_SUFFIX]"
