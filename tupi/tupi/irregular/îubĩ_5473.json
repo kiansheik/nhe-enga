@@ -1,52 +1,58 @@
 {
-  "1ppe": {
-    "ci": {
-      "verbete": "ubĩ",
-      "pluriforme": true,
-      "overwrite": false
-    }
-  },
-  "1ppi": {
-    "ci": {
-      "verbete": "ubĩ",
-      "pluriforme": true,
-      "overwrite": false
+  "3p": {
+    "ø": {
+      "in": {
+        "verbete": "ubĩ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "ubĩ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "ubĩ",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "ubĩ",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   },
   "1ps": {
-    "ge": {
-      "verbete": "tubĩ",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ci": {
-      "verbete": "ubĩ",
-      "pluriforme": true,
-      "overwrite": false
+    "ø": {
+      "ge": {
+        "verbete": "tubĩ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "ubĩ",
+        "pluriforme": true,
+        "overwrite": false
+      }
     }
   },
-  "2pp": {},
-  "2ps": {},
-  "3p": {
-    "in": {
-      "verbete": "ubĩ",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "ubĩ",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ci": {
-      "verbete": "ubĩ",
-      "pluriforme": true,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "ubĩ",
-      "pluriforme": false,
-      "overwrite": false
+  "1ppe": {
+    "ø": {
+      "ci": {
+        "verbete": "ubĩ",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "1ppi": {
+    "ø": {
+      "ci": {
+        "verbete": "ubĩ",
+        "pluriforme": true,
+        "overwrite": false
+      }
     }
   }
 }

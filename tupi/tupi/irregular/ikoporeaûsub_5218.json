@@ -1,134 +1,146 @@
 {
   "1ppe": {
-    "in": {
-      "verbete": "îkoporeaûsub",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "îkoporeaûsub",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ci": {
-      "verbete": "ekoporeaûsub",
-      "pluriforme": true,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "îkoporeaûsub",
-      "pluriforme": false,
-      "overwrite": false
+    "ø": {
+      "in": {
+        "verbete": "îkoporeaûsub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "îkoporeaûsub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "ekoporeaûsub",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "îkoporeaûsub",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   },
   "1ppi": {
-    "in": {
-      "verbete": "îkoporeaûsub",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "îkoporeaûsub",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ci": {
-      "verbete": "ekoporeaûsub",
-      "pluriforme": true,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "îkoporeaûsub",
-      "pluriforme": false,
-      "overwrite": false
+    "ø": {
+      "in": {
+        "verbete": "îkoporeaûsub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "îkoporeaûsub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "ekoporeaûsub",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "îkoporeaûsub",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   },
   "1ps": {
-    "in": {
-      "verbete": "îkoporeaûsub",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "tekoporeaûsub",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ci": {
-      "verbete": "ekoporeaûsub",
-      "pluriforme": true,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "îkoporeaûsub",
-      "pluriforme": false,
-      "overwrite": false
+    "ø": {
+      "in": {
+        "verbete": "îkoporeaûsub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "tekoporeaûsub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "ekoporeaûsub",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "îkoporeaûsub",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   },
   "2pp": {
-    "in": {
-      "verbete": "îkoporeaûsub",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "îkoporeaûsub",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "im": {
-      "verbete": "îkoporeaûsub",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "îkoporeaûsub",
-      "pluriforme": false,
-      "overwrite": false
+    "ø": {
+      "in": {
+        "verbete": "îkoporeaûsub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "îkoporeaûsub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "îkoporeaûsub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "îkoporeaûsub",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   },
   "2ps": {
-    "in": {
-      "verbete": "îkoporeaûsub",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "îkoporeaûsub",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "im": {
-      "verbete": "îkoporeaûsub",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "îkoporeaûsub",
-      "pluriforme": false,
-      "overwrite": false
+    "ø": {
+      "in": {
+        "verbete": "îkoporeaûsub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "îkoporeaûsub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "îkoporeaûsub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "îkoporeaûsub",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   },
   "3p": {
-    "in": {
-      "verbete": "îkoporeaûsub",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "îkoporeaûsub",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ci": {
-      "verbete": "ekoporeaûsub",
-      "pluriforme": true,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "îkoporeaûsub",
-      "pluriforme": false,
-      "overwrite": false
+    "ø": {
+      "in": {
+        "verbete": "îkoporeaûsub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "îkoporeaûsub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "ekoporeaûsub",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "îkoporeaûsub",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   }
 }

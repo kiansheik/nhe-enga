@@ -27,13 +27,13 @@ class Verb(TupiAntigo):
         )  # Whether the verb is transitive (boolean)
         self.raw_definition = raw_definition  # Raw definition of the verb (string)
         self.irregular = get_irregular_verb(verbete, vid)
+        self.t_type = "(t, t)" in raw_definition[:500]
         self.pluriforme = (
             "(s)" in self.verb_class
             or "(r, s)" in self.verb_class
             or "-s-" in self.verb_class
-            or "(t, t)" in raw_definition
+            or self.t_type
         )
-        self.t_type = "(t, t)" in raw_definition
         self.ios = "-îo-" in self.verb_class and "-s-" in self.verb_class
         self.segunda_classe = (
             "2ª classe" in self.verb_class or "adj." in self.verb_class
@@ -47,8 +47,10 @@ class Verb(TupiAntigo):
             if self.ero
             else "îos" + f"[OBJECT_MARKER:3p:PLURIFORM_PREFIX:MONOSYLLABIC]"
             if self.ios
-            else (f"s[PLURIFORM_PREFIX:S]" if not self.t_type else "t[PLURIFORM_PREFIX:T]")
-            if pc
+            else (f"s[PLURIFORM_PREFIX:S]")
+            if (pc and not self.t_type)
+            else "t[PLURIFORM_PREFIX:T]"
+            if (pc and self.t_type)
             else "îo" + f"[OBJECT_MARKER:3p:MONOSYLLABIC]"
             if self.monosilibica()
             else "î" + f"[OBJECT_MARKER:3p:DEFAULT]"
@@ -74,7 +76,7 @@ class Verb(TupiAntigo):
 
     def conjugate(
         self,
-        subject_tense="1ps",
+        subject_tense=None,
         object_tense=None,
         dir_obj_raw=None,
         dir_subj_raw=None,
@@ -91,12 +93,26 @@ class Verb(TupiAntigo):
         overwrite = False
         # search for the (subject_tense, mode) in the irregular verb and if found, set base_verbete and pluriform to those values
         if self.irregular:
-            if subject_tense in self.irregular.keys():
-                ms = mode[:2]
-                if ms in self.irregular[subject_tense].keys():
-                    base_verbete = self.irregular[subject_tense][ms]['verbete']
-                    pluri_check = self.irregular[subject_tense][ms]['pluriforme']
-                    overwrite = self.irregular[subject_tense][ms]['overwrite']
+            # if mode == "gerundio":
+            #     breakpoint()
+            subj_key = subject_tense if subject_tense else 'ø'
+            obj_key = object_tense if object_tense else 'ø'
+            subj = self.irregular.get(subj_key)
+            if subj:
+                obj = subj.get(obj_key)
+                if obj:
+                    ms = mode[:2]
+                    if mode == "permissivo":
+                        ms = 'in'
+                    tr = obj.get(ms)
+                    if tr:
+                        base_verbete = tr['verbete']
+                        pluri_check = tr['pluriforme']
+                        overwrite = tr['overwrite']
+        if not subject_tense:
+            subject_tense = object_tense
+
+
         if mode == "permissivo":
             perm_mode = True
         if mode == "gerundio":
@@ -140,8 +156,8 @@ class Verb(TupiAntigo):
                         if object_tense == "3p" and dir_obj_raw is None:
                             if pluri_check or self.ero:
                                 dir_obj = f"s[PLURIFORM_PREFIX:S]-" if not self.t_type else "t[PLURIFORM_PREFIX:T]-"
-                            elif self.monosilibica():
-                                dir_obj = f"îo[OBJECT:3p:MONOSYLLABIC]-"
+                            # elif self.monosilibica():
+                            #     dir_obj = f"îo[OBJECT:3p:MONOSYLLABIC]-"
                         else:
                             dir_obj += f'{f"r[PLURIFORM_PREFIX:R]-" if pluri_check or self.ero else ""}'
                     pref = dir_obj
@@ -229,7 +245,7 @@ class Verb(TupiAntigo):
                     ) 
                     if pluri_check or self.ero:
                         if object_tense == "3p" and dir_obj_raw is None:
-                            obj = f"s[PLURIFORM_PREFIX:S]-"
+                            obj = f"s[PLURIFORM_PREFIX:S]-" if not self.t_type else "t[PLURIFORM_PREFIX:T]-"
                         else:
                             obj = f"{obj}r[PLURIFORM_PREFIX:R]-"
             circ = (
@@ -304,6 +320,8 @@ class Verb(TupiAntigo):
                     obj = "îe[OBJECT:REFLEXIVE]" if object_tense == 'refl' else "îo[OBJECT:MUTUAL]"
                     vbt = f"{conj}{obj}{base_verbete}[ROOT]"
                     perm = self.choose_perm(vbt, perm_mode)
+                    if overwrite:
+                        vbt = f"{base_verbete[1:]}[ROOT]"
                     vb = f"{perm}{vbt}"
                     if negative:
                         vb = self.negate_verb(vb, mode)
@@ -332,7 +350,10 @@ class Verb(TupiAntigo):
                     pluriforme = self.object_marker(pluri_check)
                     if pos == "posposto":
                         perm = self.choose_perm(conj, perm_mode)
-                        vb = f"{perm}{conj}-{pluriforme}-{vbt}"
+                        trm = f"{conj}-{pluriforme}-{vbt}"
+                        if overwrite:
+                            trm = f"{vbt}"
+                        vb = f"{perm}{trm}"
                         if negative:
                             vb = self.negate_verb(vb, mode)
                         result = (
@@ -340,7 +361,10 @@ class Verb(TupiAntigo):
                         )
                     elif pos == "anteposto":
                         perm = self.choose_perm(conj, perm_mode)
-                        vb = f"{perm}{conj}-{pluriforme}-{vbt}"
+                        trm = f"{conj}-{pluriforme}-{vbt}"
+                        if overwrite:
+                            trm = f"{vbt}"
+                        vb = f"{perm}{trm}"
                         if negative:
                             vb = self.negate_verb(vb, mode)
                         result = (
@@ -361,6 +385,8 @@ class Verb(TupiAntigo):
                         )
                         obj = self.personal_inflections[object_tense][3] + f"[OBJECT:{object_tense}:SUBJECT_1P]"
                         vbt = f"{obj}{base_verbete}[ROOT]"
+                        if overwrite:
+                            vbt = f"{base_verbete}[ROOT]"
                         perm = self.choose_perm(vbt, perm_mode)
                         result = f"{perm}{vbt}"
                         if negative:
@@ -511,13 +537,13 @@ if __name__ == "__main__":
                     ortho = random.choice(orthos)
                     try:
                         res = v.conjugate(
-                            subject_tense=subj,
+                            subject_tense=subj if modo != 'gerundio' else None,
                             object_tense=obj,
                             mode=modo,
                             anotar=True
                         )
                         neg_res = v.conjugate(
-                            subject_tense=subj,
+                            subject_tense=subj if modo != 'gerundio' else None,
                             object_tense=obj,
                             mode=modo,
                             negative=True,

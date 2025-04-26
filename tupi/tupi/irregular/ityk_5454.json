@@ -1,0 +1,585 @@
+{
+  "1ps": {
+    "2ps": {
+      "in": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "2pp": {
+      "in": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": true
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "3p": {
+      "in": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "refl": {
+      "in": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": false,
+        "overwrite": false
+      }
+    },
+    "mut": {
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "1ppe": {
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "1ppi": {
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "1ppe": {
+    "2ps": {
+      "in": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "2pp": {
+      "in": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "3p": {
+      "in": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "refl": {
+      "in": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "mut": {
+      "in": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "1ps": {
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "1ppi": {
+    "3p": {
+      "in": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "refl": {
+      "in": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "mut": {
+      "in": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "1ps": {
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "2ps": {
+    "1ps": {
+      "in": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "1ppe": {
+      "in": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "3p": {
+      "in": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "refl": {
+      "in": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "2ps": {
+      "im": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      }
+    }
+  },
+  "2pp": {
+    "1ps": {
+      "in": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "1ppe": {
+      "in": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "3p": {
+      "in": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "refl": {
+      "in": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "mut": {
+      "in": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "2pp": {
+      "im": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      }
+    }
+  },
+  "3p": {
+    "1ps": {
+      "in": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "1ppe": {
+      "in": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "1ppi": {
+      "in": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "2ps": {
+      "in": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "2pp": {
+      "in": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "3p": {
+      "in": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "refl": {
+      "in": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "mut": {
+      "in": {
+        "verbete": "îtyk",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "ø": {
+    "1ps": {
+      "ge": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "1ppe": {
+      "ge": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "1ppi": {
+      "ge": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "2ps": {
+      "ge": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "2pp": {
+      "ge": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "3p": {
+      "ge": {
+        "verbete": "eîtyk",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  }
+}

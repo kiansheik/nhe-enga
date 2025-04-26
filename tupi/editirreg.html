@@ -60,14 +60,14 @@
 <script>
 const subj_pref_map = {
   'ixé': '1ps', 'oré': '1ppe', 'îandé': '1ppi',
-  'endé': '2ps', 'peẽ': '2pp', "a'e": '3p',
+  'endé': '2ps', 'peẽ': '2pp', "a'e": '3p', "ø": 'ø',
 };
 const obj_pref_map = {
   'xe': '1ps', 'oré': '1ppe', 'îandé': '1ppi',
-  'ne': '2ps', 'pe': '2pp', 'i': '3p'
+  'ne': '2ps', 'pe': '2pp', 'i': '3p', "ø": 'ø',"îe": "refl", "îo": "mut",
 };
 const modeLabels = {
-  in: 'Indicative', ge: 'Gerund', pe: 'Permissive', ci: 'Circumstantial', im: 'Imperative'
+  in: 'Indicative', ge: 'Gerund', pe: 'Permissive', ci: 'Circumstantial', im: 'Imperative', co: "Conjunctive",
 };
 
 let words = []; let currentIndex = 0; let originalData = {}; let currentMode = 'in';
@@ -199,56 +199,79 @@ function switchMode() {
 function generateEditableConjugationTable(mode, conjugations_b, un_id, ne) {
   let negar = ne || false;
   const filteredConjugations = conjugations_b.filter(item => item.m === mode);
-  const uniqueSubjects = new Set(filteredConjugations.map(item => item.s));
-  const uniqueObjects = new Set(filteredConjugations.map(item => item.o));
+  
+  const uniqueSubjects = new Set(filteredConjugations.map(item => item.s ?? 'ø'));
+  const uniqueObjects = new Set(filteredConjugations.map(item => item.o ?? 'ø'));
+
   const subj_m = subj_pref_map;
   const obj_m = obj_pref_map;
-  const subjects_vals = Object.entries(subj_m).filter(([_, v]) => uniqueSubjects.has(v)).map(([_, v]) => v);
-  const objects_vals = Object.entries(obj_m).filter(([_, v]) => uniqueObjects.has(v)).map(([_, v]) => v);
-  const subjects = Object.entries(subj_m).filter(([_, v]) => uniqueSubjects.has(v)).map(([k]) => k);
-  const objects = Object.entries(obj_m).filter(([_, v]) => uniqueObjects.has(v)).map(([k]) => k);
+
+    // Subjects
+    const subjects_vals = Object.values(subj_pref_map).filter(v => uniqueSubjects.has(v));
+    const subjects = Object.keys(subj_pref_map).filter(k => subjects_vals.includes(subj_pref_map[k]));
+
+    // Objects
+    const objects_vals = Object.values(obj_pref_map).filter(v => uniqueObjects.has(v));
+    const objects = Object.keys(obj_pref_map).filter(k => objects_vals.includes(obj_pref_map[k]));
+
 
   let htmlString = `<table id="conj-${un_id}">`;
   htmlString += `<tr><th>Modo: ${modeLabels[mode] || mode}</th><th colspan="${objects.length || 1}" style="background-color: #e4ffe4;">Objeto</th></tr>`;
   htmlString += `<tr><th class="label">Sujeito</th>`;
+
   if (objects.length === 0) htmlString += `<th style="background-color: #e4ffe4;">(sem objeto)</th>`;
   else for (const object of objects) htmlString += `<th style="background-color: #e4ffe4;">${object}</th>`;
+
   htmlString += `</tr>`;
 
   for (let i = 0; i < subjects.length; i++) {
     htmlString += `<tr><th class="label">${subjects[i]}</th>`;
     const subj = subjects_vals[i];
-    if (objects.length === 0) htmlString += buildCell(conjugations_b, subj, null, mode);
-    else for (let j = 0; j < objects.length; j++) htmlString += buildCell(conjugations_b, subj, objects_vals[j], mode);
-    htmlString += '</tr>';
+    if (objects.length === 0) {
+      htmlString += buildCell(conjugations_b, subj, null, mode);
+    } else {
+      for (let j = 0; j < objects.length; j++) {
+        const obj = objects_vals[j];
+        htmlString += buildCell(conjugations_b, subj, obj, mode);
+      }
+    }
+    htmlString += `</tr>`;
   }
-  htmlString += '</table>';
+
+  htmlString += `</table>`;
   return htmlString;
 }
 
 function buildCell(conjugations_b, subj, obj, mode) {
-  const idx = conjugations_b.findIndex(c => c.s === subj && c.o === obj && c.m === mode);
+  const idx = conjugations_b.findIndex(c => 
+    (c.s ?? 'ø') === subj && (c.o ?? 'ø') === obj && c.m === mode
+  );
+
   let value = idx !== -1 ? (conjugations_b[idx].verbete || '') : '';
   let orig_value = idx !== -1 ? (conjugations_b[idx].original_verbete || '') : '';
   let pluriforme = idx !== -1 ? (conjugations_b[idx].pluriforme || false) : false;
   let overwrite = idx !== -1 ? (conjugations_b[idx].overwrite || false) : false;
+
   if (mode === 'pe' && (!value || value.trim() === '')) {
-    const indicativeIdx = conjugations_b.findIndex(c => c.s === subj && c.o === obj && c.m === 'in');
-    if (indicativeIdx !== -1){ 
-        value = conjugations_b[indicativeIdx].verbete || '';
-        pluriforme = conjugations_b[indicativeIdx].pluriforme || false;
-        overwrite = conjugations_b[indicativeIdx].overwrite || false;
+    const indicativeIdx = conjugations_b.findIndex(c => 
+      (c.s ?? 'ø') === subj && (c.o ?? 'ø') === obj && c.m === 'in'
+    );
+    if (indicativeIdx !== -1) {
+      value = conjugations_b[indicativeIdx].verbete || '';
+      pluriforme = conjugations_b[indicativeIdx].pluriforme || false;
+      overwrite = conjugations_b[indicativeIdx].overwrite || false;
     }
   }
+
   return `<td>
     <div class="input-group">
-      <input type="text" data-index="${idx}" data-key="verbete" placeholder="${orig_value.replace(/"/g, '&quot;')}" value="${value}" onchange="saveCurrentEdits()">
+      <input type="text" data-index="${idx}" data-key="verbete" placeholder="${orig_value.replace(/"/g, '&quot;')}" value="${value.replace(/"/g, '&quot;')}" onchange="saveCurrentEdits()">
       <div class="checkboxes">
         <label><input type="checkbox" class="checkbox" data-index="${idx}" data-field="pluriforme" ${pluriforme ? 'checked' : ''} onchange="saveCurrentEdits()"> Pluriforme</label>
         <label><input type="checkbox" class="checkbox" data-index="${idx}" data-field="overwrite" ${overwrite ? 'checked' : ''} onchange="saveCurrentEdits()"> Overwrite</label>
       </div>
     </div>
-    </td>`;
+  </td>`;
 }
 
 function autoCopyConjugations() {
@@ -294,21 +317,41 @@ async function downloadZip() {
   saveCurrentEdits();
   const zip = new JSZip();
   const folder = zip.folder('irregular');
-  for (const [verb, data] of words) {
-    if (!data.edited) continue;
+
+  for (const [verb, dataObj] of words) {
+    const data = dataObj.conjugations || dataObj; // Support both shapes
+
+    const validEntries = data.filter(c => (c.verbete || '').trim());
+    if (validEntries.length === 0) continue;
+
     const id = verb.match(/\d+/)?.[0] || 'unknown';
     const base = verb.replace(/[0-9]/g, '').trim().replace(/\s+/g, '_');
     const fileName = `${base}_${id}.json`;
+
     const structured = {};
-    for (const c of data.conjugations) {
-      if (!structured[c.s]) structured[c.s] = {};
-      if (c.verbete) structured[c.s][c.m] = { verbete: c.verbete, pluriforme: c.pluriforme || false, overwrite: c.overwrite || false };
+
+    for (const c of validEntries) {
+      const subj = c.s ?? 'ø';  // subject, if missing → 'ø'
+      const obj = c.o ?? 'ø';   // object, if missing → 'ø'
+      const ms = (c.m || '').slice(0, 2); // first 2 letters of mode
+
+      if (!structured[subj]) structured[subj] = {};
+      if (!structured[subj][obj]) structured[subj][obj] = {};
+
+      structured[subj][obj][ms] = {
+        verbete: c.verbete,
+        pluriforme: c.pluriforme || false,
+        overwrite: c.overwrite || false
+      };
     }
+
     folder.file(fileName, JSON.stringify(structured, null, 2));
   }
-  const blob = await zip.generateAsync({type: "blob"});
+
+  const blob = await zip.generateAsync({ type: "blob" });
   saveAs(blob, "irregular_verbs.zip");
 }
+
 </script>
 
 </body>

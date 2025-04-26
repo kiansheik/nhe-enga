@@ -1,0 +1,96 @@
+{
+  "1ps": {
+    "3p": {
+      "in": {
+        "verbete": "a'u",
+        "pluriforme": false,
+        "overwrite": true
+      },
+      "pe": {
+        "verbete": "a'u",
+        "pluriforme": false,
+        "overwrite": true
+      }
+    }
+  },
+  "1ppe": {
+    "3p": {
+      "in": {
+        "verbete": "oro'u",
+        "pluriforme": false,
+        "overwrite": true
+      },
+      "pe": {
+        "verbete": "oro'u",
+        "pluriforme": false,
+        "overwrite": true
+      }
+    }
+  },
+  "1ppi": {
+    "3p": {
+      "in": {
+        "verbete": "îa'u",
+        "pluriforme": false,
+        "overwrite": true
+      },
+      "pe": {
+        "verbete": "îa'u",
+        "pluriforme": false,
+        "overwrite": true
+      }
+    }
+  },
+  "2ps": {
+    "3p": {
+      "in": {
+        "verbete": "ere'u",
+        "pluriforme": false,
+        "overwrite": true
+      },
+      "im": {
+        "verbete": "e'u",
+        "pluriforme": false,
+        "overwrite": true
+      },
+      "pe": {
+        "verbete": "ere'u",
+        "pluriforme": false,
+        "overwrite": true
+      }
+    }
+  },
+  "2pp": {
+    "3p": {
+      "in": {
+        "verbete": "pe'u",
+        "pluriforme": false,
+        "overwrite": true
+      },
+      "im": {
+        "verbete": "pe'u",
+        "pluriforme": false,
+        "overwrite": true
+      },
+      "pe": {
+        "verbete": "pe'u",
+        "pluriforme": false,
+        "overwrite": true
+      }
+    }
+  },
+  "3p": {
+    "3p": {
+      "in": {
+        "verbete": "o'u",
+        "pluriforme": false,
+        "overwrite": true
+      },
+      "pe": {
+        "verbete": "o'u",
+        "pluriforme": false,
+        "overwrite": true
+      }
+    }
+  }
+}

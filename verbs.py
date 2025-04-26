@@ -252,7 +252,7 @@ for vclass in tqdm([x for x in verbs.keys()]):
             "(-îo-) (v.tr.)",
             "(-îo- ou -nho-) (v.tr.)",
             "(-îo-s- ou -nho-s-) (v.tr. irreg. Incorpora -îo- e -s-. Nas formas nominais é pluriforme.)",
-            "(v. intr. irreg.)"
+            "(v. intr. irreg.)",
         ]:
             verb_obj = tupi.Verb(
                 vbt["first_word"], vclass, vbt["definition"], vid=vbt["id"]
@@ -398,6 +398,7 @@ for v in tqdm(
         ],
     }
     test_cases_map["permissivo"] = test_cases_map["indicativo"]
+    test_cases_map["conjuntivo"] = test_cases_map["indicativo"]
     for modo, test_cases in [(x[0], x[1]) for x in test_cases_map.items()]:
         deff = f"{v.verbete} - {v.raw_definition}"[:200]
         print(f"{v.verbete} - {v.verb_class} ({modo})")

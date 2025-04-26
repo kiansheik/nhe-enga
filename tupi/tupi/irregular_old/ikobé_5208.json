@@ -1,0 +1,134 @@
+{
+  "1ppe": {
+    "in": {
+      "verbete": "îkobé",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkobé",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ci": {
+      "verbete": "ekobé",
+      "pluriforme": true,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkobé",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "1ppi": {
+    "in": {
+      "verbete": "îkobé",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkobé",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ci": {
+      "verbete": "ekobé",
+      "pluriforme": true,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkobé",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "1ps": {
+    "in": {
+      "verbete": "îkobé",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "tekobé",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ci": {
+      "verbete": "ekobé",
+      "pluriforme": true,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkobé",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "2pp": {
+    "in": {
+      "verbete": "îkobé",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkobé",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "im": {
+      "verbete": "îkobé",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkobé",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "2ps": {
+    "in": {
+      "verbete": "îkobé",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkobé",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "im": {
+      "verbete": "îkobé",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkobé",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "3p": {
+    "in": {
+      "verbete": "îkobé",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkobé",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ci": {
+      "verbete": "ekobé",
+      "pluriforme": true,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkobé",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  }
+}

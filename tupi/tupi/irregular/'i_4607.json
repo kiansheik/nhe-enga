@@ -1,134 +1,146 @@
 {
   "1ppe": {
-    "in": {
-      "verbete": "'é",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "'i",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ci": {
-      "verbete": "'é",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "'é",
-      "pluriforme": false,
-      "overwrite": false
+    "ø": {
+      "in": {
+        "verbete": "'é",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "'i",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "'é",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "'é",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   },
   "1ppi": {
-    "in": {
-      "verbete": "'é",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "'i",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ci": {
-      "verbete": "'é",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "'é",
-      "pluriforme": false,
-      "overwrite": false
+    "ø": {
+      "in": {
+        "verbete": "'é",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "'i",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "'é",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "'é",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   },
   "1ps": {
-    "in": {
-      "verbete": "'é",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "'i",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ci": {
-      "verbete": "'é",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "'é",
-      "pluriforme": false,
-      "overwrite": false
+    "ø": {
+      "in": {
+        "verbete": "'é",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "'i",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "'é",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "'é",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   },
   "2pp": {
-    "in": {
-      "verbete": "îé",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "'i",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "im": {
-      "verbete": "îé",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "îé",
-      "pluriforme": false,
-      "overwrite": false
+    "ø": {
+      "in": {
+        "verbete": "îé",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "'i",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "îé",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "îé",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   },
   "2ps": {
-    "in": {
-      "verbete": "eré",
-      "pluriforme": false,
-      "overwrite": true
-    },
-    "ge": {
-      "verbete": "'i",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "im": {
-      "verbete": "eré",
-      "pluriforme": false,
-      "overwrite": true
-    },
-    "pe": {
-      "verbete": "eré",
-      "pluriforme": false,
-      "overwrite": true
+    "ø": {
+      "in": {
+        "verbete": "eré",
+        "pluriforme": false,
+        "overwrite": true
+      },
+      "ge": {
+        "verbete": "'i",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "eré",
+        "pluriforme": false,
+        "overwrite": true
+      },
+      "pe": {
+        "verbete": "eré",
+        "pluriforme": false,
+        "overwrite": true
+      }
     }
   },
   "3p": {
-    "in": {
-      "verbete": "e'i",
-      "pluriforme": false,
-      "overwrite": true
-    },
-    "ge": {
-      "verbete": "'i",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ci": {
-      "verbete": "'é",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "e'i",
-      "pluriforme": false,
-      "overwrite": true
+    "ø": {
+      "in": {
+        "verbete": "e'i",
+        "pluriforme": false,
+        "overwrite": true
+      },
+      "ge": {
+        "verbete": "'i",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "'é",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "e'i",
+        "pluriforme": false,
+        "overwrite": true
+      }
     }
   }
 }

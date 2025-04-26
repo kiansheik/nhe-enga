@@ -1,134 +1,146 @@
 {
   "1ppe": {
-    "in": {
-      "verbete": "îmbé",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "îmbé",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ci": {
-      "verbete": "embé",
-      "pluriforme": true,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "îmbé",
-      "pluriforme": false,
-      "overwrite": false
+    "ø": {
+      "in": {
+        "verbete": "îmbé",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "îmbé",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "embé",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "îmbé",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   },
   "1ppi": {
-    "in": {
-      "verbete": "îmbé",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "îmbé",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ci": {
-      "verbete": "embé",
-      "pluriforme": true,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "îmbé",
-      "pluriforme": false,
-      "overwrite": false
+    "ø": {
+      "in": {
+        "verbete": "îmbé",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "îmbé",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "embé",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "îmbé",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   },
   "1ps": {
-    "in": {
-      "verbete": "îmbé",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "tembé",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ci": {
-      "verbete": "embé",
-      "pluriforme": true,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "îmbé",
-      "pluriforme": false,
-      "overwrite": false
+    "ø": {
+      "in": {
+        "verbete": "îmbé",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "tembé",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "embé",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "îmbé",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   },
   "2pp": {
-    "in": {
-      "verbete": "îmbé",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "îmbé",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "im": {
-      "verbete": "îmbé",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "îmbé",
-      "pluriforme": false,
-      "overwrite": false
+    "ø": {
+      "in": {
+        "verbete": "îmbé",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "îmbé",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "îmbé",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "îmbé",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   },
   "2ps": {
-    "in": {
-      "verbete": "îmbé",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "îmbé",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "im": {
-      "verbete": "îmbé",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "îmbé",
-      "pluriforme": false,
-      "overwrite": false
+    "ø": {
+      "in": {
+        "verbete": "îmbé",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "îmbé",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "îmbé",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "îmbé",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   },
   "3p": {
-    "in": {
-      "verbete": "îmbé",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "îmbé",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ci": {
-      "verbete": "embé",
-      "pluriforme": true,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "îmbé",
-      "pluriforme": false,
-      "overwrite": false
+    "ø": {
+      "in": {
+        "verbete": "îmbé",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "îmbé",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "embé",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "îmbé",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   }
 }

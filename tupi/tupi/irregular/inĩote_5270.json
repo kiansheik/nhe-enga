@@ -1,134 +1,146 @@
 {
   "1ppe": {
-    "in": {
-      "verbete": "inĩote",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "inĩote",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ci": {
-      "verbete": "enĩote",
-      "pluriforme": true,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "inĩote",
-      "pluriforme": false,
-      "overwrite": false
+    "ø": {
+      "in": {
+        "verbete": "inĩote",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "inĩote",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "enĩote",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "inĩote",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   },
   "1ppi": {
-    "in": {
-      "verbete": "inĩote",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "inĩote",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ci": {
-      "verbete": "enĩote",
-      "pluriforme": true,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "inĩote",
-      "pluriforme": false,
-      "overwrite": false
+    "ø": {
+      "in": {
+        "verbete": "inĩote",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "inĩote",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "enĩote",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "inĩote",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   },
   "1ps": {
-    "in": {
-      "verbete": "inĩote",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "tenĩote",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ci": {
-      "verbete": "enĩote",
-      "pluriforme": true,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "inĩote",
-      "pluriforme": false,
-      "overwrite": false
+    "ø": {
+      "in": {
+        "verbete": "inĩote",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "tenĩote",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "enĩote",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "inĩote",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   },
   "2pp": {
-    "in": {
-      "verbete": "inĩote",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "inĩote",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "im": {
-      "verbete": "inĩote",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "inĩote",
-      "pluriforme": false,
-      "overwrite": false
+    "ø": {
+      "in": {
+        "verbete": "inĩote",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "inĩote",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "inĩote",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "inĩote",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   },
   "2ps": {
-    "in": {
-      "verbete": "inĩote",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "inĩote",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "im": {
-      "verbete": "inĩote",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "inĩote",
-      "pluriforme": false,
-      "overwrite": false
+    "ø": {
+      "in": {
+        "verbete": "inĩote",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "inĩote",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "inĩote",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "inĩote",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   },
   "3p": {
-    "in": {
-      "verbete": "inĩote",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ge": {
-      "verbete": "inĩote",
-      "pluriforme": false,
-      "overwrite": false
-    },
-    "ci": {
-      "verbete": "enĩote",
-      "pluriforme": true,
-      "overwrite": false
-    },
-    "pe": {
-      "verbete": "inĩote",
-      "pluriforme": false,
-      "overwrite": false
+    "ø": {
+      "in": {
+        "verbete": "inĩote",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "inĩote",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "enĩote",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "inĩote",
+        "pluriforme": false,
+        "overwrite": false
+      }
     }
   }
 }

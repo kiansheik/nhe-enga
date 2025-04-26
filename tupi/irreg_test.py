@@ -209,7 +209,7 @@ for vclass in tqdm([x for x in verbs.keys()]):
                 vbt["first_word"], vclass, vbt["definition"], vid=vbt["id"]
             )
             vobjs.append(verb_obj)
-        elif "(v. intr. irreg.)" in vclass:
+        elif "(v. tr. irreg.)" in vclass:
             irregvobj = IrregVerb(
                 vbt["first_word"], vclass, vbt["definition"], vid=vbt["id"]
             )
@@ -224,6 +224,10 @@ for vclass in tqdm([x for x in verbs.keys()]):
 irregvobjs_counter = Counter()
 for v in irregvobjs:
     irregvobjs_counter.update([v.verb_class])
+
+othervobjs_counter = Counter()
+for v in othervobjs:
+    othervobjs_counter.update([v.verb_class])
 
 def generate_permutations(input_list):
     # Use itertools.product to generate all possible pairs
@@ -365,6 +369,7 @@ for v in tqdm(
         ],
     }
     test_cases_map["permissivo"] = test_cases_map["indicativo"]
+    test_cases_map["conjuntivo"] = test_cases_map["indicativo"]
     for modo, test_cases in [(x[0], x[1]) for x in test_cases_map.items()]:
         deff = f"{v.verbete} - {v.raw_definition}"[:200]
         # print(f"{v.verbete} - {v.verb_class} ({modo})")
@@ -373,12 +378,12 @@ for v in tqdm(
             for subj, obj in test_cases:
                 try:
                     res = v.conjugate(
-                        subject_tense=subj,
+                        subject_tense=subj if modo != 'gerundio' else None,
                         object_tense=obj,
                         mode=modo,
                     )
                     neg_res = v.conjugate(
-                        subject_tense=subj,
+                        subject_tense=subj if modo != 'gerundio' else None,
                         object_tense=obj,
                         mode=modo,
                         negative=True

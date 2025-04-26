@@ -1,0 +1,134 @@
+{
+  "1ppe": {
+    "in": {
+      "verbete": "îkopuku",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkopuku",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ci": {
+      "verbete": "ekopuku",
+      "pluriforme": true,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkopuku",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "1ppi": {
+    "in": {
+      "verbete": "îkopuku",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkopuku",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ci": {
+      "verbete": "ekopuku",
+      "pluriforme": true,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkopuku",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "1ps": {
+    "in": {
+      "verbete": "îkopuku",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "tekopuku",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ci": {
+      "verbete": "ekopuku",
+      "pluriforme": true,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkopuku",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "2pp": {
+    "in": {
+      "verbete": "îkopuku",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkopuku",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "im": {
+      "verbete": "îkopuku",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkopuku",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "2ps": {
+    "in": {
+      "verbete": "îkopuku",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkopuku",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "im": {
+      "verbete": "îkopuku",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkopuku",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "3p": {
+    "in": {
+      "verbete": "îkopuku",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkopuku",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ci": {
+      "verbete": "ekopuku",
+      "pluriforme": true,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkopuku",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  }
+}
