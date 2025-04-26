@@ -116,6 +116,7 @@ class TupiAntigo(object):
                 "u": "ũ",
                 } 
     semi_vogais = "û î ŷ".split(" ")
+    semi_vogais_map = {"u":"û", "i":"î", "y":"ŷ"}
     nasais = "m n nh ng ã ẽ ĩ ỹ õ ũ mb nd".split(" ")
     consoantes = "p b t s x k ' m n r nh ng mb nd ng g û î ŷ".split(" ")
     vogais_nasais = list(set(vogais).intersection(set(nasais)))

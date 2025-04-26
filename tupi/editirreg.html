@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tupi Antigo Irregular Verb Editor</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.0/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <style>
+    table { border-collapse: collapse; width: 100%; margin-bottom: 1em; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; vertical-align: top; }
+    th.label { background-color: #fef9c3ab; }
+    input, select { width: 100%; box-sizing: border-box; }
+    .controls { margin-bottom: 1em; }
+    button { padding: 0.5em; margin-right: 0.5em; }
+    .checkboxes {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-left: 4px;
+    }
+    .input-group {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+    #saveIndicator {
+      display: inline-block;
+      margin-left: 10px;
+      color: green;
+      font-weight: bold;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    #progressBar {
+      font-weight: bold;
+      margin-bottom: 1em;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Tupi Antigo Irregular Verb Editor</h1>
+
+<div class="controls">
+  <input type="file" id="fileInput">
+  <button onclick="previousWord()">Previous</button>
+  <button onclick="nextWord()">Next</button>
+  <button onclick="downloadZip()">Download Irregular Files (ZIP)</button>
+  <button onclick="resetData()">Reset Data</button>
+</div>
+
+<div id="progressBar"></div>
+
+<h2 id="currentWord"></h2>
+
+<div id="modeSelector"></div>
+
+<div id="tableContainer"></div>
+
+<script>
+const subj_pref_map = {
+  'ixé': '1ps', 'oré': '1ppe', 'îandé': '1ppi',
+  'endé': '2ps', 'peẽ': '2pp', "a'e": '3p',
+};
+const obj_pref_map = {
+  'xe': '1ps', 'oré': '1ppe', 'îandé': '1ppi',
+  'ne': '2ps', 'pe': '2pp', 'i': '3p'
+};
+const modeLabels = {
+  in: 'Indicative', ge: 'Gerund', pe: 'Permissive', ci: 'Circumstantial', im: 'Imperative'
+};
+
+let words = []; let currentIndex = 0; let originalData = {}; let currentMode = 'in';
+
+if (localStorage.getItem('tupi_verbs_data')) {
+  let loaded = JSON.parse(localStorage.getItem('tupi_verbs_data'));
+  for (const [verb, value] of Object.entries(loaded)) {
+    if (Array.isArray(value)) loaded[verb] = { conjugations: value, edited: false };
+  }
+  originalData = loaded;
+  words = Object.entries(originalData).sort(wordSorter);
+  currentIndex = 0;
+  showWord();
+}
+
+document.getElementById('fileInput').addEventListener('change', handleFileUpload);
+
+function handleFileUpload(event) {
+  const file = event.target.files[0];
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const rawData = JSON.parse(e.target.result);
+    console.log(rawData);
+    originalData = {};
+    for (const [verb, conjugations] of Object.entries(rawData)) {
+      const fixedConjugations = conjugations.map(c => {
+        return { s: c.s, o: c.o, m: c.m, original_verbete: c.f || '', new_verbete: null, pluriforme: c.pluriforme || false, overwrite: c.overwrite || false };
+      });
+      originalData[verb] = { conjugations: fixedConjugations, edited: false };
+    }
+    words = Object.entries(originalData).sort(wordSorter);
+    saveToLocalStorage();
+    currentIndex = 0;
+    showWord();
+  };
+  reader.readAsText(file);
+}
+
+function wordSorter(a, b) {
+  if (a[0].length !== b[0].length) return a[0].length - b[0].length;
+  return a[0].localeCompare(b[0]);
+}
+
+function saveToLocalStorage() {
+  const reconstructed = {};
+  for (const [verb, data] of words) reconstructed[verb] = data;
+  localStorage.setItem('tupi_verbs_data', JSON.stringify(reconstructed));
+  showSaveIndicator();
+}
+
+function showSaveIndicator() {
+  const indicator = document.getElementById('saveIndicator');
+  if (!indicator) {
+    const saveIndicator = document.createElement('span');
+    saveIndicator.id = 'saveIndicator';
+    saveIndicator.textContent = '✔ Saved';
+    document.querySelector('.controls').appendChild(saveIndicator);
+  }
+  const elem = document.getElementById('saveIndicator');
+  elem.style.opacity = '1';
+  setTimeout(() => { elem.style.opacity = '0'; }, 1000);
+}
+
+function resetData() {
+  localStorage.removeItem('tupi_verbs_data');
+  location.reload();
+}
+
+function previousWord() {
+  if (currentIndex > 0) { saveCurrentEdits(); currentIndex--; showWord(); }
+}
+
+function nextWord() {
+  if (currentIndex < words.length - 1) { saveCurrentEdits(); autoCopyConjugations(); currentIndex++; showWord(); }
+}
+
+function saveCurrentEdits() {
+  const inputs = document.querySelectorAll('input[data-index]');
+  const checkboxes = document.querySelectorAll('input[type=checkbox][data-index]');
+  const [verb, data] = words[currentIndex];
+  const conjugations = data.conjugations;
+  let somethingTyped = false;
+  inputs.forEach(input => {
+    const idx = parseInt(input.getAttribute('data-index'));
+    const key = input.getAttribute('data-key');
+    if (conjugations[idx] && input.value.trim()) {
+      conjugations[idx][key] = input.value.trim();
+      somethingTyped = true;
+    }
+  });
+  checkboxes.forEach(box => {
+    const idx = parseInt(box.getAttribute('data-index'));
+    const field = box.getAttribute('data-field');
+    if (conjugations[idx]) {
+      conjugations[idx][field] = box.checked;
+      somethingTyped = true;
+    }
+  });
+  if (somethingTyped) {
+    data.edited = true;
+    saveToLocalStorage();
+  }
+  updateProgressBar();
+}
+
+function showWord() {
+  if (words.length === 0) return;
+  const [verbName, data] = words[currentIndex];
+  const conjugations = data.conjugations;
+  document.getElementById('currentWord').innerText = `Word ${currentIndex + 1}/${words.length}: ${verbName}`;
+  const modesAvailable = Array.from(new Set(conjugations.map(c => c.m)));
+  if (!modesAvailable.includes(currentMode)) currentMode = modesAvailable[0] || 'in';
+  let selector = `<label for="modeSelect">Mode:</label> <select id="modeSelect" onchange="switchMode()">`;
+  for (const m of modesAvailable) {
+    selector += `<option value="${m}" ${currentMode === m ? 'selected' : ''}>${modeLabels[m] || m}</option>`;
+  }
+  selector += `</select>`;
+  document.getElementById('modeSelector').innerHTML = selector;
+  document.getElementById('tableContainer').innerHTML = generateEditableConjugationTable(currentMode, conjugations, currentIndex);
+  updateProgressBar();
+}
+
+function switchMode() {
+  const select = document.getElementById('modeSelect');
+  currentMode = select.value;
+  showWord();
+}
+
+function generateEditableConjugationTable(mode, conjugations_b, un_id, ne) {
+  let negar = ne || false;
+  const filteredConjugations = conjugations_b.filter(item => item.m === mode);
+  const uniqueSubjects = new Set(filteredConjugations.map(item => item.s));
+  const uniqueObjects = new Set(filteredConjugations.map(item => item.o));
+  const subj_m = subj_pref_map;
+  const obj_m = obj_pref_map;
+  const subjects_vals = Object.entries(subj_m).filter(([_, v]) => uniqueSubjects.has(v)).map(([_, v]) => v);
+  const objects_vals = Object.entries(obj_m).filter(([_, v]) => uniqueObjects.has(v)).map(([_, v]) => v);
+  const subjects = Object.entries(subj_m).filter(([_, v]) => uniqueSubjects.has(v)).map(([k]) => k);
+  const objects = Object.entries(obj_m).filter(([_, v]) => uniqueObjects.has(v)).map(([k]) => k);
+
+  let htmlString = `<table id="conj-${un_id}">`;
+  htmlString += `<tr><th>Modo: ${modeLabels[mode] || mode}</th><th colspan="${objects.length || 1}" style="background-color: #e4ffe4;">Objeto</th></tr>`;
+  htmlString += `<tr><th class="label">Sujeito</th>`;
+  if (objects.length === 0) htmlString += `<th style="background-color: #e4ffe4;">(sem objeto)</th>`;
+  else for (const object of objects) htmlString += `<th style="background-color: #e4ffe4;">${object}</th>`;
+  htmlString += `</tr>`;
+
+  for (let i = 0; i < subjects.length; i++) {
+    htmlString += `<tr><th class="label">${subjects[i]}</th>`;
+    const subj = subjects_vals[i];
+    if (objects.length === 0) htmlString += buildCell(conjugations_b, subj, null, mode);
+    else for (let j = 0; j < objects.length; j++) htmlString += buildCell(conjugations_b, subj, objects_vals[j], mode);
+    htmlString += '</tr>';
+  }
+  htmlString += '</table>';
+  return htmlString;
+}
+
+function buildCell(conjugations_b, subj, obj, mode) {
+  const idx = conjugations_b.findIndex(c => c.s === subj && c.o === obj && c.m === mode);
+  let value = idx !== -1 ? (conjugations_b[idx].verbete || '') : '';
+  let orig_value = idx !== -1 ? (conjugations_b[idx].original_verbete || '') : '';
+  let pluriforme = idx !== -1 ? (conjugations_b[idx].pluriforme || false) : false;
+  let overwrite = idx !== -1 ? (conjugations_b[idx].overwrite || false) : false;
+  if (mode === 'pe' && (!value || value.trim() === '')) {
+    const indicativeIdx = conjugations_b.findIndex(c => c.s === subj && c.o === obj && c.m === 'in');
+    if (indicativeIdx !== -1){ 
+        value = conjugations_b[indicativeIdx].verbete || '';
+        pluriforme = conjugations_b[indicativeIdx].pluriforme || false;
+        overwrite = conjugations_b[indicativeIdx].overwrite || false;
+    }
+  }
+  return `<td>
+    <div class="input-group">
+      <input type="text" data-index="${idx}" data-key="verbete" placeholder="${orig_value.replace(/"/g, '&quot;')}" value="${value}" onchange="saveCurrentEdits()">
+      <div class="checkboxes">
+        <label><input type="checkbox" class="checkbox" data-index="${idx}" data-field="pluriforme" ${pluriforme ? 'checked' : ''} onchange="saveCurrentEdits()"> Pluriforme</label>
+        <label><input type="checkbox" class="checkbox" data-index="${idx}" data-field="overwrite" ${overwrite ? 'checked' : ''} onchange="saveCurrentEdits()"> Overwrite</label>
+      </div>
+    </div>
+    </td>`;
+}
+
+function autoCopyConjugations() {
+    const [nextVerbName, nextData] = words[currentIndex + 1];
+    const nextBase = getBaseForm(nextVerbName);
+
+    for (let i = currentIndex; i >= 0; i--) {
+        const [prevVerbName, prevData] = words[i];
+        const prevBase = getBaseForm(prevVerbName);
+
+        if (nextBase.startsWith(prevBase)) {
+            if (!nextData.edited) {
+                nextData.conjugations = prevData.conjugations.map(prevConj => {
+                    const matchingConj = nextData.conjugations.find(nextConj => 
+                        nextConj.s === prevConj.s && nextConj.o === prevConj.o && nextConj.m === prevConj.m
+                    );
+                    if (matchingConj) {
+                        matchingConj.verbete = prevConj.verbete || '';
+                        matchingConj.pluriforme = prevConj.pluriforme || false;
+                        matchingConj.overwrite = prevConj.overwrite || false;
+                    }
+                    return matchingConj || prevConj;
+                });
+                nextData.edited = true;
+                saveToLocalStorage();
+            }
+            break;
+        }
+    }
+}
+
+function getBaseForm(name) {
+  return name.replace(/[0-9]/g, '').trim();
+}
+
+function updateProgressBar() {
+  const confirmed = words.filter(([_, data]) => data.edited).length;
+  const total = words.length;
+  document.getElementById('progressBar').innerText = `Confirmed: ${confirmed} / ${total}`;
+}
+
+async function downloadZip() {
+  saveCurrentEdits();
+  const zip = new JSZip();
+  const folder = zip.folder('irregular');
+  for (const [verb, data] of words) {
+    if (!data.edited) continue;
+    const id = verb.match(/\d+/)?.[0] || 'unknown';
+    const base = verb.replace(/[0-9]/g, '').trim().replace(/\s+/g, '_');
+    const fileName = `${base}_${id}.json`;
+    const structured = {};
+    for (const c of data.conjugations) {
+      if (!structured[c.s]) structured[c.s] = {};
+      if (c.verbete) structured[c.s][c.m] = { verbete: c.verbete, pluriforme: c.pluriforme || false, overwrite: c.overwrite || false };
+    }
+    folder.file(fileName, JSON.stringify(structured, null, 2));
+  }
+  const blob = await zip.generateAsync({type: "blob"});
+  saveAs(blob, "irregular_verbs.zip");
+}
+</script>
+
+</body>
+</html>

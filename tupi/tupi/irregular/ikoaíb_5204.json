@@ -1,0 +1,134 @@
+{
+  "1ppe": {
+    "in": {
+      "verbete": "îkoaíb",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkoaíb",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ci": {
+      "verbete": "ekoaíb",
+      "pluriforme": true,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkoaíb",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "1ppi": {
+    "in": {
+      "verbete": "îkoaíb",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkoaíb",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ci": {
+      "verbete": "ekoaíb",
+      "pluriforme": true,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkoaíb",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "1ps": {
+    "in": {
+      "verbete": "îkoaíb",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "tekoaíb",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ci": {
+      "verbete": "ekoaíb",
+      "pluriforme": true,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkoaíb",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "2pp": {
+    "in": {
+      "verbete": "îkoaíb",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkoaíb",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "im": {
+      "verbete": "îkoaíb",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkoaíb",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "2ps": {
+    "in": {
+      "verbete": "îkoaíb",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkoaíb",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "im": {
+      "verbete": "îkoaíb",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkoaíb",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "3p": {
+    "in": {
+      "verbete": "îkoaíb",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkoaíb",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ci": {
+      "verbete": "ekoaíb",
+      "pluriforme": true,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkoaíb",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  }
+}

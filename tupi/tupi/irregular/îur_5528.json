@@ -1,0 +1,64 @@
+{
+  "1ppe": {
+    "ci": {
+      "verbete": "ur",
+      "pluriforme": true,
+      "overwrite": false
+    }
+  },
+  "1ppi": {
+    "ci": {
+      "verbete": "ur",
+      "pluriforme": true,
+      "overwrite": false
+    }
+  },
+  "1ps": {
+    "ge": {
+      "verbete": "tur",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ci": {
+      "verbete": "ur",
+      "pluriforme": true,
+      "overwrite": false
+    }
+  },
+  "2pp": {
+    "im": {
+      "verbete": "îori",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "2ps": {
+    "im": {
+      "verbete": "îori",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "3p": {
+    "in": {
+      "verbete": "ur",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "ur",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ci": {
+      "verbete": "ur",
+      "pluriforme": true,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "ur",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  }
+}

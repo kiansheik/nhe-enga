@@ -2,13 +2,13 @@ from setuptools import setup, find_packages
 
 setup(
     name='tupi',
-    version='0.1.0',
+    version='0.1.1',
     packages=find_packages(),
     include_package_data=True,  # Important!
     package_data={
-        'tupi': ['alt_ort/*'],  # Include all files inside alt_ort
+        'tupi': ['alt_ort/*', 'irregular/*'],  # Include all files inside alt_ort
     },
-    description='Description of your package',
+    description='A package for Old Tupi (Navarro orthography) language processing',
     author='Kian Sheik',
     author_email='kiansheik3128@gmail.com',
     url='https://github.com/kiansheik/nhe-enga',

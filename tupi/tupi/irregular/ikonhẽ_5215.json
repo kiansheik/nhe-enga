@@ -1,0 +1,124 @@
+{
+  "1ppe": {
+    "in": {
+      "verbete": "îkonhẽ",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkonhẽ",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ci": {
+      "verbete": "ekonhẽ",
+      "pluriforme": true,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkonhẽ",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "1ppi": {
+    "in": {
+      "verbete": "îkonhẽ",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkonhẽ",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ci": {
+      "verbete": "ekonhẽ",
+      "pluriforme": true,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkonhẽ",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "1ps": {
+    "in": {
+      "verbete": "îkonhẽ",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "tekonhẽ",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ci": {
+      "verbete": "ekonhẽ",
+      "pluriforme": true,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkonhẽ",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "2pp": {
+    "in": {
+      "verbete": "îkonhẽ",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkonhẽ",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkonhẽ",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "2ps": {
+    "in": {
+      "verbete": "îkonhẽ",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkonhẽ",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkonhẽ",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "3p": {
+    "in": {
+      "verbete": "îkonhẽ",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkonhẽ",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ci": {
+      "verbete": "ekonhẽ",
+      "pluriforme": true,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkonhẽ",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  }
+}

@@ -1,237 +1,7 @@
 [
     {
-        "tag": "[GERUND_SUFFIX:CLASS_2:NASAL_VOWEL_ENDING]",
-        "value": "namo",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_2:DEFAULT]",
-        "value": "amo",
-        "translation": ""
-    },
-    {
-        "tag": "[IMPERATIVE_PREFIX:2ps]",
-        "value": "e",
-        "translation": ""
-    },
-    {
         "tag": "[NEGATION_SUFFIX:VOWEL_ENDING]",
         "value": "\u00ee",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT:1ps]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT:3p]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:REFLEXIVE]",
-        "value": "\u00eee",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:2ps]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT:2ps:OBJECT_1P]",
-        "value": "\u00eeep\u00e9",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:3p]",
-        "value": "i",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:1ppe]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[NEGATION_PARTICLE:UME]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:2ps]",
-        "value": "ere",
-        "translation": ""
-    },
-    {
-        "tag": "[PERMISSIVE_PREFIX:CONSONANT]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUBJECT_PREFIX:3p]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:1ppe]",
-        "value": "oro",
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:3p]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[PLURIFORM_PREFIX:S]",
-        "value": "s",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUBJECT_PREFIX:1ps]",
-        "value": "xe",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUBJECT_PREFIX:1ps]",
-        "value": "g\u00fbi",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_1:R]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:2pp]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[NEGATION_SUFFIX:CONSONANT_ENDING]",
-        "value": "i",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUBJECT_PREFIX:2ps]",
-        "value": "nde",
-        "translation": ""
-    },
-    {
-        "tag": "[NEGATION_PARTICLE:NA]",
-        "value": "na",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:2ps]",
-        "value": "nde",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT:3p:DIRECT]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[PERMISSIVE_PREFIX:VOWEL]",
-        "value": "t",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT:1ppi]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT:1ps]",
-        "value": "ix\u00e9",
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT_MARKER:3p:DEFAULT]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_1:R]",
-        "value": "\u0301",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_2:NASAL_VOWEL_ENDING]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT:3p]",
-        "value": "i",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT:2pp]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:1ppi]",
-        "value": "\u00eeand\u00e9",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUBJECT_PREFIX:1ppi]",
-        "value": "\u00eeand\u00e9",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_1:NASAL_IYU]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_1:B]",
-        "value": "pa",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT:1ps]",
-        "value": "xe",
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT_MARKER:3p:PLURIFORM_PREFIX:MONOSYLLABIC]",
-        "value": "\u00eeos",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_1:ORAL_VOWEL]",
-        "value": "bo",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUBJECT_PREFIX:1ppi]",
-        "value": "\u00eea",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_1:CONSONANT]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:3p]",
-        "value": "i",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT:1ppe]",
-        "value": "or\u00e9",
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:2pp]",
-        "value": "pe",
         "translation": ""
     },
     {
@@ -240,58 +10,78 @@
         "translation": ""
     },
     {
-        "tag": "[GERUND_SUBJECT_PREFIX:2ps]",
+        "tag": "[IMPERATIVE_PREFIX:2ps]",
+        "value": "e",
+        "translation": ""
+    },
+    {
+        "tag": "[SUB_VERB]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[OBJECT:DIRECT]",
+        "tag": "[SUBJECT_PREFIX:3p]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[SUBJECT_PREFIX:1ps]",
+        "tag": "[OBJECT:1ps]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[PERMISSIVE_PREFIX:VOWEL]",
+        "tag": "[NEGATION_PARTICLE:UME]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[PLURIFORM_PREFIX:R]",
-        "value": "r",
-        "translation": ""
-    },
-    {
-        "tag": "[MAIN_VERB]",
+        "tag": "[SUB_VERB]",
         "value": "",
         "translation": ""
     },
     {
-        "tag": "[CIRCUMSTANTIAL_SUFFIX:NULL_ENDING]",
+        "tag": "[OBJECT:1ppe]",
+        "value": "or\u00e9",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:1ppi]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[GERUND_SUFFIX:CLASS_2:DEFAULT]",
+        "tag": "[OBJECT:3p]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[ROOT]",
+        "tag": "[SUBJECT_PREFIX:3p]",
+        "value": "i",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:1ps]",
+        "value": "a",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:1ps]",
+        "value": "xe",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:2ps]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[GERUND_SUFFIX:CLASS_2:ORAL_VOWEL_ENDING]",
-        "value": "ramo",
+        "tag": "[SUBJECT:2ps]",
+        "value": null,
         "translation": ""
     },
     {
-        "tag": "[OBJECT:MUTUAL]",
-        "value": "\u00eeo",
+        "tag": "[NEGATION_PARTICLE:NA]",
+        "value": null,
         "translation": ""
     },
     {
@@ -300,47 +90,32 @@
         "translation": ""
     },
     {
-        "tag": "[SUBJECT_PREFIX:1ppi]",
+        "tag": "[GERUND_SUFFIX:CLASS_1:IYU]",
+        "value": "abo",
+        "translation": ""
+    },
+    {
+        "tag": "[CIRCUMSTANTIAL_SUFFIX:VOWEL_ENDING]",
+        "value": "\u00fb",
+        "translation": ""
+    },
+    {
+        "tag": "[MAIN_VERB]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[OBJECT:2ps:SUBJECT_1P]",
-        "value": "oro",
+        "tag": "[SUBJECT:2pp]",
+        "value": "pe\u1ebd",
         "translation": ""
     },
     {
-        "tag": "[NEGATION_PREFIX]",
-        "value": null,
+        "tag": "[MAIN_VERB]",
+        "value": "",
         "translation": ""
     },
     {
-        "tag": "[IMPERATIVE_PREFIX:2ps]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT:2ps:OBJECT_1P]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:REFLEXIVE]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[NEGATION_SUFFIX]",
-        "value": "e'ym",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:2pp]",
-        "value": "pe",
-        "translation": ""
-    },
-    {
-        "tag": "[NEGATION_SUFFIX:VOWEL_ENDING]",
+        "tag": "[IMPERATIVE_PREFIX:2pp]",
         "value": null,
         "translation": ""
     },
@@ -350,7 +125,227 @@
         "translation": ""
     },
     {
+        "tag": "[PLURIFORM_PREFIX:S]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:1ppi]",
+        "value": "\u00eea",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:B]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:1ps]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT_MARKER:3p:MONOSYLLABIC]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:1ppe]",
+        "value": "or\u00e9",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:1ppi]",
+        "value": "\u00eeand\u00e9",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:3p:MONOSYLLABIC]",
+        "value": "\u00eeo",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:R]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[NEGATION_SUFFIX]",
+        "value": "e'ym",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:1ppi]",
+        "value": "\u00eeand\u00e9",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:1ps]",
+        "value": "ix\u00e9",
+        "translation": ""
+    },
+    {
+        "tag": "[PLURIFORM_PREFIX:R]",
+        "value": "r",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:ORAL_VOWEL]",
+        "value": "bo",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_2:ORAL_VOWEL_ENDING]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[NEGATION_SUFFIX]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[NEGATION_SUFFIX:VOWEL_ENDING]",
+        "value": "i",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:1ppi]",
+        "value": "\u00eea",
+        "translation": ""
+    },
+    {
+        "tag": "[PERMISSIVE_PREFIX:VOWEL]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[NEGATION_PREFIX]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:CONSONANT]",
+        "value": "a",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT_MARKER:3p:MONOSYLLABIC]",
+        "value": "\u00eeo",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:REFLEXIVE]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:2pp]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[CIRCUMSTANTIAL_SUFFIX:CONSONANT_ENDING]",
+        "value": "i",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_2:NASAL_VOWEL_ENDING]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[ROOT]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:2pp:OBJECT_1P]",
+        "value": "pe\u00eeep\u00e9",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:MUTUAL]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:1ppe]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:1ps]",
+        "value": "g\u00fbi",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:3p:MONOSYLLABIC]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:2pp:OBJECT_1P]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:2ps]",
+        "value": "e",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:3p]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:B]",
+        "value": "pa",
+        "translation": ""
+    },
+    {
         "tag": "[OBJECT_MARKER:3p:PLURIFORM_PREFIX:MONOSYLLABIC]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:1ppe]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:1ppi]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[IMPERATIVE_PREFIX:2pp]",
+        "value": "pe",
+        "translation": ""
+    },
+    {
+        "tag": "[NEGATION_SUFFIX:CONSONANT_ENDING]",
+        "value": "i",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:1ps]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT_MARKER:3p:DEFAULT]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:1ppe]",
+        "value": "oro",
+        "translation": ""
+    },
+    {
+        "tag": "[PERMISSIVE_PREFIX:CONSONANT]",
         "value": null,
         "translation": ""
     },
@@ -360,33 +355,13 @@
         "translation": ""
     },
     {
-        "tag": "[GERUND_SUFFIX:CLASS_1]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:1ppe]",
-        "value": "or\u00e9",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:1ps]",
-        "value": "xe",
-        "translation": ""
-    },
-    {
         "tag": "[GERUND_SUFFIX:CLASS_1:CONSONANT]",
-        "value": "a",
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:MUTUAL]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[IMPERATIVE_PREFIX:2pp]",
-        "value": null,
+        "tag": "[SUBJECT_PREFIX:1ppe]",
+        "value": "oro",
         "translation": ""
     },
     {
@@ -395,18 +370,68 @@
         "translation": ""
     },
     {
-        "tag": "[OBJECT:2ps]",
-        "value": "nde",
+        "tag": "[OBJECT_MARKER:3p:PLURIFORM_PREFIX:MONOSYLLABIC]",
+        "value": "\u00eeos",
         "translation": ""
     },
     {
-        "tag": "[SUBJECT:1ppe]",
+        "tag": "[SUBJECT:2ps:OBJECT_1P]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[GERUND_SUFFIX:CLASS_1:B]",
+        "tag": "[OBJECT:MUTUAL]",
+        "value": "\u00eeo",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:3p]",
+        "value": "o",
+        "translation": ""
+    },
+    {
+        "tag": "[NEGATION_SUFFIX:VOWEL_ENDING]",
         "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:DIRECT]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:1ppe]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:NASAL_VOWEL]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:1ppe]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:2ps]",
+        "value": "end\u00e9",
+        "translation": ""
+    },
+    {
+        "tag": "[PLURIFORM_PREFIX:R]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_2:DEFAULT]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:2pp]",
+        "value": "pe",
         "translation": ""
     },
     {
@@ -420,162 +445,17 @@
         "translation": ""
     },
     {
-        "tag": "[SUBJECT:2ps]",
-        "value": "end\u00e9",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT:2pp:OBJECT_1P]",
-        "value": null,
-        "translation": ""
-    },
-    {
         "tag": "[SUBJECT:1ppi]",
-        "value": "\u00eeand\u00e9",
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:1ps]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[NEGATION_PARTICLE:NA]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:3p]",
-        "value": "o",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT:2pp:OBJECT_1P]",
-        "value": "pe\u00eeep\u00e9",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_2:ORAL_VOWEL_ENDING]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT_MARKER:3p:MONOSYLLABIC]",
-        "value": "\u00eeo",
-        "translation": ""
-    },
-    {
-        "tag": "[CIRCUMSTANTIAL_SUFFIX:CONSONANT_ENDING]",
-        "value": "i",
-        "translation": ""
-    },
-    {
-        "tag": "[NEGATION_SUFFIX:VOWEL_ENDING]",
-        "value": "i",
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:3p:MONOSYLLABIC]",
-        "value": "\u00eeo",
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:2ps:SUBJECT_1P]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT_MARKER:3p:DEFAULT]",
-        "value": "\u00ee",
-        "translation": ""
-    },
-    {
-        "tag": "[NEGATION_PREFIX]",
-        "value": "n",
-        "translation": ""
-    },
-    {
-        "tag": "[SUB_VERB]",
-        "value": "",
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:2ps]",
+        "tag": "[SUBJECT:3p:DIRECT]",
         "value": null,
         "translation": ""
     },
     {
         "tag": "[CIRCUMSTANTIAL_SUFFIX:CONSONANT_ENDING]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:1ppe]",
-        "value": "or\u00e9",
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:1ppi]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[PLURIFORM_PREFIX:R]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUBJECT_PREFIX:1ppi]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_1:ORAL_VOWEL]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT_MARKER:3p:MONOSYLLABIC]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[MAIN_VERB]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT:2ps]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:3p:MONOSYLLABIC]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_1]",
-        "value": "a",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUBJECT_PREFIX:2ps]",
-        "value": "e",
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:1ppe]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUBJECT_PREFIX:3p]",
-        "value": "o",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:3p]",
         "value": null,
         "translation": ""
     },
@@ -585,78 +465,13 @@
         "translation": ""
     },
     {
-        "tag": "[GERUND_SUFFIX:CLASS_1:NASAL_IYU]",
-        "value": "amo",
+        "tag": "[SUBJECT_PREFIX:2ps]",
+        "value": "nde",
         "translation": ""
     },
     {
-        "tag": "[OBJECT:2pp:SUBJECT_1P]",
-        "value": "opo",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:1ps]",
-        "value": "a",
-        "translation": ""
-    },
-    {
-        "tag": "[CIRCUMSTANTIAL_SUFFIX:NULL_ENDING]",
-        "value": "",
-        "translation": ""
-    },
-    {
-        "tag": "[PERMISSIVE_PREFIX:CONSONANT]",
-        "value": "ta",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:1ppi]",
-        "value": "\u00eeand\u00e9",
-        "translation": ""
-    },
-    {
-        "tag": "[NEGATION_SUFFIX]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUBJECT_PREFIX:1ppe]",
-        "value": "or\u00e9",
-        "translation": ""
-    },
-    {
-        "tag": "[PLURIFORM_PREFIX:S]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT_PREFIX:1ppi]",
-        "value": "\u00eea",
-        "translation": ""
-    },
-    {
-        "tag": "[SUBJECT:2pp]",
-        "value": "pe\u1ebd",
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:3p]",
-        "value": "a'e",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUBJECT_PREFIX:1ppe]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[OBJECT:2pp]",
-        "value": null,
-        "translation": ""
-    },
-    {
-        "tag": "[SUB_VERB]",
-        "value": null,
+        "tag": "[OBJECT:REFLEXIVE]",
+        "value": "\u00eee",
         "translation": ""
     },
     {
@@ -665,8 +480,18 @@
         "translation": ""
     },
     {
-        "tag": "[IMPERATIVE_PREFIX:2pp]",
-        "value": "pe",
+        "tag": "[GERUND_SUFFIX:CLASS_1:R]",
+        "value": "\u0301",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_2:ORAL_VOWEL_ENDING]",
+        "value": "ramo",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:2ps:SUBJECT_1P]",
+        "value": "oro",
         "translation": ""
     },
     {
@@ -675,18 +500,188 @@
         "translation": ""
     },
     {
-        "tag": "[GERUND_SUBJECT_PREFIX:1ppe]",
-        "value": "oro",
-        "translation": ""
-    },
-    {
-        "tag": "[GERUND_SUFFIX:CLASS_1:NASAL_VOWEL]",
+        "tag": "[IMPERATIVE_PREFIX:2ps]",
         "value": null,
         "translation": ""
     },
     {
-        "tag": "[CIRCUMSTANTIAL_SUFFIX:VOWEL_ENDING]",
-        "value": "\u00fb",
+        "tag": "[SUBJECT_PREFIX:1ps]",
+        "value": "xe",
+        "translation": ""
+    },
+    {
+        "tag": "[NEGATION_PREFIX]",
+        "value": "n",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1]",
+        "value": "a",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:1ppi]",
+        "value": "\u00eeand\u00e9",
+        "translation": ""
+    },
+    {
+        "tag": "[PERMISSIVE_PREFIX:VOWEL]",
+        "value": "t",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:2ps]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:2ps:SUBJECT_1P]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:2ps]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:1ppi]",
+        "value": "\u00eeand\u00e9",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:3p]",
+        "value": "i",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:1ppe]",
+        "value": "or\u00e9",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:1ppi]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[PLURIFORM_PREFIX:S]",
+        "value": "s",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:IYU]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:2pp:SUBJECT_1P]",
+        "value": "opo",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:3p]",
+        "value": "o",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:1ps]",
+        "value": "xe",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:3p]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:2pp]",
+        "value": "pe",
+        "translation": ""
+    },
+    {
+        "tag": "[CIRCUMSTANTIAL_SUFFIX:NULL_ENDING]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUBJECT_PREFIX:2ps]",
+        "value": "nde",
+        "translation": ""
+    },
+    {
+        "tag": "[CIRCUMSTANTIAL_SUFFIX:NULL_ENDING]",
+        "value": "",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:2ps:OBJECT_1P]",
+        "value": "\u00eeep\u00e9",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT_MARKER:3p:DEFAULT]",
+        "value": "\u00ee",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_2:NASAL_VOWEL_ENDING]",
+        "value": "namo",
+        "translation": ""
+    },
+    {
+        "tag": "[NEGATION_PARTICLE:NA]",
+        "value": "na",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:2pp]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_2:DEFAULT]",
+        "value": "amo",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:3p]",
+        "value": "a'e",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:1ppe]",
+        "value": "or\u00e9",
+        "translation": ""
+    },
+    {
+        "tag": "[PERMISSIVE_PREFIX:CONSONANT]",
+        "value": "ta",
+        "translation": ""
+    },
+    {
+        "tag": "[OBJECT:2ps]",
+        "value": "nde",
+        "translation": ""
+    },
+    {
+        "tag": "[GERUND_SUFFIX:CLASS_1:ORAL_VOWEL]",
+        "value": null,
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT_PREFIX:2ps]",
+        "value": "ere",
+        "translation": ""
+    },
+    {
+        "tag": "[SUBJECT:2pp]",
+        "value": null,
         "translation": ""
     }
 ]

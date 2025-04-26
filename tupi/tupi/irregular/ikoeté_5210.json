@@ -1,0 +1,134 @@
+{
+  "1ppe": {
+    "in": {
+      "verbete": "îkoeté",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkoeté",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ci": {
+      "verbete": "ekoeté",
+      "pluriforme": true,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkoeté",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "1ppi": {
+    "in": {
+      "verbete": "îkoeté",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkoeté",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ci": {
+      "verbete": "ekoeté",
+      "pluriforme": true,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkoeté",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "1ps": {
+    "in": {
+      "verbete": "îkoeté",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "tekoeté",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ci": {
+      "verbete": "ekoeté",
+      "pluriforme": true,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkoeté",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "2pp": {
+    "in": {
+      "verbete": "îkoeté",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkoeté",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "im": {
+      "verbete": "îkoeté",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkoeté",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "2ps": {
+    "in": {
+      "verbete": "îkoeté",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkoeté",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "im": {
+      "verbete": "îkoeté",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkoeté",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  },
+  "3p": {
+    "in": {
+      "verbete": "îkoeté",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ge": {
+      "verbete": "îkoeté",
+      "pluriforme": false,
+      "overwrite": false
+    },
+    "ci": {
+      "verbete": "ekoeté",
+      "pluriforme": true,
+      "overwrite": false
+    },
+    "pe": {
+      "verbete": "îkoeté",
+      "pluriforme": false,
+      "overwrite": false
+    }
+  }
+}

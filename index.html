@@ -527,6 +527,7 @@
             // Create a temporary container element
             const tempContainer = document.createElement("div");
             // Set innerHTML of the container to the HTML string
+            console.log(con)
             tempContainer.innerHTML = generateConjugationTable(mode, con, un_id, ne);
             var storedState = getCookie('conjugationToggle');
             if (storedState === 'enabled') {
