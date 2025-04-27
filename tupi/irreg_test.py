@@ -205,7 +205,7 @@ for vclass in tqdm([x for x in verbs.keys()]):
         #     "(-îo- ou -nho-) (v.tr.)",
         #     "(-îo-s- ou -nho-s-) (v.tr. irreg. Incorpora -îo- e -s-. Nas formas nominais é pluriforme.)",
         #     "(v. tr. irreg.)",
-        #     "(v. intr. irreg.)",
+        #     # "(v. intr. irreg.)",
         #     "(t) (v. intr. compl. posp. irreg.)",
         #     "(v. intr. irreg. usado somente no plural)",
         #     "(v.tr. irreg. - não recebe o pronome -î- incorporado)"
@@ -214,14 +214,14 @@ for vclass in tqdm([x for x in verbs.keys()]):
         #         vbt["first_word"], vclass, vbt["definition"], vid=vbt["id"]
         #     )
         #     vobjs.append(verb_obj)
-        if "só" == vbt["first_word"]:
+        if "'ikatu" == vbt["first_word"]:
             irregvobj = IrregVerb(
                 vbt["first_word"], vclass, vbt["definition"], vid=vbt["id"]
             )
             irregvobjs.append(irregvobj)
         else:
             othervobj = tupi.Verb(
-                vbt["first_word"], "2ª classe", vbt["definition"], vid=vbt["id"]
+                vbt["first_word"], vclass, vbt["definition"], vid=vbt["id"]
             )
             othervobjs.append(othervobj)
 

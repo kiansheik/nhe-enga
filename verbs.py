@@ -256,7 +256,8 @@ for vclass in tqdm([x for x in verbs.keys()]):
             "(v. tr. irreg.)",
             "(t) (v. intr. compl. posp. irreg.)",
             "(v. intr. irreg. usado somente no plural)",
-            "(v.tr. irreg. - não recebe o pronome -î- incorporado)"
+            "(v.tr. irreg. - não recebe o pronome -î- incorporado)",
+            "(v. intr. compl. posp. irreg.)"
         ]:
             verb_obj = tupi.Verb(
                 vbt["first_word"], vclass, vbt["definition"], vid=vbt["id"]

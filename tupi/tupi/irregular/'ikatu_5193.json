@@ -1,0 +1,116 @@
+{
+  "1ppe": {
+    "ø": {
+      "in": {
+        "verbete": "'ekatu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "'ekatu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "'ekatu",
+        "pluriforme": false,
+        "overwrite": false
+      }
+    }
+  },
+  "1ppi": {
+    "ø": {
+      "in": {
+        "verbete": "'ekatu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "'ekatu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "'ekatu",
+        "pluriforme": false,
+        "overwrite": false
+      }
+    }
+  },
+  "1ps": {
+    "ø": {
+      "in": {
+        "verbete": "'ekatu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "'ekatu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "'ekatu",
+        "pluriforme": false,
+        "overwrite": false
+      }
+    }
+  },
+  "2pp": {
+    "ø": {
+      "in": {
+        "verbete": "îekatu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "îekatu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "'ekatu",
+        "pluriforme": false,
+        "overwrite": false
+      }
+    }
+  },
+  "2ps": {
+    "ø": {
+      "in": {
+        "verbete": "katu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "rekatu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "'ekatu",
+        "pluriforme": false,
+        "overwrite": false
+      }
+    }
+  },
+  "3p": {
+    "ø": {
+      "in": {
+        "verbete": "e'ikatu",
+        "pluriforme": false,
+        "overwrite": true
+      },
+      "ci": {
+        "verbete": "'ekatu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "'ekatu",
+        "pluriforme": false,
+        "overwrite": false
+      }
+    }
+  }
+}
