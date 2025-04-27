@@ -11,9 +11,19 @@
         "pluriforme": false,
         "overwrite": false
       },
+      "ci": {
+        "verbete": "ekó",
+        "pluriforme": true,
+        "overwrite": false
+      },
       "pe": {
         "verbete": "îkotebẽ",
         "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekotebẽ",
+        "pluriforme": true,
         "overwrite": false
       }
     }
@@ -30,9 +40,19 @@
         "pluriforme": false,
         "overwrite": false
       },
+      "ci": {
+        "verbete": "ekó",
+        "pluriforme": true,
+        "overwrite": false
+      },
       "pe": {
         "verbete": "îkotebẽ",
         "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekotebẽ",
+        "pluriforme": true,
         "overwrite": false
       }
     }
@@ -49,9 +69,19 @@
         "pluriforme": false,
         "overwrite": false
       },
+      "ci": {
+        "verbete": "ekó",
+        "pluriforme": true,
+        "overwrite": false
+      },
       "pe": {
         "verbete": "îkotebẽ",
         "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekotebẽ",
+        "pluriforme": true,
         "overwrite": false
       }
     }
@@ -77,6 +107,11 @@
         "verbete": "îkotebẽ",
         "pluriforme": false,
         "overwrite": false
+      },
+      "co": {
+        "verbete": "ekotebẽ",
+        "pluriforme": true,
+        "overwrite": false
       }
     }
   },
@@ -101,6 +136,11 @@
         "verbete": "îkotebẽ",
         "pluriforme": false,
         "overwrite": false
+      },
+      "co": {
+        "verbete": "ekotebẽ",
+        "pluriforme": true,
+        "overwrite": false
       }
     }
   },
@@ -116,9 +156,19 @@
         "pluriforme": false,
         "overwrite": false
       },
+      "ci": {
+        "verbete": "ekó",
+        "pluriforme": true,
+        "overwrite": false
+      },
       "pe": {
         "verbete": "îkotebẽ",
         "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekotebẽ",
+        "pluriforme": true,
         "overwrite": false
       }
     }

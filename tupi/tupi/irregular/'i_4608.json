@@ -20,6 +20,11 @@
         "verbete": "'é",
         "pluriforme": false,
         "overwrite": false
+      },
+      "co": {
+        "verbete": "'é",
+        "pluriforme": false,
+        "overwrite": false
       }
     }
   },
@@ -41,6 +46,11 @@
         "overwrite": false
       },
       "pe": {
+        "verbete": "'é",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
         "verbete": "'é",
         "pluriforme": false,
         "overwrite": false
@@ -68,6 +78,11 @@
         "verbete": "'é",
         "pluriforme": false,
         "overwrite": false
+      },
+      "co": {
+        "verbete": "'é",
+        "pluriforme": false,
+        "overwrite": false
       }
     }
   },
@@ -90,6 +105,11 @@
       },
       "pe": {
         "verbete": "îé",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "'é",
         "pluriforme": false,
         "overwrite": false
       }
@@ -116,6 +136,11 @@
         "verbete": "eré",
         "pluriforme": false,
         "overwrite": true
+      },
+      "co": {
+        "verbete": "'é",
+        "pluriforme": false,
+        "overwrite": false
       }
     }
   },
@@ -140,6 +165,11 @@
         "verbete": "e'i",
         "pluriforme": false,
         "overwrite": true
+      },
+      "co": {
+        "verbete": "'é",
+        "pluriforme": false,
+        "overwrite": false
       }
     }
   }

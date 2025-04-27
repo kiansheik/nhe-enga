@@ -47,6 +47,7 @@
   <button onclick="nextWord()">Next</button>
   <button onclick="downloadZip()">Download Irregular Files (ZIP)</button>
   <button onclick="resetData()">Reset Data</button>
+  <button onclick="copyLastEdit()">Copy Previous</button>
 </div>
 
 <div id="progressBar"></div>
@@ -83,7 +84,58 @@ if (localStorage.getItem('tupi_verbs_data')) {
   showWord();
 }
 
-document.getElementById('fileInput').addEventListener('change', handleFileUpload);
+document.getElementById('fileInput').addEventListener('change', handleUpload);
+
+async function handleUpload(event) {
+  const file = event.target.files[0];
+
+  if (file.name.endsWith('.zip')) {
+    await handleZipUpload(file);
+  } else if (file.name.endsWith('.json')) {
+    handleFileUpload(event);
+  }
+}
+function copyLastEdit() {
+  if (lastEditedIndex === null) {
+    alert("No previous edit to copy!");
+    return;
+  }
+
+  const [verb, rawData] = words[currentIndex];
+  const conjugations = rawData.conjugations || rawData;
+
+  const inputs = document.querySelectorAll('input[data-index]');
+  const lastInput = [...inputs].find(input => parseInt(input.getAttribute('data-index')) === lastEditedIndex);
+
+  if (!lastInput) {
+    alert("Could not find last edited input!");
+    return;
+  }
+
+  let found = false;
+
+  for (const input of inputs) {
+    const idx = parseInt(input.getAttribute('data-index'));
+    if (idx <= lastEditedIndex) continue; // ✅ Only after last edited
+    if (input.value.trim()) continue; // ✅ Only truly empty fields
+
+    const nextIdx = idx;
+    const last = conjugations[lastEditedIndex];
+
+    conjugations[nextIdx].verbete = last.verbete;
+    conjugations[nextIdx].pluriforme = last.pluriforme;
+    conjugations[nextIdx].overwrite = last.overwrite;
+
+    saveToLocalStorage();
+    showWord(); // Refresh table
+    found = true;
+    break;
+  }
+
+  if (!found) {
+    alert("No next empty conjugation to paste into!");
+  }
+}
 
 function handleFileUpload(event) {
   const file = event.target.files[0];
@@ -94,7 +146,7 @@ function handleFileUpload(event) {
     originalData = {};
     for (const [verb, conjugations] of Object.entries(rawData)) {
       const fixedConjugations = conjugations.map(c => {
-        return { s: c.s, o: c.o, m: c.m, original_verbete: c.f || '', new_verbete: null, pluriforme: c.pluriforme || false, overwrite: c.overwrite || false };
+        return { s: c.s, o: c.o, m: c.m, original_verbete: c.f || '', verbete: null, pluriforme: c.pluriforme || false, overwrite: c.overwrite || false };
       });
       originalData[verb] = { conjugations: fixedConjugations, edited: false };
     }
@@ -104,6 +156,73 @@ function handleFileUpload(event) {
     showWord();
   };
   reader.readAsText(file);
+}
+
+async function handleZipUpload(file) {
+  const zip = await JSZip.loadAsync(file);
+
+  for (const filename of Object.keys(zip.files)) {
+    if (!filename.endsWith('.json')) continue;
+
+    const content = await zip.files[filename].async('string');
+    try {
+      const parsed = JSON.parse(content);
+
+      const verbName = filename.replace(/_\d+\.json$/, '').replace("irregular/", "");
+      const id = filename.match(/_(\d+)\.json$/)?.[1] || 'unknown';
+      const fullVerb = `${verbName.replace(/_/g, ' ')} ${id}`.normalize('NFC');
+
+      let existingEntry = words.find(([verb]) => verb.normalize('NFC') === fullVerb.normalize('NFC'));
+      if (!existingEntry) {
+        existingEntry = [fullVerb, { conjugations: [], edited: false }];
+        words.push(existingEntry);
+      }
+      existingEntry[1].edited = true;
+      const [_, dataObj] = existingEntry;
+      const conjugations = dataObj.conjugations || dataObj;
+
+      for (const [subject, objs] of Object.entries(parsed)) {
+        for (const [object, modes] of Object.entries(objs)) {
+          for (const [mode, values] of Object.entries(modes)) {
+            const subj = subject === 'ø' ? null : subject;
+            const obj = object === 'ø' ? null : object;
+            const ms = mode; // already shortened
+
+            const idx = conjugations.findIndex(c => 
+              (c.s ?? 'ø') === (subj ?? 'ø') &&
+              (c.o ?? 'ø') === (obj ?? 'ø') &&
+              (c.m || '').slice(0, 2) === ms
+            );
+
+            if (idx !== -1) {
+              // Update existing conjugation
+              conjugations[idx].verbete = values.verbete || '';
+              conjugations[idx].pluriforme = values.pluriforme || false;
+              conjugations[idx].overwrite = values.overwrite || false;
+              console.log(conjugations[idx])
+            } else {
+              // Add new conjugation if it doesn't exist
+              conjugations.push({
+                s: subj,
+                o: obj,
+                m: ms,
+                original_verbete: values.verbete || '',
+                verbete: values.verbete || '',
+                pluriforme: values.pluriforme || false,
+                overwrite: values.overwrite || false
+              });
+            }
+          }
+        }
+      }
+
+    } catch (error) {
+      console.warn(`Skipping invalid JSON file: ${filename}`, error);
+    }
+  }
+  saveToLocalStorage();
+  currentIndex = 0;
+  showWord();
 }
 
 function wordSorter(a, b) {
@@ -144,51 +263,68 @@ function nextWord() {
   if (currentIndex < words.length - 1) { saveCurrentEdits(); autoCopyConjugations(); currentIndex++; showWord(); }
 }
 
+let lastEditedIndex = null;
+
 function saveCurrentEdits() {
   const inputs = document.querySelectorAll('input[data-index]');
   const checkboxes = document.querySelectorAll('input[type=checkbox][data-index]');
-  const [verb, data] = words[currentIndex];
-  const conjugations = data.conjugations;
+  
+  const [verb, rawData] = words[currentIndex];
+  const conjugations = rawData.conjugations || rawData;
   let somethingTyped = false;
+
   inputs.forEach(input => {
     const idx = parseInt(input.getAttribute('data-index'));
     const key = input.getAttribute('data-key');
-    if (conjugations[idx] && input.value.trim()) {
-      conjugations[idx][key] = input.value.trim();
-      somethingTyped = true;
+    if (!isNaN(idx) && conjugations[idx]) {
+      if (input.value.trim() && key === 'verbete') {
+        // console.log(`Saving ${key} for ${verb} at index ${idx}: ${input.value.trim()}`);
+        conjugations[idx].verbete = input.value.trim();
+        somethingTyped = true;
+        lastEditedIndex = idx; // ✅ Track last edited
+      }
     }
   });
+
   checkboxes.forEach(box => {
     const idx = parseInt(box.getAttribute('data-index'));
     const field = box.getAttribute('data-field');
-    if (conjugations[idx]) {
+    if (!isNaN(idx) && conjugations[idx]) {
       conjugations[idx][field] = box.checked;
       somethingTyped = true;
+      lastEditedIndex = idx; // ✅ Track last edited too
     }
   });
+
   if (somethingTyped) {
-    data.edited = true;
     saveToLocalStorage();
   }
   updateProgressBar();
 }
 
+
 function showWord() {
   if (words.length === 0) return;
-  const [verbName, data] = words[currentIndex];
-  const conjugations = data.conjugations;
+
+  const [verbName, rawData] = words[currentIndex];
+  const data = rawData.conjugations || rawData; // ✅ support both formats
+  
   document.getElementById('currentWord').innerText = `Word ${currentIndex + 1}/${words.length}: ${verbName}`;
-  const modesAvailable = Array.from(new Set(conjugations.map(c => c.m)));
+
+  const modesAvailable = Array.from(new Set(data.map(c => c.m)));
   if (!modesAvailable.includes(currentMode)) currentMode = modesAvailable[0] || 'in';
+
   let selector = `<label for="modeSelect">Mode:</label> <select id="modeSelect" onchange="switchMode()">`;
   for (const m of modesAvailable) {
     selector += `<option value="${m}" ${currentMode === m ? 'selected' : ''}>${modeLabels[m] || m}</option>`;
   }
   selector += `</select>`;
+  
   document.getElementById('modeSelector').innerHTML = selector;
-  document.getElementById('tableContainer').innerHTML = generateEditableConjugationTable(currentMode, conjugations, currentIndex);
+  document.getElementById('tableContainer').innerHTML = generateEditableConjugationTable(currentMode, data, currentIndex);
   updateProgressBar();
 }
+
 
 function switchMode() {
   const select = document.getElementById('modeSelect');
@@ -282,21 +418,22 @@ function autoCopyConjugations() {
         const [prevVerbName, prevData] = words[i];
         const prevBase = getBaseForm(prevVerbName);
 
-        if (nextBase.startsWith(prevBase)) {
-            if (!nextData.edited) {
-                nextData.conjugations = prevData.conjugations.map(prevConj => {
-                    const matchingConj = nextData.conjugations.find(nextConj => 
-                        nextConj.s === prevConj.s && nextConj.o === prevConj.o && nextConj.m === prevConj.m
-                    );
-                    if (matchingConj) {
-                        matchingConj.verbete = prevConj.verbete || '';
-                        matchingConj.pluriforme = prevConj.pluriforme || false;
-                        matchingConj.overwrite = prevConj.overwrite || false;
-                    }
-                    return matchingConj || prevConj;
-                });
-                nextData.edited = true;
-                saveToLocalStorage();
+        const normalize = str => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        if (normalize(nextBase).startsWith(normalize(prevBase)) || normalize(nextBase).endsWith(normalize(prevBase))) {
+            if (true) {
+            nextData.conjugations = prevData.conjugations.map(prevConj => {
+                const matchingConj = nextData.conjugations.find(nextConj => 
+                nextConj.s === prevConj.s && nextConj.o === prevConj.o && nextConj.m === prevConj.m
+                );
+                if (matchingConj && !matchingConj.verbete) {
+                matchingConj.verbete = prevConj.verbete || '';
+                matchingConj.pluriforme = prevConj.pluriforme || false;
+                matchingConj.overwrite = prevConj.overwrite || false;
+                }
+                return matchingConj || prevConj;
+            });
+            nextData.edited = true;
+            saveToLocalStorage();
             }
             break;
         }
@@ -321,7 +458,7 @@ async function downloadZip() {
   for (const [verb, dataObj] of words) {
     const data = dataObj.conjugations || dataObj; // Support both shapes
 
-    const validEntries = data.filter(c => (c.verbete || '').trim());
+    const validEntries = data.filter(c => (c.verbete || c.original_verbete || '').trim());
     if (validEntries.length === 0) continue;
 
     const id = verb.match(/\d+/)?.[0] || 'unknown';
@@ -331,15 +468,15 @@ async function downloadZip() {
     const structured = {};
 
     for (const c of validEntries) {
-      const subj = c.s ?? 'ø';  // subject, if missing → 'ø'
-      const obj = c.o ?? 'ø';   // object, if missing → 'ø'
-      const ms = (c.m || '').slice(0, 2); // first 2 letters of mode
+      const subj = c.s ?? 'ø';
+      const obj = c.o ?? 'ø';
+      const ms = (c.m || '').slice(0, 2);
 
       if (!structured[subj]) structured[subj] = {};
       if (!structured[subj][obj]) structured[subj][obj] = {};
 
       structured[subj][obj][ms] = {
-        verbete: c.verbete,
+        verbete: (c.verbete || c.original_verbete || '').trim(),
         pluriforme: c.pluriforme || false,
         overwrite: c.overwrite || false
       };

@@ -20,6 +20,11 @@
         "verbete": "îkobé",
         "pluriforme": false,
         "overwrite": false
+      },
+      "co": {
+        "verbete": "ekobé",
+        "pluriforme": true,
+        "overwrite": false
       }
     }
   },
@@ -43,6 +48,11 @@
       "pe": {
         "verbete": "îkobé",
         "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekobé",
+        "pluriforme": true,
         "overwrite": false
       }
     }
@@ -68,6 +78,11 @@
         "verbete": "îkobé",
         "pluriforme": false,
         "overwrite": false
+      },
+      "co": {
+        "verbete": "ekobé",
+        "pluriforme": true,
+        "overwrite": false
       }
     }
   },
@@ -91,6 +106,11 @@
       "pe": {
         "verbete": "îkobé",
         "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekobé",
+        "pluriforme": true,
         "overwrite": false
       }
     }
@@ -116,6 +136,11 @@
         "verbete": "îkobé",
         "pluriforme": false,
         "overwrite": false
+      },
+      "co": {
+        "verbete": "ekobé",
+        "pluriforme": true,
+        "overwrite": false
       }
     }
   },
@@ -139,6 +164,11 @@
       "pe": {
         "verbete": "îkobé",
         "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekobé",
+        "pluriforme": true,
         "overwrite": false
       }
     }

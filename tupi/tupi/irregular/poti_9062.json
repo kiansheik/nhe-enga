@@ -1,4 +1,149 @@
 {
+  "1ppe": {
+    "ø": {
+      "in": {
+        "verbete": "oré oropoti",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "oropotîabo",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "epoti",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "oré toropoti",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "epoti",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "1ppi": {
+    "ø": {
+      "in": {
+        "verbete": "îandé îapoti",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "îapotîabo",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "epoti",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "îandé tîapoti",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "epoti",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "1ps": {
+    "ø": {
+      "in": {
+        "verbete": "ixé apoti",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "tepoti",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "epoti",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "ixé tapoti",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "epoti",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "2pp": {
+    "ø": {
+      "in": {
+        "verbete": "peẽ pepoti",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "pepotîabo",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "peẽ pepoti",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "peẽ tapepoti",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "epoti",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "2ps": {
+    "ø": {
+      "in": {
+        "verbete": "endé erepoti",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "epotîabo",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "endé epoti",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "endé terepoti",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "epoti",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
   "3p": {
     "ø": {
       "in": {
@@ -20,35 +165,8 @@
         "verbete": "epoti",
         "pluriforme": false,
         "overwrite": false
-      }
-    }
-  },
-  "1ps": {
-    "ø": {
-      "ge": {
-        "verbete": "tepoti",
-        "pluriforme": false,
-        "overwrite": false
       },
-      "ci": {
-        "verbete": "epoti",
-        "pluriforme": true,
-        "overwrite": false
-      }
-    }
-  },
-  "1ppe": {
-    "ø": {
-      "ci": {
-        "verbete": "epoti",
-        "pluriforme": true,
-        "overwrite": false
-      }
-    }
-  },
-  "1ppi": {
-    "ø": {
-      "ci": {
+      "co": {
         "verbete": "epoti",
         "pluriforme": true,
         "overwrite": false

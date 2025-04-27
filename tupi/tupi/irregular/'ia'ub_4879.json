@@ -2,28 +2,28 @@
   "1ppe": {
     "ø": {
       "in": {
-        "verbete": "îkoaibĩ",
+        "verbete": "'é",
         "pluriforme": false,
         "overwrite": false
       },
       "ge": {
-        "verbete": "îkoaibĩ",
+        "verbete": "'i",
         "pluriforme": false,
         "overwrite": false
       },
       "ci": {
-        "verbete": "ekoaibĩ",
-        "pluriforme": true,
+        "verbete": "'é",
+        "pluriforme": false,
         "overwrite": false
       },
       "pe": {
-        "verbete": "îkoaibĩ",
+        "verbete": "'é",
         "pluriforme": false,
         "overwrite": false
       },
       "co": {
-        "verbete": "ekoaíbĩ",
-        "pluriforme": true,
+        "verbete": "'ea'ub",
+        "pluriforme": false,
         "overwrite": false
       }
     }
@@ -31,28 +31,28 @@
   "1ppi": {
     "ø": {
       "in": {
-        "verbete": "îkoaibĩ",
+        "verbete": "'é",
         "pluriforme": false,
         "overwrite": false
       },
       "ge": {
-        "verbete": "îkoaibĩ",
+        "verbete": "'i",
         "pluriforme": false,
         "overwrite": false
       },
       "ci": {
-        "verbete": "ekoaibĩ",
-        "pluriforme": true,
+        "verbete": "'é",
+        "pluriforme": false,
         "overwrite": false
       },
       "pe": {
-        "verbete": "îkoaibĩ",
+        "verbete": "'é",
         "pluriforme": false,
         "overwrite": false
       },
       "co": {
-        "verbete": "ekoaíbĩ",
-        "pluriforme": true,
+        "verbete": "'ea'ub",
+        "pluriforme": false,
         "overwrite": false
       }
     }
@@ -60,28 +60,28 @@
   "1ps": {
     "ø": {
       "in": {
-        "verbete": "îkoaibĩ",
+        "verbete": "'é",
         "pluriforme": false,
         "overwrite": false
       },
       "ge": {
-        "verbete": "tekoaibĩ",
+        "verbete": "'i",
         "pluriforme": false,
         "overwrite": false
       },
       "ci": {
-        "verbete": "ekoaibĩ",
-        "pluriforme": true,
+        "verbete": "'é",
+        "pluriforme": false,
         "overwrite": false
       },
       "pe": {
-        "verbete": "îkoaibĩ",
+        "verbete": "'é",
         "pluriforme": false,
         "overwrite": false
       },
       "co": {
-        "verbete": "ekoaíbĩ",
-        "pluriforme": true,
+        "verbete": "'ea'ub",
+        "pluriforme": false,
         "overwrite": false
       }
     }
@@ -89,28 +89,28 @@
   "2pp": {
     "ø": {
       "in": {
-        "verbete": "îkoaibĩ",
+        "verbete": "îé",
         "pluriforme": false,
         "overwrite": false
       },
       "ge": {
-        "verbete": "îkoaibĩ",
+        "verbete": "'i",
         "pluriforme": false,
         "overwrite": false
       },
       "im": {
-        "verbete": "îkoaibĩ",
+        "verbete": "îé",
         "pluriforme": false,
         "overwrite": false
       },
       "pe": {
-        "verbete": "îkoaibĩ",
+        "verbete": "îé",
         "pluriforme": false,
         "overwrite": false
       },
       "co": {
-        "verbete": "ekoaíbĩ",
-        "pluriforme": true,
+        "verbete": "'ea'ub",
+        "pluriforme": false,
         "overwrite": false
       }
     }
@@ -118,28 +118,28 @@
   "2ps": {
     "ø": {
       "in": {
-        "verbete": "îkoaibĩ",
+        "verbete": "eré",
         "pluriforme": false,
-        "overwrite": false
+        "overwrite": true
       },
       "ge": {
-        "verbete": "îkoaibĩ",
+        "verbete": "'i",
         "pluriforme": false,
         "overwrite": false
       },
       "im": {
-        "verbete": "îkoaibĩ",
+        "verbete": "eré",
         "pluriforme": false,
-        "overwrite": false
+        "overwrite": true
       },
       "pe": {
-        "verbete": "îkoaibĩ",
+        "verbete": "eré",
         "pluriforme": false,
-        "overwrite": false
+        "overwrite": true
       },
       "co": {
-        "verbete": "ekoaíbĩ",
-        "pluriforme": true,
+        "verbete": "'ea'ub",
+        "pluriforme": false,
         "overwrite": false
       }
     }
@@ -147,28 +147,28 @@
   "3p": {
     "ø": {
       "in": {
-        "verbete": "îkoaibĩ",
+        "verbete": "e'i",
         "pluriforme": false,
-        "overwrite": false
+        "overwrite": true
       },
       "ge": {
-        "verbete": "îkoaibĩ",
+        "verbete": "'i",
         "pluriforme": false,
         "overwrite": false
       },
       "ci": {
-        "verbete": "ekoaibĩ",
-        "pluriforme": true,
-        "overwrite": false
-      },
-      "pe": {
-        "verbete": "îkoaibĩ",
+        "verbete": "'é",
         "pluriforme": false,
         "overwrite": false
       },
+      "pe": {
+        "verbete": "e'i",
+        "pluriforme": false,
+        "overwrite": true
+      },
       "co": {
-        "verbete": "ekoaíbĩ",
-        "pluriforme": true,
+        "verbete": "'ea'ub",
+        "pluriforme": false,
         "overwrite": false
       }
     }

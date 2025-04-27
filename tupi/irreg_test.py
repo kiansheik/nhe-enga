@@ -209,7 +209,7 @@ for vclass in tqdm([x for x in verbs.keys()]):
                 vbt["first_word"], vclass, vbt["definition"], vid=vbt["id"]
             )
             vobjs.append(verb_obj)
-        elif "(v. tr. irreg.)" in vclass:
+        elif "(v. intr. irreg.)" in vclass:
             irregvobj = IrregVerb(
                 vbt["first_word"], vclass, vbt["definition"], vid=vbt["id"]
             )

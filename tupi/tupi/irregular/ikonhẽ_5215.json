@@ -20,6 +20,11 @@
         "verbete": "îkonhẽ",
         "pluriforme": false,
         "overwrite": false
+      },
+      "co": {
+        "verbete": "ekonhẽ",
+        "pluriforme": true,
+        "overwrite": false
       }
     }
   },
@@ -43,6 +48,11 @@
       "pe": {
         "verbete": "îkonhẽ",
         "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekonhẽ",
+        "pluriforme": true,
         "overwrite": false
       }
     }
@@ -68,6 +78,11 @@
         "verbete": "îkonhẽ",
         "pluriforme": false,
         "overwrite": false
+      },
+      "co": {
+        "verbete": "ekonhẽ",
+        "pluriforme": true,
+        "overwrite": false
       }
     }
   },
@@ -83,9 +98,19 @@
         "pluriforme": false,
         "overwrite": false
       },
+      "im": {
+        "verbete": "îkó",
+        "pluriforme": false,
+        "overwrite": false
+      },
       "pe": {
         "verbete": "îkonhẽ",
         "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekonhẽ",
+        "pluriforme": true,
         "overwrite": false
       }
     }
@@ -102,9 +127,19 @@
         "pluriforme": false,
         "overwrite": false
       },
+      "im": {
+        "verbete": "îkó",
+        "pluriforme": false,
+        "overwrite": false
+      },
       "pe": {
         "verbete": "îkonhẽ",
         "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekonhẽ",
+        "pluriforme": true,
         "overwrite": false
       }
     }
@@ -129,6 +164,11 @@
       "pe": {
         "verbete": "îkonhẽ",
         "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekonhẽ",
+        "pluriforme": true,
         "overwrite": false
       }
     }

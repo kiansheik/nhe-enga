@@ -253,6 +253,7 @@ for vclass in tqdm([x for x in verbs.keys()]):
             "(-îo- ou -nho-) (v.tr.)",
             "(-îo-s- ou -nho-s-) (v.tr. irreg. Incorpora -îo- e -s-. Nas formas nominais é pluriforme.)",
             "(v. intr. irreg.)",
+            "(v. tr. irreg.)",
         ]:
             verb_obj = tupi.Verb(
                 vbt["first_word"], vclass, vbt["definition"], vid=vbt["id"]

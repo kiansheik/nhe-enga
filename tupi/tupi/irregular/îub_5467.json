@@ -1,4 +1,149 @@
 {
+  "1ppe": {
+    "ø": {
+      "in": {
+        "verbete": "oré oroîub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "oroîupa",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "uî",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "oré toroîub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ub",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "1ppi": {
+    "ø": {
+      "in": {
+        "verbete": "îandé îaîub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "îaîupa",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "uî",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "îandé tîaîub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ub",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "1ps": {
+    "ø": {
+      "in": {
+        "verbete": "ixé aîub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "tub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "uî",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "ixé taîub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ub",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "2pp": {
+    "ø": {
+      "in": {
+        "verbete": "peẽ peîub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "peîupa",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "peẽ peîub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "peẽ tapeîub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ub",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "2ps": {
+    "ø": {
+      "in": {
+        "verbete": "endé ereîub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "eîupa",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "endé eîub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "endé tereîub",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ub",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
   "3p": {
     "ø": {
       "in": {
@@ -20,36 +165,9 @@
         "verbete": "ub",
         "pluriforme": false,
         "overwrite": false
-      }
-    }
-  },
-  "1ps": {
-    "ø": {
-      "ge": {
-        "verbete": "tub",
-        "pluriforme": false,
-        "overwrite": false
       },
-      "ci": {
-        "verbete": "uî",
-        "pluriforme": true,
-        "overwrite": false
-      }
-    }
-  },
-  "1ppe": {
-    "ø": {
-      "ci": {
-        "verbete": "uî",
-        "pluriforme": true,
-        "overwrite": false
-      }
-    }
-  },
-  "1ppi": {
-    "ø": {
-      "ci": {
-        "verbete": "uî",
+      "co": {
+        "verbete": "ub",
         "pluriforme": true,
         "overwrite": false
       }
