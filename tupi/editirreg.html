@@ -451,42 +451,47 @@ function updateProgressBar() {
 }
 
 async function downloadZip() {
-  saveCurrentEdits();
-  const zip = new JSZip();
-  const folder = zip.folder('irregular');
+    saveCurrentEdits();
+    const zip = new JSZip();
+    const folder = zip.folder('irregular');
 
-  for (const [verb, dataObj] of words) {
-    const data = dataObj.conjugations || dataObj; // Support both shapes
+    for (const [verb, dataObj] of words) {
+        const data = dataObj.conjugations || dataObj; // Support both shapes
 
-    const validEntries = data.filter(c => (c.verbete || c.original_verbete || '').trim());
-    if (validEntries.length === 0) continue;
+        const validEntries = data.filter(c => (c.verbete || c.original_verbete || '').trim());
+        if (validEntries.length === 0) continue;
 
-    const id = verb.match(/\d+/)?.[0] || 'unknown';
-    const base = verb.replace(/[0-9]/g, '').trim().replace(/\s+/g, '_');
-    const fileName = `${base}_${id}.json`;
+        const hasNonEmptyVerbete = validEntries.some(c => (c.verbete || '').trim());
+        if (!hasNonEmptyVerbete) continue; // Skip file if all .verbete fields are empty
 
-    const structured = {};
+        const id = verb.match(/\d+/)?.[0] || 'unknown';
+        const base = verb.replace(/[0-9]/g, '').trim().replace(/\s+/g, '_');
+        const fileName = `${base}_${id}.json`;
 
-    for (const c of validEntries) {
-      const subj = c.s ?? 'ø';
-      const obj = c.o ?? 'ø';
-      const ms = (c.m || '').slice(0, 2);
+        const structured = {};
 
-      if (!structured[subj]) structured[subj] = {};
-      if (!structured[subj][obj]) structured[subj][obj] = {};
+        for (const c of validEntries) {
+            if (c.verbete){
+                const subj = c.s ?? 'ø';
+                const obj = c.o ?? 'ø';
+                const ms = (c.m || '').slice(0, 2);
 
-      structured[subj][obj][ms] = {
-        verbete: (c.verbete || c.original_verbete || '').trim(),
-        pluriforme: c.pluriforme || false,
-        overwrite: c.overwrite || false
-      };
+                if (!structured[subj]) structured[subj] = {};
+                if (!structured[subj][obj]) structured[subj][obj] = {};
+
+                structured[subj][obj][ms] = {
+                    verbete: (c.verbete || '').trim(),
+                    pluriforme: c.pluriforme || false,
+                    overwrite: c.overwrite || false
+                };
+            }
+        }
+
+        folder.file(fileName, JSON.stringify(structured, null, 2));
     }
 
-    folder.file(fileName, JSON.stringify(structured, null, 2));
-  }
-
-  const blob = await zip.generateAsync({ type: "blob" });
-  saveAs(blob, "irregular_verbs.zip");
+    const blob = await zip.generateAsync({ type: "blob" });
+    saveAs(blob, "irregular_verbs.zip");
 }
 
 </script>

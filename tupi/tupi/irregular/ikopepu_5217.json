@@ -1,0 +1,176 @@
+{
+  "1ppe": {
+    "ø": {
+      "in": {
+        "verbete": "îkopepu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "îkopepu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "ekopepu",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "oré toroikopepu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekopepu",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "1ppi": {
+    "ø": {
+      "in": {
+        "verbete": "îkopepu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "îkopepu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "ekopepu",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "îandé tîaikopepu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekopepu",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "1ps": {
+    "ø": {
+      "in": {
+        "verbete": "îkopepu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "tekopepu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "ekopepu",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "ixé taikopepu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekopepu",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "2pp": {
+    "ø": {
+      "in": {
+        "verbete": "îkopepu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "îkopepu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "îkopepu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "peẽ tapeikopepu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekopepu",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "2ps": {
+    "ø": {
+      "in": {
+        "verbete": "îkopepu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "îkopepu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "îkopepu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "endé tereikopepu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekopepu",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "3p": {
+    "ø": {
+      "in": {
+        "verbete": "îkopepu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "îkopepu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "ekopepu",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "a'e toikopepu",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekopepu",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  }
+}

@@ -190,26 +190,31 @@ irregvobjs = []
 othervobjs = []
 for vclass in tqdm([x for x in verbs.keys()]):
     for vbt in verbs[vclass]:
-        if vclass in [
-            "(s) (v.tr.)",
-            "(v.tr.)",
-            "(v. intr.)",
-            "(v. intr. compl. posp.)",
-            "(v.tr. ou intr.)",
-            "(s) (v.tr. e intr.)",
-            "(v. da 2ª classe)",
-            "(-îo-, -s-) (v.tr. irreg. Incorpora -îo- (ou -nho-) e -s- no indicativo e formas derivadas deste.)",
-            "(xe) (r, s) (v. da 2ª classe)",
-            "(r, s) (xe) (v. da 2ª classe)",
-            "(-îo-) (v.tr.)",
-            "(-îo- ou -nho-) (v.tr.)",
-            "(-îo-s- ou -nho-s-) (v.tr. irreg. Incorpora -îo- e -s-. Nas formas nominais é pluriforme.)",
-        ]:
-            verb_obj = tupi.Verb(
-                vbt["first_word"], vclass, vbt["definition"], vid=vbt["id"]
-            )
-            vobjs.append(verb_obj)
-        elif "(v. intr. irreg.)" in vclass:
+        # if vclass in [
+        #     "(s) (v.tr.)",
+        #     "(v.tr.)",
+        #     "(v. intr.)",
+        #     "(v. intr. compl. posp.)",
+        #     "(v.tr. ou intr.)",
+        #     "(s) (v.tr. e intr.)",
+        #     "(v. da 2ª classe)",
+        #     "(-îo-, -s-) (v.tr. irreg. Incorpora -îo- (ou -nho-) e -s- no indicativo e formas derivadas deste.)",
+        #     "(xe) (r, s) (v. da 2ª classe)",
+        #     "(r, s) (xe) (v. da 2ª classe)",
+        #     "(-îo-) (v.tr.)",
+        #     "(-îo- ou -nho-) (v.tr.)",
+        #     "(-îo-s- ou -nho-s-) (v.tr. irreg. Incorpora -îo- e -s-. Nas formas nominais é pluriforme.)",
+        #     "(v. tr. irreg.)",
+        #     "(v. intr. irreg.)",
+        #     "(t) (v. intr. compl. posp. irreg.)",
+        #     "(v. intr. irreg. usado somente no plural)",
+        #     "(v.tr. irreg. - não recebe o pronome -î- incorporado)"
+        # ]:
+        #     verb_obj = tupi.Verb(
+        #         vbt["first_word"], vclass, vbt["definition"], vid=vbt["id"]
+        #     )
+        #     vobjs.append(verb_obj)
+        if "só" == vbt["first_word"]:
             irregvobj = IrregVerb(
                 vbt["first_word"], vclass, vbt["definition"], vid=vbt["id"]
             )

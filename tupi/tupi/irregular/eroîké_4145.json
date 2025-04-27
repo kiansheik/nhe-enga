@@ -1,0 +1,46 @@
+{
+  "ø": {
+    "1ps": {
+      "ge": {
+        "verbete": "eroîkŷa",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "1ppe": {
+      "ge": {
+        "verbete": "eroîkŷa",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "1ppi": {
+      "ge": {
+        "verbete": "eroîkŷa",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "2ps": {
+      "ge": {
+        "verbete": "eroîkŷa",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "2pp": {
+      "ge": {
+        "verbete": "eroîkŷa",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    },
+    "3p": {
+      "ge": {
+        "verbete": "eroîkŷa",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  }
+}

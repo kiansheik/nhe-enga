@@ -1,0 +1,86 @@
+{
+  "1ps": {
+    "3p": {
+      "in": {
+        "verbete": "aytarõ",
+        "pluriforme": false,
+        "overwrite": true
+      },
+      "pe": {
+        "verbete": "aytarõ",
+        "pluriforme": false,
+        "overwrite": true
+      }
+    }
+  },
+  "1ppe": {
+    "3p": {
+      "in": {
+        "verbete": "oroytarõ",
+        "pluriforme": false,
+        "overwrite": true
+      },
+      "pe": {
+        "verbete": "oroytarõ",
+        "pluriforme": false,
+        "overwrite": true
+      }
+    }
+  },
+  "1ppi": {
+    "3p": {
+      "in": {
+        "verbete": "îaytarõ",
+        "pluriforme": false,
+        "overwrite": true
+      },
+      "pe": {
+        "verbete": "îaytarõ",
+        "pluriforme": false,
+        "overwrite": true
+      }
+    }
+  },
+  "2ps": {
+    "3p": {
+      "in": {
+        "verbete": "ereytarõ",
+        "pluriforme": false,
+        "overwrite": true
+      },
+      "pe": {
+        "verbete": "ereytarõ",
+        "pluriforme": false,
+        "overwrite": true
+      }
+    }
+  },
+  "2pp": {
+    "3p": {
+      "in": {
+        "verbete": "peytarõ",
+        "pluriforme": false,
+        "overwrite": true
+      },
+      "pe": {
+        "verbete": "peytarõ",
+        "pluriforme": false,
+        "overwrite": true
+      }
+    }
+  },
+  "3p": {
+    "3p": {
+      "in": {
+        "verbete": "oytarõ",
+        "pluriforme": false,
+        "overwrite": true
+      },
+      "pe": {
+        "verbete": "oytarõ",
+        "pluriforme": false,
+        "overwrite": true
+      }
+    }
+  }
+}
