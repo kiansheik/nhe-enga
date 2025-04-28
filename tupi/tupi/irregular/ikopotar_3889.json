@@ -1,0 +1,146 @@
+{
+  "1ppe": {
+    "ø": {
+      "in": {
+        "verbete": "îkopotar",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "îkopotar",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "ekopotar",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekopotar",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "1ppi": {
+    "ø": {
+      "in": {
+        "verbete": "îkopotar",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "îkopotar",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "ekopotar",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekopotar",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "1ps": {
+    "ø": {
+      "in": {
+        "verbete": "îkopotar",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "tekopotar",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "ekopotar",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekopotar",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "2pp": {
+    "ø": {
+      "in": {
+        "verbete": "îkopotar",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "îkopotar",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "îkopotar",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekopotar",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "2ps": {
+    "ø": {
+      "in": {
+        "verbete": "îkopotar",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "îkopotar",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "îkopotar",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekopotar",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "3p": {
+    "ø": {
+      "in": {
+        "verbete": "îkopotar",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "îkopotar",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "ekopotar",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "ekopotar",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  }
+}
