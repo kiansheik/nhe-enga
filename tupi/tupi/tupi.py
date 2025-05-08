@@ -180,7 +180,7 @@ class TupiAntigo(object):
             "oen": "ogûen",
             "îeer": "îer",
             "îî": "î",
-            "ee": "e",
+            # "ee": "e",
             "  ": " ",
             "-": "",
             "'û": "gû",
