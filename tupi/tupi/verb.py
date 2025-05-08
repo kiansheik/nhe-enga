@@ -210,13 +210,19 @@ class Verb(TupiAntigo):
             if negative:
                 eme = "e'ym[NEGATION_SUFFIX]e[CONJUNCTIVE_SUFFIX:NEGATIVE]"
             else:
-                if vbt[-1] in self.vogais_nasais:
-                    vbt += "n"
-                elif vbt[-1] in self.vogais:
-                    vbt += "r"
-                eme = (
-                    "eme" + f"[CONJUNCTIVE_SUFFIX]"
-                )
+                if vbt[-1] in "bm":
+                    vbt = self.accent_last_vowel(vbt[:-1])
+                    eme = (
+                        "me" + f"[CONJUNCTIVE_SUFFIX]"
+                    )
+                else:
+                    if vbt[-1] in self.vogais_nasais:
+                        vbt += "n"
+                    elif vbt[-1] in self.vogais:
+                        vbt += "r"
+                    eme = (
+                        "eme" + f"[CONJUNCTIVE_SUFFIX]"
+                    )
             if pluri_check and not self.transitivo:
                 if "3p" in subject_tense and dir_subj_raw is None:
                     obj = f"s[PLURIFORM_PREFIX:S]-" if not self.t_type else "t[PLURIFORM_PREFIX:T]-"
