@@ -11,19 +11,19 @@ class Copula(Predicate):
         super().__init__(verbete="=", category="Copula", min_args=1, max_args=None)
         self.negated = False
 
-    def preval(self):
+    def preval(self, annotated=False):
         """Evaluate the Copula object."""
         first = self.arguments[0]
-        vbt = first.eval()
+        vbt = first.eval(annotated=annotated)
         if self.negated:
             neg_prefix = "nd" if vbt[0] in TupiNoun.vogais else "nda"
             vbt = f"{neg_prefix} {vbt} ruã"
-        nec = " ".join([x.eval() for x in self.arguments[1:]])
+        nec = " ".join([x.eval(annotated=annotated) for x in self.arguments[1:]])
         nec = f"{vbt} {nec}"
         if self.post_adjuncts:
-            nec += " " + " ".join([x.eval() for x in self.adjuncts])
+            nec += " " + " ".join([x.eval(annotated=annotated) for x in self.adjuncts])
         if self.pre_adjuncts:
-            nec = " ".join([x.eval() for x in self.pre_adjuncts]) + " " + nec
+            nec = " ".join([x.eval(annotated=annotated) for x in self.pre_adjuncts]) + " " + nec
         return nec
 
     def __eq__(self, other):

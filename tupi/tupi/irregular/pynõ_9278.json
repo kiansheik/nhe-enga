@@ -1,24 +1,9 @@
 {
   "1ppe": {
     "ø": {
-      "in": {
-        "verbete": "oré oropynõ",
-        "pluriforme": false,
-        "overwrite": false
-      },
-      "ge": {
-        "verbete": "oropynõmo",
-        "pluriforme": false,
-        "overwrite": false
-      },
       "ci": {
-        "verbete": "oré pynõû",
-        "pluriforme": false,
-        "overwrite": false
-      },
-      "pe": {
-        "verbete": "oré toropynõ",
-        "pluriforme": false,
+        "verbete": "epynõ",
+        "pluriforme": true,
         "overwrite": false
       },
       "co": {
@@ -30,27 +15,12 @@
   },
   "1ppi": {
     "ø": {
-      "in": {
-        "verbete": "îandé îapynõ",
-        "pluriforme": false,
-        "overwrite": false
-      },
-      "ge": {
-        "verbete": "îapynõmo",
-        "pluriforme": false,
+      "co": {
+        "verbete": "epynõ",
+        "pluriforme": true,
         "overwrite": false
       },
       "ci": {
-        "verbete": "îandé pynõû",
-        "pluriforme": false,
-        "overwrite": false
-      },
-      "pe": {
-        "verbete": "îandé tîapynõ",
-        "pluriforme": false,
-        "overwrite": false
-      },
-      "co": {
         "verbete": "epynõ",
         "pluriforme": true,
         "overwrite": false
@@ -59,27 +29,12 @@
   },
   "1ps": {
     "ø": {
-      "in": {
-        "verbete": "ixé apynõ",
-        "pluriforme": false,
-        "overwrite": false
-      },
-      "ge": {
-        "verbete": "gûipynõmo",
-        "pluriforme": false,
+      "co": {
+        "verbete": "epynõ",
+        "pluriforme": true,
         "overwrite": false
       },
       "ci": {
-        "verbete": "xe pynõû",
-        "pluriforme": false,
-        "overwrite": false
-      },
-      "pe": {
-        "verbete": "ixé tapynõ",
-        "pluriforme": false,
-        "overwrite": false
-      },
-      "co": {
         "verbete": "epynõ",
         "pluriforme": true,
         "overwrite": false
@@ -88,27 +43,12 @@
   },
   "2pp": {
     "ø": {
-      "in": {
-        "verbete": "peẽ pepynõ",
-        "pluriforme": false,
-        "overwrite": false
-      },
-      "ge": {
-        "verbete": "pepynõmo",
-        "pluriforme": false,
-        "overwrite": false
-      },
-      "im": {
-        "verbete": "peẽ pepynõ",
-        "pluriforme": false,
-        "overwrite": false
-      },
-      "pe": {
-        "verbete": "peẽ tapepynõ",
-        "pluriforme": false,
-        "overwrite": false
-      },
       "co": {
+        "verbete": "epynõ",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "ci": {
         "verbete": "epynõ",
         "pluriforme": true,
         "overwrite": false
@@ -117,27 +57,12 @@
   },
   "2ps": {
     "ø": {
-      "in": {
-        "verbete": "endé erepynõ",
-        "pluriforme": false,
-        "overwrite": false
-      },
-      "ge": {
-        "verbete": "epynõmo",
-        "pluriforme": false,
-        "overwrite": false
-      },
-      "im": {
-        "verbete": "endé epynõ",
-        "pluriforme": false,
-        "overwrite": false
-      },
-      "pe": {
-        "verbete": "endé terepynõ",
-        "pluriforme": false,
-        "overwrite": false
-      },
       "co": {
+        "verbete": "epynõ",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "ci": {
         "verbete": "epynõ",
         "pluriforme": true,
         "overwrite": false
@@ -147,26 +72,21 @@
   "3p": {
     "ø": {
       "in": {
-        "verbete": "a'e opynõ",
+        "verbete": "epynõ",
         "pluriforme": false,
         "overwrite": false
       },
       "ge": {
-        "verbete": "opynõmo",
-        "pluriforme": false,
-        "overwrite": false
-      },
-      "ci": {
-        "verbete": "i pynõû",
-        "pluriforme": false,
-        "overwrite": false
-      },
-      "pe": {
-        "verbete": "a'e topynõ",
+        "verbete": "epynõ",
         "pluriforme": false,
         "overwrite": false
       },
       "co": {
+        "verbete": "epynõ",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "ci": {
         "verbete": "epynõ",
         "pluriforme": true,
         "overwrite": false

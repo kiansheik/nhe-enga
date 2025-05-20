@@ -13,13 +13,13 @@ class Conjunction(Noun):
         self.min_args = 2
         self.max_args = None
 
-    def preval(self):
+    def preval(self, annotated=False):
         """Evaluate the Conjunction object."""
-        nec = " ".join([x.eval() for x in self.arguments]) + f" {self.verbete}"
+        nec = " ".join([x.eval(annotated=annotated) for x in self.arguments]) + f" {self.verbete}"
         if self.post_adjuncts:
-            nec += " " + " ".join([x.eval() for x in self.adjuncts])
+            nec += " " + " ".join([x.eval(annotated=annotated) for x in self.adjuncts])
         if self.pre_adjuncts:
-            nec = " ".join([x.eval() for x in self.pre_adjuncts]) + " " + nec
+            nec = " ".join([x.eval(annotated=annotated) for x in self.pre_adjuncts]) + " " + nec
         return nec
 
     def inflection(self):

@@ -33,7 +33,7 @@ class Noun(Predicate):
         neg.pro_drop = True
         return neg
 
-    def preval(self):
+    def preval(self, annotated=False):
         """Evaluate the Noun object."""
         vbt = self.noun.substantivo()
         if self.negated:

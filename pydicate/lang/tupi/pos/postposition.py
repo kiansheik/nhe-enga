@@ -12,7 +12,7 @@ class Postposition(Adverb):
         self.min_args = 1
         self.max_args = 1
 
-    def preval(self):
+    def preval(self, annotated=False):
         """Evaluate the Postposition object."""
         if len(self.arguments) == 1:
             arg0 = self.arguments[0].verbete
@@ -23,7 +23,7 @@ class Postposition(Adverb):
                     found = True
                     break
             if not found:
-                arg0 = self.arguments[0].eval()
+                arg0 = self.arguments[0].eval(annotated=annotated)
             return f"{arg0} {self.verbete}"
         return self.verbete
 

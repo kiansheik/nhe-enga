@@ -139,10 +139,13 @@ class Predicate:
             f"min_args={self.min_args}, max_args={self.max_args})"
         )
 
-    def eval(self):
-        pre = self.preval()
-        if self.rua:
-            pre = f"nda {pre} ruã"
+    def eval(self, annotated=False):
+        prev = self.copy()
+        pre = prev.preval(annotated=annotated)
+        neg = '' if not annotated else '[NEGATION_PARTICLE:NA]'
+        neg_suf = '' if not annotated else '[NEGATION_PARTICLE:RUA]'
+        if prev.rua:
+            pre = f"nda{neg} {pre} ruã{neg_suf}"
         return pre
 
     def __invert__(self):
@@ -154,24 +157,25 @@ class Predicate:
         neg.rua = True
         return neg
 
-    def preval(self):
+    def preval(self, annotated=False):
         """
         Evaluate the predicate by applying the arguments and adjuncts.
         Default response: f"{self.verbete}(args...) + adjunct1 + adjunct2 + ..."
         :return: The result of applying the predicate.
         """
-        args = ", ".join(arg.eval() for arg in self.arguments)
+        prev = self.copy()
+        args = ", ".join(arg.eval(annotated=annotated) for arg in prev.arguments)
         pre_adjuncts = (
-            " + ".join(adj.eval() for adj in self.pre_adjuncts)
-            if self.pre_adjuncts
+            " + ".join(adj.eval(annotated=annotated) for adj in prev.pre_adjuncts)
+            if prev.pre_adjuncts
             else ""
         )
         post_adjuncts = (
-            " + ".join(adj.eval() for adj in self.post_adjuncts)
-            if self.post_adjuncts
+            " + ".join(adj.eval(annotated=annotated) for adj in prev.post_adjuncts)
+            if prev.post_adjuncts
             else ""
         )
-        repr = f"{self.verbete}"
+        repr = f"{prev.verbete}"
         args_repr = f"{repr}({args})" if args else repr
         post_adjuncts_repr = (
             f"{args_repr} + {post_adjuncts}" if post_adjuncts else args_repr

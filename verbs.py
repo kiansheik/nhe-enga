@@ -436,12 +436,13 @@ for v in tqdm(
                         "f": res,
                         "s": subj if modo[:2] != "ge" else None,
                         "o": obj,
-                        "m": modo[:2], 'n': neg_res
+                        "m": modo[:2], 'n': neg_res,
                     }
                     if "con" in dicc_dict[v.vid]:
                         dicc_dict[v.vid]["con"].append(dicc_con)
                     else:
                         dicc_dict[v.vid]["con"] = [dicc_con]
+                    dicc_dict[v.vid]["vc"] = v.verb_class
                 except Exception as e:
                     pass
                     # print(f"\t({subj} -> {obj}):\tainda não desenvolvida", e)
@@ -466,6 +467,7 @@ for v in tqdm(
                         dicc_dict[v.vid]["con"].append(dicc_con)
                     else:
                         dicc_dict[v.vid]["con"] = [dicc_con]
+                    dicc_dict[v.vid]["vc"] = v.verb_class
                 except Exception as e:
                     pass
                     # print(f"\t({subj} -> {obj}):\tainda não desenvolvida", e)

@@ -1,24 +1,9 @@
 {
   "1ppe": {
     "ø": {
-      "in": {
-        "verbete": "oré oroîur",
-        "pluriforme": false,
-        "overwrite": false
-      },
-      "ge": {
-        "verbete": "oroîú",
-        "pluriforme": false,
-        "overwrite": false
-      },
       "ci": {
         "verbete": "ur",
         "pluriforme": true,
-        "overwrite": false
-      },
-      "pe": {
-        "verbete": "oré toroîur",
-        "pluriforme": false,
         "overwrite": false
       },
       "co": {
@@ -30,24 +15,9 @@
   },
   "1ppi": {
     "ø": {
-      "in": {
-        "verbete": "îandé îaîur",
-        "pluriforme": false,
-        "overwrite": false
-      },
-      "ge": {
-        "verbete": "îaîú",
-        "pluriforme": false,
-        "overwrite": false
-      },
       "ci": {
         "verbete": "ur",
         "pluriforme": true,
-        "overwrite": false
-      },
-      "pe": {
-        "verbete": "îandé tîaîur",
-        "pluriforme": false,
         "overwrite": false
       },
       "co": {
@@ -59,11 +29,6 @@
   },
   "1ps": {
     "ø": {
-      "in": {
-        "verbete": "ixé aîur",
-        "pluriforme": false,
-        "overwrite": false
-      },
       "ge": {
         "verbete": "tur",
         "pluriforme": false,
@@ -72,11 +37,6 @@
       "ci": {
         "verbete": "ur",
         "pluriforme": true,
-        "overwrite": false
-      },
-      "pe": {
-        "verbete": "ixé taîur",
-        "pluriforme": false,
         "overwrite": false
       },
       "co": {
@@ -88,23 +48,8 @@
   },
   "2pp": {
     "ø": {
-      "in": {
-        "verbete": "peẽ peîur",
-        "pluriforme": false,
-        "overwrite": false
-      },
-      "ge": {
-        "verbete": "peîú",
-        "pluriforme": false,
-        "overwrite": false
-      },
       "im": {
         "verbete": "îori",
-        "pluriforme": false,
-        "overwrite": false
-      },
-      "pe": {
-        "verbete": "peẽ tapeîur",
         "pluriforme": false,
         "overwrite": false
       },
@@ -117,23 +62,8 @@
   },
   "2ps": {
     "ø": {
-      "in": {
-        "verbete": "endé ereîur",
-        "pluriforme": false,
-        "overwrite": false
-      },
-      "ge": {
-        "verbete": "eîú",
-        "pluriforme": false,
-        "overwrite": false
-      },
       "im": {
         "verbete": "îori",
-        "pluriforme": false,
-        "overwrite": false
-      },
-      "pe": {
-        "verbete": "endé tereîur",
         "pluriforme": false,
         "overwrite": false
       },
