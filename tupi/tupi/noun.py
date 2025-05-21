@@ -122,7 +122,6 @@ class Noun(TupiAntigo):
         return ret_noun
     
     def verb(self):
-        raiz =  self.verbete()
         verb_class = ""
         if self.segunda_classe:
             verb_class += "2ª classe "
@@ -429,6 +428,29 @@ class Noun(TupiAntigo):
         else:
             ret_noun.latest_verbete = f"{ret_noun.latest_verbete}ûam"
         ret_noun.latest_verbete += "[FUTURE_SUFFIX]"
+        ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.segunda_classe = True
+        ret_noun.transitivo = False
+        ret_noun.recreate += f".{func_name}({args_str})"
+        return ret_noun
+    def ramo(self):
+        frame = inspect.currentframe()
+        func_name = frame.f_code.co_name
+        args, _, _, values = inspect.getargvalues(frame)
+        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        ret_noun = copy.deepcopy(self)
+        ret_noun.aglutinantes[-1] = self
+        # --------------------------------
+        vbt = self.verbete()
+        if vbt[-1] in self.vogais:
+            parts = ret_noun.latest_verbete.split("[")
+            start = "[".join(parts[:-1])
+            ret_noun.latest_verbete = f"{start}[{parts[-1]}ramo"
+            if vbt[-1] in self.vogais_nasais:
+                ret_noun.latest_verbete = f"{start}[{parts[-1]}namo"
+        else:
+            ret_noun.latest_verbete = f"{ret_noun.latest_verbete}amo"
+        ret_noun.latest_verbete += "[SIMULATIVE_SUFFIX]"
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.segunda_classe = True
         ret_noun.transitivo = False

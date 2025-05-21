@@ -17,6 +17,7 @@ class Conjunction(Noun):
         """Evaluate the Conjunction object."""
         nec = " ".join([x.eval(annotated=annotated) for x in self.arguments]) + f" {self.verbete}"
         if self.post_adjuncts:
+            # TODO: When evaling adkunct, check if yfix for space or y
             nec += " " + " ".join([x.eval(annotated=annotated) for x in self.adjuncts])
         if self.pre_adjuncts:
             nec = " ".join([x.eval(annotated=annotated) for x in self.pre_adjuncts]) + " " + nec

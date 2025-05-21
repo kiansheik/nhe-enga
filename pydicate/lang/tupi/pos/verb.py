@@ -5,6 +5,7 @@ sys.path.append("/Users/kian/code/nhe-enga/tupi")
 from tupi import Verb as TupiVerb
 from tupi import Noun as TupiNoun
 from .noun import pronoun_verbetes
+from .y_fix import YFix
 import gzip, json
 
 # load /Users/kian/code/nhe-enga/docs/dict-conjugated.json.gz into an object
@@ -47,6 +48,10 @@ class Verb(Predicate):
 
         self.verb = TupiVerb(value, verb_class, definition, vid=vid)
         self.mood = "indicativo"
+
+    def raw_noun(self):
+        """Return the noun form of the verb."""
+        return TupiNoun(self.verbete, self.definition)
 
     def subject(self):
         return self.arguments[0]
@@ -134,7 +139,10 @@ class Verb(Predicate):
         for adj in self.pre_adjuncts:
             retval = adj.eval(annotated=annotated) + " " + retval
         for adj in self.post_adjuncts:
-            retval = retval + " " + adj.eval(annotated=annotated)
+            sepchar = " "
+            if type(adj) == YFix and retval[-1] not in (TupiVerb.vogais + TupiVerb.semi_vogais):
+                sepchar = "y"+("[CONSONANT_CLASH]" if annotated else "")
+            retval = retval + sepchar + adj.eval(annotated=annotated)
         return retval
 
     # first arg is the subject, second arg is the object

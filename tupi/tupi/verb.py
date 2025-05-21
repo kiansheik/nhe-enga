@@ -270,7 +270,7 @@ class Verb(TupiAntigo):
             if negative:
                 circ = "e'ym[NEGATION_SUFFIX]i[CIRCUMSTANTIAL_SUFFIX:CONSONANT_ENDING]"
             vbt = f"{base_verbete}[ROOT]"
-            result = f"{subj if not pro_drop else ''}{' ' if not self.segunda_classe else ''}{obj}{vbt}{circ}"
+            result = f"{subj if (not pro_drop or not self.transitivo) else ''}{' ' if not self.segunda_classe else ''}{obj}{vbt}{circ}"
         elif self.segunda_classe:
             subj_prefix = (
                 self.personal_inflections[subject_tense][1] + f"[SUBJECT_PREFIX:{subject_tense}]"
@@ -430,3 +430,19 @@ class Verb(TupiAntigo):
                             vb = self.negate_verb(vb, mode)
                         result = f"{vb} {subj if not pro_drop else ''}" if pos == "anteposto" else f"{subj if not pro_drop else ''} {vb}"
         return result if anotar else self.fix_phonetics(self.remove_brackets_and_contents(result))
+
+    def bae(self, anotar=False):
+        # We will conjugate for the 3rd person prod_drop first, and then apply the suffix
+        vbt = self.conjugate(subject_tense="3p", object_tense="3p", dir_obj_raw=None, dir_subj_raw=None, mode="indicativo", pos="anteposto", pro_drop=True, negative=False, anotar=True)
+        if vbt[-1] in 'bmp':
+            parts = vbt.split("[")
+            start = "[".join(parts[:-1])
+            vbt = f"{self.accent_last_vowel(start[:-1])}[{parts[-1]}ba'e"
+        elif vbt[-1] in self.vogais:
+            parts = vbt.split("[")
+            start = "[".join(parts[:-1])
+            vbt = f"{self.remove_accent_last_vowel(start)}[{parts[-1]}ba'e"
+        else:
+            vbt = f"{vbt}yba'e"
+        vbt += "[RELATIVE_AGENT_SUFFIX]"
+        return vbt if anotar else self.fix_phonetics(self.remove_brackets_and_contents(vbt))
