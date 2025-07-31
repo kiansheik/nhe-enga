@@ -61,7 +61,7 @@ def tokenize_string(annotated_string):
 class Noun(TupiAntigo):
     def __init__(self, verbete, raw_definition):
         super().__init__()
-        self.base_verbete = (verbete if verbete[-1] != 'a' else verbete[:-1]) + "[ROOT]" # The name of the verb in its dictionary form
+        self.base_verbete = (verbete if verbete[-1] != 'a' else verbete[:-1]) + ("[ROOT]" if verbete[-1] != ']' else "") # The name of the verb in its dictionary form
         self.latest_verbete = self.base_verbete # The name of the verb in its dictionary form
         self.raw_definition = raw_definition  # Raw definition of the verb (string)
         self.aglutinantes = [self]
@@ -297,7 +297,9 @@ class Noun(TupiAntigo):
         return ret_noun
 
     # TODO: Implement rest of phonetic changes
-    def possessive(self, person='3p'):
+    def possessive(self, person='3p', possessor=None):
+        if possessor is not None:
+            person = "3p"
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
         args, _, _, values = inspect.getargvalues(frame)
@@ -307,11 +309,11 @@ class Noun(TupiAntigo):
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         vbt = self.remove_parens_and_contents(ret_noun.verbete(anotated=True))
-        pref = ret_noun.pluriform_prefix(person)
+        pref = f"r[PLURIFORM_PREFIX:R]" if possessor and self.pluriforme else ret_noun.pluriform_prefix(person)
         if pref:
             vbt = ret_noun.verbete(anotated=True).replace('(', '').replace(')', '')
-        pronoun = f"{self.personal_inflections[person][1]}[POSSESSIVE_PRONOUN:{person}]"
-        ret_noun.latest_verbete = f"{'' if '3p' in person and self.pluriforme else pronoun} {pref}{vbt}".strip()
+        pronoun = f"{self.personal_inflections[person][1]}[POSSESSIVE_PRONOUN:{person}]" if not possessor else f"{possessor}[NOUN:POSSESSOR]"
+        ret_noun.latest_verbete = f"{'' if '3p' in person and self.pluriforme and not possessor else pronoun} {pref}{vbt}".strip()
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
@@ -549,7 +551,7 @@ class Noun(TupiAntigo):
         vbt = self.verbete()
         ret_noun.latest_verbete = f"{ret_noun.latest_verbete}e'ym"
 
-        ret_noun.latest_verbete += "[ROOT_NEGATION_SUFFIX]"
+        ret_noun.latest_verbete += "[NEGATION_SUFFIX]"
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun

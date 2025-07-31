@@ -26,7 +26,7 @@ class Noun(Predicate):
 
     def __pos__(self):
         """
-        Mark noun as pro_drop the predicate using the ~ operator.
+        Mark noun as pro_drop the predicate using the + operator.
         :return: Self (to enable chaining).
         """
         neg = self.copy()
@@ -35,13 +35,23 @@ class Noun(Predicate):
 
     def preval(self, annotated=False):
         """Evaluate the Noun object."""
-        vbt = self.noun.substantivo()
+        vbt = self.noun.substantivo(annotated)
         if self.negated:
             # neg_prefix = "nd" if vbt[0] in self.noun.vogais else "nda"
-            vbt = f"{vbt}e'yma"
+            vbt = self.noun.eym().substantivo(annotated)
         return vbt
 
     def __mul__(self, other):
+        # When its another Noun, we treat it as a possessive construction
+        if isinstance(other, Noun):
+            possessor = self.copy()
+            base_noun = other.copy()
+
+            base_noun.arguments.append(possessor)
+            base_noun.noun = base_noun.noun.possessive(possessor._inflection, None if possessor.category == "pronoun" else possessor.eval(annotated=True))
+            base_noun.noun.pluriforme = possessor.noun.pluriforme
+            return base_noun
+        # Otherwise, treat itself as the argument to the other predicate
         return other * self
 
     def __eq__(self, other):

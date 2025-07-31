@@ -140,10 +140,12 @@ class Verb(Predicate):
             retval = adj.eval(annotated=annotated) + " " + retval
         for adj in self.post_adjuncts:
             sepchar = " "
-            if type(adj) == YFix and retval[-1] not in (TupiVerb.vogais + TupiVerb.semi_vogais):
+            # remove [*] from end of retval and get last character
+            lastchar = self.verb.remove_brackets_and_contents(retval).strip()[-1]
+            if type(adj) == YFix and (lastchar not in (TupiVerb.vogais + TupiVerb.semi_vogais)):
                 sepchar = "y"+("[CONSONANT_CLASH]" if annotated else "")
             retval = retval + sepchar + adj.eval(annotated=annotated)
-        return retval
+        return retval if annotated else self.verb.remove_brackets_and_contents(retval)
 
     # first arg is the subject, second arg is the object
 

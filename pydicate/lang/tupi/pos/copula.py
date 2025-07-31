@@ -8,7 +8,7 @@ from tupi import Noun as TupiNoun
 class Copula(Predicate):
     def __init__(self):
         """Initialize a Copula object."""
-        super().__init__(verbete="=", category="Copula", min_args=1, max_args=None)
+        super().__init__(verbete="=", category="Copula", min_args=1, max_args=2)
         self.negated = False
 
     def preval(self, annotated=False):

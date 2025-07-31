@@ -8,3 +8,8 @@ class YFix(Predicate):
         # Use object.__getattribute__ to avoid infinite recursion
         _predicate = object.__getattribute__(self, '_predicate')
         return getattr(_predicate, attr)
+    
+    def preval(self, annotated=False):
+        """Evaluate the YFix object."""
+        # Call the preval method of the underlying predicate
+        return self._predicate.preval(annotated=annotated)
