@@ -14,6 +14,7 @@ class Noun(Predicate):
         )
         self.noun = TupiNoun(value, definition)
         self._inflection = inflection
+        self.plural = "pp" in inflection
         self.pro_drop = pro_drop
         for val, infl in self.noun.personal_inflections.items():
             if value.lower() == infl[0]:
@@ -67,7 +68,7 @@ class Noun(Predicate):
         return self._inflection
 
     def __repr__(self):
-        return f"Noun({self.verbete})"
+        return self.eval(annotated=False)
 
 
 class Pronoun(Noun):

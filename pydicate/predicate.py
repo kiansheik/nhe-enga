@@ -49,15 +49,6 @@ class Predicate:
         mult.arguments.append(other_copy)
         return mult
 
-    def __pos__(self):
-        """
-        Positive the predicate using the + operator.
-        :return: Self (to enable chaining).
-        """
-        neg = self.copy()
-        neg.negated = False
-        return neg
-
     def refresh_verbete(self, new_verbete):
         self.verbete = new_verbete
 
@@ -81,16 +72,7 @@ class Predicate:
 
     def __neg__(self):
         """
-        Positive the predicate using the + operator.
-        :return: Self (to enable chaining).
-        """
-        neg = self.copy()
-        neg.negated = True
-        return neg
-
-    def __invert__(self):
-        """
-        Positive the predicate using the + operator.
+        Negate the predicate using the - operator.
         :return: Self (to enable chaining).
         """
         neg = self.copy()
@@ -138,6 +120,9 @@ class Predicate:
             f"arguments=[{args}], pre_adjuncts=[{pre_adjuncts}], post_adjuncts=[{post_adjuncts}], "
             f"min_args={self.min_args}, max_args={self.max_args})"
         )
+
+    def __str__(self):
+        return self.__repr__()
 
     def eval(self, annotated=False):
         prev = self.copy()

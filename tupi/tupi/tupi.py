@@ -1,6 +1,7 @@
 from .orth import ALT_ORTS, get_nasality_î
 
 import re, random
+import unicodedata
 class TupiAntigo(object):
     cv_patterns = ["CVC", "CV", "VC", "V"]
     personal_inflections = {
@@ -378,7 +379,9 @@ class TupiAntigo(object):
         # Check if the last character is a vowel
         if input_string[-1] in vowels:
             # Accent the last vowel
-            return input_string[:-1] + input_string[-1] + "́"
+            accented = input_string[:-1] + input_string[-1] + "́"
+            # Normalize to combine accent with vowel
+            return unicodedata.normalize("NFC", accented)
         return input_string
 
     def remove_accent_last_vowel(self, input_string):

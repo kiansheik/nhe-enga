@@ -150,7 +150,16 @@ class Verb(Predicate):
     # first arg is the subject, second arg is the object
 
     def __repr__(self):
-        return f"Verb({self.verbete})"
+        return self.eval(annotated=False)
+
+    def __pos__(self):
+        """
+        Mark noun as pro_drop the predicate using the + operator.
+        :return: Self (to enable chaining).
+        """
+        dropped = self.copy()
+        dropped.arguments[0].pro_drop = True
+        return dropped
 
     def imp(self):
         imp_copy = self.copy()

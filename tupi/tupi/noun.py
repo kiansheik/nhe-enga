@@ -1,6 +1,7 @@
 from .tupi import TupiAntigo
 from .verb import Verb
 import copy, inspect, re
+from .annotated_string import AnnotatedString  # assuming the class is in this module
 
 sara_consoante_map = {
     "b": "par",
@@ -62,7 +63,7 @@ class Noun(TupiAntigo):
     def __init__(self, verbete, raw_definition):
         super().__init__()
         self.base_verbete = (verbete if verbete[-1] != 'a' else verbete[:-1]) + ("[ROOT]" if verbete[-1] != ']' else "") # The name of the verb in its dictionary form
-        self.latest_verbete = self.base_verbete # The name of the verb in its dictionary form
+        self.latest_verbete = AnnotatedString(self.base_verbete) # The name of the verb in its dictionary form
         self.raw_definition = raw_definition  # Raw definition of the verb (string)
         self.aglutinantes = [self]
         raw_def = self.raw_definition[:50]
@@ -86,41 +87,54 @@ class Noun(TupiAntigo):
         )
         self.ero = self.verbete().startswith("ero") or self.verbete().startswith("eno") or self.verbete().startswith("eru")
         self.objeto_raw = None
-    
+
+    # Fix annotation and whole composition process
     def compose(self, modifier):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
         args, _, _, values = inspect.getargvalues(frame)
         args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
-        vbt = ret_noun.verbete()
-        vbt_an = ret_noun.verbete(anotated=True)
-        mod_vbt = modifier.verbete()
-        mod_vbt_an = modifier.verbete(anotated=True)
-        # Define some useful groups
-        vogais_orais = "a á e é i í y ý o ó u ú".split(" ")
-        vogais_nasais =  "ã ẽ ĩ ỹ õ ũ".split(" ")
-        nasais = "m n ng nh mb nd".split(" ")
-        consoantes = "p b t s x k r gû û î ŷ".split(" ")
-        parts = ret_noun.latest_verbete.split("[")
-        start = "[".join(parts[:-1])
-        start = self.remove_accent_last_vowel(start)
-        if ends_with_any(vbt, consoantes) and starts_with_any(mod_vbt, consoantes+nasais):
-            start = remove_ending_if_any(start, consoantes)
-        elif ends_with_any(vbt, nasais+consoantes) and starts_with_any(mod_vbt, ["'"]):
-            mod_vbt_an = mod_vbt_an[1:]
-        elif ends_with_any(vbt, nasais+vogais_nasais) and starts_with_any(mod_vbt, consoantes+nasais):
-            semivogal = 'î' if start.endswith('nh') else ''
-            start = remove_ending_if_any(start, nasais)
-            start = self.nasaliza_final(start) + semivogal
+
+        annotated = AnnotatedString(str(self.latest_verbete))  # safe copy
+        mod_annotated = AnnotatedString(str(modifier.latest_verbete))
+
+        vbt = annotated.get_clean()
+        mod_vbt = mod_annotated.get_clean()
+
+        # Define sound groups
+        consoantes = "p b t s x k r gû û î ŷ".split()
+        vogais_nasais = "ã ẽ ĩ ỹ õ ũ".split()
+        nasais = "m n ng nh mb nd".split()
+
+        # === Rule 1: consonant-consonant clash
+        if ends_with_any(vbt, consoantes) and starts_with_any(mod_vbt, consoantes + nasais):
+            annotated.replace_clean(-1, 1, '')  # remove final consonant
+
+        # === Rule 2: final nasal/consonant and modifier starts with apostrophe
+        elif ends_with_any(vbt, nasais + consoantes) and starts_with_any(mod_vbt, ["'"]):
+            mod_annotated = AnnotatedString(mod_annotated.get_annotated()[1:])  # strip apostrophe in annotated form
+
+        # === Rule 3: final nasal clash with nasal modifier
+        elif ends_with_any(vbt, nasais + vogais_nasais) and starts_with_any(mod_vbt, consoantes + nasais):
+            semivogal = 'î' if vbt.endswith('nh') else ''
+            annotated.replace_clean(-1, 1, '')  # remove last nasal
+            nasalized = self.nasaliza_final(annotated.get_clean()) + semivogal
+            annotated = AnnotatedString(nasalized)
             if not self.is_nasal(mod_vbt):
-                mod_vbt_an = self.nasaliza_prefixo(mod_vbt_an)
-        ret_noun.latest_verbete = f"{start}[{parts[-1]}{mod_vbt_an}"
+                mod_annotated = AnnotatedString(self.nasaliza_prefixo(mod_annotated.get_annotated()))
+
+        # Add the modifier to the base
+        annotated.insert_suffix(mod_annotated.get_annotated())
+
+        # Finalize
+        ret_noun.latest_verbete = annotated
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
-    
+
     def verb(self):
         verb_class = ""
         if self.segunda_classe:
@@ -189,7 +203,7 @@ class Noun(TupiAntigo):
         return noun_out
 
     def verbete(self, anotated=False):
-        return self.remove_brackets_and_contents(self.latest_verbete) if not anotated else self.latest_verbete
+        return self.latest_verbete.get_clean() if not anotated else self.latest_verbete.get_annotated()
     
     def base_substantivo(self):
         return f"{self.verbete(anotated=True)}{'a[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING]' if self.verbete(anotated=False)[-1] not in self.vogais else '[SUBSTANTIVE_SUFFIX:VOWEL_ENDING]'}"
@@ -221,7 +235,48 @@ class Noun(TupiAntigo):
                 return "r[PLURIFORM_PREFIX:R]"
         return ""
 
-    # TODO: Implement rest of phonetic changes
+    def pe(self):
+        frame = inspect.currentframe()
+        func_name = frame.f_code.co_name
+        args, _, _, values = inspect.getargvalues(frame)
+        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        ret_noun = copy.deepcopy(self)
+        ret_noun.aglutinantes[-1] = self
+        annotated = ret_noun.latest_verbete
+
+        if ends_with_any(annotated, ["ab"]):
+            annotated.replace_clean(-2, 2, "á")
+            annotated.insert_suffix("pe")
+        elif ends_with_any(annotated, ["î", "nh"]):
+            if annotated.endswith("nh"):
+                annotated.replace_clean(-3, 1, self.nasal_map.get(annotated[-3], annotated[-3]))
+                annotated.replace_clean(-2, 2, "î")
+            if annotated[-2] in ret_noun.vogais_nasais:
+                annotated.insert_suffix("me")
+            else:
+                annotated.insert_suffix("pe")
+        elif ends_with_any(annotated, ret_noun.vogais_nasais):
+            annotated.insert_suffix("me")
+        elif ends_with_any(annotated, ["m"]):
+            annotated.replace_clean(-2, 2, self.nasal_map[annotated[-2]])
+            annotated.insert_suffix("me")
+        elif ends_with_any(annotated, ret_noun.nasais):
+            annotated.insert_suffix("yme")
+        elif ends_with_any(annotated, ret_noun.semi_vogais):
+            annotated.insert_suffix("pe")
+        elif ends_with_any(annotated, ret_noun.consoantes):
+            annotated.insert_suffix("ype")
+        else:
+            annotated.insert_suffix("pe")
+        annotated.insert_suffix("[POSTPOSITION:LOCATIVE]")
+
+        ret_noun.latest_verbete = annotated
+        ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.segunda_classe = True
+        ret_noun.transitivo = False
+        ret_noun.recreate += f".{func_name}({args_str})"
+        return ret_noun
+
     def sara(self):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
@@ -229,30 +284,29 @@ class Noun(TupiAntigo):
         args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
-        vbt = ret_noun.verbete()
-        vbt_an = ret_noun.verbete(anotated=True)
-        if self.ends_with(vbt, self.vogais_nasais):
-            ret_noun.latest_verbete = f"{vbt_an}an"  
-        elif self.ends_with(vbt, ["î"]):
-            if self.ends_with(vbt[:-1], self.nasais):
-                ret_noun.latest_verbete = f"{vbt_an}ndar"   
+        annotated = ret_noun.latest_verbete
+
+        if ends_with_any(annotated, ret_noun.vogais_nasais):
+            annotated.insert_suffix("an")
+        elif ends_with_any(annotated, ["î"]):
+            if ends_with_any(annotated[:-1], ret_noun.nasais):
+                annotated.insert_suffix("ndar")
             else:
-                ret_noun.latest_verbete = f"{vbt_an}tar"           
-        elif vbt[-1] == 'o' and vbt[-2] in (self.vogais + ["'"]):
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{start[:-1]}[{parts[-1]}ûar"    
-        elif vbt[-2:] == 'ng':
-            ret_noun.latest_verbete = f"{vbt_an}ar" 
-        elif vbt[-1] in sara_consoante_map.keys():
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{start[:-1]}[{parts[-1]}{sara_consoante_map[vbt[-1]]}"
-        elif vbt[-1] not in self.vogais:
-            ret_noun.latest_verbete = f"{vbt_an}ar"
+                annotated.insert_suffix("tar")
+        elif annotated.endswith("o") and annotated[-2] in (ret_noun.vogais + ["'"]):
+            annotated.replace_clean(-1, 1, "ûar")
+        elif annotated[-2:] == "ng":
+            annotated.insert_suffix("ar")
+        elif annotated[-1] in sara_consoante_map:
+            annotated.replace_clean(-1, 1, sara_consoante_map[annotated[-1]])
+        elif annotated[-1] not in ret_noun.vogais:
+            annotated.insert_suffix("ar")
         else:
-            ret_noun.latest_verbete = f"{vbt_an}sar"
-        ret_noun.latest_verbete += "[ABSOLUTE_AGENT_SUFFIX]"
+            annotated.insert_suffix("sar")
+
+        annotated.insert_suffix("[ABSOLUTE_AGENT_SUFFIX]")
+
+        ret_noun.latest_verbete = annotated
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.segunda_classe = True
         ret_noun.transitivo = False
@@ -266,57 +320,85 @@ class Noun(TupiAntigo):
         func_name = frame.f_code.co_name
         args, _, _, values = inspect.getargvalues(frame)
         args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
-        vbt = ret_noun.verbete()
-        vbt_an = ret_noun.verbete(anotated=True)
+
+        annotated = AnnotatedString(str(self.latest_verbete))  # make copy
+        vbt = annotated.get_clean()
+
         if self.ends_with(vbt, self.vogais_nasais):
-            ret_noun.latest_verbete = f"{vbt_an}ab"  
+            annotated.insert_suffix("ab")
         elif self.ends_with(vbt, ["î"]):
             if self.ends_with(vbt[:-1], self.nasais):
-                ret_noun.latest_verbete = f"{vbt_an}ndab"   
+                annotated.insert_suffix("ndab")
             else:
-                ret_noun.latest_verbete = f"{vbt_an}tab"           
-        elif vbt[-1] == 'o' and vbt[-2] in (self.vogais + ["'"]):
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{start[:-1]}[{parts[-1]}ûab"    
-        elif vbt[-2:] == 'ng':
-            ret_noun.latest_verbete = f"{vbt_an}ab" 
-        elif vbt[-1] in sara_consoante_map.keys():
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{start[:-1]}[{parts[-1]}{saba_consoante_map[vbt[-1]]}"
+                annotated.insert_suffix("tab")
+        elif vbt.endswith("o") and vbt[-2] in (self.vogais + ["'"]):
+            annotated.replace_clean(-1, 1, "ûab")
+        elif vbt[-2:] == "ng":
+            annotated.insert_suffix("ab")
+        elif vbt[-1] in sara_consoante_map:
+            annotated.replace_clean(-1, 1, saba_consoante_map[vbt[-1]])
         else:
-            ret_noun.latest_verbete = f"{vbt_an}sab"
-        ret_noun.latest_verbete += "[FACILITY_SUFFIX]"
+            annotated.insert_suffix("sab")
+
+        annotated.insert_suffix("[FACILITY_SUFFIX]")
+
+        ret_noun.latest_verbete = annotated
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.segunda_classe = True
         ret_noun.transitivo = False
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
 
-    # TODO: Implement rest of phonetic changes
+
     def possessive(self, person='3p', possessor=None):
         if possessor is not None:
             person = "3p"
+
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
         args, _, _, values = inspect.getargvalues(frame)
         args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+
         if person == 'absoluta':
             return self.absoluta()
+
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
-        vbt = self.remove_parens_and_contents(ret_noun.verbete(anotated=True))
-        pref = f"r[PLURIFORM_PREFIX:R]" if possessor and self.pluriforme else ret_noun.pluriform_prefix(person)
-        if pref:
-            vbt = ret_noun.verbete(anotated=True).replace('(', '').replace(')', '')
-        pronoun = f"{self.personal_inflections[person][1]}[POSSESSIVE_PRONOUN:{person}]" if not possessor else f"{possessor}[NOUN:POSSESSOR]"
-        ret_noun.latest_verbete = f"{'' if '3p' in person and self.pluriforme and not possessor else pronoun} {pref}{vbt}".strip()
+
+        base_annotated = AnnotatedString(str(ret_noun.latest_verbete))
+
+        # Remove any parentheses from annotations
+        cleaned = base_annotated.get_annotated().replace("(", "").replace(")", "")
+        base_annotated = AnnotatedString(cleaned)
+
+        # Determine prefix (e.g., r[PLURIFORM_PREFIX:R]) for plural forms
+        if possessor and self.pluriforme:
+            prefix = "r[PLURIFORM_PREFIX:R]"
+        else:
+            prefix = ret_noun.pluriform_prefix(person)
+
+        # Determine possessive pronoun or custom possessor noun
+        if possessor:
+            poss_str = f"{possessor}[NOUN:POSSESSOR]"
+        elif not ("3p" in person and self.pluriforme):
+            poss_str = f"{self.personal_inflections[person][1]}[POSSESSIVE_PRONOUN:{person}]"
+        else:
+            poss_str = ""  # no prefix for 3p pluriforme without possessor
+
+        # Build annotated string
+        final_annotated = AnnotatedString(base_annotated.get_annotated())  # copy
+        final_annotated.insert_prefix(f"{poss_str} {prefix}".strip())
+
+        ret_noun.latest_verbete = final_annotated
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
+
+
+
         # TODO: Implement rest of phonetic changes
     def absoluta(self):
         frame = inspect.currentframe()
@@ -330,7 +412,7 @@ class Noun(TupiAntigo):
         pref = ret_noun.pluriform_prefix('absoluta')
         if pref:
             vbt = ret_noun.verbete(anotated=True).replace('(', '').replace(')', '')
-        ret_noun.latest_verbete = f"{pref}{vbt}".strip()
+        ret_noun.latest_verbete = AnnotatedString(f"{pref}{vbt}".strip())
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
@@ -342,18 +424,16 @@ class Noun(TupiAntigo):
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
-        vbt = self.verbete()
+        vbt = ret_noun.latest_verbete
         if vbt[-1] in 'bmp':
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{self.accent_last_vowel(start[:-1])}[{parts[-1]}ba'e"
+            vbt.replace_clean(-1, 1, 'b')
+            vbt.insert_suffix("ba'e")
         elif vbt[-1] in self.vogais:
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{self.remove_accent_last_vowel(start)}[{parts[-1]}ba'e"
+            vbt.remove_accent_last_vowel()
+            vbt.insert_suffix("ba'e")
         else:
-            ret_noun.latest_verbete = f"{ret_noun.latest_verbete}yba'e"
-        ret_noun.latest_verbete += "[RELATIVE_AGENT_SUFFIX]"
+            vbt.insert_suffix("yba'e")
+        vbt.insert_suffix("[RELATIVE_AGENT_SUFFIX]")
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
@@ -365,37 +445,30 @@ class Noun(TupiAntigo):
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
-        vbt = self.verbete()
+        vbt = ret_noun.latest_verbete
         if vbt[-1] in self.vogais:
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{start}[{parts[-1]}pûer"
             if vbt[-1] in self.vogais_nasais:
-                ret_noun.latest_verbete = f"{start}[{parts[-1]}mbûer"
+                vbt.insert_suffix("mbûer")
+            else:
+                vbt.insert_suffix("pûer")
         elif vbt[-1] in ['b']:
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{start[:-1]}[{parts[-1]}gûer"
+            vbt.replace_clean(-1, 1, '')
+            vbt.insert_suffix("gûer")
         elif vbt[-1] in ['n']:
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{start}[{parts[-1]}der"
+            vbt.insert_suffix("der")
         elif vbt[-1] in ['r']:
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{start}[{parts[-1]}ûer"
+            vbt.insert_suffix("ûer")
         elif vbt[-1] in ['m']:
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{start}[{parts[-1]}bûer"
+            vbt.insert_suffix("bûer")
         else:
-            ret_noun.latest_verbete = f"{ret_noun.latest_verbete}ûer"
-        ret_noun.latest_verbete += "[PRETERITE_SUFFIX]"
+            vbt.insert_suffix("ûer")
+        vbt.insert_suffix("[PRETERITE_SUFFIX]")
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.segunda_classe = True
         ret_noun.transitivo = False
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
+
     def ram(self):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
@@ -404,37 +477,30 @@ class Noun(TupiAntigo):
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
-        vbt = self.verbete()
+        vbt = ret_noun.latest_verbete
         if vbt[-1] in self.vogais:
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{start}[{parts[-1]}ram"
             if vbt[-1] in self.vogais_nasais:
-                ret_noun.latest_verbete = f"{start}[{parts[-1]}nam"
+                vbt.insert_suffix("nam")
+            else:
+                vbt.insert_suffix("ram")
         elif vbt[-1] in ['b']:
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{start[:-1]}[{parts[-1]}gûam"
-        elif vbt[-1] in ['n']:
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{start}[{parts[-1]}am"
-        elif vbt[-1] in ['r']:
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{start}[{parts[-1]}am"
+            vbt.replace_clean(-1, 1, '')
+            vbt.insert_suffix("gûam")
+        elif ends_with_any(vbt, ['n', 'r', "nh"]):
+            vbt.insert_suffix("am")
         elif vbt[-1] in ['m']:
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{self.nasaliza_final(start[:-1])}[{parts[-1]}gûam"
+            vbt.replace_clean(-1, 1, '')
+            vbt.nasaliza_final()
+            vbt.insert_suffix("gûam")
         else:
-            ret_noun.latest_verbete = f"{ret_noun.latest_verbete}ûam"
-        ret_noun.latest_verbete += "[FUTURE_SUFFIX]"
+            vbt.insert_suffix("ûam")
+        vbt.insert_suffix("[FUTURE_SUFFIX]")
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.segunda_classe = True
         ret_noun.transitivo = False
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
+    
     def ramo(self):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
@@ -443,16 +509,15 @@ class Noun(TupiAntigo):
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
-        vbt = self.verbete()
+        vbt = ret_noun.latest_verbete
         if vbt[-1] in self.vogais:
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{start}[{parts[-1]}ramo"
             if vbt[-1] in self.vogais_nasais:
-                ret_noun.latest_verbete = f"{start}[{parts[-1]}namo"
+                vbt.insert_suffix("namo")
+            else:
+                vbt.insert_suffix("ramo")
         else:
-            ret_noun.latest_verbete = f"{ret_noun.latest_verbete}amo"
-        ret_noun.latest_verbete += "[SIMULATIVE_SUFFIX]"
+            vbt.insert_suffix("amo")
+        vbt.insert_suffix("[SIMULATIVE_SUFFIX]")
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.segunda_classe = True
         ret_noun.transitivo = False
@@ -466,26 +531,24 @@ class Noun(TupiAntigo):
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
-        vbt = self.verbete()
+        vbt = ret_noun.latest_verbete
         if vbt[-1] in self.vogais:
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{start}[{parts[-1]}pyr"
             if vbt[-1] in self.vogais_nasais:
-                ret_noun.latest_verbete = f"{start}[{parts[-1]}mbyr"
+                vbt.insert_suffix("mbyr")
+            else:
+                vbt.insert_suffix("pyr")
         elif vbt[-1] in ['b', 'p']:
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{start[:-1]}[{parts[-1]}pyr"
+            vbt.replace_clean(-1, 1, '')
+            vbt.insert_suffix("pyr")
         else:
-            ret_noun.latest_verbete = f"{ret_noun.latest_verbete}ypyr"
+            vbt.insert_suffix("ypyr")
         obj_pref = f"{ret_noun.pluriform_prefix('3p')}"
         if obj_pref:
             obj_pref += "[OBJECT_PRONOUN]"
         else:
-            obj_pref = "i[OBJECT_PRONOUN] "
-        ret_noun.latest_verbete = f"{obj_pref}{ret_noun.latest_verbete}"
-        ret_noun.latest_verbete += "[INDEFINITE_SUBJET_SUFFIX]"
+            obj_pref = "i[OBJECT_PRONOUN]"
+        vbt.insert_prefix(obj_pref)
+        vbt.insert_suffix("[AGENTLESS_PATIENT_SUFFIX]")
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.segunda_classe = True
         ret_noun.transitivo = False
@@ -500,16 +563,15 @@ class Noun(TupiAntigo):
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
-        vbt = self.verbete()
+        vbt = ret_noun.latest_verbete
         if vbt[-1] in self.vogais:
-            parts = ret_noun.latest_verbete.split("[")
-            start = "[".join(parts[:-1])
-            ret_noun.latest_verbete = f"{start}[{parts[-1]}reme"
             if vbt[-1] in self.vogais_nasais:
-                ret_noun.latest_verbete = f"{start}[{parts[-1]}neme"
+                vbt.insert_suffix("neme")
+            else:
+                vbt.insert_suffix("reme")
         else:
-            ret_noun.latest_verbete = f"{ret_noun.latest_verbete}eme"
-        ret_noun.latest_verbete += "[CIRCUMSTANCE_SUBSTANTATIVE_SUFFIX]"
+            vbt.insert_suffix("eme")
+        vbt.insert_suffix("[CONJUNCTIVE_SUFFIX]")
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
@@ -521,7 +583,7 @@ class Noun(TupiAntigo):
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
-        vbt = self.verbete()
+        vbt = ret_noun.latest_verbete
         ret_noun.pluriforme = "t"
         token = "[PATIENT_PREFIX]"
         if vbt[0] in self.nasal_prefix_map.keys():
@@ -530,11 +592,12 @@ class Noun(TupiAntigo):
                 suf = "emi"
                 if self.monosilibica():
                     suf = "embi"
-                ret_noun.latest_verbete = f"{suf}{token}{self.nasal_prefix_map[ret_noun.latest_verbete[0]]}{ret_noun.latest_verbete[1:]}"
+                vbt.replace_clean(0, 1, self.nasal_prefix_map[vbt[0]])
+                vbt.insert_suffix(f"{suf}{token}")
         elif self.monosilibica() and not any(nasal in vbt for nasal in self.nasais):
-            ret_noun.latest_verbete = f"embi{token}{ret_noun.latest_verbete}"
+            vbt.insert_prefix(f"embi{token}")
         else:
-            ret_noun.latest_verbete = f"emi{token}{ret_noun.latest_verbete}"
+            vbt.insert_prefix(f"emi{token}")
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.segunda_classe = True
         ret_noun.transitivo = False
@@ -548,10 +611,9 @@ class Noun(TupiAntigo):
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
-        vbt = self.verbete()
-        ret_noun.latest_verbete = f"{ret_noun.latest_verbete}e'ym"
-
-        ret_noun.latest_verbete += "[NEGATION_SUFFIX]"
+        vbt = ret_noun.latest_verbete
+        vbt.insert_suffix("eym")
+        vbt.insert_suffix("[NEGATION_SUFFIX]")
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
