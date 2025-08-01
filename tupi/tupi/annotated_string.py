@@ -1,18 +1,25 @@
 import unicodedata
 from .tupi import TupiAntigo
 
+nasal_prefix_map = {
+    "p": "mb",
+    "k": "ng",
+    "t": "nd",
+    "s": "nd",
+}
+
 class AnnotatedString:
     def __init__(self, annotated: str):
         self.original = annotated
         self._rebuild_maps()
 
     def _rebuild_maps(self):
-        self.clean = ''
+        self.clean = ""
         self.map_clean_to_annotated = []
         i = 0
         while i < len(self.original):
-            if self.original[i] == '[':
-                while i < len(self.original) and self.original[i] != ']':
+            if self.original[i] == "[":
+                while i < len(self.original) and self.original[i] != "]":
                     i += 1
                 i += 1  # skip the closing ']'
             else:
@@ -31,7 +38,7 @@ class AnnotatedString:
         elif isinstance(key, slice):
             indices = self.map_clean_to_annotated[key]
             if not indices:
-                return ''
+                return ""
             start = indices[0]
             end = indices[-1] + 1
             return self.original[start:end]
@@ -78,7 +85,7 @@ class AnnotatedString:
         self.original += suffix
         self._rebuild_maps()
 
-    def replace_clean(self, start: int, length: int = 1, replacement: str = ''):
+    def replace_clean(self, start: int, length: int = 1, replacement: str = ""):
         clean_len = len(self.clean)
 
         # Normalize negative start
@@ -98,17 +105,16 @@ class AnnotatedString:
         # Map to annotated string indices
         annotated_start = (
             self.map_clean_to_annotated[start]
-            if start < clean_len else len(self.original)
+            if start < clean_len
+            else len(self.original)
         )
-        annotated_end = (
-            self.map_clean_to_annotated[end - 1] + 1
-        )
+        annotated_end = self.map_clean_to_annotated[end - 1] + 1
 
         # Replace in original
         self.original = (
-            self.original[:annotated_start] +
-            replacement +
-            self.original[annotated_end:]
+            self.original[:annotated_start]
+            + replacement
+            + self.original[annotated_end:]
         )
         self._rebuild_maps()
 
@@ -129,10 +135,23 @@ class AnnotatedString:
             normalized = unicodedata.normalize("NFC", accented)
             self.replace_clean(-1, 1, normalized)
         return self
-    
+
     def nasaliza_final(self):
         # Check if the last character is an accented vowel
         if self[-1] in TupiAntigo.nasal_map.keys():
             # Remove the accent from the last vowel
             self.replace_clean(-1, 1, TupiAntigo.nasal_map[self[-1]])
+        return self
+    
+    def nasaliza_prefixo(self):
+        if self[0] in nasal_prefix_map.keys():
+            return self.replace_clean(0, 1, nasal_prefix_map[self[0]])
+        return self
+
+    def remove_ending_if_any(self, endings):
+        for ending in endings:
+            if self.endswith(ending):
+                self.replace_clean(-len(ending), len(ending), "")
+                # exit the loop after the first match
+                return self
         return self

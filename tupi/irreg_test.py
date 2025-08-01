@@ -1,5 +1,6 @@
 import sys
-sys.path.append('tupi')
+
+sys.path.append("tupi")
 import tupi
 from tupi import IrregVerb
 
@@ -11,12 +12,17 @@ import random
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import sys
-sys.path.append('tupi')
+
+sys.path.append("tupi")
 import unicodedata
 import gzip
 
+
 def strip_accents(s):
-    return ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
+    return "".join(
+        c for c in unicodedata.normalize("NFD", s) if unicodedata.category(c) != "Mn"
+    )
+
 
 # with open("docs/tupi_dict_navarro.js", "r") as file:
 #     lines = file.readlines()
@@ -208,7 +214,7 @@ for vclass in tqdm([x for x in verbs.keys()]):
             # "(v. intr. irreg.)",
             "(t) (v. intr. compl. posp. irreg.)",
             "(v. intr. irreg. usado somente no plural)",
-            "(v.tr. irreg. - não recebe o pronome -î- incorporado)"
+            "(v.tr. irreg. - não recebe o pronome -î- incorporado)",
         ]:
             verb_obj = tupi.Verb(
                 vbt["first_word"], vclass, vbt["definition"], vid=vbt["id"]
@@ -233,6 +239,7 @@ for v in irregvobjs:
 othervobjs_counter = Counter()
 for v in othervobjs:
     othervobjs_counter.update([v.verb_class])
+
 
 def generate_permutations(input_list):
     # Use itertools.product to generate all possible pairs
@@ -383,15 +390,15 @@ for v in tqdm(
             for subj, obj in test_cases:
                 try:
                     res = v.conjugate(
-                        subject_tense=subj if modo != 'gerundio' else None,
+                        subject_tense=subj if modo != "gerundio" else None,
                         object_tense=obj,
                         mode=modo,
                     )
                     neg_res = v.conjugate(
-                        subject_tense=subj if modo != 'gerundio' else None,
+                        subject_tense=subj if modo != "gerundio" else None,
                         object_tense=obj,
                         mode=modo,
-                        negative=True
+                        negative=True,
                     )
                     if (subj, obj) in test_cases_map[modo]:
                         quiz.append(
@@ -407,15 +414,16 @@ for v in tqdm(
                         "f": res,
                         "s": subj if modo[:2] != "ge" else None,
                         "o": obj,
-                        "m": modo[:2], 'n': neg_res
+                        "m": modo[:2],
+                        "n": neg_res,
                     }
                     if "con" in dicc_dict[v.vid]:
                         dicc_dict[v.vid]["con"].append(dicc_con)
-                        conns[v.verbete+" "+str(v.vid)].append(dicc_con)
+                        conns[v.verbete + " " + str(v.vid)].append(dicc_con)
 
                     else:
                         dicc_dict[v.vid]["con"] = [dicc_con]
-                        conns[v.verbete+" "+str(v.vid)] = [dicc_con]
+                        conns[v.verbete + " " + str(v.vid)] = [dicc_con]
                 except Exception as e:
                     pass
                     print(f"\t({subj} -> {obj}):\tainda não desenvolvida", e)
@@ -426,41 +434,28 @@ for v in tqdm(
                         subject_tense=subj,
                         mode=modo,
                     )
-                    neg_res = v.conjugate(
-                        subject_tense=subj,
-                        mode=modo,
-                        negative=True
-                    )
+                    neg_res = v.conjugate(subject_tense=subj, mode=modo, negative=True)
                     if subj in {x[0] for x in test_cases_map[modo]}:
                         quiz.append(
                             {"f": res, "s": subj, "o": None, "m": modo[:2], "d": deff}
                         )
-                    dicc_con = {"f": res, "s": subj, "o": None, "m": modo[:2], 'n': neg_res}
+                    dicc_con = {
+                        "f": res,
+                        "s": subj,
+                        "o": None,
+                        "m": modo[:2],
+                        "n": neg_res,
+                    }
                     if "con" in dicc_dict[v.vid]:
                         dicc_dict[v.vid]["con"].append(dicc_con)
-                        conns[v.verbete+" "+str(v.vid)].append(dicc_con)
+                        conns[v.verbete + " " + str(v.vid)].append(dicc_con)
 
                     else:
                         dicc_dict[v.vid]["con"] = [dicc_con]
-                        conns[v.verbete+" "+str(v.vid)] = [dicc_con]
+                        conns[v.verbete + " " + str(v.vid)] = [dicc_con]
                 except Exception as e:
                     pass
                     print(f"\t({subj}:\tainda não desenvolvida", e)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # def compress_data(data):
@@ -476,9 +471,7 @@ for v in tqdm(
 #     f.write(c_quiz)
 
 processed_data = [
-    {k[0]:v for k,v in obj.items()}
-    for obj in dicc_dict.values()
-    if "con" in obj
+    {k[0]: v for k, v in obj.items()} for obj in dicc_dict.values() if "con" in obj
 ]
 # with open("docs/dict-conjugated.json.gz", "wb") as f:
 #     c_data = compress_data(processed_data)

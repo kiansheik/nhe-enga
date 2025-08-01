@@ -5,6 +5,7 @@ sys.path.append("/Users/kian/code/nhe-enga/tupi")
 
 from tupi import Noun as TupiNoun
 
+
 class Copula(Predicate):
     def __init__(self):
         """Initialize a Copula object."""
@@ -23,7 +24,11 @@ class Copula(Predicate):
         if self.post_adjuncts:
             nec += " " + " ".join([x.eval(annotated=annotated) for x in self.adjuncts])
         if self.pre_adjuncts:
-            nec = " ".join([x.eval(annotated=annotated) for x in self.pre_adjuncts]) + " " + nec
+            nec = (
+                " ".join([x.eval(annotated=annotated) for x in self.pre_adjuncts])
+                + " "
+                + nec
+            )
         return nec
 
     def __eq__(self, other):
@@ -38,8 +43,8 @@ class Copula(Predicate):
     def __repr__(self):
         return f"Copula({self.verbete})"
 
+
 def ruã(pred):
     new_pred = pred.copy()
     new_pred.rua = True
     return new_pred
-

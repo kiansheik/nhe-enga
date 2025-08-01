@@ -36,34 +36,44 @@ saba_consoante_map = {
     "ú": "usab",
 }
 
+
 def ends_with_any(s, endings):
     return any(s.endswith(ending) for ending in endings)
+
 
 def starts_with_any(s, endings):
     return any(s.startswith(ending) for ending in endings)
 
+
 def remove_ending_if_any(s, endings):
     for ending in endings:
         if s.endswith(ending):
-            return s[:-len(ending)]
+            return s[: -len(ending)]
     return s
+
 
 def remove_starting_if_any(s, endings):
     for ending in endings:
         if s.startswith(ending):
-            return s[len(ending):]
+            return s[len(ending) :]
     return s
 
+
 def tokenize_string(annotated_string):
-    matches = re.findall(r'([^\s\[\]]+)?\[(.*?)\]', annotated_string)
+    matches = re.findall(r"([^\s\[\]]+)?\[(.*?)\]", annotated_string)
     notes = [(token, annotation) for token, annotation in matches]
     return notes
+
 
 class Noun(TupiAntigo):
     def __init__(self, verbete, raw_definition):
         super().__init__()
-        self.base_verbete = (verbete if verbete[-1] != 'a' else verbete[:-1]) + ("[ROOT]" if verbete[-1] != ']' else "") # The name of the verb in its dictionary form
-        self.latest_verbete = AnnotatedString(self.base_verbete) # The name of the verb in its dictionary form
+        self.base_verbete = (verbete if verbete[-1] != "a" else verbete[:-1]) + (
+            "[ROOT]" if verbete[-1] != "]" else ""
+        )  # The name of the verb in its dictionary form
+        self.latest_verbete = AnnotatedString(
+            self.base_verbete
+        )  # The name of the verb in its dictionary form
         self.raw_definition = raw_definition  # Raw definition of the verb (string)
         self.aglutinantes = [self]
         raw_def = self.raw_definition[:50]
@@ -82,10 +92,12 @@ class Noun(TupiAntigo):
         self.segunda_classe = (
             "2ª classe" in self.raw_definition or "adj." in self.raw_definition
         )
-        self.transitivo ="v.tr." in raw_def.replace(
-            " ", ""
+        self.transitivo = "v.tr." in raw_def.replace(" ", "")
+        self.ero = (
+            self.verbete().startswith("ero")
+            or self.verbete().startswith("eno")
+            or self.verbete().startswith("eru")
         )
-        self.ero = self.verbete().startswith("ero") or self.verbete().startswith("eno") or self.verbete().startswith("eru")
         self.objeto_raw = None
 
     # Fix annotation and whole composition process
@@ -93,44 +105,42 @@ class Noun(TupiAntigo):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
         args, _, _, values = inspect.getargvalues(frame)
-        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
-
+        args_str = ", ".join(
+            f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
+        )
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
+        mod_noun = copy.deepcopy(modifier)
+        vbt = ret_noun.latest_verbete
+        mod_vbt = mod_noun.latest_verbete
+        # Define some useful groups
+        vogais_nasais = self.vogais_nasais
+        nasais = self.consoantes_nasais
+        consoantes = self.consoantes_orais_normais
 
-        annotated = AnnotatedString(str(self.latest_verbete))  # safe copy
-        mod_annotated = AnnotatedString(str(modifier.latest_verbete))
-
-        vbt = annotated.get_clean()
-        mod_vbt = mod_annotated.get_clean()
-
-        # Define sound groups
-        consoantes = "p b t s x k r gû û î ŷ".split()
-        vogais_nasais = "ã ẽ ĩ ỹ õ ũ".split()
-        nasais = "m n ng nh mb nd".split()
-
-        # === Rule 1: consonant-consonant clash
-        if ends_with_any(vbt, consoantes) and starts_with_any(mod_vbt, consoantes + nasais):
-            annotated.replace_clean(-1, 1, '')  # remove final consonant
-
-        # === Rule 2: final nasal/consonant and modifier starts with apostrophe
-        elif ends_with_any(vbt, nasais + consoantes) and starts_with_any(mod_vbt, ["'"]):
-            mod_annotated = AnnotatedString(mod_annotated.get_annotated()[1:])  # strip apostrophe in annotated form
-
-        # === Rule 3: final nasal clash with nasal modifier
-        elif ends_with_any(vbt, nasais + vogais_nasais) and starts_with_any(mod_vbt, consoantes + nasais):
-            semivogal = 'î' if vbt.endswith('nh') else ''
-            annotated.replace_clean(-1, 1, '')  # remove last nasal
-            nasalized = self.nasaliza_final(annotated.get_clean()) + semivogal
-            annotated = AnnotatedString(nasalized)
+        vbt.remove_accent_last_vowel()
+        if ends_with_any(vbt, consoantes) and starts_with_any(
+            mod_vbt, consoantes + nasais
+        ):
+            vbt.remove_ending_if_any(consoantes)
+        elif ends_with_any(vbt, nasais + consoantes) and starts_with_any(
+            mod_vbt, [self.glottal_stop]
+        ):
+            mod_vbt.replace_clean(0, 1, "")
+        elif ends_with_any(vbt, nasais + vogais_nasais) and starts_with_any(
+            mod_vbt, consoantes + nasais
+        ):
+            semivogal = "î" if ends_with_any(vbt, ["nh"]) else ""
+            vbt.remove_ending_if_any(nasais)
+            vbt.nasaliza_final()
+            vbt.insert_suffix(semivogal)
             if not self.is_nasal(mod_vbt):
-                mod_annotated = AnnotatedString(self.nasaliza_prefixo(mod_annotated.get_annotated()))
-
-        # Add the modifier to the base
-        annotated.insert_suffix(mod_annotated.get_annotated())
-
-        # Finalize
-        ret_noun.latest_verbete = annotated
+                mod_vbt.nasaliza_prefixo()
+        elif ends_with_any(vbt, self.semi_vogais) and ends_with_any(vbt[:-1], vogais_nasais):
+            if not self.is_nasal(mod_vbt):
+                mod_vbt.nasaliza_prefixo()
+        vbt.insert_suffix(str(mod_vbt))
+        # ret_noun.pluriforme = self.pluriforme
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
@@ -147,20 +157,23 @@ class Noun(TupiAntigo):
             verb_class += "-îo- -s- "
         ret = Verb(self.verbete(), verb_class, self.raw_definition)
         return ret
-    
+
     def objeto(self, objeto_raw=None):
         if not objeto_raw:
             return self.objeto_raw
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
         args, _, _, values = inspect.getargvalues(frame)
-        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        args_str = ", ".join(
+            f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
+        )
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         ret_noun.objeto_raw = objeto_raw
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
+
     # Define a .conjugate function which passes all args to .verb.conjugate()
     def conjugate(self, *args, **kwargs):
         # kwargs["dir_obj_raw"] = self.objeto()
@@ -175,10 +188,10 @@ class Noun(TupiAntigo):
             if "[ROOT]" in word:
                 root_split = word.split("[ROOT]")
                 suffixes = "[ROOT]".join(root_split[1:])
-                prefixes = "]".join(root_split[0].split(']')[:-1])
+                prefixes = "]".join(root_split[0].split("]")[:-1])
                 if prefixes:
                     prefixes += "]"
-                root = root_split[0].split(']')[-1]
+                root = root_split[0].split("]")[-1]
                 print(root, prefixes, suffixes)
 
                 n = Noun(root, prefixes)
@@ -189,7 +202,11 @@ class Noun(TupiAntigo):
                         n = n.sara()
                     if "SUBSTANTIVE_SUFFIX" in suffix:
                         break
-                tokens.append(self.keep_brackets_contents(prefixes)+root+self.keep_brackets_contents(suffixes))
+                tokens.append(
+                    self.keep_brackets_contents(prefixes)
+                    + root
+                    + self.keep_brackets_contents(suffixes)
+                )
             else:
                 tokens.append(self.keep_brackets_contents(word))
         return " ".join(tokens)
@@ -203,35 +220,43 @@ class Noun(TupiAntigo):
         return noun_out
 
     def verbete(self, anotated=False):
-        return self.latest_verbete.get_clean() if not anotated else self.latest_verbete.get_annotated()
-    
+        return (
+            self.latest_verbete.get_clean()
+            if not anotated
+            else self.latest_verbete.get_annotated()
+        )
+
     def base_substantivo(self):
         return f"{self.verbete(anotated=True)}{'a[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING]' if self.verbete(anotated=False)[-1] not in self.vogais else '[SUBSTANTIVE_SUFFIX:VOWEL_ENDING]'}"
-        
+
     def substantivo(self, anotated=False):
-        bs = self.base_substantivo() if anotated else self.remove_brackets_and_contents(self.base_substantivo())
+        bs = (
+            self.base_substantivo()
+            if anotated
+            else self.remove_brackets_and_contents(self.base_substantivo())
+        )
         return bs
-    
+
     def __repr__(self) -> str:
         return self.substantivo()
-    
+
     def __str__(self) -> str:
         return repr(self)
 
-    def pluriform_prefix(self, person='absoluta'):
+    def pluriform_prefix(self, person="absoluta"):
         plf = self.pluriforme
         if plf:
-            if '3p' in person:
+            if "3p" in person:
                 if plf == "t, t":
                     return "t[PLURIFORM_PREFIX:T]"
                 elif plf:
                     return "s[PLURIFORM_PREFIX:S]"
-            if person == 'absoluta':
+            if person == "absoluta":
                 if plf == "t, t" or plf == "t":
                     return "t[PLURIFORM_PREFIX:T]"
                 if plf == "s, r, s":
                     return "s[PLURIFORM_PREFIX:S]"
-            if '1p' in person or '2p' in person:
+            if "1p" in person or "2p" in person:
                 return "r[PLURIFORM_PREFIX:R]"
         return ""
 
@@ -239,7 +264,9 @@ class Noun(TupiAntigo):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
         args, _, _, values = inspect.getargvalues(frame)
-        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        args_str = ", ".join(
+            f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
+        )
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         annotated = ret_noun.latest_verbete
@@ -249,7 +276,9 @@ class Noun(TupiAntigo):
             annotated.insert_suffix("pe")
         elif ends_with_any(annotated, ["î", "nh"]):
             if annotated.endswith("nh"):
-                annotated.replace_clean(-3, 1, self.nasal_map.get(annotated[-3], annotated[-3]))
+                annotated.replace_clean(
+                    -3, 1, self.nasal_map.get(annotated[-3], annotated[-3])
+                )
                 annotated.replace_clean(-2, 2, "î")
             if annotated[-2] in ret_noun.vogais_nasais:
                 annotated.insert_suffix("me")
@@ -281,7 +310,9 @@ class Noun(TupiAntigo):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
         args, _, _, values = inspect.getargvalues(frame)
-        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        args_str = ", ".join(
+            f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
+        )
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         annotated = ret_noun.latest_verbete
@@ -313,13 +344,14 @@ class Noun(TupiAntigo):
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
 
-
     # TODO: Implement rest of phonetic changes
     def saba(self):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
         args, _, _, values = inspect.getargvalues(frame)
-        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        args_str = ", ".join(
+            f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
+        )
 
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
@@ -352,17 +384,18 @@ class Noun(TupiAntigo):
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
 
-
-    def possessive(self, person='3p', possessor=None):
+    def possessive(self, person="3p", possessor=None):
         if possessor is not None:
             person = "3p"
 
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
         args, _, _, values = inspect.getargvalues(frame)
-        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        args_str = ", ".join(
+            f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
+        )
 
-        if person == 'absoluta':
+        if person == "absoluta":
             return self.absoluta()
 
         ret_noun = copy.deepcopy(self)
@@ -384,49 +417,56 @@ class Noun(TupiAntigo):
         if possessor:
             poss_str = f"{possessor}[NOUN:POSSESSOR]"
         elif not ("3p" in person and self.pluriforme):
-            poss_str = f"{self.personal_inflections[person][1]}[POSSESSIVE_PRONOUN:{person}]"
+            poss_str = (
+                f"{self.personal_inflections[person][1]}[POSSESSIVE_PRONOUN:{person}]"
+            )
         else:
             poss_str = ""  # no prefix for 3p pluriforme without possessor
 
         # Build annotated string
         final_annotated = AnnotatedString(base_annotated.get_annotated())  # copy
-        final_annotated.insert_prefix(f"{poss_str} {prefix}".strip())
+        final_annotated.insert_prefix(prefix)
+        final_annotated.insert_prefix(f"{poss_str} ")
 
         ret_noun.latest_verbete = final_annotated
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
 
-
-
         # TODO: Implement rest of phonetic changes
+
     def absoluta(self):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
         args, _, _, values = inspect.getargvalues(frame)
-        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        args_str = ", ".join(
+            f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
+        )
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         # TODO: Figure out verbetes como '(a)pé' which have the perntheses and that vowel only if there's no prefix
         vbt = self.remove_parens_and_contents(ret_noun.verbete(anotated=True))
-        pref = ret_noun.pluriform_prefix('absoluta')
+        pref = ret_noun.pluriform_prefix("absoluta")
         if pref:
-            vbt = ret_noun.verbete(anotated=True).replace('(', '').replace(')', '')
+            vbt = ret_noun.verbete(anotated=True).replace("(", "").replace(")", "")
         ret_noun.latest_verbete = AnnotatedString(f"{pref}{vbt}".strip())
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
+
     def bae(self):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
         args, _, _, values = inspect.getargvalues(frame)
-        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        args_str = ", ".join(
+            f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
+        )
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
         vbt = ret_noun.latest_verbete
-        if vbt[-1] in 'bmp':
-            vbt.replace_clean(-1, 1, 'b')
+        if vbt[-1] in "bmp":
+            vbt.replace_clean(-1, 1, "b")
             vbt.insert_suffix("ba'e")
         elif vbt[-1] in self.vogais:
             vbt.remove_accent_last_vowel()
@@ -437,11 +477,14 @@ class Noun(TupiAntigo):
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
+
     def puer(self):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
         args, _, _, values = inspect.getargvalues(frame)
-        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        args_str = ", ".join(
+            f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
+        )
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
@@ -451,14 +494,14 @@ class Noun(TupiAntigo):
                 vbt.insert_suffix("mbûer")
             else:
                 vbt.insert_suffix("pûer")
-        elif vbt[-1] in ['b']:
-            vbt.replace_clean(-1, 1, '')
+        elif vbt[-1] in ["b"]:
+            vbt.replace_clean(-1, 1, "")
             vbt.insert_suffix("gûer")
-        elif vbt[-1] in ['n']:
+        elif vbt[-1] in ["n"]:
             vbt.insert_suffix("der")
-        elif vbt[-1] in ['r']:
+        elif vbt[-1] in ["r"]:
             vbt.insert_suffix("ûer")
-        elif vbt[-1] in ['m']:
+        elif vbt[-1] in ["m"]:
             vbt.insert_suffix("bûer")
         else:
             vbt.insert_suffix("ûer")
@@ -473,7 +516,9 @@ class Noun(TupiAntigo):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
         args, _, _, values = inspect.getargvalues(frame)
-        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        args_str = ", ".join(
+            f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
+        )
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
@@ -483,13 +528,13 @@ class Noun(TupiAntigo):
                 vbt.insert_suffix("nam")
             else:
                 vbt.insert_suffix("ram")
-        elif vbt[-1] in ['b']:
-            vbt.replace_clean(-1, 1, '')
+        elif vbt[-1] in ["b"]:
+            vbt.replace_clean(-1, 1, "")
             vbt.insert_suffix("gûam")
-        elif ends_with_any(vbt, ['n', 'r', "nh"]):
+        elif ends_with_any(vbt, ["n", "r", "nh"]):
             vbt.insert_suffix("am")
-        elif vbt[-1] in ['m']:
-            vbt.replace_clean(-1, 1, '')
+        elif vbt[-1] in ["m"]:
+            vbt.replace_clean(-1, 1, "")
             vbt.nasaliza_final()
             vbt.insert_suffix("gûam")
         else:
@@ -500,12 +545,14 @@ class Noun(TupiAntigo):
         ret_noun.transitivo = False
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
-    
+
     def ramo(self):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
         args, _, _, values = inspect.getargvalues(frame)
-        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        args_str = ", ".join(
+            f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
+        )
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
@@ -523,11 +570,14 @@ class Noun(TupiAntigo):
         ret_noun.transitivo = False
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
+
     def pyr(self):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
         args, _, _, values = inspect.getargvalues(frame)
-        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        args_str = ", ".join(
+            f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
+        )
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
@@ -537,8 +587,8 @@ class Noun(TupiAntigo):
                 vbt.insert_suffix("mbyr")
             else:
                 vbt.insert_suffix("pyr")
-        elif vbt[-1] in ['b', 'p']:
-            vbt.replace_clean(-1, 1, '')
+        elif vbt[-1] in ["b", "p"]:
+            vbt.replace_clean(-1, 1, "")
             vbt.insert_suffix("pyr")
         else:
             vbt.insert_suffix("ypyr")
@@ -554,12 +604,15 @@ class Noun(TupiAntigo):
         ret_noun.transitivo = False
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
+
     # TODO: Not yet tested -reme
     def reme(self):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
         args, _, _, values = inspect.getargvalues(frame)
-        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        args_str = ", ".join(
+            f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
+        )
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
@@ -575,11 +628,14 @@ class Noun(TupiAntigo):
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
+
     def emi(self):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
         args, _, _, values = inspect.getargvalues(frame)
-        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        args_str = ", ".join(
+            f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
+        )
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
@@ -603,11 +659,14 @@ class Noun(TupiAntigo):
         ret_noun.transitivo = False
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
+
     def eym(self):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
         args, _, _, values = inspect.getargvalues(frame)
-        args_str = ', '.join(f"{arg}={repr(values[arg])}" for arg in args if 'self' != arg)
+        args_str = ", ".join(
+            f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
+        )
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
@@ -617,7 +676,8 @@ class Noun(TupiAntigo):
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
-    
+
+
 if __name__ == "__main__":
     # Example usage:
     # noun_examples = [Noun("apysyk", "adj.: "),
@@ -625,24 +685,24 @@ if __name__ == "__main__":
     #                     Noun("aûsub", "v.tr. (r, s)"),
     #                     Noun("nhan", "v.intr.")
     # ]
-    noun_examples = [(Noun("kytĩ", "adj.: "), "kytĩsara,kytĩana"),
-                        (Noun("pysyrõ", "v.intr."), "pysyrõsara,pysyrõana"),
-                        (Noun("tym", "v.tr. (r, s)"), "tymbara"),
-                        (Noun("mosem", "v.tr. (r, s)"), "mosembara"),
-                        (Noun("nhan", "v.intr."), "nhandara"),
-                        (Noun("suban", "v.intr."), "subandara"),
-                        (Noun("kuab", "v.intr."), "kuapara"),
-                        (Noun("mooryb", "v.intr."), "moorypara"),
-                        (Noun("potar", "v.intr."), "potasara"),
-                        (Noun("'u", "v.intr."), "'ûara,gûara"),
-                        (Noun("so'o", "v.intr."), "so'ûara,sogûara"),
-                        (Noun("kaî", "v.intr."), "kaîtara"),
-                        (Noun("poî", "v.intr."), "poîtara"),
-                        (Noun("enõî", "v.intr."), "enõîndara"),
-                        (Noun("îekoty", "v.intr."), "îekotŷara"),
-                        (Noun("kating", "v.intr."), "katingara"),
-                        (Noun("îuká", "v.intr."), "îukasara"),
-                        
+    noun_examples = [
+        (Noun("kytĩ", "adj.: "), "kytĩsara,kytĩana"),
+        (Noun("pysyrõ", "v.intr."), "pysyrõsara,pysyrõana"),
+        (Noun("tym", "v.tr. (r, s)"), "tymbara"),
+        (Noun("mosem", "v.tr. (r, s)"), "mosembara"),
+        (Noun("nhan", "v.intr."), "nhandara"),
+        (Noun("suban", "v.intr."), "subandara"),
+        (Noun("kuab", "v.intr."), "kuapara"),
+        (Noun("mooryb", "v.intr."), "moorypara"),
+        (Noun("potar", "v.intr."), "potasara"),
+        (Noun("'u", "v.intr."), "'ûara,gûara"),
+        (Noun("so'o", "v.intr."), "so'ûara,sogûara"),
+        (Noun("kaî", "v.intr."), "kaîtara"),
+        (Noun("poî", "v.intr."), "poîtara"),
+        (Noun("enõî", "v.intr."), "enõîndara"),
+        (Noun("îekoty", "v.intr."), "îekotŷara"),
+        (Noun("kating", "v.intr."), "katingara"),
+        (Noun("îuká", "v.intr."), "îukasara"),
     ]
     print()
     for noun_example, solution in noun_examples:
@@ -653,31 +713,45 @@ if __name__ == "__main__":
     print(n.recreate)
     print(n.verbete())
     print(n.substantivo(True))
-    print(n.possessive('absoluta'), n.possessive('absoluta').recreate)
-    print(n.possessive('absoluta').possessive('1ps'), n.possessive('absoluta').possessive('1ps').recreate)
-    print(n.possessive('1ps'))
-    print(n.possessive('3p'), n.possessive('3p').recreate)
+    print(n.possessive("absoluta"), n.possessive("absoluta").recreate)
+    print(
+        n.possessive("absoluta").possessive("1ps"),
+        n.possessive("absoluta").possessive("1ps").recreate,
+    )
+    print(n.possessive("1ps"))
+    print(n.possessive("3p"), n.possessive("3p").recreate)
 
     print()
     print("Puera, rama test")
-    noun_examples = [(Noun("ybyrá", "adj.: "), "ybyrárama,ybyrápûera"),
-                        (Noun("embi'u", "(t)"), "embi'urama,embi'upûera"),
-                        (Noun("só", ""), "sórama,sópûera"),
-                        (Noun("nhũ", "v.tr. (r, s)"), "nhũnama,nhũmbûera"),
-                        (Noun("kunumĩ", "v.intr."), "kunumĩnama,kunumĩmbûera"),
-                        (Noun("anhanga", "v.intr."), "anhangûama,anhangûera"),
-                        (Noun("oka", "(r, s)"), "okûama,okûera"),
-                        (Noun("pesaba", "v.intr."), "pesagûama,pesagûera"),
-                        (Noun("sema", "v.intr."), "sẽgûama,sembûera"),
-                        (Noun("mena", "v.intr."), "menama,mendera"),
-                        (Noun("pira", "v.intr."), "pirama,pirera"),
-                        
+    noun_examples = [
+        (Noun("ybyrá", "adj.: "), "ybyrárama,ybyrápûera"),
+        (Noun("embi'u", "(t)"), "embi'urama,embi'upûera"),
+        (Noun("só", ""), "sórama,sópûera"),
+        (Noun("nhũ", "v.tr. (r, s)"), "nhũnama,nhũmbûera"),
+        (Noun("kunumĩ", "v.intr."), "kunumĩnama,kunumĩmbûera"),
+        (Noun("anhanga", "v.intr."), "anhangûama,anhangûera"),
+        (Noun("oka", "(r, s)"), "okûama,okûera"),
+        (Noun("pesaba", "v.intr."), "pesagûama,pesagûera"),
+        (Noun("sema", "v.intr."), "sẽgûama,sembûera"),
+        (Noun("mena", "v.intr."), "menama,mendera"),
+        (Noun("pira", "v.intr."), "pirama,pirera"),
     ]
     print()
     for noun_example, solution in noun_examples:
-        if noun_example.ram().substantivo() not in solution or noun_example.puer().substantivo() not in solution:
-            print(noun_example.verbete(), "\t", noun_example.ram(), "\t", noun_example.puer(), "\t", solution)
-    n = Noun("embi'u", "(t)").puer().possessive('1ps')
+        if (
+            noun_example.ram().substantivo() not in solution
+            or noun_example.puer().substantivo() not in solution
+        ):
+            print(
+                noun_example.verbete(),
+                "\t",
+                noun_example.ram(),
+                "\t",
+                noun_example.puer(),
+                "\t",
+                solution,
+            )
+    n = Noun("embi'u", "(t)").puer().possessive("1ps")
     print(n)
     print(n.recreate)
     print(n.substantivo(True))
@@ -685,18 +759,19 @@ if __name__ == "__main__":
 
     print()
     print("(r)emi- test")
-    noun_examples = [(Noun("ka'u", "adj.: "), "eminga'u"),
-                        (Noun("su'u", ""), "emindu'u"),
-                        (Noun("potar", ""), "emimbotara"),
-                        (Noun("tym", ""), "emityma"),
-                        (Noun("tyr", ""), "embindyra"),
-                        (Noun("'u", ""), "embi'u"),
+    noun_examples = [
+        (Noun("ka'u", "adj.: "), "eminga'u"),
+        (Noun("su'u", ""), "emindu'u"),
+        (Noun("potar", ""), "emimbotara"),
+        (Noun("tym", ""), "emityma"),
+        (Noun("tyr", ""), "embindyra"),
+        (Noun("'u", ""), "embi'u"),
     ]
     print()
     for noun_example, solution in noun_examples:
         if noun_example.emi().substantivo() not in solution:
             print(noun_example.verbete(), "\t", noun_example.emi(), "\t", solution)
-    n = Noun("'u", "(v.tr) ingerir").emi().puer().possessive('1ps')
+    n = Noun("'u", "(v.tr) ingerir").emi().puer().possessive("1ps")
     print(n)
     print(n.recreate)
     print(n.substantivo(True))
@@ -704,16 +779,17 @@ if __name__ == "__main__":
 
     print()
     print("pyr- test")
-    noun_examples = [(Noun("îuká", "adj.: "), "i îukápyra"),
-                        (Noun("aûsub", "(s)"), "saûsupyra"),
-                        (Noun("potar", ""), "i potarypyra"),
-                        (Noun("kuab", ""), "i kuapyra"),
+    noun_examples = [
+        (Noun("îuká", "adj.: "), "i îukápyra"),
+        (Noun("aûsub", "(s)"), "saûsupyra"),
+        (Noun("potar", ""), "i potarypyra"),
+        (Noun("kuab", ""), "i kuapyra"),
     ]
     print()
     for noun_example, solution in noun_examples:
         if noun_example.pyr().substantivo().strip() != solution.strip():
             print(noun_example.verbete(), "\t", noun_example.pyr(), "\t", solution)
-    n = Noun("'u", "(v.tr.) ingerir").pyr().ram().puer().possessive('1ps')
+    n = Noun("'u", "(v.tr.) ingerir").pyr().ram().puer().possessive("1ps")
     print(n)
     print(n.recreate)
     print(n.substantivo(True))

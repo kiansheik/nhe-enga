@@ -62,7 +62,7 @@ class Predicate:
         mod_n = TupiNoun(modifier.verbete, modifier.definition)
         new_n = orig_n.compose(mod_n).verbete()
         # Modify the copy of self
-        orig.definition = self.definition + " " + modifier.definition
+        orig.definition = self.definition
         orig.compositions += [modifier]
         orig.refresh_verbete(new_n)
         return orig
@@ -127,8 +127,8 @@ class Predicate:
     def eval(self, annotated=False):
         prev = self.copy()
         pre = prev.preval(annotated=annotated)
-        neg = '' if not annotated else '[NEGATION_PARTICLE:NA]'
-        neg_suf = '' if not annotated else '[NEGATION_PARTICLE:RUA]'
+        neg = "" if not annotated else "[NEGATION_PARTICLE:NA]"
+        neg_suf = "" if not annotated else "[NEGATION_PARTICLE:RUA]"
         if prev.rua:
             pre = f"nda{neg} {pre} ruã{neg_suf}"
         return pre
@@ -171,15 +171,15 @@ class Predicate:
             else post_adjuncts_repr
         )
         return pre_adjuncts_repr
-    
+
     def is_subordinated(self):
         return self.principal is not None
-      
+
     def same_subject(self):
         if self.is_subordinated():
             return self.subject().verbete == self.principal.subject().verbete
         return None
-    
+
     def same_subject(self):
         return self.subject().verbete == self.principal.subject().verbete
 
@@ -195,6 +195,6 @@ class Predicate:
 
     def __lshift__(self, other):
         return self.subordinate(other, pre=False)
-    
+
     def __rshift__(self, other):
         return other.subordinate(self, pre=True)

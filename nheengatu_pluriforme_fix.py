@@ -6,10 +6,11 @@ json_path = "docs/extracted_entries_nheengatu.json"
 
 
 def extract_text(input_string):
-    match = re.match(r'^[^\(\[\{]+', input_string)
+    match = re.match(r"^[^\(\[\{]+", input_string)
     if match:
         return match.group(0).strip()
     return input_string.strip()
+
 
 # Example usage
 input_string = "fewf (r, t, [T})"
@@ -30,13 +31,15 @@ for entry in data:
         definition = f"{entry['word'].replace(word, '').strip()} {definition}"
     new_data.append({"f": word, "d": definition})
 
+
 def compress_data(data):
     # Convert to JSON
-    json_data = json.dumps(data, separators=(',', ':'))
+    json_data = json.dumps(data, separators=(",", ":"))
     # Convert to bytes
-    encoded = json_data.encode('utf-8')
+    encoded = json_data.encode("utf-8")
     # Compress
     return gzip.compress(encoded)
+
 
 # Save the modified data to a new JSON file as .tar.gz
 compressed_data = compress_data(new_data)

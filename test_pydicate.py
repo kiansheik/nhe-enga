@@ -9,6 +9,8 @@ from pydicate import Predicate
 # one line random hash function
 rhash = lambda x: sum([ord(c) for c in str(x)])
 from graphviz import Digraph
+
+
 def build_graphviz(predicate, graph=None, parent_name=None, edge_label=None):
     """
     Recursively builds a Graphviz graph from a Predicate structure.
@@ -20,16 +22,29 @@ def build_graphviz(predicate, graph=None, parent_name=None, edge_label=None):
     if graph is None:
         graph = Digraph(format="png")
         graph.attr(rankdir="TB")  # Set tree to vertical (Top-to-Bottom) by default
-        graph.attr(label=predicate.eval(), labelloc="t", fontsize="24", fontname="Helvetica-Bold")
-    
+        graph.attr(
+            label=predicate.eval(),
+            labelloc="t",
+            fontsize="24",
+            fontname="Helvetica-Bold",
+        )
+
     if parent_name is None:
         parent_name = "Root"
         graph.node(parent_name, label=f"IP")
     # Generate a unique name for the current node
-    node_name = f"{predicate.category}_{predicate.verbete}_{rhash(predicate)}" if isinstance(predicate, Predicate) else predicate.verbete
+    node_name = (
+        f"{predicate.category}_{predicate.verbete}_{rhash(predicate)}"
+        if isinstance(predicate, Predicate)
+        else predicate.verbete
+    )
 
     # Add the current node to the graph
-    label = f"{predicate.category}\n{predicate.verbete}" if isinstance(predicate, Predicate) else predicate.verbete
+    label = (
+        f"{predicate.category}\n{predicate.verbete}"
+        if isinstance(predicate, Predicate)
+        else predicate.verbete
+    )
     label += "\n(NEG)" if predicate.negated else ""
     graph.node(node_name, label=label, parent_name="Root")
 
@@ -79,6 +94,7 @@ def build_graphviz(predicate, graph=None, parent_name=None, edge_label=None):
 
     return graph
 
+
 # # Example usage
 # and_predicate = Conjunction("abé",) * abá * ixé + Adverb("nhõ")
 
@@ -91,40 +107,39 @@ def build_graphviz(predicate, graph=None, parent_name=None, edge_label=None):
 # print(and_and_predicate.eval())
 
 go = Verb("só")
-print(go.eval()) # só
+print(go.eval())  # só
 
 igo = go * ixé
-print(igo.eval()) # ixé asó
+print(igo.eval())  # ixé asó
 
 yougo = go * endé
-print(yougo.eval()) # endé eresó
+print(yougo.eval())  # endé eresó
 
 yougo = go * endé + Adverb("koritei")
-print(yougo.eval()) # endé eresó koritei
+print(yougo.eval())  # endé eresó koritei
 
-yougo_circ =  Adverb("koritei") + go * endé
-print(yougo_circ.eval()) # koritei endé eresó
+yougo_circ = Adverb("koritei") + go * endé
+print(yougo_circ.eval())  # koritei endé eresó
 
 hego = go * ~ae + Adverb("koritei")
-print(hego.eval()) # a'e osó koritei
+print(hego.eval())  # a'e osó koritei
 
 hego_circ = Adverb("koritei") + go * ~ae
-print(hego_circ.eval()) # koritei i sóû
+print(hego_circ.eval())  # koritei i sóû
 
 want = Verb("potar", "v.tr.", definition="to want")
 
 ver = Verb("epîak", "v.tr. (s)", definition="to see")
 
 tl = ver * ixé * endé << go * ixé
-print(tl.eval()) # ixé endé epîak só
+print(tl.eval())  # ixé endé epîak só
 
-ver_circ = ~-go/want * ixé >> -ver * +ixé * endé
-print(ver_circ.eval()) # ixé endé epîak só
+ver_circ = ~-go / want * ixé >> -ver * +ixé * endé
+print(ver_circ.eval())  # ixé endé epîak só
 
 
-ver_circ =  endé * koty + ixé * -go + sosé * ixé
-print(ver_circ.eval()) # ixé endé epîak só
-
+ver_circ = endé * koty + ixé * -go + sosé * ixé
+print(ver_circ.eval())  # ixé endé epîak só
 
 
 # euepedro = (abé * Noun("Pedro") * ixé)
@@ -132,15 +147,7 @@ print(ver_circ.eval()) # ixé endé epîak só
 # print(me_n_pedro.eval()) # Mateus sees Pedro
 # vergo =  Noun("Mateus") == Noun("Pedro")
 # vergo_neg =  Noun("Mateus") != Noun("Pedro")
-# print("ble: ", (vergo).eval()) 
+# print("ble: ", (vergo).eval())
 
 # build_graphviz(hego).render("and_predicate1", view=True)
 # build_graphviz(hego_circ).render("and_predicate_circ1", view=True)
-
-
-
-
-
-
-
-

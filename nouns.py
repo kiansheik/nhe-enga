@@ -6,12 +6,17 @@ import random
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import sys
-sys.path.append('tupi')
+
+sys.path.append("tupi")
 from tupi import Noun, Verb, TupiAntigo
 import unicodedata
 
+
 def strip_accents(s):
-    return ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
+    return "".join(
+        c for c in unicodedata.normalize("NFD", s) if unicodedata.category(c) != "Mn"
+    )
+
 
 with open("docs/tupi_dict_navarro.js", "r") as file:
     lines = file.readlines()
@@ -110,7 +115,7 @@ possible_letters = set()
 for vbt in tupi_only:
     for vclass in [
         "(s.)",
-            "(s. - portug.)",
+        "(s. - portug.)",
         "(s) (v.tr.)",
         "(v.tr.)",
         "(v. intr.)",
@@ -121,7 +126,7 @@ for vbt in tupi_only:
         "(-îo-) (v.tr.)",
         "(-îo- ou -nho-) (v.tr.)",
         "(-îo-s- ou -nho-s-) (v.tr. irreg. Incorpora -îo- e -s-. Nas formas nominais é pluriforme.)",
-        "adj.: "
+        "adj.: ",
     ]:
         if vclass in vbt["definition"]:
             found = False
@@ -147,7 +152,7 @@ for vbt in tupi_only:
                 count.update([vt])
 
 all_nouns = sorted(list(all_nouns))
-all_nouns_objs = [Noun(x['first_word'], x['definition']) for x in all_verbetes]
+all_nouns_objs = [Noun(x["first_word"], x["definition"]) for x in all_verbetes]
 possible_letters = sorted(possible_letters)
 
 
@@ -178,121 +183,114 @@ random.shuffle(all_nouns_objs)
 #     print(noun.absoluta(), "\t\t", noun.absoluta().substantivo(anotated=True))
 #     print()
 results = []
-persons = [
-        "1ps",
-        "1ppi",
-        "1ppe",
-        "2ps",
-        "2pp",
-        "3p",
-        "absoluta"
-    ]
+persons = ["1ps", "1ppi", "1ppe", "2ps", "2pp", "3p", "absoluta"]
 # write each x.verbete() for x in all_nouns_objs to a json list
-with open('docs/all_nouns_verbs.json', 'w') as f:
+with open("docs/all_nouns_verbs.json", "w") as f:
     # use json to write to file
     json.dump(list({x.verbete() for x in all_nouns_objs}), f)
 for noun in tqdm(all_nouns_objs):
     for person in persons:
         n = noun
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
         n = noun.ram()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
         n = noun.ram().puer()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
         n = noun.puer()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
-
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
 
         n = noun.saba()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
         n = noun.saba().puer()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
         n = noun.saba().ram()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
         n = noun.saba().ram().puer()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
 
-
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
         n = noun.sara()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
         n = noun.sara().puer()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
         n = noun.sara().ram()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
         n = noun.sara().ram().puer()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
 
-
-
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
         n = noun.pyr()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
         n = noun.pyr().puer()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
         n = noun.pyr().ram()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
         n = noun.pyr().ram().puer()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
 
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
         n = noun.emi()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
         n = noun.emi().puer()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
         n = noun.emi().ram()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
         n = noun.emi().ram().puer()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
 
-
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
         n = noun.bae()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
         n = noun.puer().bae()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
         n = noun.ram().bae()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
         n = noun.ram().puer().bae()
         n = n.possessive(person)
-        results.append((n.substantivo(anotated=False),n.recreate_annotated()))
+        results.append((n.substantivo(anotated=False), n.recreate_annotated()))
+
 
 def introduce_typo(s):
-    typo_type = random.choice(['swap', 'add', 'remove'])
-    if typo_type == 'swap' and len(s) > 1:
+    typo_type = random.choice(["swap", "add", "remove"])
+    if typo_type == "swap" and len(s) > 1:
         pos = random.randint(0, len(s) - 2)
-        s = s[:pos] + s[pos+1] + s[pos] + s[pos+2:]
-    elif typo_type == 'add':
+        s = s[:pos] + s[pos + 1] + s[pos] + s[pos + 2 :]
+    elif typo_type == "add":
         pos = random.randint(0, len(s))
-        char = random.choice("p pû pî b t s sû k kû ' m mû n r nh ng mb mbû nd ndû ng ngû gû g û î ŷ a á e é i í y ý o ó u ú ã ẽ ĩ ỹ õ ũ x".split(" "))
+        char = random.choice(
+            "p pû pî b t s sû k kû ' m mû n r nh ng mb mbû nd ndû ng ngû gû g û î ŷ a á e é i í y ý o ó u ú ã ẽ ĩ ỹ õ ũ x".split(
+                " "
+            )
+        )
         s = s[:pos] + char + s[pos:]
-    elif typo_type == 'remove' and len(s) > 1:
+    elif typo_type == "remove" and len(s) > 1:
         pos = random.randint(0, len(s) - 1)
-        s = s[:pos] + s[pos+1:]
+        s = s[:pos] + s[pos + 1 :]
     return s
+
 
 # Example usage
 original_string = "hello world"
@@ -301,35 +299,39 @@ print(typo_string)
 
 
 import json, re
+
 uniq_results = set(results)
 results = []
 # Augment the data for more robust results
 t = TupiAntigo()
 for src, recreate in tqdm(uniq_results):
-    for aug_func in [strip_accents, lambda x:x, introduce_typo, t.fix_phonetics]:
+    for aug_func in [strip_accents, lambda x: x, introduce_typo, t.fix_phonetics]:
         results.append((aug_func(src), recreate))
 # Write results to file
-results = [{"anotated":x[1], "label":x[0]} for x in set(results)]
-with open('anotated_results_nouns.json', 'w') as f:
+results = [{"anotated": x[1], "label": x[0]} for x in set(results)]
+with open("anotated_results_nouns.json", "w") as f:
     # use json to write to file
     json.dump(results, f)
 
+
 def tokenize_string(annotated_string):
-    matches = re.findall(r'([^\s\[\]]+)?(\[.*?\])', annotated_string)
+    matches = re.findall(r"([^\s\[\]]+)?(\[.*?\])", annotated_string)
     notes = {(token, annotation) for token, annotation in matches}
     for tag in {(None, annotation) for _, annotation in matches}:
         notes.add(tag)
     return notes
 
+
 print("test")
 from collections import Counter
+
 c = Counter()
 for res in results:
-    c.update(tokenize_string(res['anotated']))
+    c.update(tokenize_string(res["anotated"]))
 for mc in c.most_common(25):
     print(mc)
 
 # Write the .keys contents of c to a file as a json list
-with open('anotated_tokens_nouns.json', 'w') as f:
+with open("anotated_tokens_nouns.json", "w") as f:
     # use json to write to file
-    json.dump(list(set([y for x in c.keys() for y in x if y and '[' in y])), f)
+    json.dump(list(set([y for x in c.keys() for y in x if y and "[" in y])), f)

@@ -10,7 +10,8 @@ import gzip, json
 
 # load /Users/kian/code/nhe-enga/docs/dict-conjugated.json.gz into an object
 with gzip.open("/Users/kian/code/nhe-enga/docs/dict-conjugated.json.gz", "rt") as f:
-    dict_conjugated = [x for x in json.load(f) if 'c' in x.keys()]
+    dict_conjugated = [x for x in json.load(f) if "c" in x.keys()]
+
 
 class Verb(Predicate):
     def __init__(self, value=None, verb_class="", definition="", vid=None):
@@ -55,7 +56,7 @@ class Verb(Predicate):
 
     def subject(self):
         return self.arguments[0]
-    
+
     def object(self):
         return self.arguments[1]
 
@@ -87,11 +88,17 @@ class Verb(Predicate):
             if self.verb.transitivo:
                 # TODO: render "nominal form"
                 if infl0:  # if the verb has a personal inflection then it's a pronoun
-                    retval = self.verb.conjugate( anotar=annotated,
-                        subject_tense="3p", object_tense=infl0, pro_drop=True, mode=self.mood, negative=self.negated
+                    retval = self.verb.conjugate(
+                        anotar=annotated,
+                        subject_tense="3p",
+                        object_tense=infl0,
+                        pro_drop=True,
+                        mode=self.mood,
+                        negative=self.negated,
                     )
                 else:  # otherwise it's a direct object
-                    retval = self.verb.conjugate( anotar=annotated,
+                    retval = self.verb.conjugate(
+                        anotar=annotated,
                         subject_tense="3p",
                         object_tense="3p",
                         dir_obj_raw=arg0,
@@ -102,11 +109,16 @@ class Verb(Predicate):
             else:  # intransitive
                 suj = self.arguments[0]
                 if infl0:
-                    retval = self.verb.conjugate( anotar=annotated,
-                        subject_tense=infl0, mode=self.mood, negative=self.negated, pro_drop=suj.pro_drop
+                    retval = self.verb.conjugate(
+                        anotar=annotated,
+                        subject_tense=infl0,
+                        mode=self.mood,
+                        negative=self.negated,
+                        pro_drop=suj.pro_drop,
                     )
                 else:
-                    retval = self.verb.conjugate( anotar=annotated,
+                    retval = self.verb.conjugate(
+                        anotar=annotated,
                         subject_tense="3p",
                         dir_subj_raw=arg0,
                         mode=self.mood,
@@ -118,12 +130,17 @@ class Verb(Predicate):
             obj = self.arguments[1]
             arg0 = suj.eval(annotated=annotated)
             infl0 = suj.inflection()
-            arg1 = None if (obj.pro_drop or obj.eval(annotated=annotated) in pronoun_verbetes) else obj.eval(annotated=annotated)
+            arg1 = (
+                None
+                if (obj.pro_drop or obj.eval(annotated=annotated) in pronoun_verbetes)
+                else obj.eval(annotated=annotated)
+            )
             infl1 = obj.inflection()
             if obj.category == "conjunction":
                 arg1 = None
                 obj_delocated = None if obj.pro_drop else obj.eval(annotated=annotated)
-            retval = self.verb.conjugate( anotar=annotated,
+            retval = self.verb.conjugate(
+                anotar=annotated,
                 subject_tense=infl0,
                 object_tense=infl1,
                 dir_subj_raw=arg0,
@@ -142,8 +159,10 @@ class Verb(Predicate):
             sepchar = " "
             # remove [*] from end of retval and get last character
             lastchar = self.verb.remove_brackets_and_contents(retval).strip()[-1]
-            if type(adj) == YFix and (lastchar not in (TupiVerb.vogais + TupiVerb.semi_vogais)):
-                sepchar = "y"+("[CONSONANT_CLASH]" if annotated else "")
+            if type(adj) == YFix and (
+                lastchar not in (TupiVerb.vogais + TupiVerb.semi_vogais)
+            ):
+                sepchar = "y" + ("[CONSONANT_CLASH]" if annotated else "")
             retval = retval + sepchar + adj.eval(annotated=annotated)
         return retval if annotated else self.verb.remove_brackets_and_contents(retval)
 

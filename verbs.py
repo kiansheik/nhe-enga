@@ -6,15 +6,20 @@ import random
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 import sys
-sys.path.append('tupi')
+
+sys.path.append("tupi")
 import tupi
 from tupi.verb import Verb
 from tupi.orth import ALT_ORTS
 import unicodedata
 import gzip
 
+
 def strip_accents(s):
-    return ''.join(c for c in unicodedata.normalize('NFD', s) if unicodedata.category(c) != 'Mn')
+    return "".join(
+        c for c in unicodedata.normalize("NFD", s) if unicodedata.category(c) != "Mn"
+    )
+
 
 # with open("docs/tupi_dict_navarro.js", "r") as file:
 #     lines = file.readlines()
@@ -257,7 +262,7 @@ for vclass in tqdm([x for x in verbs.keys()]):
             "(t) (v. intr. compl. posp. irreg.)",
             "(v. intr. irreg. usado somente no plural)",
             "(v.tr. irreg. - não recebe o pronome -î- incorporado)",
-            "(v. intr. compl. posp. irreg.)"
+            "(v. intr. compl. posp. irreg.)",
         ]:
             verb_obj = tupi.Verb(
                 vbt["first_word"], vclass, vbt["definition"], vid=vbt["id"]
@@ -417,10 +422,7 @@ for v in tqdm(
                         mode=modo,
                     )
                     neg_res = v.conjugate(
-                        subject_tense=subj,
-                        object_tense=obj,
-                        mode=modo,
-                        negative=True
+                        subject_tense=subj, object_tense=obj, mode=modo, negative=True
                     )
                     if (subj, obj) in test_cases_map[modo]:
                         quiz.append(
@@ -436,7 +438,8 @@ for v in tqdm(
                         "f": res,
                         "s": subj if modo[:2] != "ge" else None,
                         "o": obj,
-                        "m": modo[:2], 'n': neg_res,
+                        "m": modo[:2],
+                        "n": neg_res,
                     }
                     if "con" in dicc_dict[v.vid]:
                         dicc_dict[v.vid]["con"].append(dicc_con)
@@ -453,16 +456,18 @@ for v in tqdm(
                         subject_tense=subj,
                         mode=modo,
                     )
-                    neg_res = v.conjugate(
-                        subject_tense=subj,
-                        mode=modo,
-                        negative=True
-                    )
+                    neg_res = v.conjugate(subject_tense=subj, mode=modo, negative=True)
                     if (subj, obj) in test_cases_map[modo]:
                         quiz.append(
                             {"f": res, "s": subj, "o": None, "m": modo[:2], "d": deff}
                         )
-                    dicc_con = {"f": res, "s": subj, "o": None, "m": modo[:2], 'n': neg_res}
+                    dicc_con = {
+                        "f": res,
+                        "s": subj,
+                        "o": None,
+                        "m": modo[:2],
+                        "n": neg_res,
+                    }
                     if "con" in dicc_dict[v.vid]:
                         dicc_dict[v.vid]["con"].append(dicc_con)
                     else:
@@ -472,22 +477,21 @@ for v in tqdm(
                     pass
                     # print(f"\t({subj} -> {obj}):\tainda não desenvolvida", e)
 
+
 def compress_data(data):
     # Convert to JSON
-    json_data = json.dumps(data, separators=(',', ':'))
+    json_data = json.dumps(data, separators=(",", ":"))
     # Convert to bytes
-    encoded = json_data.encode('utf-8')
+    encoded = json_data.encode("utf-8")
     # Compress
     return gzip.compress(encoded)
+
 
 with open("quiz/quiz.json.gz", "wb") as f:
     c_quiz = compress_data(quiz)
     f.write(c_quiz)
 
-processed_data = [
-    {k[0]:v for k,v in obj.items()}
-    for obj in dicc_dict.values()
-]
+processed_data = [{k[0]: v for k, v in obj.items()} for obj in dicc_dict.values()]
 with open("docs/dict-conjugated.json.gz", "wb") as f:
     c_data = compress_data(processed_data)
     f.write(c_data)
@@ -496,16 +500,23 @@ with open("docs/dict-conjugated.json.gz", "wb") as f:
 
 print("Testing -aba")
 from tupi import Noun
-abas_raw = [x for x in tupi_only if 'tempo, lugar' in x['definition'].lower()]
-nouns = [Noun(x['first_word'], x['definition']) for x in abas_raw]
+
+abas_raw = [x for x in tupi_only if "tempo, lugar" in x["definition"].lower()]
+nouns = [Noun(x["first_word"], x["definition"]) for x in abas_raw]
 abas = [x.saba() for x in nouns]
 for a in abas:
-    real_aba = a.raw_definition.lower().split('tempo, lugar')[-2].split('aba')[0].split(' ')[-1]+"aba"
+    real_aba = (
+        a.raw_definition.lower()
+        .split("tempo, lugar")[-2]
+        .split("aba")[0]
+        .split(" ")[-1]
+        + "aba"
+    )
     if real_aba != a.substantivo():
         print(a.base_verbete, a.substantivo(), real_aba)
 
 #### SEPAR ################################
-        
+
 # Example usage:
 test_cases_map = {
     "indicativo": [
@@ -597,29 +608,29 @@ test_cases_map = {
         ("2pp", "mut"),
     ],
 }
-    # def conjugate(
-    #     self,
-    #     subject_tense="1ps",
-    #     object_tense=None,
-    #     dir_obj_raw=None,
-    #     mode="indicativo",
-    #     pos="anteposto",
-    #     pro_drop=False,
-    #     negative=False,
-    #     anotar=False,
+# def conjugate(
+#     self,
+#     subject_tense="1ps",
+#     object_tense=None,
+#     dir_obj_raw=None,
+#     mode="indicativo",
+#     pos="anteposto",
+#     pro_drop=False,
+#     negative=False,
+#     anotar=False,
 # Write the .keys contents of c to a file as a json list
 import csv
 
-with open('anotated_results_nouns.json', 'r') as f:
+with open("anotated_results_nouns.json", "r") as f:
     # use json to write to file
     nouns = json.load(f)
 
 baby_names_raw = set()
 
-with open('docs/baby-names.csv', 'r') as file:
+with open("docs/baby-names.csv", "r") as file:
     reader = csv.DictReader(file)
     for row in reader:
-        baby_names_raw.add(row['name'].lower())
+        baby_names_raw.add(row["name"].lower())
 
 baby_names = list(baby_names_raw)
 
@@ -651,12 +662,30 @@ for modo, test_cases in tqdm([(x[0], x[1]) for x in test_cases_map.items()]):
                                                 pro_drop=pro_drop,
                                                 pos=pos,
                                                 negative=neg,
-                                                dir_subj_raw=f"{random.choice(baby_names)}" if dir_subj_raw and '3p' in subj else None,
-                                                dir_obj_raw=f"{random.choice(baby_names)}" if dir_obj_raw and '3p' in obj else None,
-                                                anotar=True
+                                                dir_subj_raw=f"{random.choice(baby_names)}"
+                                                if dir_subj_raw and "3p" in subj
+                                                else None,
+                                                dir_obj_raw=f"{random.choice(baby_names)}"
+                                                if dir_obj_raw and "3p" in obj
+                                                else None,
+                                                anotar=True,
                                             )
                                             # print(f"{res}")
-                                            results.append({"anotated":res, "label":v.map_orthography(v.remove_brackets_and_contents(res), ortho), "definition":(v.verbete, v.raw_definition)})
+                                            results.append(
+                                                {
+                                                    "anotated": res,
+                                                    "label": v.map_orthography(
+                                                        v.remove_brackets_and_contents(
+                                                            res
+                                                        ),
+                                                        ortho,
+                                                    ),
+                                                    "definition": (
+                                                        v.verbete,
+                                                        v.raw_definition,
+                                                    ),
+                                                }
+                                            )
                                         except Exception as e:
                                             pass
                         else:
@@ -667,19 +696,33 @@ for modo, test_cases in tqdm([(x[0], x[1]) for x in test_cases_map.items()]):
                                         subject_tense=subj,
                                         pro_drop=pro_drop,
                                         mode=modo,
-                                        dir_subj_raw=f"{random.choice(baby_names)}" if dir_subj_raw and '3p' in subj else None,
+                                        dir_subj_raw=f"{random.choice(baby_names)}"
+                                        if dir_subj_raw and "3p" in subj
+                                        else None,
                                         negative=neg,
-                                        anotar=True
+                                        anotar=True,
                                     )
                                     # print(f"{res}")
-                                    results.append({"anotated":res, "label":v.map_orthography(v.remove_brackets_and_contents(res), ortho), "definition":(v.verbete, v.raw_definition)})
+                                    results.append(
+                                        {
+                                            "anotated": res,
+                                            "label": v.map_orthography(
+                                                v.remove_brackets_and_contents(res),
+                                                ortho,
+                                            ),
+                                            "definition": (v.verbete, v.raw_definition),
+                                        }
+                                    )
                                 except Exception as e:
                                     pass
 
+
 def complex_sentences(results):
     sample_n = 10
+
     def sample_list(star, sample_n=10):
-        return random.sample(star, len(star)//(sample_n*4))
+        return random.sample(star, len(star) // (sample_n * 4))
+
     complex_results = []
     gerunds = []
     imperatives = []
@@ -688,141 +731,345 @@ def complex_sentences(results):
     indicatives = []
     # Separate the sentences based on their verb mood types
     for res in results:
-        if 'GERUND' in res['anotated']:
+        if "GERUND" in res["anotated"]:
             gerunds.append(res)
-        elif 'IMPERATIVE' in res['anotated']:
+        elif "IMPERATIVE" in res["anotated"]:
             imperatives.append(res)
-        elif 'PERMISSIVE' in res['anotated']:
+        elif "PERMISSIVE" in res["anotated"]:
             permissives.append(res)
-        elif 'CIRCUMSTANCIAL' in res['anotated']:
+        elif "CIRCUMSTANCIAL" in res["anotated"]:
             circumstancials.append(res)
         else:
             indicatives.append(res)
     # indicatives
     for mainVerb in tqdm(sample_list(indicatives)):
-        complex_results.append({"definitions":[mainVerb['definition']], "anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{mainVerb['label']}"})
+        complex_results.append(
+            {
+                "definitions": [mainVerb["definition"]],
+                "anotated": f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]",
+                "label": f"{mainVerb['label']}",
+            }
+        )
         for sub in random.sample(permissives, sample_n):
-            complex_results.append({"definitions":[mainVerb['definition'], sub['definition']], "anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]", "label":f"{mainVerb['label']} {sub['label']}"})
-            complex_results.append({"definitions":[mainVerb['definition'], sub['definition']], "anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+            complex_results.append(
+                {
+                    "definitions": [mainVerb["definition"], sub["definition"]],
+                    "anotated": f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]",
+                    "label": f"{mainVerb['label']} {sub['label']}",
+                }
+            )
+            complex_results.append(
+                {
+                    "definitions": [mainVerb["definition"], sub["definition"]],
+                    "anotated": f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]",
+                    "label": f"{sub['label']} {mainVerb['label']}",
+                }
+            )
         for sub in random.sample(gerunds, sample_n):
-            if 'GERUND_SUBJECT_PREFIX' not in sub['anotated']:
-                complex_results.append({"definitions":[mainVerb['definition'], sub['definition']], "anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]", "label":f"{mainVerb['label']} {sub['label']}"})
-                if 'SUBJECT:3p' not in mainVerb['anotated'] and 'SUBJECT_PREFIX:3p' not in mainVerb['anotated']:
-                    complex_results.append({"definitions":[mainVerb['definition'], sub['definition']], "anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+            if "GERUND_SUBJECT_PREFIX" not in sub["anotated"]:
+                complex_results.append(
+                    {
+                        "definitions": [mainVerb["definition"], sub["definition"]],
+                        "anotated": f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]",
+                        "label": f"{mainVerb['label']} {sub['label']}",
+                    }
+                )
+                if (
+                    "SUBJECT:3p" not in mainVerb["anotated"]
+                    and "SUBJECT_PREFIX:3p" not in mainVerb["anotated"]
+                ):
+                    complex_results.append(
+                        {
+                            "definitions": [mainVerb["definition"], sub["definition"]],
+                            "anotated": f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]",
+                            "label": f"{sub['label']} {mainVerb['label']}",
+                        }
+                    )
             else:
                 # Find the tag like "[GERUND_SUBJECT_PREFIX:****]" and extract the subject tense from the ****
-                subject_tense_gerund = sub['anotated'].split('GERUND_SUBJECT_PREFIX:')[1].split(']')[0]
+                subject_tense_gerund = (
+                    sub["anotated"].split("GERUND_SUBJECT_PREFIX:")[1].split("]")[0]
+                )
                 subject_tense_main = ""
-                if "[SUBJECT:" in mainVerb['anotated']:
-                    subject_tense_main = mainVerb['anotated'].split('SUBJECT:')[1].split(']')[0].split(":")[0]
-                elif "[SUBJECT_PREFIX:" in mainVerb['anotated']:
-                    subject_tense_main = mainVerb['anotated'].split('SUBJECT_PREFIX:')[1].split(']')[0]
-                if subject_tense_gerund == subject_tense_main and subject_tense_main != '3p':
-                    complex_results.append({"definitions":[mainVerb['definition'], sub['definition']], "anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]", "label":f"{mainVerb['label']} {sub['label']}"})
-                    complex_results.append({"definitions":[mainVerb['definition'], sub['definition']], "anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+                if "[SUBJECT:" in mainVerb["anotated"]:
+                    subject_tense_main = (
+                        mainVerb["anotated"]
+                        .split("SUBJECT:")[1]
+                        .split("]")[0]
+                        .split(":")[0]
+                    )
+                elif "[SUBJECT_PREFIX:" in mainVerb["anotated"]:
+                    subject_tense_main = (
+                        mainVerb["anotated"].split("SUBJECT_PREFIX:")[1].split("]")[0]
+                    )
+                if (
+                    subject_tense_gerund == subject_tense_main
+                    and subject_tense_main != "3p"
+                ):
+                    complex_results.append(
+                        {
+                            "definitions": [mainVerb["definition"], sub["definition"]],
+                            "anotated": f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]",
+                            "label": f"{mainVerb['label']} {sub['label']}",
+                        }
+                    )
+                    complex_results.append(
+                        {
+                            "definitions": [mainVerb["definition"], sub["definition"]],
+                            "anotated": f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]",
+                            "label": f"{sub['label']} {mainVerb['label']}",
+                        }
+                    )
     # Imperatives
     for mainVerb in sample_list(imperatives):
-        complex_results.append({"definitions":[mainVerb['definition']], "anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{mainVerb['label']}"})
+        complex_results.append(
+            {
+                "definitions": [mainVerb["definition"]],
+                "anotated": f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]",
+                "label": f"{mainVerb['label']}",
+            }
+        )
         for sub in random.sample(permissives, sample_n):
-            complex_results.append({"definitions":[mainVerb['definition'], sub['definition']], "anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]", "label":f"{mainVerb['label']} {sub['label']}"})
-            complex_results.append({"definitions":[mainVerb['definition'], sub['definition']], "anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+            complex_results.append(
+                {
+                    "definitions": [mainVerb["definition"], sub["definition"]],
+                    "anotated": f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]",
+                    "label": f"{mainVerb['label']} {sub['label']}",
+                }
+            )
+            complex_results.append(
+                {
+                    "definitions": [mainVerb["definition"], sub["definition"]],
+                    "anotated": f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]",
+                    "label": f"{sub['label']} {mainVerb['label']}",
+                }
+            )
         for sub in random.sample(gerunds, sample_n):
-            if 'GERUND_SUBJECT_PREFIX' not in sub['anotated']:
-                complex_results.append({"definitions":[mainVerb['definition'], sub['definition']], "anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]", "label":f"{mainVerb['label']} {sub['label']}"})
-                complex_results.append({"definitions":[mainVerb['definition'], sub['definition']], "anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+            if "GERUND_SUBJECT_PREFIX" not in sub["anotated"]:
+                complex_results.append(
+                    {
+                        "definitions": [mainVerb["definition"], sub["definition"]],
+                        "anotated": f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]",
+                        "label": f"{mainVerb['label']} {sub['label']}",
+                    }
+                )
+                complex_results.append(
+                    {
+                        "definitions": [mainVerb["definition"], sub["definition"]],
+                        "anotated": f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]",
+                        "label": f"{sub['label']} {mainVerb['label']}",
+                    }
+                )
             else:
                 # Find the tag like "[GERUND_SUBJECT_PREFIX:****]" and extract the subject tense from the ****
-                subject_tense_gerund = sub['anotated'].split('GERUND_SUBJECT_PREFIX:')[1].split(']')[0]
+                subject_tense_gerund = (
+                    sub["anotated"].split("GERUND_SUBJECT_PREFIX:")[1].split("]")[0]
+                )
                 subject_tense_main = ""
-                if "[IMPERATIVE_PREFIX:" in mainVerb['anotated']:
-                    subject_tense_main = mainVerb['anotated'].split('IMPERATIVE_PREFIX:')[1].split(']')[0].split(":")[0]
+                if "[IMPERATIVE_PREFIX:" in mainVerb["anotated"]:
+                    subject_tense_main = (
+                        mainVerb["anotated"]
+                        .split("IMPERATIVE_PREFIX:")[1]
+                        .split("]")[0]
+                        .split(":")[0]
+                    )
                 if subject_tense_gerund == subject_tense_main:
-                    complex_results.append({"definitions":[mainVerb['definition'], sub['definition']], "anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]", "label":f"{mainVerb['label']} {sub['label']}"})
-                    complex_results.append({"definitions":[mainVerb['definition'], sub['definition']], "anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+                    complex_results.append(
+                        {
+                            "definitions": [mainVerb["definition"], sub["definition"]],
+                            "anotated": f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]",
+                            "label": f"{mainVerb['label']} {sub['label']}",
+                        }
+                    )
+                    complex_results.append(
+                        {
+                            "definitions": [mainVerb["definition"], sub["definition"]],
+                            "anotated": f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]",
+                            "label": f"{sub['label']} {mainVerb['label']}",
+                        }
+                    )
     # Permissives
     for mainVerb in sample_list(permissives):
-        complex_results.append({"definitions":[mainVerb['definition']], "anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{mainVerb['label']}"})
+        complex_results.append(
+            {
+                "definitions": [mainVerb["definition"]],
+                "anotated": f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]",
+                "label": f"{mainVerb['label']}",
+            }
+        )
         for sub in random.sample(permissives, sample_n):
-            complex_results.append({"definitions":[mainVerb['definition'], sub['definition']], "anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]", "label":f"{mainVerb['label']} {sub['label']}"})
-            complex_results.append({"definitions":[mainVerb['definition'], sub['definition']], "anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+            complex_results.append(
+                {
+                    "definitions": [mainVerb["definition"], sub["definition"]],
+                    "anotated": f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]",
+                    "label": f"{mainVerb['label']} {sub['label']}",
+                }
+            )
+            complex_results.append(
+                {
+                    "definitions": [mainVerb["definition"], sub["definition"]],
+                    "anotated": f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]",
+                    "label": f"{sub['label']} {mainVerb['label']}",
+                }
+            )
         for sub in random.sample(gerunds, sample_n):
-            if 'GERUND_SUBJECT_PREFIX' not in sub['anotated']:
-                complex_results.append({"definitions":[mainVerb['definition'], sub['definition']], "anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]", "label":f"{mainVerb['label']} {sub['label']}"})
-                complex_results.append({"definitions":[mainVerb['definition'], sub['definition']], "anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+            if "GERUND_SUBJECT_PREFIX" not in sub["anotated"]:
+                complex_results.append(
+                    {
+                        "definitions": [mainVerb["definition"], sub["definition"]],
+                        "anotated": f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]",
+                        "label": f"{mainVerb['label']} {sub['label']}",
+                    }
+                )
+                complex_results.append(
+                    {
+                        "definitions": [mainVerb["definition"], sub["definition"]],
+                        "anotated": f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]",
+                        "label": f"{sub['label']} {mainVerb['label']}",
+                    }
+                )
             else:
                 # Find the tag like "[GERUND_SUBJECT_PREFIX:****]" and extract the subject tense from the ****
-                subject_tense_gerund = sub['anotated'].split('GERUND_SUBJECT_PREFIX:')[1].split(']')[0]
+                subject_tense_gerund = (
+                    sub["anotated"].split("GERUND_SUBJECT_PREFIX:")[1].split("]")[0]
+                )
                 subject_tense_main = ""
-                if "[SUBJECT:" in mainVerb['anotated']:
-                    subject_tense_main = mainVerb['anotated'].split('SUBJECT:')[1].split(']')[0].split(":")[0]
-                elif "[SUBJECT_PREFIX:" in mainVerb['anotated']:
-                    subject_tense_main = mainVerb['anotated'].split('SUBJECT_PREFIX:')[1].split(']')[0]
+                if "[SUBJECT:" in mainVerb["anotated"]:
+                    subject_tense_main = (
+                        mainVerb["anotated"]
+                        .split("SUBJECT:")[1]
+                        .split("]")[0]
+                        .split(":")[0]
+                    )
+                elif "[SUBJECT_PREFIX:" in mainVerb["anotated"]:
+                    subject_tense_main = (
+                        mainVerb["anotated"].split("SUBJECT_PREFIX:")[1].split("]")[0]
+                    )
                 if subject_tense_gerund == subject_tense_main:
-                    complex_results.append({"definitions":[mainVerb['definition'], sub['definition']], "anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]", "label":f"{mainVerb['label']} {sub['label']}"})
-                    complex_results.append({"definitions":[mainVerb['definition'], sub['definition']], "anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+                    complex_results.append(
+                        {
+                            "definitions": [mainVerb["definition"], sub["definition"]],
+                            "anotated": f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB] [SUB_VERB]{sub['anotated']}[SUB_VERB]",
+                            "label": f"{mainVerb['label']} {sub['label']}",
+                        }
+                    )
+                    complex_results.append(
+                        {
+                            "definitions": [mainVerb["definition"], sub["definition"]],
+                            "anotated": f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]",
+                            "label": f"{sub['label']} {mainVerb['label']}",
+                        }
+                    )
     # Circunstancials
     for mainVerb in sample_list(circumstancials):
         # complex_results.append({"definitions":[mainVerb['definition']], "anotated":f"[MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{mainVerb['label']}"})
         for sub in random.sample(permissives, sample_n):
-            complex_results.append({"definitions":[mainVerb['definition'], sub['definition']], "anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+            complex_results.append(
+                {
+                    "definitions": [mainVerb["definition"], sub["definition"]],
+                    "anotated": f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]",
+                    "label": f"{sub['label']} {mainVerb['label']}",
+                }
+            )
         for sub in random.sample(gerunds, sample_n):
-            if 'GERUND_SUBJECT_PREFIX' not in sub['anotated']:
-                complex_results.append({"definitions":[mainVerb['definition'], sub['definition']], "anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+            if "GERUND_SUBJECT_PREFIX" not in sub["anotated"]:
+                complex_results.append(
+                    {
+                        "definitions": [mainVerb["definition"], sub["definition"]],
+                        "anotated": f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]",
+                        "label": f"{sub['label']} {mainVerb['label']}",
+                    }
+                )
             else:
                 # Find the tag like "[GERUND_SUBJECT_PREFIX:****]" and extract the subject tense from the ****
-                subject_tense_gerund = sub['anotated'].split('GERUND_SUBJECT_PREFIX:')[1].split(']')[0]
+                subject_tense_gerund = (
+                    sub["anotated"].split("GERUND_SUBJECT_PREFIX:")[1].split("]")[0]
+                )
                 subject_tense_main = ""
-                if "[SUBJECT:" in mainVerb['anotated']:
-                    subject_tense_main = mainVerb['anotated'].split('SUBJECT:')[1].split(']')[0].split(":")[0]
-                elif "[SUBJECT_PREFIX:" in mainVerb['anotated']:
-                    subject_tense_main = mainVerb['anotated'].split('SUBJECT_PREFIX:')[1].split(']')[0]
+                if "[SUBJECT:" in mainVerb["anotated"]:
+                    subject_tense_main = (
+                        mainVerb["anotated"]
+                        .split("SUBJECT:")[1]
+                        .split("]")[0]
+                        .split(":")[0]
+                    )
+                elif "[SUBJECT_PREFIX:" in mainVerb["anotated"]:
+                    subject_tense_main = (
+                        mainVerb["anotated"].split("SUBJECT_PREFIX:")[1].split("]")[0]
+                    )
                 if subject_tense_gerund == subject_tense_main:
-                    complex_results.append({"definitions":[mainVerb['definition'], sub['definition']], "anotated":f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]", "label":f"{sub['label']} {mainVerb['label']}"})
+                    complex_results.append(
+                        {
+                            "definitions": [mainVerb["definition"], sub["definition"]],
+                            "anotated": f"[SUB_VERB]{sub['anotated']}[SUB_VERB] [MAIN_VERB]{mainVerb['anotated']}[MAIN_VERB]",
+                            "label": f"{sub['label']} {mainVerb['label']}",
+                        }
+                    )
     # Remove duplicates from complex_results
-    complex_results = list(set([(x['anotated'], x['label'], tuple(x['definitions'])) for x in complex_results]))
+    complex_results = list(
+        set(
+            [
+                (x["anotated"], x["label"], tuple(x["definitions"]))
+                for x in complex_results
+            ]
+        )
+    )
     return complex_results
 
+
 import json, re
+
 # Write results to file
 print("simplifying tags...")
-pre_res = [{"anotated":x[0], "label":x[1], "definition":x[2]} for x in tqdm(set([(x['anotated'], x['label'], x['definition']) for x in results]))]
+pre_res = [
+    {"anotated": x[0], "label": x[1], "definition": x[2]}
+    for x in tqdm(set([(x["anotated"], x["label"], x["definition"]) for x in results]))
+]
 
-results = [{"anotated":x[0], "label":x[1], "definitions":x[2]} for x in tqdm(complex_sentences(pre_res))]
+results = [
+    {"anotated": x[0], "label": x[1], "definitions": x[2]}
+    for x in tqdm(complex_sentences(pre_res))
+]
 
 
-with open('anotated_results.json', 'w') as f:
+with open("anotated_results.json", "w") as f:
     # use json to write to file
     json.dump(results, f)
 
+
 def tokenize_string(annotated_string):
-    matches = re.findall(r'([^\s\[\]\(\)]+)?(\[.*?\])', annotated_string)
-    notes = {(token, annotation) for token, annotation in matches if '[VERB]' not in annotation and 'DIRECT' not in annotation and '[ROOT]' not in annotation}
+    matches = re.findall(r"([^\s\[\]\(\)]+)?(\[.*?\])", annotated_string)
+    notes = {
+        (token, annotation)
+        for token, annotation in matches
+        if "[VERB]" not in annotation
+        and "DIRECT" not in annotation
+        and "[ROOT]" not in annotation
+    }
     for tag in {(None, annotation) for _, annotation in matches}:
         notes.add(tag)
     return notes
 
+
 print("test")
 from collections import Counter
+
 c = Counter()
 for res in results:
-    c.update(tokenize_string(res['anotated']))
+    c.update(tokenize_string(res["anotated"]))
 for mc in c.most_common(25):
     print(mc)
 
 base_noun = set()  # Initialize empty set
 
+
 def filter_token(token, token_pair):
     # List of patterns to exclude
-    excluded_patterns = [
-        '(None)',
-        '(r, s)',
-        '(t, t)',
-        '(t)',
-        '(s, r, s)'
-    ]
-    
+    excluded_patterns = ["(None)", "(r, s)", "(t, t)", "(t)", "(s, r, s)"]
+
     # Check if token exists and doesn't contain excluded patterns
     return token and not any(pattern in token_pair[1] for pattern in excluded_patterns)
+
 
 # Extract and filter tokens from the dictionary keys
 filtered_tokens = set()
@@ -835,7 +1082,7 @@ for token_pair in c.keys():
 all_tokens = base_noun.union(filtered_tokens)
 
 # Write to JSON file
-with open('anotated_tokens.json', 'w') as f:
+with open("anotated_tokens.json", "w") as f:
     json.dump(list(all_tokens), f)
 
 # Extract and filter tokens from the dictionary keys
@@ -849,8 +1096,10 @@ for token_pair in c.keys():
 all_token_pairs = base_noun.union(filtered_tokens)
 
 
-
 # Write to JSON file
-with open('anotated_token_pairs.json', 'w') as f:
-    json.dump([{"tag":x[1], "value":x[0], "translation":""} for x in all_token_pairs], f, indent=4)
-
+with open("anotated_token_pairs.json", "w") as f:
+    json.dump(
+        [{"tag": x[1], "value": x[0], "translation": ""} for x in all_token_pairs],
+        f,
+        indent=4,
+    )

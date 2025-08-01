@@ -49,7 +49,12 @@ class Noun(Predicate):
             base_noun = other.copy()
 
             base_noun.arguments.append(possessor)
-            base_noun.noun = base_noun.noun.possessive(possessor._inflection, None if possessor.category == "pronoun" else possessor.eval(annotated=True))
+            base_noun.noun = base_noun.noun.possessive(
+                possessor._inflection,
+                None
+                if possessor.category == "pronoun"
+                else possessor.eval(annotated=True),
+            )
             base_noun.noun.pluriforme = possessor.noun.pluriforme
             return base_noun
         # Otherwise, treat itself as the argument to the other predicate

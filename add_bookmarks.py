@@ -1,6 +1,7 @@
 import sys
 from PyPDF2 import PdfReader, PdfWriter
 
+
 def add_bookmarks(pdf_path, bookmarks, output_path):
     reader = PdfReader(pdf_path)
     writer = PdfWriter()
@@ -8,18 +9,21 @@ def add_bookmarks(pdf_path, bookmarks, output_path):
     # Add all pages to the writer
     for page in reader.pages:
         writer.add_page(page)
-    
+
     # Add bookmarks (now called outline items in PyPDF2 3.0.0+)
     for title, page in bookmarks.items():
-        writer.add_outline_item(title, page - 1, parent=None)  # Subtract 1 because PyPDF2 is zero-indexed
+        writer.add_outline_item(
+            title, page - 1, parent=None
+        )  # Subtract 1 because PyPDF2 is zero-indexed
     writer.page_mode = "/UseOutlines"
     # Write the new PDF with bookmarks
-    with open(output_path, 'wb') as f:
+    with open(output_path, "wb") as f:
         writer.write(f)
+
 
 def main():
     pdf_path = sys.argv[1]
-    output_path = 'bookmarked_kuapa.pdf'
+    output_path = "bookmarked_kuapa.pdf"
     bookmarks = {
         "SUMÁRIO": 8,
         "APRESENTAÇÃO DO AUTOR": 10,
@@ -70,10 +74,11 @@ def main():
         "VOCABULÁRIO TEMÁTICO": 114,
         "VERBOS E ADJETIVOS": 129,
         "VOCABULÁRIO EM ORDEM ALFABÉTICA": 135,
-        "REFÊNCIAS BIBLIOGRÁFICAS": 156
+        "REFÊNCIAS BIBLIOGRÁFICAS": 156,
     }
 
     add_bookmarks(pdf_path, bookmarks, output_path)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
