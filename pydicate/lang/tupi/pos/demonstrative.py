@@ -3,9 +3,9 @@ from copy import deepcopy
 from tupi import AnnotatedString
 
 class Demonstrative(Noun):
-    def __init__(self, value, tag="[DEMONSTRATIVE]"):
+    def __init__(self, value, definition="", tag="[DEMONSTRATIVE]"):
         """Initialize a Demonstrative object."""
-        super().__init__(value, inflection="3p", pro_drop=False)
+        super().__init__(value, inflection=None, pro_drop=False, definition=definition)
         self.min_args = 0
         self.max_args = 1
         self.category = "demonstrative"

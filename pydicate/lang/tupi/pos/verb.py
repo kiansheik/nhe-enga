@@ -23,7 +23,7 @@ class Verb(Predicate):
             max_args=2,
             definition=definition,
         )
-        if not value and not vid:
+        if not self.verbete and not vid:
             raise ValueError("Either value or vid must be provided.")
         # Try to find the verb in the conjugated dictionary
         if not verb_class or not definition:
@@ -31,7 +31,7 @@ class Verb(Predicate):
             if vid:
                 for verb in dict_conjugated:
                     if verb["i"] == vid:
-                        value = verb["f"]
+                        self.verbete = verb["f"]
                         verb_class = verb["v"]
                         definition = verb["d"]
                         found = True
@@ -40,14 +40,14 @@ class Verb(Predicate):
                     raise ValueError(f"Verb with ID {vid} not found in the dictionary.")
             else:
                 for verb in dict_conjugated:
-                    if verb["f"] == value:
+                    if verb["f"] == self.verbete:
                         verb_class = verb["v"]
                         definition = verb["d"]
                         vid = verb["i"]
                         found = True
                         break
 
-        self.verb = TupiVerb(value, verb_class, definition, vid=vid)
+        self.verb = TupiVerb(self.verbete, verb_class, definition, vid=vid)
         self.mood = "indicativo"
 
     def raw_noun(self):

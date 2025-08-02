@@ -1,19 +1,19 @@
 digraph {
 	rankdir=TB
-	fontname="Helvetica-Bold" fontsize=24 label="koritei i sóû" labelloc=t
+	fontname="Helvetica-Bold" fontsize=24 label="koritei i xóû" labelloc=t
 	Root [label=IP]
-	"verb_só_838" [label="verb
+	"verb_só_1542" [label="verb
 só" parent_name=Root]
-	Root -> "verb_só_838"
+	Root -> "verb_só_1542"
 	Pre_Adjunct_koritei_1436 [label="adverb
 koritei"]
 	{
 		rank=same
-		Pre_Adjunct_koritei_1436 -> "verb_só_838" [label="+" arrowhead=none]
+		Pre_Adjunct_koritei_1436 -> "verb_só_1542" [label="+" arrowhead=none]
 	}
-	"pronoun_a'e_734" [label="pronoun
+	"pronoun_a'e_1066" [label="pronoun
 a'e" parent_name=Root]
-	"verb_só_838" -> "pronoun_a'e_734" [label="Arg 1"]
+	"verb_só_1542" -> "pronoun_a'e_1066" [label="Arg 1"]
 	{
 		rank=same
 	}

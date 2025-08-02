@@ -384,9 +384,12 @@ class Noun(TupiAntigo):
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
 
-    def possessive(self, person="3p", possessor=None):
+    def possessive(self, person=None, possessor=None):
         if possessor is not None:
             person = "3p"
+        else:
+            if person is None:
+                person = "absoluta"
 
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
@@ -401,34 +404,25 @@ class Noun(TupiAntigo):
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
 
-        base_annotated = AnnotatedString(str(ret_noun.latest_verbete))
-
-        # Remove any parentheses from annotations
-        cleaned = base_annotated.get_annotated().replace("(", "").replace(")", "")
-        base_annotated = AnnotatedString(cleaned)
+        vbt = ret_noun.latest_verbete
 
         # Determine prefix (e.g., r[PLURIFORM_PREFIX:R]) for plural forms
         if possessor and self.pluriforme:
             prefix = "r[PLURIFORM_PREFIX:R]"
         else:
             prefix = ret_noun.pluriform_prefix(person)
-
         # Determine possessive pronoun or custom possessor noun
         if possessor:
-            poss_str = f"{possessor}[NOUN:POSSESSOR]"
+            poss_str = f"{possessor}[NOUN:POSSESSOR] "
         elif not ("3p" in person and self.pluriforme):
             poss_str = (
-                f"{self.personal_inflections[person][1]}[POSSESSIVE_PRONOUN:{person}]"
+                f"{self.personal_inflections[person][1]}[POSSESSIVE_PRONOUN:{person}] "
             )
         else:
             poss_str = ""  # no prefix for 3p pluriforme without possessor
-
         # Build annotated string
-        final_annotated = AnnotatedString(base_annotated.get_annotated())  # copy
-        final_annotated.insert_prefix(prefix)
-        final_annotated.insert_prefix(f"{poss_str} ")
-
-        ret_noun.latest_verbete = final_annotated
+        vbt.insert_prefix(prefix)
+        vbt.insert_prefix(poss_str)
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun

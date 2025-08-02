@@ -6,9 +6,9 @@ sys.path.append("/Users/kian/code/nhe-enga/tupi")
 
 
 class Conjunction(Noun):
-    def __init__(self, value):
+    def __init__(self, value, definition=""):
         """Initialize a Conjunction object."""
-        super().__init__(value, inflection="3p", pro_drop=False)
+        super().__init__(value, inflection="3p", pro_drop=False, definition=definition)
         self.category = "conjunction"
         self.min_args = 2
         self.max_args = None
@@ -43,6 +43,3 @@ class Conjunction(Noun):
         elif any("2p" in x for x in arg_inflections):
             retval = "2pp"
         return retval
-
-    def __repr__(self):
-        return f"Conjunction({self.verbete})"

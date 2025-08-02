@@ -7,9 +7,9 @@ from tupi import Noun as TupiNoun
 
 
 class Copula(Predicate):
-    def __init__(self):
+    def __init__(self, definition="to be"):
         """Initialize a Copula object."""
-        super().__init__(verbete="=", category="Copula", min_args=1, max_args=2)
+        super().__init__(verbete="=", category="Copula", min_args=1, max_args=2, definition=definition)
         self.negated = False
 
     def preval(self, annotated=False):
@@ -39,9 +39,6 @@ class Copula(Predicate):
             return retval
         return self * other
         # raise TypeError(f"Cannot compare Noun object with {type(other)} object.")
-
-    def __repr__(self):
-        return f"Copula({self.verbete})"
 
 
 def ruã(pred):

@@ -2,9 +2,9 @@ from ....predicate import Predicate
 
 
 class Adverb(Predicate):
-    def __init__(self, value, tag="[ADVERB]"):
+    def __init__(self, value, definition="", tag="[ADVERB]"):
         """Initialize a Adverb object."""
-        super().__init__(verbete=value, category="adverb", min_args=0, max_args=None)
+        super().__init__(verbete=value, category="adverb", min_args=0, max_args=None, definition=definition)
         self.tag = tag
 
     def preval(self, annotated=False):
@@ -15,6 +15,3 @@ class Adverb(Predicate):
 
     def __add__(self, other):
         return other.__addpre__(self)
-
-    def __repr__(self):
-        return f"Adverb({self.verbete})"

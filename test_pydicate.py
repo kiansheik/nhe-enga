@@ -143,7 +143,7 @@ print(ver_circ.eval())  # ixé endé epîak só
 
 
 # euepedro = (abé * Noun("Pedro") * ixé)
-# me_n_pedro = -ver * (mateus * euepedro)
+# me_n_pedro = -ver * (endé * euepedro)
 # print(me_n_pedro.eval()) # Mateus sees Pedro
 # vergo =  Noun("Mateus") == Noun("Pedro")
 # vergo_neg =  Noun("Mateus") != Noun("Pedro")
@@ -151,3 +151,30 @@ print(ver_circ.eval())  # ixé endé epîak só
 
 # build_graphviz(hego).render("and_predicate1", view=True)
 # build_graphviz(hego_circ).render("and_predicate_circ1", view=True)
+
+print("Let's write a story in Tupi!\n\n")
+
+arakae = Adverb("araka'e", definition="long ago", tag="[ADVERB:IMPERATIVE]")
+kunumim = Noun("kunum˜i", definition="young boy")
+ikó = Verb("ikó", definition="to live")
+taba = Noun("taba", definition="village")
+irun = Noun("ir˜u", definition="friend")
+era = Noun("er", "(t); name")
+
+julia = ProperNoun("Julia", "Kian's girlfriend")
+kian = ProperNoun("Kiã", "Julia's boyfriend")
+love = Verb("aûsub", "to love")
+kunhatai = Noun("kunhatai", "young girl")
+abét = Adverb("abé", "also, as well")
+
+frases = [
+    arakae + (pe * taba + ikó * (amõ * kunumim)),
+    (kunumim * era) == kian,
+    pe * (kian * taba) + ikó * (amõ * kunhatai) + abét,
+    julia == (kunhatai * era),
+    love * kian * julia,
+    love * julia * kian + abét,
+
+]
+for frase in frases:
+    print(frase.eval(annotated=False))

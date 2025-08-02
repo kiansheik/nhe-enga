@@ -1,0 +1,1 @@
+from from pydicate.lang.tupi.pos import * 

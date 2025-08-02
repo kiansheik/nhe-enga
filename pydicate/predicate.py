@@ -4,6 +4,18 @@ import sys
 sys.path.append("/Users/kian/code/nhe-enga/tupi")
 from tupi import Noun as TupiNoun
 
+# let's make a function which takes a string and where there are sumbolys like ˜i, ˜u, ˆy, ˜y, ´y; it will combine then into a single unicode character
+def combine_symbols(s):
+    symbol_map = {
+        "˜i": "ĩ",
+        "˜u": "ũ",
+        "ˆy": "ŷ",
+        "˜y": "ỹ",
+        "´y": "ý"
+    }
+    for key, value in symbol_map.items():
+        s = s.replace(key, value)
+    return s
 
 class Predicate:
     def __init__(self, verbete, category, min_args, max_args=None, definition=""):
@@ -14,7 +26,7 @@ class Predicate:
         :param min_args: Minimum number of required arguments.
         :param max_args: Maximum number of arguments (default: same as min_args; None for unlimited).
         """
-        self.verbete = verbete
+        self.verbete = combine_symbols(verbete)
         self.category = category
         self.min_args = min_args
         self.max_args = max_args if max_args is not None else min_args

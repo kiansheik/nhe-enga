@@ -7,17 +7,18 @@ from .copula import Copula
 
 
 class Noun(Predicate):
-    def __init__(self, value, definition="", inflection="3p", pro_drop=False):
+    def __init__(self, value, definition="", inflection=None, pro_drop=False):
         """Initialize a Noun object."""
         super().__init__(
             verbete=value, category="noun", min_args=0, definition=definition
         )
-        self.noun = TupiNoun(value, definition)
+        self.noun = TupiNoun(self.verbete, definition)
         self._inflection = inflection
-        self.plural = "pp" in inflection
+        if inflection:
+            self.plural = "pp" in inflection
         self.pro_drop = pro_drop
         for val, infl in self.noun.personal_inflections.items():
-            if value.lower() == infl[0]:
+            if self.verbete.lower() == infl[0]:
                 self._inflection = val
                 break
 
@@ -76,19 +77,24 @@ class Noun(Predicate):
         return self.eval(annotated=False)
 
 
+class ProperNoun(Noun):
+    def __init__(self, value, definition=""):
+        super().__init__(value=value, definition=definition, inflection="3p")
+
+
 class Pronoun(Noun):
-    def __init__(self, inflection, pro_drop=False):
-        """Initialize a Prounoun object."""
+    def __init__(self, inflection, pro_drop=False, definition=""):
+        """Initialize a Pronoun object."""
         pronoun = TupiNoun.personal_inflections[inflection][0]
-        super().__init__(value=pronoun, inflection=inflection, pro_drop=pro_drop)
+        super().__init__(value=pronoun, inflection=inflection, pro_drop=pro_drop, definition=definition)
         self.category = "pronoun"
 
 
-ixé = Pronoun("1ps")
-îandé = Pronoun("1ppi")
-oré = Pronoun("1ppe")
-endé = Pronoun("2ps")
-pee = Pronoun("2pp")
-ae = Pronoun("3p")
+ixé = Pronoun("1ps", definition="I")
+îandé = Pronoun("1ppi", definition="we (inclusive)")
+oré = Pronoun("1ppe", definition="we (exclusive)")
+endé = Pronoun("2ps", definition="you")
+pee = Pronoun("2pp", definition="y'all'")
+ae = Pronoun("3p", definition="he/she/it/they")
 
 pronoun_verbetes = [x.verbete for x in [ixé, îandé, oré, endé, pee, ae]]
