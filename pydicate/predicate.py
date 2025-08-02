@@ -111,7 +111,7 @@ class Predicate:
     def __ne__(self, other):
         return -(self == other)
 
-    def __repr__(self):
+    def signature(self):
         args = ", ".join(repr(arg) for arg in self.arguments)
         pre_adjuncts = ", ".join(repr(adj) for adj in self.pre_adjuncts)
         post_adjuncts = ", ".join(repr(adj) for adj in self.post_adjuncts)
@@ -120,6 +120,9 @@ class Predicate:
             f"arguments=[{args}], pre_adjuncts=[{pre_adjuncts}], post_adjuncts=[{post_adjuncts}], "
             f"min_args={self.min_args}, max_args={self.max_args})"
         )
+
+    def __repr__(self):
+        return self.eval(annotated=False)
 
     def __str__(self):
         return self.__repr__()

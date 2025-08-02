@@ -59,6 +59,12 @@ class AnnotatedString:
 
     def get_annotated(self):
         return self.original
+    
+    def verbete(self, annotated=False):
+        """Return the verbete of the annotated string."""
+        if annotated:
+            return self.original
+        return self.clean
 
     def endswith(self, suffix):
         return self.clean.endswith(suffix)

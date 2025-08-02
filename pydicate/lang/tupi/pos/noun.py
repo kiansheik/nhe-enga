@@ -7,7 +7,7 @@ from .copula import Copula
 
 
 class Noun(Predicate):
-    def __init__(self, value, inflection="3p", pro_drop=False, definition=""):
+    def __init__(self, value, definition="", inflection="3p", pro_drop=False):
         """Initialize a Noun object."""
         super().__init__(
             verbete=value, category="noun", min_args=0, definition=definition

@@ -290,16 +290,16 @@ class Noun(TupiAntigo):
             annotated.replace_clean(-2, 2, self.nasal_map[annotated[-2]])
             annotated.insert_suffix("me")
         elif ends_with_any(annotated, ret_noun.nasais):
-            annotated.insert_suffix("yme")
+            annotated.insert_suffix("y[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING:CLITIC]")
+            annotated.insert_suffix("me")
         elif ends_with_any(annotated, ret_noun.semi_vogais):
             annotated.insert_suffix("pe")
         elif ends_with_any(annotated, ret_noun.consoantes):
-            annotated.insert_suffix("ype")
+            annotated.insert_suffix("y[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING:CLITIC]")
+            annotated.insert_suffix("pe")
         else:
             annotated.insert_suffix("pe")
         annotated.insert_suffix("[POSTPOSITION:LOCATIVE]")
-
-        ret_noun.latest_verbete = annotated
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.segunda_classe = True
         ret_noun.transitivo = False
@@ -671,6 +671,7 @@ class Noun(TupiAntigo):
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
         vbt = ret_noun.latest_verbete
+        vbt.remove_accent_last_vowel()
         vbt.insert_suffix("eym")
         vbt.insert_suffix("[NEGATION_SUFFIX]")
         ret_noun.aglutinantes.append(ret_noun)
