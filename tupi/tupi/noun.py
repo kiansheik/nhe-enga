@@ -68,7 +68,9 @@ def tokenize_string(annotated_string):
 class Noun(TupiAntigo):
     def __init__(self, verbete, raw_definition):
         super().__init__()
-        self.base_verbete = (verbete if verbete[-1] != "a" else verbete[:-1]) + (
+        if verbete[-1] == "a" and verbete[-2] not in self.vogais:
+            verbete = verbete[:-1]
+        self.base_verbete = verbete + (
             "[ROOT]" if verbete[-1] != "]" else ""
         )  # The name of the verb in its dictionary form
         self.latest_verbete = AnnotatedString(
@@ -599,7 +601,7 @@ class Noun(TupiAntigo):
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
 
-    # TODO: Not yet tested -reme
+    # Updated -reme to match new logic and use class methods
     def reme(self):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
@@ -609,14 +611,18 @@ class Noun(TupiAntigo):
         )
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
-        # --------------------------------
         vbt = ret_noun.latest_verbete
-        if vbt[-1] in self.vogais:
-            if vbt[-1] in self.vogais_nasais:
-                vbt.insert_suffix("neme")
-            else:
-                vbt.insert_suffix("reme")
+
+        if vbt[-1] in "bm":
+            # Remove last char, accent last vowel, then add "me[CONJUNCTIVE_SUFFIX]"
+            vbt.replace_clean(-1, 1, "")
+            vbt.accent_last_vowel()
+            vbt.insert_suffix("me")
         else:
+            if vbt[-1] in self.vogais_nasais:
+                vbt.insert_suffix("n")
+            elif vbt[-1] in self.vogais:
+                vbt.insert_suffix("r")
             vbt.insert_suffix("eme")
         vbt.insert_suffix("[CONJUNCTIVE_SUFFIX]")
         ret_noun.aglutinantes.append(ret_noun)

@@ -154,27 +154,30 @@ print(ver_circ.eval())  # ixé endé epîak só
 
 print("Let's write a story in Tupi!\n\n")
 
-arakae = Adverb("araka'e", definition="long ago", tag="[ADVERB:IMPERATIVE]")
+arakae = Adverb("araka'e", definition="a long time ago, distant past", tag="[ADVERB:DISTANT_PAST]")
 kunumim = Noun("kunum˜i", definition="young boy")
 ikó = Verb("ikó", definition="to live")
 taba = Noun("taba", definition="village")
 irun = Noun("ir˜u", definition="friend")
-era = Noun("er", "(t); name")
+era = Noun("er", definition="(t); name")
 
-julia = ProperNoun("Julia", "Kian's girlfriend")
-kian = ProperNoun("Kiã", "Julia's boyfriend")
-love = Verb("aûsub", "to love")
-kunhatai = Noun("kunhatai", "young girl")
-abét = Adverb("abé", "also, as well")
+julia = ProperNoun("Julia")
+kian = ProperNoun("Kiã")
+love = Verb("aûsub", definition="to love")
+kunhatai = Noun("kunhatai", definition="young girl")
+abét = Adverb("abé", definition="also, as well")
+ara = Noun("'ara", definition="day, light, sunlight, time, period, era")
+ekar = Verb("ekar", definition="to search, to seek, to look for")
+só = Verb("só", definition="to go, to leave, to travel", verb_class="v. intr.")
 
 frases = [
-    arakae + (pe * taba + ikó * (amõ * kunumim)),
+    arakae + ((pe * taba) + (ikó * (amõ * kunumim))),
     (kunumim * era) == kian,
     pe * (kian * taba) + ikó * (amõ * kunhatai) + abét,
     julia == (kunhatai * era),
     love * kian * julia,
     love * julia * kian + abét,
-
+    amõ * ara * pupé + (kian * só) << (kian * ekar * julia),
 ]
 for frase in frases:
     print(frase.eval(annotated=False))

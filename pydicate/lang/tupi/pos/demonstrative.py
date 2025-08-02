@@ -28,9 +28,11 @@ class Demonstrative(Noun):
         return pl.verbete(annotated=annotated)
 
     def __mul__(self, other):
-        cop = self.copy()
-        cop.arguments.append(other)
-        return cop
+        if isinstance(other, Noun):
+            cop = self.copy()
+            cop.arguments.append(other)
+            return cop
+        return super().__mul__(other)
 
 kó = Demonstrative("kó", tag="[DEMONSTRATIVE:1p:VISIBLE]")
 ikó = Demonstrative("ikó", tag="[DEMONSTRATIVE:1p:VISIBLE]")
@@ -53,5 +55,5 @@ akó = Demonstrative("akó", tag="[DEMONSTRATIVE:3p:NOT_VISIBLE]")
 akûeî = Demonstrative("akûeî", tag="[DEMONSTRATIVE:3p:NOT_VISIBLE]")
 aîpó = Demonstrative("aîpó", tag="[DEMONSTRATIVE:3p:NOT_VISIBLE:AUDIBLE]")
 
-amõ = Demonstrative("amõ", tag="[DEMONSTRATIVE:3p:INDETERMINATE]")
-amoaé = Demonstrative("amoaé", tag="[DEMONSTRATIVE:3p:OTHER]")
+amõ = Demonstrative("amõ", definition="some", tag="[DEMONSTRATIVE:3p:INDETERMINATE]")
+amoaé = Demonstrative("amoaé", definition="other, another", tag="[DEMONSTRATIVE:3p:OTHER]")

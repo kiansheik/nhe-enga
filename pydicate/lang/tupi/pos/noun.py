@@ -78,8 +78,8 @@ class Noun(Predicate):
 
 
 class ProperNoun(Noun):
-    def __init__(self, value, definition=""):
-        super().__init__(value=value, definition=definition, inflection="3p")
+    def __init__(self, value):
+        super().__init__(value=value, definition=value, pro_drop=False)
 
 
 class Pronoun(Noun):

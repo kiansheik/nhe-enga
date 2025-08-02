@@ -141,8 +141,8 @@ class Verb(Predicate):
                 obj_delocated = None if obj.pro_drop else obj.eval(annotated=annotated)
             retval = self.verb.conjugate(
                 anotar=annotated,
-                subject_tense=infl0,
-                object_tense=infl1,
+                subject_tense=infl0 if infl0 else "3p",
+                object_tense=infl1 if infl1 else "3p",
                 dir_subj_raw=arg0,
                 dir_obj_raw=arg1,
                 mode=self.mood,

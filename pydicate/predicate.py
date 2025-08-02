@@ -18,7 +18,7 @@ def combine_symbols(s):
     return s
 
 class Predicate:
-    def __init__(self, verbete, category, min_args, max_args=None, definition=""):
+    def __init__(self, verbete, category, min_args, max_args=None, definition="", tag="[PREDICATE]"):
         """
         Initialize a Predicate object.
         :param verbete: The core lexeme or word root.
@@ -38,6 +38,7 @@ class Predicate:
         self.definition = definition
         self.principal = None
         self.rua = False
+        self.tag = tag  # Tag for the predicate, useful for debugging or annotation
 
     def copy(self):
         """
@@ -133,6 +134,23 @@ class Predicate:
             f"min_args={self.min_args}, max_args={self.max_args})"
         )
 
+
+    def semantic(self):
+        """
+        Get self.definition for each of the arguments and adjuncts recusrively and show it in a clear string representation. 
+        Assume each argument and adjunct is a Predicate object.
+        """
+        args = ", ".join(arg.semantic() for arg in self.arguments)
+        pre_adjuncts = " + ".join(adj.semantic() for adj in reversed(self.pre_adjuncts))
+        if len(pre_adjuncts) > 1:
+            pre_adjuncts = f"({pre_adjuncts}) >> "
+        post_adjuncts = " + ".join(adj.semantic() for adj in self.post_adjuncts)
+        if len(post_adjuncts) > 1:
+            post_adjuncts = f" << ({post_adjuncts})"
+        if args:
+            args = f"({args})"
+        return f"{pre_adjuncts}[{self.definition if self.definition else self.tag}]{args}{post_adjuncts}"
+    
     def __repr__(self):
         return self.eval(annotated=False)
 
