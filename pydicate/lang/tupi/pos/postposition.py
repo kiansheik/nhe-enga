@@ -97,7 +97,7 @@ class Beyond(Postposition):
         if len(self.arguments) == 0:
             return f"{self.verbete}{self.tag}"
         if isinstance(self.arguments[0], Verb):
-            vbt = self.arguments[0].copy().base_nominal(annotated=annotated).latest_verbete
+            vbt = self.arguments[0].copy().base_nominal(annotated=annotated).noun.latest_verbete
         else:
             vbt = self.arguments[0].copy().noun.latest_verbete
         suffix = "iré"

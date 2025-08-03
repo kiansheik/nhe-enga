@@ -59,7 +59,7 @@ def sara_morphology(verb, annotated=False):
     vbt.arguments[0].pro_drop = True
     nom = vbt.base_nominal(annotated=annotated)
 
-    return nom.sara().substantivo(annotated)
+    return nom.noun.sara().substantivo(annotated)
 
 
 bae = Deverbal("ba'e", definition="refers to subject of the verb, the doer, the agent", tag="[DEVERBAL:AGENT]")

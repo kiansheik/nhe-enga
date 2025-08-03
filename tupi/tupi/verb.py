@@ -32,13 +32,23 @@ class Verb(TupiAntigo):
         self.irregular = get_irregular_verb(verbete, vid)
         self.t_type = "(t, t)" in raw_definition[:500]
         self.tr_type = "(t)" in raw_definition[:100]
-        self.pluriforme = (
-            "(s)" in self.verb_class
-            or "(r, s)" in self.verb_class
-            or "-s-" in self.verb_class
-            or self.t_type
-            or self.tr_type
-        )
+        self.pluriforme = False  # Whether the verb has a plural form (boolean)
+        if self.t_type:
+            self.pluriforme = True
+            self.pluriforme_type = "t, t"
+        elif self.tr_type:
+            self.pluriforme = True
+            self.pluriforme_type = "t"
+        elif "(s)" in self.verb_class:
+            self.pluriforme_type = "s"
+            self.pluriforme = True
+        elif "-s-" in self.verb_class:
+            self.pluriforme_type = "s"
+            self.pluriforme = True
+        elif "(r, s)" in self.verb_class:
+            self.pluriforme_type = "r, s"
+            self.pluriforme = True
+        
         self.ios = "-îo-" in self.verb_class and "-s-" in self.verb_class
         self.segunda_classe = (
             "2ª classe" in self.verb_class or "adj." in self.verb_class

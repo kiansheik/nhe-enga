@@ -162,12 +162,25 @@ class AnnotatedString:
                 return self
         return self
 
-    def strip(self):
+    def strip(self, to_strip=" "):
         """Strip whitespace from the annotated string."""
-        self.original = self.original.strip()
+        self.original = self.original.strip(to_strip)
         self._rebuild_maps()
         return self
     
+    def strip_original(self, to_strip=" "):
+        """Strip whitespace from the original string."""
+        self.original = self.original.strip(to_strip)
+        self._rebuild_maps()
+        return self
+    
+    def removesuffix_original(self, suffix):
+        """Remove the suffix from the annotated string."""
+        if self.original.endswith(suffix):
+            self.original = self.original[:-len(suffix)]
+            self._rebuild_maps()
+        return self
+
     def drop_last_tag(self):
         """Drop the last tag from the annotated string."""
         if "[" in self.original:

@@ -68,11 +68,14 @@ def tokenize_string(annotated_string):
 class Noun(TupiAntigo):
     def __init__(self, verbete, raw_definition):
         super().__init__()
-        if verbete[-1] == "a" and verbete[-2] not in self.vogais:
-            verbete = verbete[:-1]
-        self.base_verbete = verbete + (
-            "[ROOT]" if verbete[-1] != "]" else ""
-        )  # The name of the verb in its dictionary form
+        vbt = AnnotatedString(verbete)
+        if vbt[-1] == "a" and vbt[-2] not in self.vogais:
+            vbt.replace_clean(-1, 1, "")
+            # breakpoint()
+            vbt.removesuffix_original("[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING]")
+        if not vbt.get_annotated().endswith("[ROOT]"):
+            vbt.insert_suffix("[ROOT]")
+        self.base_verbete = vbt.get_annotated()
         self.latest_verbete = AnnotatedString(
             self.base_verbete
         )  # The name of the verb in its dictionary form
@@ -255,9 +258,14 @@ class Noun(TupiAntigo):
                     return "s[PLURIFORM_PREFIX:S]"
             if person == "absoluta":
                 if plf == "t, t" or plf == "t":
-                    return "t[PLURIFORM_PREFIX:T]"
+                    return "t[PLURIFORM_PREFIX:T:ABSOLUTE]"
                 if plf == "s, r, s":
-                    return "s[PLURIFORM_PREFIX:S]"
+                    return "s[PLURIFORM_PREFIX:S:ABSOLUTE]"
+                if self.verb().transitivo:
+                    prefix = "mor"
+                    if starts_with_any(self.latest_verbete, self.consoantes):
+                        prefix += "o"
+                    return prefix + "[AGENT_PREFIX:GENERIC:PEOPLE:ABSOLUTE]"
             if "1p" in person or "2p" in person:
                 return "r[PLURIFORM_PREFIX:R]"
         return ""
@@ -471,11 +479,10 @@ class Noun(TupiAntigo):
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         # TODO: Figure out verbetes como '(a)pé' which have the perntheses and that vowel only if there's no prefix
-        vbt = self.remove_parens_and_contents(ret_noun.verbete(anotated=True))
+        vbt = ret_noun.latest_verbete
         pref = ret_noun.pluriform_prefix("absoluta")
         if pref:
-            vbt = ret_noun.verbete(anotated=True).replace("(", "").replace(")", "")
-        ret_noun.latest_verbete = AnnotatedString(f"{pref}{vbt}".strip())
+            vbt.insert_prefix(pref)
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
