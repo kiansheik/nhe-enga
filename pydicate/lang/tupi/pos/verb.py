@@ -149,6 +149,7 @@ class Verb(Predicate):
                 mode=self.mood,
                 negative=self.negated,
                 pro_drop=suj.pro_drop,
+                pro_drop_obj=obj.pro_drop,
             )
         if obj_delocated:
             retval = retval + " " + obj_delocated
@@ -226,7 +227,7 @@ class Verb(Predicate):
             if isinstance(adj, Verb):
                 if len(adj.arguments) == 2:
                     # Gerund does not force circumstancial mood
-                    if adj.subject() != self.subject():
+                    if adj.subject().eval(True) != self.subject().eval(True):
                         return "circunstancial" 
         return "indicativo"
 

@@ -99,6 +99,7 @@ class Verb(TupiAntigo):
         pro_drop=False,
         negative=False,
         anotar=False,
+        pro_drop_obj=False,
     ):
         result = ""
         perm_mode = False
@@ -155,36 +156,34 @@ class Verb(TupiAntigo):
                     vbt = vbt[:-1]
                 elif base_verbete[-1] not in self.vogais:
                     suf = "a" + "[GERUND_SUFFIX:CLASS_1:CONSONANT]"
-                if not self.transitivo:
+                if not self.transitivo or object_tense in ["refl", "mut"]:
+                    dir_obj = ""
+                    if object_tense == "refl":
+                        dir_obj = "îe" + f"[OBJECT:REFLEXIVE]"
+                    elif object_tense == "mut":
+                        dir_obj = "îo" + f"[OBJECT:MUTUAL]"
                     subj_pref = (
-                        self.gerundio[subject_tense][0]
+                        self.gerundio[subject_tense][0] + dir_obj
                         + f"[GERUND_SUBJECT_PREFIX:{subject_tense}]"
                     )
-                    pref = f"{subj_pref}-"
+                    pref = f"{subj_pref}"
                 else:
                     dir_obj = (
                         f"{self.personal_inflections[object_tense][1]}[OBJECT:{object_tense}]"
                         if dir_obj_raw is None
                         else dir_obj_raw + f"[OBJECT:DIRECT]"
                     )
-                    if object_tense in ("refl", "mut"):
-                        dir_obj = (
-                            f"îe[OBJECT:REFLEXIVE]"
-                            if object_tense == "refl"
-                            else f"îo[OBJECT:MUTUAL]"
-                        )
+                    if object_tense == "3p" and dir_obj_raw is None:
+                        if pluri_check or self.ero:
+                            dir_obj = (
+                                f"s[PLURIFORM_PREFIX:S]"
+                                if not self.t_type
+                                else "t[PLURIFORM_PREFIX:T]"
+                            )
+                        # elif self.monosilibica():
+                        #     dir_obj = f"îo[OBJECT:3p:MONOSYLLABIC]"
                     else:
-                        if object_tense == "3p" and dir_obj_raw is None:
-                            if pluri_check or self.ero:
-                                dir_obj = (
-                                    f"s[PLURIFORM_PREFIX:S]"
-                                    if not self.t_type
-                                    else "t[PLURIFORM_PREFIX:T]"
-                                )
-                            # elif self.monosilibica():
-                            #     dir_obj = f"îo[OBJECT:3p:MONOSYLLABIC]"
-                        else:
-                            dir_obj += f'{f"r[PLURIFORM_PREFIX:R]" if pluri_check or self.ero else ""}'
+                        dir_obj += f'{f"r[PLURIFORM_PREFIX:R]" if pluri_check or self.ero else ""}'
                     pref = dir_obj
                 if suf[0] in self.vogais and vbt[-1] in "i y u".split():
                     vbt = vbt[:-1] + self.semi_vogais_map[vbt[-1]]
@@ -496,7 +495,7 @@ class Verb(TupiAntigo):
                         vb = f"{perm}{trm}"
                         if negative:
                             vb = self.negate_verb(vb, mode)
-                        result = f"{subj} {vb} {dir_obj}"
+                        result = f"{subj} {vb} {dir_obj if not pro_drop_obj else ''}".strip()
                     elif pos == "anteposto":
                         perm = self.choose_perm(conj, perm_mode)
                         trm = f"{conj}-{pluriforme}-{vbt}"
@@ -505,7 +504,7 @@ class Verb(TupiAntigo):
                         vb = f"{perm}{trm}"
                         if negative:
                             vb = self.negate_verb(vb, mode)
-                        result = f"{subj} {dir_obj} {vb}"
+                        result = f"{subj}{' '+ dir_obj if not pro_drop_obj else ''} {vb}"
                     elif pos == "incorporado":
                         perm = self.choose_perm(conj, perm_mode)
                         vb = f"{perm}{conj}-{pluriforme if dir_obj_raw is None else dir_obj}-{vbt}"
