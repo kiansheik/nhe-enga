@@ -161,3 +161,19 @@ class AnnotatedString:
                 # exit the loop after the first match
                 return self
         return self
+
+    def strip(self):
+        """Strip whitespace from the annotated string."""
+        self.original = self.original.strip()
+        self._rebuild_maps()
+        return self
+    
+    def drop_last_tag(self):
+        """Drop the last tag from the annotated string."""
+        if "[" in self.original:
+            last_open = self.original.rfind("[")
+            last_close = self.original.rfind("]")
+            if last_open != -1 and last_close != -1 and last_open < last_close:
+                self.original = self.original[:last_open] + self.original[last_close + 1:]
+                self._rebuild_maps()
+        return self.strip()

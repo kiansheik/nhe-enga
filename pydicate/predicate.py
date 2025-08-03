@@ -1,4 +1,5 @@
 from copy import deepcopy
+import re
 import sys
 
 sys.path.append("/Users/kian/code/nhe-enga/tupi")
@@ -16,6 +17,11 @@ def combine_symbols(s):
     for key, value in symbol_map.items():
         s = s.replace(key, value)
     return s
+
+def remove_adjacent_tags(to_remove_from):
+    # Remove adjacent duplicate tags from the string.
+    pattern = r"(\[.*?\])(?=\1)"
+    return re.sub(pattern, "", to_remove_from)
 
 class Predicate:
     def __init__(self, verbete, category, min_args, max_args=None, definition="", tag="[PREDICATE]"):
@@ -164,7 +170,7 @@ class Predicate:
         neg_suf = "" if not annotated else "[NEGATION_PARTICLE:RUA]"
         if prev.rua:
             pre = f"nda{neg} {pre} ruã{neg_suf}"
-        return pre
+        return remove_adjacent_tags(pre)
 
     def __invert__(self):
         """

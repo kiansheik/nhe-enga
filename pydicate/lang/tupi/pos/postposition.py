@@ -1,9 +1,10 @@
 from .adverb import Adverb
+from .verb import Verb
 import sys
 import re
 
 sys.path.append("/Users/kian/code/nhe-enga/tupi")
-from tupi import Noun as TupiNoun
+from tupi import Noun as TupiNoun, AnnotatedString
 
 
 class Postposition(Adverb):
@@ -50,7 +51,18 @@ class Locative(Postposition):
         """Evaluate the Postposition object."""
         if len(self.arguments) == 0:
             return f"{self.verbete}{self.tag}"
-        return self.arguments[0].noun.pe().verbete(annotated) + self.tag if annotated else ""
+        return self.arguments[0].noun.pe().verbete(annotated) + (self.tag if annotated else "")
+
+class Dative(Postposition):
+    def __init__(self, definition="to, for, in favor of"):
+        """Initialize a Dative object."""
+        super().__init__("supé", definition=definition, tag="[POSTPOSITION:DATIVE]")
+
+    def preval(self, annotated=False):
+        """Evaluate the Postposition object."""
+        if len(self.arguments) == 0:
+            return f"{self.verbete}{self.tag}"
+        return self.arguments[0].noun.supe().verbete(annotated) + (self.tag if annotated else "")
 
 class Temporal(Postposition):
     def __init__(self, definition="during, when, at the time of, on"):
@@ -61,11 +73,11 @@ class Temporal(Postposition):
         """Evaluate the Postposition object."""
         if len(self.arguments) == 0:
             return f"{self.verbete}{self.tag}"
-        return self.arguments[0].noun.reme().verbete(annotated) + self.tag if annotated else ""
-    
+        return self.arguments[0].noun.reme().verbete(annotated) + (self.tag if annotated else "")
+
 # -(r)amo (posp. átona - sua forma nasalizada é -namo): 1) como, na condição de; em [Com o verbo ikó / ekó (t) forma locução correspondente ao verbo ser do português.]: ...Ybyramo i moingó-ukare'yma. - Em terra não os fazendo transformar. (Ar., Cat., 179v); ...Serekoaramo ûitekóbo... - Estando como seu guardião (ou sendo seu guardião). (Anch., Teatro, 4); Pitangamo seni Maria îybápe. - Como criança está sentado nos braços de Maria. (Anch., Poemas, 108); Nde manhanamo t'oîkóne! - Ele há de ser (ou há de estar na condição de) teu espião! (Anch., Teatro, 32); ...Xe boîáramo pabẽ xe pópe arekó-katu. - Como meus súditos em minhas mãos bem os tenho a todos. (Anch., Teatro, 34); Pitangĩnamo ereîkó… - Uma criancinha és (ou na condição de uma criancinha estás). (Anch., Poemas, 100); 2) segundo, conforme: Xe anama, erimba'e, tekó-ypyramo sekóû. - Minha nação, outrora, estava segundo a lei primeira. (Anch., Poemas, 114); 3) Forma o gerúndio de predicados nominais: ...o mba'epûeramo... - sendo coisa antiga (Ar., Cat., 74); O angaîpabamo... - Sendo mau. (Ar., Cat., 27); Xe katuramo. - Sendo eu bom; Nde katuramo. - Sendo tu bom. (Anch., Arte, 29); 4) Forma o modo indicativo circunstancial dos verbos da segunda classe: Koromõ xe rorybamo. - Logo eu estou feliz. (Anch., Arte, 40)
 class Simulational(Postposition):
-    def __init__(self, definition="as, in the condition of, "):
+    def __init__(self, definition="as, in the condition of, in the duty of"):
         """Initialize a Locative object."""
         super().__init__("amo", definition=definition, tag="[POSTPOSITION:SIMULATIONAL]")
 
@@ -73,7 +85,40 @@ class Simulational(Postposition):
         """Evaluate the Postposition object."""
         if len(self.arguments) == 0:
             return f"{self.verbete}{self.tag}"
-        return self.arguments[0].noun.ramo().verbete(annotated)
+        return self.arguments[0].noun.ramo().verbete(annotated) + (self.tag if annotated else "")
+
+class Beyond(Postposition):
+    def __init__(self, definition="after, beyond, past", tag="[POSTPOSITION:BEYOND]"):
+        """Initialize a Beyond object."""
+        super().__init__("riré", definition=definition, tag=tag)
+
+    def preval(self, annotated=False):
+        """Evaluate the Postposition object."""
+        if len(self.arguments) == 0:
+            return f"{self.verbete}{self.tag}"
+        if isinstance(self.arguments[0], Verb):
+            vbt = self.arguments[0].copy().base_nominal(annotated=annotated).latest_verbete
+        else:
+            vbt = self.arguments[0].copy().noun.latest_verbete
+        suffix = "iré"
+        if vbt[-1] in TupiNoun.vogais:
+            suffix = "r" + suffix
+        vbt.insert_suffix(suffix)
+        vbt.insert_suffix(self.tag)
+        return vbt.verbete(annotated=annotated)
+
+class SoonAfter(Beyond):
+    def __init__(self, definition="soon after, immediately after", tag="[ADVERB:SOON]"):
+        """Initialize a SoonAfter object."""
+        super().__init__(definition=definition, tag=tag)
+
+    def preval(self, annotated=False):
+        """Evaluate the Postposition object."""
+        retval = AnnotatedString((Beyond() * self.arguments[0]).preval(annotated=annotated))
+        retval.replace_clean(-1, 1, "e")
+        retval.insert_suffix("mẽ")
+        retval.insert_suffix(self.tag)
+        return retval.verbete(annotated=annotated)
 
 sosé = Postposition("sosé", definition="above, better than, more than")
 koty = Postposition("koty", definition="in the direction of, towards")
@@ -86,8 +131,11 @@ porupi = Postposition("porupi", definition="alongside, parallel to, next to")
 # pupé (posp.) - 1) dentro de: Mba'epe ererur nde karamemûã pupé? - Que trouxeste dentro de tua caixa? (Léry, Histoire, 342); 2) com (instr.): Oîeypyî 'y-karaíba pupé. - Asperge-se com água benta. (Ar., Cat., 24); ...Opîá o akangaobĩ pupé. - Cobrindo-o com seu véu. (Ar., Cat., 62); itá pupé - com uma pedra (VLB, I, 77) 3) em (temp.): kó semana pupé... - nesta semana (Ar., Cat., 4); 4) em, para, para dentro de: ...Apŷaba... mondóbo xe retama pupé. - Enviando homens para minha terra. (D'Abbeville, Histoire, 341v); Mba'e-tepe peseká kó xe retama pupé? - Mas que é que procurais nesta minha terra? (Anch., Teatro, 28); ...Ybyrá pupé omanõmo... - Morrendo na cruz. (Anch., Poemas, 90); ...Purgatório pupé osoba'e... - as que vão para o purgatório (Ar., Cat., 136, 1686); 5) dentro do mesmo lugar de; no mesmo lugar de; com (de companhia): A'ar nde pupé. - Embarco contigo. (Anch., Arte, 40v); A'a nde pupé. - Caí no mesmo lugar de ti (isto é, caí em teus costumes); 6) entre, no meio de, junto com: Arasó nde mba'e xe mba'e pupé. - Levei as tuas coisas entre as minhas coisas. (Anch., Arte, 40v) ● pupé-ndûara (ou pupé-sûara) - o que está dentro de; o que é interior, o interno (VLB, II, 13)
 pupé = Postposition("pupé", definition="inside, within, in, into, inside of, using, with, during")
 amo = Simulational()
+iré = Beyond()
+iremen = SoonAfter()
 
 # TODO: implement -bo like -pe
 
 
 pe = Locative()
+supé = Dative()

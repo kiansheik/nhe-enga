@@ -5,6 +5,7 @@ sys.path.append("/Users/kian/code/nhe-enga/tupi")
 from tupi import Verb as TupiVerb
 from tupi import Noun as TupiNoun
 from .noun import pronoun_verbetes
+from .adverb import Adverb
 from .y_fix import YFix
 import gzip, json
 
@@ -165,6 +166,39 @@ class Verb(Predicate):
                 sepchar = "y" + ("[CONSONANT_CLASH]" if annotated else "")
             retval = retval + sepchar + adj.eval(annotated=annotated)
         return retval if annotated else self.verb.remove_brackets_and_contents(retval)
+    
+    def base_nominal(self, annotated=False):
+        if len(self.arguments) == 0:
+            return self.raw_noun().substantivo(annotated)
+        if len(self.arguments) < 2:
+            if self.verb.transitivo:
+                obj_tense = self.arguments[0].inflection()
+                obj = self.arguments[0].eval(annotated=annotated) if self.arguments[0].category != "pronoun" else None
+                subj_tense = None
+                subj = None
+            else:
+                obj_tense = "3p"
+                obj = None
+                subj_tense = self.arguments[0].inflection()
+                subj = self.arguments[0].eval(annotated=annotated) if self.arguments[0].category != "pronoun" else None
+        else:
+            obj_tense = self.arguments[1].inflection()
+            obj = self.arguments[1].eval(annotated=annotated) if self.arguments[1].category != "pronoun" else None
+            subj_tense = self.arguments[0].inflection()
+            subj = self.arguments[0].eval(annotated=annotated) if self.arguments[0].category != "pronoun" else None
+        nom = self.verb.conjugate(
+            subject_tense=subj_tense if subj_tense else "3p",
+            object_tense=obj_tense,
+            dir_obj_raw=obj,
+            dir_subj_raw=subj,
+            mode="nominal",
+            pos="anteposto",
+            pro_drop=self.arguments[0].pro_drop or not subj_tense,
+            negative=False,
+            anotar=annotated,
+        )
+        return TupiNoun(nom, self.definition)
+
 
     # first arg is the subject, second arg is the object
 
@@ -186,6 +220,15 @@ class Verb(Predicate):
         return imp_copy
 
     def indicative(self):
-        if self.pre_adjuncts:
-            return "circunstancial"
+        for adj in self.pre_adjuncts:
+            if isinstance(adj, Adverb):
+                return "circunstancial"
+            if isinstance(adj, Verb):
+                if len(adj.arguments) == 2:
+                    # Gerund does not force circumstancial mood
+                    if adj.subject() != self.subject():
+                        return "circunstancial" 
         return "indicativo"
+
+só = Verb("só", definition="to go")
+aûsub = Verb("aûsub", definition="to love")

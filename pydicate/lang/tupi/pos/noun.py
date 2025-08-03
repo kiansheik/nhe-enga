@@ -79,7 +79,7 @@ class Noun(Predicate):
 
 class ProperNoun(Noun):
     def __init__(self, value):
-        super().__init__(value=value, definition=value, pro_drop=False)
+        super().__init__(value=value, inflection="3p", definition=value, pro_drop=False)
 
 
 class Pronoun(Noun):
@@ -96,5 +96,7 @@ oré = Pronoun("1ppe", definition="we (exclusive)")
 endé = Pronoun("2ps", definition="you")
 pee = Pronoun("2pp", definition="y'all'")
 ae = Pronoun("3p", definition="he/she/it/they")
+îe = Pronoun("refl", definition="to oneself, one's own")
+îo = Pronoun("mut", definition="to one another")
 
 pronoun_verbetes = [x.verbete for x in [ixé, îandé, oré, endé, pee, ae]]

@@ -15,3 +15,5 @@ class Adverb(Predicate):
 
     def __add__(self, other):
         return other.__addpre__(self)
+
+koyré = Adverb("koyré", definition="right now, at this moment", tag="[ADVERB:TEMPORAL:IMMEDIATE]")

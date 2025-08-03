@@ -6,6 +6,9 @@ from .verb import *
 from .copula import *
 from .y_fix import *
 from .demonstrative import *
+from .deverbal import *
+from .particle import *
+from .interjection import *
 
 abé = Conjunction("abé")  # Tupi for "and"
 erimbae = Adverb("erimba'e", tag="[ADVERB]")  # Tupi for "also" or "too"

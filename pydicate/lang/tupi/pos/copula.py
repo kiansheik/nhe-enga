@@ -22,7 +22,7 @@ class Copula(Predicate):
         nec = " ".join([x.eval(annotated=annotated) for x in self.arguments[1:]])
         nec = f"{vbt} {nec}"
         if self.post_adjuncts:
-            nec += " " + " ".join([x.eval(annotated=annotated) for x in self.adjuncts])
+            nec += " " + " ".join([x.eval(annotated=annotated) for x in self.post_adjuncts])
         if self.pre_adjuncts:
             nec = (
                 " ".join([x.eval(annotated=annotated) for x in self.pre_adjuncts])
@@ -39,9 +39,3 @@ class Copula(Predicate):
             return retval
         return self * other
         # raise TypeError(f"Cannot compare Noun object with {type(other)} object.")
-
-
-def ruã(pred):
-    new_pred = pred.copy()
-    new_pred.rua = True
-    return new_pred

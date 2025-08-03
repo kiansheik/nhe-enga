@@ -262,6 +262,34 @@ class Noun(TupiAntigo):
                 return "r[PLURIFORM_PREFIX:R]"
         return ""
 
+    def supe(self):
+        frame = inspect.currentframe()
+        func_name = frame.f_code.co_name
+        args, _, _, values = inspect.getargvalues(frame)
+        args_str = ", ".join(
+            f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
+        )
+        ret_noun = copy.deepcopy(self)
+        ret_noun.aglutinantes[-1] = self
+        vbt = ret_noun.latest_verbete
+        # implement the logic for the "supe" postposition. check each 
+        found = False
+        for infl, vals in self.personal_inflections.items():
+            if str(vbt.get_clean()) == vals[0]:
+                new_vbt = AnnotatedString(self.dative_inflections[infl][0])
+                found = True
+                vbt = new_vbt
+                break
+        if not found:
+            vbt.insert_suffix(" supé")
+        ret_noun.latest_verbete = vbt
+        ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.segunda_classe = True
+        ret_noun.transitivo = False
+        ret_noun.recreate += f".{func_name}({args_str})"
+        return ret_noun
+
+
     def pe(self):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
@@ -331,7 +359,9 @@ class Noun(TupiAntigo):
         elif annotated[-2:] == "ng":
             annotated.insert_suffix("ar")
         elif annotated[-1] in sara_consoante_map:
-            annotated.replace_clean(-1, 1, sara_consoante_map[annotated[-1]])
+            sar_rep = sara_consoante_map[annotated[-1]]
+            annotated.replace_clean(-1, 1, "")
+            annotated.insert_suffix(sar_rep)
         elif annotated[-1] not in ret_noun.vogais:
             annotated.insert_suffix("ar")
         else:
@@ -339,7 +369,7 @@ class Noun(TupiAntigo):
 
         annotated.insert_suffix("[ABSOLUTE_AGENT_SUFFIX]")
 
-        ret_noun.latest_verbete = annotated
+        ret_noun.latest_verbete = annotated.strip()
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.segunda_classe = True
         ret_noun.transitivo = False

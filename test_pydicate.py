@@ -168,7 +168,14 @@ kunhatai = Noun("kunhatai", definition="young girl")
 abét = Adverb("abé", definition="also, as well")
 ara = Noun("'ara", definition="day, light, sunlight, time, period, era")
 ekar = Verb("ekar", definition="to search, to seek, to look for")
-só = Verb("só", definition="to go, to leave, to travel", verb_class="v. intr.")
+só = Verb("só", definition="to go, to leave, to travel")
+îuká = Verb("îuká", definition="to murder, to kill, to slay")
+monhang = Verb("monhang", definition="to do, to make, to create, to cause, to perform, to commit")
+mongetá = Verb("mongetá", definition="to talk, to converse, to speak with")
+kanhem = Verb("kanhem", definition="to disappear, to vanish, to lose oneself")
+# oka (r, s) (s.) - OCA, casa indígena, casa em geral: Aîur xe roka suí. - Vim de minha casa. (Anch., Poemas, 102); soka. - a casa dele (Fig., Arte, 78); Oîképe a'e i boîá aé Anás rokype? - Entraram aqueles mesmos discípulos seus na casa de Anás? (Ar., Cat., 55); Xe roka turusueté nhẽ opakatu oka sosé. - Minha casa é maior que todas as casas. (Fig., Arte, 80); Asó okybo. - Vou pelas casas. (Fig., Arte, 7); Aîmonhang sokûama. - Faço sua futura casa. (VLB, I, 108); 2) reduto, toca, habitat: mbyryki-oka - reduto de buriquis (Staden, Viagem, 55) ● kamusy-oka - casa de telha (VLB, II, 125); okybaté - casa assobradada (lit., casa alta) (VLB, II, 119); itá-oka - casa de pedra (VLB, I, 68); oka rerekoara - o que cuida da casa, caseiro (VLB, I, 68)
+oka = Noun("oka", definition="(t); house, home, dwelling, abode, residence")
+lost = (bae * kanhem)
 
 frases = [
     arakae + ((pe * taba) + (ikó * (amõ * kunumim))),
@@ -178,6 +185,9 @@ frases = [
     love * kian * julia,
     love * julia * kian + abét,
     amõ * ara * pupé + (kian * só) << (kian * ekar * julia),
+    (lost == julia) + é,
+    lost * amo + (julia * ikó),
+    koyré + (ixé * monhang * kó) << (mongetá * ixé * endé) + pe * (ixé * oka)
 ]
 for frase in frases:
     print(frase.eval(annotated=False))
