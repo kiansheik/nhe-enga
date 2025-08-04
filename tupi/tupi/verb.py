@@ -3,20 +3,14 @@ from .tupi import TupiAntigo
 from .annotated_string import AnnotatedString
 from .tupi import ALT_ORTS
 import json
-import re
+from importlib import resources
 
-#  Get path of current file directory
-import os
-
-current_dir = os.path.dirname(os.path.abspath(__file__))
-
-
-# Make a function which takes a string and int id, and looks for that file in "irregular/{stirng}_{id}.json" and returns the object if it finds it, otherwise None
+# Make a function which takes a string and int id, and looks for that file in "irregular/{string}_{id}.json" and returns the object if it finds it, otherwise None
 def get_irregular_verb(verbete, id):
     try:
-        with open(current_dir + f"/irregular/{verbete}_{id}.json", "r") as f:
+        with resources.files("tupi.irregular").joinpath(f"{verbete}_{id}.json").open("r") as f:
             return json.load(f)
-    except FileNotFoundError:
+    except (FileNotFoundError, ModuleNotFoundError):
         return None
 
 

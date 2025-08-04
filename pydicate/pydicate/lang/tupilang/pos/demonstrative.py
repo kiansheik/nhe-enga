@@ -35,7 +35,7 @@ class Demonstrative(Noun):
         return super().__mul__(other)
 
 kó = Demonstrative("kó", tag="[DEMONSTRATIVE:1p:VISIBLE]")
-ikó = Demonstrative("ikó", tag="[DEMONSTRATIVE:1p:VISIBLE]")
+ikód = Demonstrative("ikó", tag="[DEMONSTRATIVE:1p:VISIBLE]")
 
 ã = Demonstrative("ã", tag="[DEMONSTRATIVE:1p:NOT_VISIBLE]")
 ang = Demonstrative("ang", tag="[DEMONSTRATIVE:1p:NOT_VISIBLE]")

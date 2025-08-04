@@ -12,8 +12,6 @@ import gzip, json
 import io
 import importlib.resources
 
-import importlib.resources
-
 path = importlib.resources.files("pydicate.lang.tupilang.data").joinpath("dict-conjugated.json.gz")
 with path.open("rb") as raw_file:  # Open in binary mode for gzip
     with gzip.open(raw_file, "rt", encoding="utf-8") as f:
