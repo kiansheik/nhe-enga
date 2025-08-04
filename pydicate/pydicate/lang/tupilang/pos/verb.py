@@ -9,11 +9,15 @@ from pydicate.lang.tupilang.pos.noun import pronoun_verbetes, Noun
 from pydicate.lang.tupilang.pos.adverb import Adverb
 from pydicate.lang.tupilang.pos.y_fix import YFix
 import gzip, json
+import io
+import importlib.resources
 
-# load /Users/kian/code/nhe-enga/docs/dict-conjugated.json.gz into an object
-with gzip.open("/Users/kian/code/nhe-enga/docs/dict-conjugated.json.gz", "rt") as f:
-    dict_conjugated = [x for x in json.load(f) if "c" in x.keys()]
+import importlib.resources
 
+path = importlib.resources.files("pydicate.lang.tupilang.data").joinpath("dict-conjugated.json.gz")
+with path.open("rb") as raw_file:  # Open in binary mode for gzip
+    with gzip.open(raw_file, "rt", encoding="utf-8") as f:
+        dict_conjugated = [x for x in json.load(f) if "c" in x]
 
 class Verb(Predicate):
     def __init__(self, value=None, verb_class="", definition="", vid=None):

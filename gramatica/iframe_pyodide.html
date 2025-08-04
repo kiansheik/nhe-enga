@@ -7,7 +7,7 @@ async function initializePython() {
     globalPyodide = await loadPyodide();
     await globalPyodide.loadPackage('micropip');
     const micropip = globalPyodide.pyimport('micropip');
-    await micropip.install('https://kiansheik.io/nhe-enga/gramatica/pylibs/tupi-0.1.0-py3-none-any.whl');
+    await micropip.install('https://kiansheik.io/nhe-enga/gramatica/pylibs/tupi-0.1.2-py3-none-any.whl');
     globalPyodide.runPython('import tupi');
     globalPyodide.runPython('print(tupi.Noun(\'îagûar\', \'normal\'))');
     this.pyodideReady = true;
