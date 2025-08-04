@@ -3,15 +3,23 @@ from .tupi import TupiAntigo
 from .annotated_string import AnnotatedString
 from .tupi import ALT_ORTS
 import json
+import json
+import unicodedata
 from importlib import resources
 
-# Make a function which takes a string and int id, and looks for that file in "irregular/{string}_{id}.json" and returns the object if it finds it, otherwise None
 def get_irregular_verb(verbete, id):
+    verbete = unicodedata.normalize("NFC", verbete)
+    target_suffix = f"{verbete}_{id}.json"
     try:
-        with resources.files("tupi.irregular").joinpath(f"{verbete}_{id}.json").open("r") as f:
-            return json.load(f)
-    except (FileNotFoundError, ModuleNotFoundError):
-        return None
+        for file in resources.files("tupi.irregular").iterdir():
+            normalized_name = unicodedata.normalize("NFC", file.name)
+            if normalized_name.endswith(target_suffix):
+                with file.open("r") as f:
+                    return json.load(f)
+    except ModuleNotFoundError:
+        pass
+    return None
+
 
 
 class Verb(TupiAntigo):
