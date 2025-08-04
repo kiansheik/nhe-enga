@@ -218,9 +218,22 @@ class Predicate:
         if self.is_subordinated():
             return self.subject().verbete == self.principal.subject().verbete
         return None
+    
+    def definition_simple(self):
+        """
+        Get the first part of the definition, split by comma (not including initial () which should be ignored for the , split but then reprepended before returning)
+        :return: The first part of the definition or an empty string if no definition is set.
+        """
+        parts = self.definition.split(") ")
+        if len(parts) == 1:
+            return parts[0].split(",")[0].strip()
+        elif len(parts) > 1:
+            return parts[0] + ") " + parts[1].split(",")[0].strip()
 
     def same_subject(self):
-        return self.subject().verbete == self.principal.subject().verbete
+        one = self.subject() if self.subject() else None
+        princ = self.principal.subject() if (self.principal.subject() and self.is_subordinated()) else None
+        return one.verbete == princ.verbete if one and princ else False
 
     def subordinate(self, sub, pre=True):
         subordinated = sub.copy()
@@ -237,3 +250,114 @@ class Predicate:
 
     def __rshift__(self, other):
         return other.subordinate(self, pre=True)
+    
+    def to_forest_tree(self, indent=0, ctype='result', parent=None) -> str:
+        """
+        Recursively generate a forest-compatible LaTeX forest package string from a Predicate.
+        Displays tag (if present) below the word using \shortstack.
+        Adds an intermediate stripped node if tag is present and eval != verbete.
+        Appends adjuncts at the same level as the core predicate.
+        """
+        indent_str = " " # "\t" * indent
+        child_indent = " " #  "\n" + "\t" * (indent + 1)
+
+        # Compose top label
+
+        this = self.copy()
+        if indent != 0:
+            this.principal = None  # Prevent recursion
+        label_text = escape_latex(this.eval())
+        style_pre = f"""
+edge path={{
+    \\noexpand\path[black!200, draw]
+    (\\forestoption{{name}}.east) .. controls +(north:7pt) and +(north:7pt) .. (core{indent-1}{id(parent)}.west) \\forestoption{{edge label}};
+}}
+"""
+        
+        style_post = f"""
+edge path={{
+    \\noexpand\path[black!200, draw]
+    (\\forestoption{{name}}.west) .. controls +(north:7pt) and +(north:7pt) .. (core{indent-1}{id(parent)}.east) \\forestoption{{edge label}};
+}}
+"""
+        style = ", " + (style_pre if ctype == 'pre_adjunct' else style_post)
+        if 'adjunct' not in ctype:
+            style = ""
+        if self.tag:
+            tag_text = escape_latex(self.tag)
+            if len(self.arguments) == 0 and self.definition:
+                def_text = escape_latex(self.definition_simple())
+                label = f"[\\shortstack{{\\textit{{{label_text}}} \\\\ \\texttt{{{tag_text}}} \\\\ \\texttt{{{def_text}}}}}, {ctype}{style}"
+            else:
+                label = f"[\\shortstack{{\\textit{{{label_text}}} \\\\ \\texttt{{{tag_text}}}}}, {ctype}{style}"
+        else:
+            if len(self.arguments) == 0 and self.definition:
+                def_text = escape_latex(self.definition_simple())
+                label = f"[\\shortstack{{\\textit{{{label_text}}} \\\\ \\texttt{{{def_text}}}}}, {ctype}{style}"
+            else:
+                label = f"[\\textit{{{label_text}}}, {ctype}{style}"
+
+        # Collect post_adjuncts (they go to the left in rendering)
+        post_children = [
+            adj.to_forest_tree(indent + 1, ctype='pre_adjunct', parent=self)
+            for adj in self.pre_adjuncts or []
+        ]
+        # Collect pre_adjuncts (they go to the right in rendering)
+        pre_children = [
+            adj.to_forest_tree(indent + 1, ctype='post_adjunct', parent=self)
+            for adj in reversed(self.post_adjuncts or [])
+        ]
+        # Collect arguments (default style, can be tagged 'arg' if desired)
+        arg_children = [
+            arg.to_forest_tree(indent + 1, ctype='arg', parent=self) for arg in reversed(self.arguments or [])
+        ]
+
+        children = []
+
+        # Prepare stripped node
+        stripped = self.copy()
+        stripped.pre_adjuncts = []
+        stripped.post_adjuncts = []
+        stripped.principal = None
+        if self.arguments and stripped.eval() != stripped.verbete:
+            stripped_text = escape_latex(stripped.verbete)
+            tag_label = ""
+            def_label = ""
+            if stripped.tag:
+                tag_label = f" \\\\ \\texttt{{{escape_latex(stripped.tag)}}}"
+            if stripped.definition:
+                def_label = f" \\\\ \\texttt{{{escape_latex(stripped.definition_simple())}}}"
+            if tag_label or def_label:
+                core_label = f"\\shortstack{{\\textit{{{stripped_text}}}{tag_label}{def_label}}}"
+            else:
+                core_label = f"\\textit{{{stripped_text}}}"
+
+            stripped_node = f"[{core_label}, core, name=core{indent}{id(self)}" + child_indent + child_indent.join(arg_children) + f"]"
+            children.append(stripped_node)
+        else:
+            children.extend(arg_children)
+
+        # Combine all
+        all_children = pre_children + children + post_children
+
+        if all_children:
+            child_str = child_indent + child_indent.join(all_children)
+            return f"{label} {child_str}\n{indent_str}]"
+        else:
+            retval = f"{label}]"
+            # retval = f"[, {ctype} "+retval[1:]
+            return retval
+
+
+def escape_latex(text: str) -> str:
+    return (
+        text.replace("\\", "\\textbackslash{}")
+            .replace("{", "\\textbraceleft{}")
+            .replace("}", "\\textbraceright{}")
+            .replace("_", "\\_")
+            .replace("#", "\\#")
+            .replace("%", "\\%")
+            .replace("&", "\\&")
+            .replace("^", "\\^{}")
+            .replace("~", "\\~{}")
+    )

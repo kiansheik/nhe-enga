@@ -4,10 +4,10 @@ from pydicate.lang.tupilang.pos.copula import Copula
 
 
 class Noun(Predicate):
-    def __init__(self, value, definition="", inflection=None, pro_drop=False):
+    def __init__(self, value, definition="", inflection=None, pro_drop=False, tag="[NOUN]"):
         """Initialize a Noun object."""
         super().__init__(
-            verbete=value, category="noun", min_args=0, definition=definition
+            verbete=value, category="noun", min_args=0, definition=definition, tag=tag
         )
         self.noun = TupiNoun(self.verbete, definition)
         self._inflection = inflection
@@ -85,15 +85,15 @@ class Noun(Predicate):
 
 
 class ProperNoun(Noun):
-    def __init__(self, value):
-        super().__init__(value=value, inflection="3p", definition=value, pro_drop=False)
+    def __init__(self, value, tag="[PROPER_NOUN]"):
+        super().__init__(value=value, inflection="3p", definition=value, pro_drop=False, tag=tag)
 
 
 class Pronoun(Noun):
-    def __init__(self, inflection, pro_drop=False, definition=""):
+    def __init__(self, inflection, pro_drop=False, definition="", tag="[PRONOUN]"):
         """Initialize a Pronoun object."""
         pronoun = TupiNoun.personal_inflections[inflection][0]
-        super().__init__(value=pronoun, inflection=inflection, pro_drop=pro_drop, definition=definition)
+        super().__init__(value=pronoun, inflection=inflection, pro_drop=pro_drop, definition=definition, tag=tag)
         self.category = "pronoun"
 
 

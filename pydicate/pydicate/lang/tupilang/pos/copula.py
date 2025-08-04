@@ -5,11 +5,13 @@ from tupi import Noun as TupiNoun
 class Copula(Predicate):
     def __init__(self, definition="to be"):
         """Initialize a Copula object."""
-        super().__init__(verbete="=", category="Copula", min_args=1, max_args=2, definition=definition)
+        super().__init__(verbete="=", category="Copula", min_args=1, max_args=2, definition=definition, tag="[COPULA]")
         self.negated = False
 
     def preval(self, annotated=False):
         """Evaluate the Copula object."""
+        if len(self.arguments) == 0:
+            return f"{self.verbete}{self.tag}" if annotated else self.verbete
         first = self.arguments[0]
         vbt = first.eval(annotated=annotated)
         if self.negated:

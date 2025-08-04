@@ -192,7 +192,7 @@ epenhan = Verb("epenhan", definition="to attack, to assault, to fight with")
 epîak = Verb("epîak", definition="to see, to look at, to watch, to observe")
 atã = Noun("atã", definition="(t) strong, brave, firm, hard, tough, rigid, arduous")
 gûarinin = Noun("gûarinin", definition="war, warfare, battle, warrior, soldier")
-
+pdb = +(pindo * abé * pedro)
 frases = [
     arakae + ((pe * taba) + (ikó * (amõ * kunumim))),
     (kunumim * era) == pedro,
@@ -205,8 +205,8 @@ frases = [
     amo * lost + (pindo * ikó),
     pupé * (opá + kaa) + (pedro * ekar * pindo), 
     (iré * (mosapyr + ara)) + ((pedro * ekar * pindo) >> +pedro * basem + (ae*supé)),
-    ((pindo *abé * pedro) * (mboryb) * îo) << ((pindo *abé * pedro) * epîak * îo ),
-    (((ae * apé) * pe + te) + (îebyr * ae)) >> ((amõ * îagûara) * epenhan * +ae),
+    ((pindo * abé * pedro) * (mboryb) * îo) << ((pindo * abé * pedro) * epîak * îo),
+    (((ae * apé) * pe + te) + (îebyr * pdb)) >> ((amõ * îagûara) * epenhan * +pdb),
     (amo * (gûarinin)) + (pedro * îuká * (aîpó * îagûara)),
     (sara) * (pedro * îuká * (îagûara)) == pedro,
 ]

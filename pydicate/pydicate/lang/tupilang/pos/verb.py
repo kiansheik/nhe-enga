@@ -18,7 +18,7 @@ with path.open("rb") as raw_file:  # Open in binary mode for gzip
         dict_conjugated = [x for x in json.load(f) if "c" in x]
 
 class Verb(Predicate):
-    def __init__(self, value=None, verb_class="", definition="", vid=None):
+    def __init__(self, value=None, verb_class="", definition="", vid=None, tag="[VERB]"):
         """Initialize a Verb object."""
         super().__init__(
             verbete=value,
@@ -26,6 +26,7 @@ class Verb(Predicate):
             min_args=1,
             max_args=2,
             definition=definition,
+            tag=tag
         )
         if not self.verbete and not vid:
             raise ValueError("Either value or vid must be provided.")
@@ -61,10 +62,10 @@ class Verb(Predicate):
         return TupiNoun(self.verbete, self.raw_definition)
 
     def subject(self):
-        return self.arguments[0]
+        return self.arguments[0] if (len(self.arguments) > 1 or (len(self.arguments) > 0 and not self.verb.transitivo)) else None
 
     def object(self):
-        return self.arguments[1]
+        return self.arguments[1] if len(self.arguments) > 1 else self.arguments[0] if (len(self.arguments) > 0 and self.verb.transitivo) else None
 
     def refresh_verbete(self, new_verbete):
         self.verbete = new_verbete
@@ -243,8 +244,9 @@ class Verb(Predicate):
             if isinstance(adj, Verb):
                 if len(adj.arguments) >= 1:
                     # Gerund does not force circumstancial mood
-                    if adj.subject().eval(True) != self.subject().eval(True):
-                        return "circunstancial" 
+                    if adj.subject() and self.subject():
+                        if adj.subject().eval(True) != self.subject().eval(True):
+                            return "circunstancial" 
         return "indicativo"
 
     def __mul__(self, other):
