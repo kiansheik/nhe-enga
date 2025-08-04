@@ -1,9 +1,5 @@
-import sys
-
-sys.path.append("pydicate")
-
-from pydicate.lang.tupi import *
-from pydicate.lang.tupi.pos import *
+from pydicate.lang.tupilang import *
+from pydicate.lang.tupilang.pos import *
 from pydicate import Predicate
 
 # one line random hash function

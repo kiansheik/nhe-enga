@@ -11,6 +11,7 @@ lint:
 	cp tupi/dist/tupi-0.1.0* gramatica/docs/src/.vuepress/public/pylibs/
 	cp pydicate/dist/pydicate-0.1* gramatica/docs/src/.vuepress/public/pylibs/
 	cp pydicate/dist/pydicate-0.1* ../tupi-annotation-suite/public/
+	cp tupi/dist/tupi-0.1.0* ../tupi-annotation-suite/public/
 	zsh -c 'cd gramatica/docs; export NODE_OPTIONS=--openssl-legacy-provider; npm run build;'
 	cp -r gramatica/docs/src/.vuepress/dist/* gramatica/
 	echo 'kiansheik.io' > gramatica/CNAME

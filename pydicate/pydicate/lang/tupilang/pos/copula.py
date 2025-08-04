@@ -1,8 +1,4 @@
 from pydicate import Predicate
-import sys
-
-sys.path.append("/Users/kian/code/nhe-enga/tupi")
-
 from tupi import Noun as TupiNoun
 
 

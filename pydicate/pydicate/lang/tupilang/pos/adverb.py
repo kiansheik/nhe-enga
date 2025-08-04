@@ -1,7 +1,5 @@
-from ....predicate import Predicate
+from pydicate import Predicate
 from .particle import Particle
-import sys
-sys.path.append("/Users/kian/code/nhe-enga/tupi")
 from tupi import AnnotatedString
 
 class Adverb(Predicate):

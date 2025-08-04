@@ -1,1 +1,1 @@
-from .tupi import *
+from .tupilang import *

@@ -1,10 +1,6 @@
 from .adverb import Adverb
 from .verb import Verb
 from .deverbal import Deverbal
-import sys
-import re
-
-sys.path.append("/Users/kian/code/nhe-enga/tupi")
 from tupi import Noun as TupiNoun, AnnotatedString
 
 

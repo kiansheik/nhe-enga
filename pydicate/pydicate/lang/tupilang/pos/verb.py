@@ -1,11 +1,8 @@
 from pydicate import Predicate
-import sys
 from typing import TYPE_CHECKING
 
 # if TYPE_CHECKING:
 # from .deverbal import Deverbal  # only used for type checking, not at runtime
-
-sys.path.append("/Users/kian/code/nhe-enga/tupi")
 from tupi import Verb as TupiVerb
 from tupi import Noun as TupiNoun
 from .noun import pronoun_verbetes, Noun

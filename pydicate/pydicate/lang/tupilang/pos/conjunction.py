@@ -1,7 +1,4 @@
 from .noun import Noun
-import sys
-
-sys.path.append("/Users/kian/code/nhe-enga/tupi")
 from tupi import AnnotatedString
 
 class Conjunction(Noun):
