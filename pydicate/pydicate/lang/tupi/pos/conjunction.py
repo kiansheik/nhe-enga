@@ -1,4 +1,3 @@
-from ....predicate import Predicate
 from .noun import Noun
 import sys
 

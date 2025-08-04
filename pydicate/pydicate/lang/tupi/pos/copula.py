@@ -1,4 +1,4 @@
-from ....predicate import Predicate
+from pydicate import Predicate
 import sys
 
 sys.path.append("/Users/kian/code/nhe-enga/tupi")

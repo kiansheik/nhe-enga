@@ -1,4 +1,4 @@
-from ....predicate import Predicate
+from pydicate import Predicate
 import sys
 from typing import TYPE_CHECKING
 

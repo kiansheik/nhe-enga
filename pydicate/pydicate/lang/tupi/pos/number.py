@@ -1,5 +1,4 @@
-from ....predicate import Predicate
-
+from pydicate import Predicate
 
 class Number(Predicate):
     def __init__(self, value, definition="", tag="[NUMBER]"):

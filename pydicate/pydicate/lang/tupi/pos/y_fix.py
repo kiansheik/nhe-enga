@@ -1,4 +1,4 @@
-from ....predicate import Predicate
+from pydicate import Predicate
 
 
 class YFix(Predicate):
