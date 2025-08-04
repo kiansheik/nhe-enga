@@ -6,7 +6,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,  # Important!
     package_data={
-        "pydicate": ["../tupi/*",],  # Include all files inside alt_ort
+        # "pydicate": ["../tupi/*",],  # Include all files inside alt_ort
     },
     description="A package for generic linguistics processing",
     author="Kian Sheik",

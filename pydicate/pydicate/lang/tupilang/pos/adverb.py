@@ -1,5 +1,5 @@
 from pydicate import Predicate
-from .particle import Particle
+from pydicate.lang.tupilang.pos.particle import Particle
 from tupi import AnnotatedString
 
 class Adverb(Predicate):

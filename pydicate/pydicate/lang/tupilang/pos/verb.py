@@ -5,9 +5,9 @@ from typing import TYPE_CHECKING
 # from .deverbal import Deverbal  # only used for type checking, not at runtime
 from tupi import Verb as TupiVerb
 from tupi import Noun as TupiNoun
-from .noun import pronoun_verbetes, Noun
-from .adverb import Adverb
-from .y_fix import YFix
+from pydicate.lang.tupilang.pos.noun import pronoun_verbetes, Noun
+from pydicate.lang.tupilang.pos.adverb import Adverb
+from pydicate.lang.tupilang.pos.y_fix import YFix
 import gzip, json
 
 # load /Users/kian/code/nhe-enga/docs/dict-conjugated.json.gz into an object

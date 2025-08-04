@@ -1,4 +1,4 @@
-from .noun import Noun
+from pydicate.lang.tupilang.pos.noun import Noun
 from copy import deepcopy
 from tupi import AnnotatedString
 

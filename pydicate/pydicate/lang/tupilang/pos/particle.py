@@ -1,5 +1,5 @@
 from pydicate import Predicate
-from .y_fix import YFix
+from pydicate.lang.tupilang.pos.y_fix import YFix
 
 
 class Particle(Predicate):

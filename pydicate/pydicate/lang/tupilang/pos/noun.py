@@ -1,6 +1,6 @@
 from pydicate import Predicate
 from tupi import Noun as TupiNoun
-from .copula import Copula
+from pydicate.lang.tupilang.pos.copula import Copula
 
 
 class Noun(Predicate):

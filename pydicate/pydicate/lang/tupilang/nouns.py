@@ -1,4 +1,4 @@
-from .pos.noun import Noun
+from pydicate.lang.tupilang.pos.noun import Noun
 
 # Define Tupi-specific nouns
 abá = Noun("abá")  # Tupi for "man"

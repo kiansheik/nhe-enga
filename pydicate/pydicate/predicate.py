@@ -1,8 +1,5 @@
 from copy import deepcopy
 import re
-import sys
-
-sys.path.append("/Users/kian/code/nhe-enga/tupi")
 from tupi import Noun as TupiNoun
 
 # let's make a function which takes a string and where there are sumbolys like ˜i, ˜u, ˆy, ˜y, ´y; it will combine then into a single unicode character

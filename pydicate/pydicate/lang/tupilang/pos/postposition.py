@@ -1,6 +1,6 @@
-from .adverb import Adverb
-from .verb import Verb
-from .deverbal import Deverbal
+from pydicate.lang.tupilang.pos.adverb import Adverb
+from pydicate.lang.tupilang.pos.verb import Verb
+from pydicate.lang.tupilang.pos.deverbal import Deverbal
 from tupi import Noun as TupiNoun, AnnotatedString
 
 

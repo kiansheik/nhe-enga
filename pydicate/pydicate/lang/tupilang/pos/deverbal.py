@@ -1,11 +1,7 @@
-# file: a.py
-from typing import TYPE_CHECKING
+from pydicate.lang.tupilang.pos.verb import Verb  # only used for type checking, not at runtime
 
-# if TYPE_CHECKING:
-from .verb import Verb  # only used for type checking, not at runtime
-
-from .noun import Noun
-from .y_fix import YFix
+from pydicate.lang.tupilang.pos.noun import Noun
+from pydicate.lang.tupilang.pos.y_fix import YFix
 from tupi import Noun as TupiNoun, AnnotatedString
 from copy import deepcopy
 

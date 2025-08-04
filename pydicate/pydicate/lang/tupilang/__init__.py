@@ -1,1 +1,1 @@
-from .nouns import *
+from pydicate.lang.tupilang.nouns import *

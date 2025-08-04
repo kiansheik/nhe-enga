@@ -1,1 +1,1 @@
-from .tupilang import *
+from pydicate.lang.tupilang import *
