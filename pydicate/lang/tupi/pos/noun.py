@@ -21,6 +21,7 @@ class Noun(Predicate):
             if self.verbete.lower() == infl[0]:
                 self._inflection = val
                 break
+        self.posto = "posposto"
 
     def refresh_verbete(self, new_verbete):
         self.verbete = new_verbete
@@ -41,7 +42,15 @@ class Noun(Predicate):
         if self.negated:
             # neg_prefix = "nd" if vbt[0] in self.noun.vogais else "nda"
             vbt = self.noun.eym().substantivo(annotated)
-        return vbt
+        ret_val = ""
+        for adj in self.pre_adjuncts:
+            ret_val += " " + adj.eval(annotated=annotated)
+        ret_val = ret_val.strip()
+        for adj in self.post_adjuncts:
+            ret_val = adj.eval(annotated=annotated) + " " + ret_val
+        ret_val = ret_val.strip()
+        ret_val += " " + vbt if ret_val else vbt
+        return ret_val.strip()
 
     def __mul__(self, other):
         # When its another Noun, we treat it as a possessive construction
@@ -59,6 +68,7 @@ class Noun(Predicate):
             base_noun.noun.pluriforme = possessor.noun.pluriforme
             return base_noun
         # Otherwise, treat itself as the argument to the other predicate
+        self.posto = "anteposto"
         return other * self
 
     def __eq__(self, other):
@@ -91,9 +101,11 @@ class Pronoun(Noun):
 
 
 ixé = Pronoun("1ps", definition="I")
+xe = Pronoun("1ps", definition="I")
 îandé = Pronoun("1ppi", definition="we (inclusive)")
 oré = Pronoun("1ppe", definition="we (exclusive)")
 endé = Pronoun("2ps", definition="you")
+nde = Pronoun("2ps", definition="you")
 pee = Pronoun("2pp", definition="y'all'")
 ae = Pronoun("3p", definition="he/she/it/they")
 îe = Pronoun("refl", definition="to oneself, one's own")

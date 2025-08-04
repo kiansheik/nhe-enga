@@ -3,21 +3,22 @@ from .noun import Noun
 import sys
 
 sys.path.append("/Users/kian/code/nhe-enga/tupi")
-
+from tupi import AnnotatedString
 
 class Conjunction(Noun):
-    def __init__(self, value, definition=""):
+    def __init__(self, value, definition="", tag="[CONJUNCTION]"):
         """Initialize a Conjunction object."""
         super().__init__(value, inflection="3p", pro_drop=False, definition=definition)
         self.category = "conjunction"
         self.min_args = 2
+        self.tag = tag
         self.max_args = None
 
     def preval(self, annotated=False):
         """Evaluate the Conjunction object."""
         nec = (
             " ".join([x.eval(annotated=annotated) for x in self.arguments])
-            + f" {self.verbete}"
+            + f" {self.verbete}{self.tag}"
         )
         if self.post_adjuncts:
             # TODO: When evaling adjunct, check if yfix for space or y
@@ -28,7 +29,7 @@ class Conjunction(Noun):
                 + " "
                 + nec
             )
-        return nec
+        return AnnotatedString(nec).verbete(annotated=annotated)
 
     def inflection(self):
         retval = "3p"
@@ -43,3 +44,11 @@ class Conjunction(Noun):
         elif any("2p" in x for x in arg_inflections):
             retval = "2pp"
         return retval
+
+    def __mul__(self, other):
+        if isinstance(other, Noun):
+            cop = self.copy()
+            cop.arguments.append(other.copy())
+            return cop
+        else:
+            return super().__mul__(other)

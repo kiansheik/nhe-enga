@@ -1,5 +1,9 @@
 from ....predicate import Predicate
 import sys
+from typing import TYPE_CHECKING
+
+# if TYPE_CHECKING:
+# from .deverbal import Deverbal  # only used for type checking, not at runtime
 
 sys.path.append("/Users/kian/code/nhe-enga/tupi")
 from tupi import Verb as TupiVerb
@@ -90,7 +94,7 @@ class Verb(Predicate):
             infl0 = obj.inflection()
             if self.verb.transitivo:
                 # TODO: render "nominal form"
-                if infl0:  # if the verb has a personal inflection then it's a pronoun
+                if obj.category == "pronoun":  # if the verb has a personal inflection then it's a pronoun
                     retval = self.verb.conjugate(
                         anotar=annotated,
                         subject_tense="3p",
@@ -111,13 +115,14 @@ class Verb(Predicate):
                     )
             else:  # intransitive
                 suj = self.arguments[0]
-                if infl0:
+                if suj.category == "pronoun":
                     retval = self.verb.conjugate(
                         anotar=annotated,
                         subject_tense=infl0,
                         mode=self.mood,
                         negative=self.negated,
                         pro_drop=suj.pro_drop,
+                        pos=suj.posto
                     )
                 else:
                     retval = self.verb.conjugate(
@@ -127,6 +132,7 @@ class Verb(Predicate):
                         mode=self.mood,
                         negative=self.negated,
                         pro_drop=suj.pro_drop,
+                        pos=suj.posto
                     )
         elif arglen == 2:  # transitive
             suj = self.arguments[0]
@@ -152,6 +158,7 @@ class Verb(Predicate):
                 negative=self.negated,
                 pro_drop=suj.pro_drop,
                 pro_drop_obj=obj.pro_drop,
+                pos=obj.posto,
             )
         if obj_delocated:
             retval = retval + " " + obj_delocated
@@ -235,19 +242,23 @@ class Verb(Predicate):
             if isinstance(adj, Adverb):
                 return "circunstancial"
             if isinstance(adj, Verb):
-                if len(adj.arguments) == 2:
+                if len(adj.arguments) >= 1:
                     # Gerund does not force circumstancial mood
                     if adj.subject().eval(True) != self.subject().eval(True):
                         return "circunstancial" 
         return "indicativo"
 
     def __mul__(self, other):
-        if isinstance(other, Verb):
-            cop = self.copy()
-            cop.arguments.append(other)
-            return cop
-        else:
-            return super().__mul__(other)
+        fin = other.copy()
+        vbt = self.copy()
+        if isinstance(fin, Verb):
+            if len(vbt.arguments) > len(fin.arguments):
+                vbt = vbt.base_nominal(annotated=True)
+                return vbt * fin
+            fin = fin.base_nominal(annotated=True)
+        # elif isinstance(fin, Deverbal):
+        #     return fin * vbt
+        return super().__mul__(fin)
 
 só = Verb("só", definition="to go")
 aûsub = Verb("aûsub", definition="to love")

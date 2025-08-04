@@ -91,7 +91,7 @@ class AnnotatedString:
         self.original += suffix
         self._rebuild_maps()
 
-    def replace_clean(self, start: int, length: int = 1, replacement: str = ""):
+    def replace_clean(self, start: int, length: int = 1, replacement: str = "", drop_trailing_tag=False):
         clean_len = len(self.clean)
 
         # Normalize negative start
@@ -123,6 +123,14 @@ class AnnotatedString:
             + self.original[annotated_end:]
         )
         self._rebuild_maps()
+
+        # Drop trailing tag if requested and present
+        if drop_trailing_tag and self.original and self.original[-1] == "]":
+            last_open = self.original.rfind("[")
+            last_close = self.original.rfind("]")
+            if last_open != -1 and last_close == len(self.original) - 1 and last_open < last_close:
+                self.original = self.original[:last_open]
+                self._rebuild_maps()
 
     def remove_accent_last_vowel(self):
         vowels = "áéíýóú"

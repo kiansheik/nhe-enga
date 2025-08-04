@@ -1,4 +1,5 @@
 from ....predicate import Predicate
+from .y_fix import YFix
 
 
 class Particle(Predicate):
@@ -17,3 +18,4 @@ class Particle(Predicate):
         return other.__addpre__(self)
 
 é = Particle("é", definition="really is, actually is, gives focus to what precedes", tag="[PARTICLE:FOCUS]")
+te = Particle("te", definition="ADVERSATIVE discourse marker, shifting focus to what precedes it, 'on the other hand...', 'but this in contrast...", tag="[PARTICLE:ADVERSATIVE]")

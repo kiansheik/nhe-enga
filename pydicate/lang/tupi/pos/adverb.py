@@ -1,5 +1,8 @@
 from ....predicate import Predicate
-
+from .particle import Particle
+import sys
+sys.path.append("/Users/kian/code/nhe-enga/tupi")
+from tupi import AnnotatedString
 
 class Adverb(Predicate):
     def __init__(self, value, definition="", tag="[ADVERB]"):
@@ -9,11 +12,17 @@ class Adverb(Predicate):
 
     def preval(self, annotated=False):
         """Evaluate the Adverb object."""
-        if annotated:
-            return f"{self.verbete}{self.tag}"
-        return self.verbete
+        ret_val = f"{self.verbete}{self.tag}"
+        for adj in self.pre_adjuncts:
+            ret_val = f"{adj.eval(True)} " + ret_val
+        ret_val = ret_val.strip()
+        for adj in self.post_adjuncts:
+            ret_val += f" {adj.eval(True)}"
+        return AnnotatedString(ret_val).verbete(annotated=annotated)
 
     def __add__(self, other):
+        if isinstance(other, Adverb) or isinstance(other, Particle):
+            return super().__add__(other)
         return other.__addpre__(self)
 
 koyré = Adverb("koyré", definition="right now, at this moment", tag="[ADVERB:TEMPORAL:IMMEDIATE]")

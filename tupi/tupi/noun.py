@@ -69,10 +69,9 @@ class Noun(TupiAntigo):
     def __init__(self, verbete, raw_definition):
         super().__init__()
         vbt = AnnotatedString(verbete)
-        if vbt[-1] == "a" and vbt[-2] not in self.vogais:
-            vbt.replace_clean(-1, 1, "")
+        if len(vbt.clean) >= 2 and vbt[-1] == "a" and vbt[-2] not in self.vogais:
+            vbt.replace_clean(-1, 1, "", drop_trailing_tag=True)
             # breakpoint()
-            vbt.removesuffix_original("[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING]")
         if not vbt.get_annotated().endswith("[ROOT]"):
             vbt.insert_suffix("[ROOT]")
         self.base_verbete = vbt.get_annotated()
@@ -499,7 +498,7 @@ class Noun(TupiAntigo):
         # --------------------------------
         vbt = ret_noun.latest_verbete
         if vbt[-1] in "bmp":
-            vbt.replace_clean(-1, 1, "b")
+            vbt.replace_clean(-1, 1, "")
             vbt.insert_suffix("ba'e")
         elif vbt[-1] in self.vogais:
             vbt.remove_accent_last_vowel()
@@ -599,7 +598,7 @@ class Noun(TupiAntigo):
             vbt.insert_suffix("amo")
         vbt.insert_suffix("[SIMULATIVE_SUFFIX]")
         ret_noun.aglutinantes.append(ret_noun)
-        ret_noun.segunda_classe = True
+        ret_noun.segunda_classe = False
         ret_noun.transitivo = False
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun

@@ -9,8 +9,9 @@ from .demonstrative import *
 from .deverbal import *
 from .particle import *
 from .interjection import *
+from .number import *
 
-abé = Conjunction("abé")  # Tupi for "and"
+abé = Conjunction("abé", tag="[CONJUNCTION:AND]")  # Tupi for "and"
 erimbae = Adverb("erimba'e", tag="[ADVERB]")  # Tupi for "also" or "too"
 ne = YFix(Adverb("ne", tag="[FUTURE]"))
 mo = YFix(Adverb("mo", tag="[IRREALIS_SUFIX]"))  # Make into a irreal particle

@@ -165,12 +165,12 @@ class Predicate:
 
     def eval(self, annotated=False):
         prev = self.copy()
-        pre = prev.preval(annotated=annotated)
+        pre = prev.preval(annotated=annotated).strip()
         neg = "" if not annotated else "[NEGATION_PARTICLE:NA]"
         neg_suf = "" if not annotated else "[NEGATION_PARTICLE:RUA]"
         if prev.rua:
             pre = f"nda{neg} {pre} ruã{neg_suf}"
-        return remove_adjacent_tags(pre)
+        return remove_adjacent_tags(pre).strip()
 
     def __invert__(self):
         """
@@ -213,6 +213,9 @@ class Predicate:
 
     def is_subordinated(self):
         return self.principal is not None
+
+    def subject(self):
+        return self.arguments[0] if self.arguments else None
 
     def same_subject(self):
         if self.is_subordinated():
