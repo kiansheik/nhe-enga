@@ -1,10 +1,12 @@
 import weakref
+import inspect
+
 
 class Trackable:
     _instances = {}
 
     def __init__(self):
-        # Optionally, add self to the global instances on creation
+        self._var_name = self.get_var_name_from_stack()
         self.__class__.add(self)
 
     @classmethod
@@ -16,5 +18,17 @@ class Trackable:
         # Return live objects only
         return [ref() for ref in cls._instances.values() if ref() is not None]
 
-    def __len__(self):
-        return len(self.instances())
+    def get_var_name_from_stack(self):
+        for frame_info in inspect.stack():
+            frame = frame_info.frame
+            for var_name, var_val in frame.f_globals.items():
+                if var_val is self:
+                    return var_name
+        return None
+
+    @property
+    def var_name(self):
+        if self._var_name:
+            return self._var_name
+        self._var_name = self.get_var_name_from_stack()
+        return self._var_name

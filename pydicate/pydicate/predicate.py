@@ -134,9 +134,16 @@ class Predicate(Trackable):
         pre_adjuncts = ", ".join(repr(adj) for adj in self.pre_adjuncts)
         post_adjuncts = ", ".join(repr(adj) for adj in self.post_adjuncts)
         return (
-            f"Predicate(verbete={self.verbete}, category={self.category}, "
+            f"{self.var_name} = " + self.__class__.__name__ + f"(verbete=\"{self.verbete}\", category=\"{self.category}\", "
             f"arguments=[{args}], pre_adjuncts=[{pre_adjuncts}], post_adjuncts=[{post_adjuncts}], "
-            f"min_args={self.min_args}, max_args={self.max_args})"
+            f"min_args={self.min_args}, max_args={self.max_args}, "
+            f"negated={self.negated}, rua={self.rua}, definition=\"{self.definition}\", tag=\"{self.tag}\")"
+        )
+
+
+    def simple_signature(self):
+        return (
+            f"{self.var_name} = " + self.__class__.__name__ + f"(\"{self.verbete}\", definition=\"{self.definition}\", tag=\"{self.tag}\")"
         )
 
 
@@ -250,6 +257,9 @@ class Predicate(Trackable):
     def format_tag(self):
         tf = [escape_latex(x.lower().capitalize().replace("_", " ")) for x in self.tag[1:-1].split(":")]
         return "\\textit{" + (", ".join(tf)) + "}"
+    
+    def __len__(self):
+        return 1 + sum(len(x) for x in self.arguments + self.pre_adjuncts + self.post_adjuncts)
 
     def __lshift__(self, other):
         return self.subordinate(other, pre=False)
