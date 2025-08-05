@@ -144,7 +144,7 @@ class Predicate(Trackable):
     def simple_signature(self):
         tr = self.var_name
         return (
-            f"{self.var_name if self.var_name else self.verbete.replace("'", "_")} = " + self.__class__.__name__ + f"(\"{self.verbete}\", definition=\"{self.definition}\", tag=\"{self.tag}\")"
+            f"{self.var_name if self.var_name else self.verbete.replace('\"', '_')} = " + self.__class__.__name__ + f"(\"{self.verbete}\", definition=\"{self.definition}\", tag=\"{self.tag}\")"
         )
 
 
