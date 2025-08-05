@@ -1,6 +1,7 @@
 from copy import deepcopy
 import re
 from tupi import Noun as TupiNoun
+from pydicate.trackable import Trackable
 
 # let's make a function which takes a string and where there are sumbolys like ˜i, ˜u, ˆy, ˜y, ´y; it will combine then into a single unicode character
 def combine_symbols(s):
@@ -20,7 +21,7 @@ def remove_adjacent_tags(to_remove_from):
     pattern = r"(\[.*?\])(?=\1)"
     return re.sub(pattern, "", to_remove_from)
 
-class Predicate:
+class Predicate(Trackable):
     def __init__(self, verbete, category, min_args, max_args=None, definition="", tag="[PREDICATE]"):
         """
         Initialize a Predicate object.
@@ -29,6 +30,7 @@ class Predicate:
         :param min_args: Minimum number of required arguments.
         :param max_args: Maximum number of arguments (default: same as min_args; None for unlimited).
         """
+        super().__init__()
         self.verbete = combine_symbols(verbete)
         self.category = category
         self.min_args = min_args
@@ -245,6 +247,10 @@ class Predicate:
             principalled.post_adjuncts.append(subordinated)
         return principalled
 
+    def format_tag(self):
+        tf = [escape_latex(x.lower().capitalize().replace("_", " ")) for x in self.tag[1:-1].split(":")]
+        return "\\textit{" + (", ".join(tf)) + "}"
+
     def __lshift__(self, other):
         return self.subordinate(other, pre=False)
 
@@ -283,8 +289,8 @@ edge path={{
         style = ", " + (style_pre if ctype == 'pre_adjunct' else style_post)
         if 'adjunct' not in ctype:
             style = ""
-        if self.tag:
-            tag_text = escape_latex(self.tag)
+        if self.tag and (not self.arguments or ctype in ['core']):
+            tag_text = self.format_tag()
             if len(self.arguments) == 0 and self.definition:
                 def_text = escape_latex(self.definition_simple())
                 label = f"[\\shortstack{{\\textit{{{label_text}}} \\\\ \\texttt{{{tag_text}}} \\\\ \\texttt{{{def_text}}}}}, {ctype}{style}"
@@ -324,7 +330,7 @@ edge path={{
             tag_label = ""
             def_label = ""
             if stripped.tag:
-                tag_label = f" \\\\ \\texttt{{{escape_latex(stripped.tag)}}}"
+                tag_label = f" \\\\ \\texttt{{{stripped.format_tag()}}}"
             if stripped.definition:
                 def_label = f" \\\\ \\texttt{{{escape_latex(stripped.definition_simple())}}}"
             if tag_label or def_label:

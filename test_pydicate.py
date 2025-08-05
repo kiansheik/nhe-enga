@@ -192,7 +192,13 @@ epenhan = Verb("epenhan", definition="to attack, to assault, to fight with")
 epîak = Verb("epîak", definition="to see, to look at, to watch, to observe")
 atã = Noun("atã", definition="(t) strong, brave, firm, hard, tough, rigid, arduous")
 gûarinin = Noun("gûarinin", definition="war, warfare, battle, warrior, soldier")
+ur = Verb("îur", definition="to come")
+poî = Verb("poî", definition="to feed, to nourish, to sustain")
+# 'i / 'é1 (v. intr. irreg.) 1) dizer: Marã e'ipe asé, karaibebé o arõana mongetábo? - Que a gente diz, conversando com o anjo seu guardião? (Ar., Cat., 23v); Aîpó eré supikatu... - Isso dizes com razão... (Anch., Teatro, 32); 2) rezar, enunciar-se, prescrever: Aîpó tekoangaîpaba robaîara nã e'i. - Os opostos daqueles pecados assim se enunciam. (Ar., Cat., 18); 3) querer dizer, querer significar, pensar, supor, presumir, cogitar, julgar: Marã e'ipe asé o py'ape aîpó o'îabo i xupé? - Que quer dizer a gente em seu coração, dizendo isso para ela? (Ar., Cat., 31v); "Osó ipó re'a" a'é. - Presumo que ele deve ter ido. (VLB, II, 86); 4) concluir, julgar por indícios: Emonã ûĩ re'a a'é. - Concluo que talvez isso seja assim. (VLB, II, 16); Amõ îuká-potá ûĩ sekóû a'é. - Concluí que ele está querendo matar alguém. (VLB, II, 16) ● e'iba'e - o que diz: Mendara... "xe mena koîpó xe remirekó re'õ ré t'îamendar îandé îoesé" e'iba'e, se'õ nhẽ roîré nd'e'ikatuî sesé omendá. - O cônjuge que diz: "-Após a morte de meu marido ou de minha esposa havemos de nos casar", após sua morte não pode casar-se com ele (ou ela). (Ar., Cat., 1686, 279-280); 'îara (ou e'îara) - o que diz; o indicador: Îaîuká memẽ aîpó 'îara... - Matemos juntos o que diz isso. (Ar., Cat., 79); ...Îasytatá serekoarama resé... pé 'îaramo i xupé... - Por causa da estrela sua guardiã,... como indicadora do caminho para eles. (Ar., Cat., 3); ...Marã e'îara... - As que dizem coisas más. (Anch., Teatro, 36); "...-Our temõ anhanga xe rerasóbo mã" e'îara. - O que diz: -Oxalá venha o diabo para me levar... (Ar., Cat., 67); 'îaba (ou 'eaba ou 'esaba) - 1) tempo, lugar, modo, etc. de dizer; o dizer: Okaî oupa aûîeramanhẽ... o îurupe nhote aîpó o 'eagûera repyramo. - Estão queimando para sempre como pena de dizerem isso somente em suas bocas. (Ar., Cat., 1686, 248); 2) o que alguém diz, o chamado por alguém, o dito: Ybytyra Monte Calvário 'îápe... - Para o monte chamado Calvário (Ar., Cat., 89); Erimba'epe aîpó nde 'îaba ereîmopóne? - Quando cumprirás isso que tu dizes? (Ar., Cat., 111v); O'u nhẽpe a'e 'ybá, tegûama, Tupã 'îaba? - Comeu aquele fruto, causa da morte, que Deus dissera? (Ar., Cat., 40v); Aîpó i 'eagûera rerekóbo, semimbo'e-etá... miapé rari o pópe... - Tendo isso que ele disse, seus discípulos tomaram o pão em suas mãos. (Ar., Cat., 84v)
+ei = Verb("'i", definition="to say, to tell, to speak, to indicate, to mean, to conclude, to judge", )
+
 pdb = +(pindo * abé * pedro)
+
 frases = [
     arakae + ((pe * taba) + (ikó * (amõ * kunumim))),
     (kunumim * era) == pedro,
@@ -209,6 +215,9 @@ frases = [
     (((ae * apé) * pe + te) + (îebyr * pdb)) >> ((amõ * îagûara) * epenhan * +pdb),
     (amo * (gûarinin)) + (pedro * îuká * (aîpó * îagûara)),
     (sara) * (pedro * îuká * (îagûara)) == pedro,
+    # Aîur ta xe poî na ûi'îabo ruã. - Venho não tendo a intenção de que me alimentem. (Anch., Arte, 55v)
+    (ur * +ixé) << ((poî * ixé).imp() >> ~(ei * ixé)),
+
 ]
 
 print(prompt)
