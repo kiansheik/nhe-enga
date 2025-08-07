@@ -143,9 +143,13 @@ class Predicate(Trackable):
 
     def simple_signature(self):
         tr = self.var_name
-        tr = self.var_name if self.var_name else self.verbete.replace('\"', '_')
+        tr = self.var_name if self.var_name else self.verbete.replace("'", '_').replace(" ", "_").replace('-', '_').replace('(', '').replace(')', '')
+        if self.category == "pronoun":
+            vbt = self.inflection()
+        else:
+            vbt = self.verbete
         return (
-            f"{tr} = " + self.__class__.__name__ + f"(\"{self.verbete}\", definition=\"{self.definition}\", tag=\"{self.tag}\")"
+            f"{tr} = " + self.__class__.__name__ + f"(\"{vbt}\", definition=\"{self.definition}\", tag=\"{self.tag}\")"
         )
 
 

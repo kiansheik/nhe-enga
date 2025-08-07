@@ -28,6 +28,9 @@ share/python-wheels/
 *.egg
 MANIFEST
 
+translate/google_api_keys.json
+translate/api_usage_log.json
+
 nhe-enga/
 node_modles/
 node_modules/

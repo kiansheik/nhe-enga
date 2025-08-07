@@ -90,9 +90,14 @@ class ProperNoun(Noun):
 
 
 class Pronoun(Noun):
-    def __init__(self, inflection, pro_drop=False, definition="", tag="[PRONOUN]"):
+    def __init__(self, inflection_or_verbete, pro_drop=False, definition="", tag="[PRONOUN]"):
         """Initialize a Pronoun object."""
-        pronoun = TupiNoun.personal_inflections[inflection][0]
+        if inflection_or_verbete in TupiNoun.personal_inflections.keys():
+            pronoun = TupiNoun.personal_inflections[inflection_or_verbete][0]
+            inflection = inflection_or_verbete
+        else:
+            pronoun = inflection_or_verbete
+            inflection = '3p'
         super().__init__(value=pronoun, inflection=inflection, pro_drop=pro_drop, definition=definition, tag=tag)
         self.category = "pronoun"
 
