@@ -4,6 +4,7 @@ from pydicate import Predicate
 class YFix(Predicate):
     def __init__(self, predicate: Predicate):
         self._predicate = predicate
+        self.category = predicate.category
 
     def __getattr__(self, attr):
         # Use object.__getattribute__ to avoid infinite recursion

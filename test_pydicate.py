@@ -1,7 +1,6 @@
 from pydicate.lang.tupilang import *
 from pydicate.lang.tupilang.pos import *
 from pydicate import Predicate
-
 # one line random hash function
 rhash = lambda x: sum([ord(c) for c in str(x)])
 from graphviz import Digraph
@@ -199,7 +198,7 @@ ei = Verb("'i", definition="to say, to tell, to speak, to indicate, to mean, to 
 
 pdb = +(pindo * abé * pedro)
 
-frases = [
+pedro_and_pindoba = [
     arakae + ((pe * taba) + (ikó * (amõ * kunumim))),
     (kunumim * era) == pedro,
     pe * (pedro * taba) + ikó * (amõ * kunhatai) + abét,
@@ -216,17 +215,67 @@ frases = [
     (amo * (gûarinin)) + (pedro * îuká * (aîpó * îagûara)),
     (sara) * (pedro * îuká * (îagûara)) == pedro,
     # Aîur ta xe poî na ûi'îabo ruã. - Venho não tendo a intenção de que me alimentem. (Anch., Arte, 55v)
-    (ur * +ixé) << ((poî * ixé).imp() >> ~(ei * ixé)),
-
 ]
 
-print(prompt)
-print()
+# COMPENDIO DA DOUTRINA
+# CHRISTÄA Na lingua Portugueza, e Brasilica.
+# PRIMEIRA PARTE
+# . Dos primeiros elementos da Fé Christãa.
+# Oração dofinal da Santa Cruz.
+
+santa_cruz = ProperNoun("Santa Cruz")
+tupan = ProperNoun("Tupã")
+aang = Verb("a'ang")
+pysyro = Verb("pysyrõ")
+îara = Noun("îara")
+amotar = Verb("amotar")
+tb = Conjunction("",tag="[CONJUNCTION:AND]")
+tuba = Noun("uba", "pai")
+tayra = Noun("a'yra", "filho")
+espirito_santo = ProperNoun("Espírito Santo")
+amen = Interjection("amém", definition="so be it, truly, let it be", tag="[INTERJECTION:AMEN]")
+jesus = ProperNoun("Jesus")
+ybaka = Noun("ybaka")
+moeté = Verb("moeté")
+reino = Noun("Reino", definition="kingdom, realm, dominion", tag="[NOUN:LOAN_WORD:PORTUGUESE]")
+yby = Noun("yby", definition="earth, land, ground, soil, country, world")
+
+
+bettendorff_compendio_pt_1 = [
+    ((saba * (santa_cruz * aang)) * esé) + 
+    (endé * (pysyro.imp()) * oré) + 
+    ((tupan == (oré * îara.voc()))) + 
+    ((sara * (-(oré * amotar))) * suí),
+
+    (((endé + tuba + espirito_santo) * era) * pupé) + (amen + jesus),
+
+    (oré * tuba).voc() @ (((pe * ybaka)) + (sara * ikó).voc()) + (amo * (pyra * moeté)) + (ikó * (nde * era)).perm(),
+
+    (ur * (nde * reino)).perm(),
+
+    (monhang * (emi * (potar * nde)) * îe).perm() + (pe * yby) + (pe * ybaka) + (îabé * (monhang * ae * îe)),
+
+    
+]
+
+
+frases = bettendorff_compendio_pt_1[-1:]
+output = []
 for frase in frases:
-    print(f"{frase.eval(annotated=False)}.")
-print()
+    output.append(f"{frase.eval(annotated=False)}.")
+output.append("")
 for frase in frases:
-    print(f"{frase.eval(annotated=True)}.")
-print()
+    output.append(f"{frase.eval(annotated=True)}.")
+output.append("")
 for frase in frases:
-    print(f"{frase.semantic()}")
+    output.append(f"{frase.semantic()}")
+
+result_string = "\n\n".join(output)
+print(result_string)
+
+breakpoint()
+from translate.generate_glosses import get_ai_response
+
+response = get_ai_response(result_string, prompt)
+
+print(response)

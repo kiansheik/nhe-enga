@@ -1,15 +1,17 @@
 from pydicate import Predicate
 from tupi import Noun as TupiNoun
 from pydicate.lang.tupilang.pos.copula import Copula
-
+from tupi import AnnotatedString
 
 class Noun(Predicate):
-    def __init__(self, value, definition="", inflection=None, pro_drop=False, tag="[NOUN]"):
+    def __init__(
+        self, value, definition="", inflection=None, pro_drop=False, tag="[NOUN]", category="noun"
+    ):
         """Initialize a Noun object."""
         super().__init__(
-            verbete=value, category="noun", min_args=0, definition=definition, tag=tag
+            verbete=value, category=category, min_args=0, definition=definition, tag=tag
         )
-        self.noun = TupiNoun(self.verbete, definition)
+        self.noun = TupiNoun(self.verbete, self.functional_definition)
         self._inflection = inflection
         if inflection:
             self.plural = "pp" in inflection
@@ -32,13 +34,50 @@ class Noun(Predicate):
         neg = self.copy()
         neg.pro_drop = True
         return neg
+    
+    def __add__(self, other):
+        """
+        Add a Noun or Copula to the current Noun.
+        :param other: The Noun or Copula to add.
+        :return: A new Noun with the added argument.
+        """
+        if isinstance(other, Conjunction):
+            cop = self.copy()
+            conj = other.copy()
+            # add cop to front of arguments
+            conj.arguments.insert(0, cop)
+            return conj
+        if isinstance(other, (Noun)):
+            cop = self.copy()
+            oth = other.copy()
+            conj = Conjunction("", tag="[CONJUNCTION:AND]")
+            conj.arguments.append(cop)
+            conj.arguments.append(oth)
+            return conj
+        return super().__add__(other)
+
+
+    def __addpre__(self, other):
+        """
+        Add an adjunct using the + operator.
+        :param other: The adjunct to add.
+        :return: Self (to enable chaining).
+        """
+        mult = self.copy()
+        other_copy = other.copy()
+        # prepend the adjunct to the pre_adjuncts
+        mult.pre_adjuncts.insert(0, other_copy)
+        return mult
+
+    def noun_function(self, neg=False, annotated=False):
+        """Return the noun in its base form."""
+        if neg:
+            return self.noun.eym().absoluta().substantivo(annotated)
+        return self.noun.absoluta().substantivo(annotated)
 
     def preval(self, annotated=False):
         """Evaluate the Noun object."""
-        vbt = self.noun.substantivo(annotated)
-        if self.negated:
-            # neg_prefix = "nd" if vbt[0] in self.noun.vogais else "nda"
-            vbt = self.noun.eym().substantivo(annotated)
+        vbt = self.noun_function(neg=self.negated, annotated=annotated)
         ret_val = ""
         for adj in self.pre_adjuncts:
             ret_val += " " + adj.eval(annotated=annotated)
@@ -75,6 +114,9 @@ class Noun(Predicate):
         #     raise TypeError(f"Cannot compare Noun object with {type(other)} object.")
         return Copula() * self * other
 
+    def __matmul__(self, other):
+        return self.__eq__(other)
+
     def inflection(self, setter=None):
         if setter:
             self._inflection = setter
@@ -83,22 +125,94 @@ class Noun(Predicate):
     def __repr__(self):
         return self.eval(annotated=False)
 
+    def voc(self):
+        """Return the noun in its vocative form."""
+        voc_cop = self.copy()
+        voc_cop.noun = voc_cop.noun.vocativo()
+        return voc_cop
+
+
+class Conjunction(Noun):
+    def __init__(self, value, definition="", tag="[CONJUNCTION]", category="conjunction"):
+        """Initialize a Conjunction object."""
+        super().__init__(value, inflection="3p", pro_drop=False, definition=definition, tag=tag, category=category)
+        self.min_args = 2
+        self.tag = tag
+        self.max_args = None
+
+    def preval(self, annotated=False):
+        """Evaluate the Conjunction object."""
+        nec = (
+            " ".join([x.eval(annotated=annotated) for x in self.arguments])
+            + (f" {self.verbete}{self.tag}" if self.verbete else f"{self.tag}")
+        )
+        if self.post_adjuncts:
+            # TODO: When evaling adjunct, check if yfix for space or y
+            nec += " " + " ".join([x.eval(annotated=annotated).strip() for x in self.adjuncts])
+        if self.pre_adjuncts:
+            nec = (
+                " ".join([x.eval(annotated=annotated) for x in self.pre_adjuncts])
+                + " "
+                + nec.strip()
+            )
+        return AnnotatedString(nec).verbete(annotated=annotated).strip()
+
+    def inflection(self):
+        retval = "3p"
+        arg_inflections = [x.inflection() for x in self.arguments]
+        # if "1p" or "2p" are present in any strings in arg_inflections, then return true
+        if any("1p" in x for x in arg_inflections) and any(
+            "2p" in x for x in arg_inflections
+        ):
+            retval = "1ppi"
+        elif any("1p" in x for x in arg_inflections):
+            retval = "1ppe"
+        elif any("2p" in x for x in arg_inflections):
+            retval = "2pp"
+        return retval
+
+    def __add__(self, other):
+        if isinstance(other, Noun):
+            cop = self.copy()
+            cop.arguments.append(other.copy())
+            return cop
+        else:
+            return super().__add__(other)
+
+
 
 class ProperNoun(Noun):
-    def __init__(self, value, tag="[PROPER_NOUN]"):
-        super().__init__(value=value, inflection="3p", definition=value, pro_drop=False, tag=tag)
+    def __init__(self, value, tag="[PROPER_NOUN]", category="proper_noun"):
+        super().__init__(
+            value=value, inflection="3p", definition=value, pro_drop=False, tag=tag, category=category
+        )
+    
+    def noun_function(self, neg=False, annotated=False):
+        """Return the noun in its base form."""
+        if neg:
+            return self.noun.eym().verbete(annotated)
+        return self.noun.absoluta().verbete(annotated)
 
 
 class Pronoun(Noun):
-    def __init__(self, inflection_or_verbete, pro_drop=False, definition="", tag="[PRONOUN]"):
+    def __init__(
+        self, inflection_or_verbete, pro_drop=False, definition="", tag="[PRONOUN]", category="pronoun"
+    ):
         """Initialize a Pronoun object."""
         if inflection_or_verbete in TupiNoun.personal_inflections.keys():
             pronoun = TupiNoun.personal_inflections[inflection_or_verbete][0]
             inflection = inflection_or_verbete
         else:
             pronoun = inflection_or_verbete
-            inflection = '3p'
-        super().__init__(value=pronoun, inflection=inflection, pro_drop=pro_drop, definition=definition, tag=tag)
+            inflection = "3p"
+        super().__init__(
+            value=pronoun,
+            inflection=inflection,
+            pro_drop=pro_drop,
+            definition=definition,
+            tag=tag,
+            category=category,
+        )
         self.category = "pronoun"
 
 

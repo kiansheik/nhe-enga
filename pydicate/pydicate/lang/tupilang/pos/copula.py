@@ -3,9 +3,16 @@ from tupi import Noun as TupiNoun
 
 
 class Copula(Predicate):
-    def __init__(self, definition="to be"):
+    def __init__(self, definition="to be", category="copula"):
         """Initialize a Copula object."""
-        super().__init__(verbete="=", category="Copula", min_args=1, max_args=2, definition=definition, tag="[COPULA]")
+        super().__init__(
+            verbete="=",
+            category=category,
+            min_args=1,
+            max_args=2,
+            definition=definition,
+            tag="[COPULA]",
+        )
         self.negated = False
 
     def preval(self, annotated=False):
@@ -20,7 +27,9 @@ class Copula(Predicate):
         nec = " ".join([x.eval(annotated=annotated) for x in self.arguments[1:]])
         nec = f"{vbt} {nec}"
         if self.post_adjuncts:
-            nec += " " + " ".join([x.eval(annotated=annotated) for x in self.post_adjuncts])
+            nec += " " + " ".join(
+                [x.eval(annotated=annotated) for x in self.post_adjuncts]
+            )
         if self.pre_adjuncts:
             nec = (
                 " ".join([x.eval(annotated=annotated) for x in self.pre_adjuncts])
@@ -36,4 +45,6 @@ class Copula(Predicate):
                 retval *= arg
             return retval
         return self * other
-        # raise TypeError(f"Cannot compare Noun object with {type(other)} object.")
+
+    def __matmul__(self, other):
+        return self.__eq__(other)

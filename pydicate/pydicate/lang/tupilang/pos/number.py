@@ -1,9 +1,16 @@
 from pydicate import Predicate
 
+
 class Number(Predicate):
-    def __init__(self, value, definition="", tag="[NUMBER]"):
+    def __init__(self, value, definition="", tag="[NUMBER]", category="number"):
         """Initialize a Number object."""
-        super().__init__(verbete=value, category="number", min_args=0, max_args=None, definition=definition)
+        super().__init__(
+            verbete=value,
+            category=category,
+            min_args=0,
+            max_args=None,
+            definition=definition,
+        )
         self.tag = tag
 
     def preval(self, annotated=False):
@@ -14,6 +21,7 @@ class Number(Predicate):
 
     def __add__(self, other):
         return other.__addpre__(self)
+
 
 oîepé = Number("oîepé", definition="one, a single one", tag="[NUMBER:ONE]")
 # mokõî1 (num.) - 1) dois (Fig., Arte, 4): mokõî apŷaba - dois homens (Anch., Arte, 9v); ...Mokõî nhõ abá rekoabane... - Duas, somente, serão as moradas das pessoas. (Ar, Cat.,163); 2) par, dupla de qualquer coisa (VLB, II, 64) ● mokõ-mokõî - de dois em dois, dois a dois (VLB, I, 106)
@@ -31,12 +39,22 @@ moîepé = Number("moîepé", definition="one, a single one", tag="[NUMBER:ONE]"
 # oîeirundyk (num.) - quatro (o mesmo que oîoirundyk - v.) (Ar., Cat., 77)
 oîeirundyk = Number("oîeirundyk", definition="four", tag="[NUMBER:FOUR]")
 # xe-pó-xe-py (num.) - vinte (isto é, os dedos de meus pés e minhas mãos) (Fig., Arte, 4)
-xe_pó_xe_py = Number("xe-pó-xe-py", definition="twenty (literally, the fingers of my feet and hands)", tag="[NUMBER:TWENTY]")
+xe_pó_xe_py = Number(
+    "xe-pó-xe-py",
+    definition="twenty (literally, the fingers of my feet and hands)",
+    tag="[NUMBER:TWENTY]",
+)
 # moîerundyk (ou monherundyk) (num.) - quatro (Fig., Arte, 4): -Mbobype ybykûarusu yby apyterype sekóû...? -Moîerundyk. - Quantas furnas há no meio da terra? -Quatro. (Bettendorff, Compêndio, 48)
 moîerundyk = Number("moîerundyk", definition="four", tag="[NUMBER:FOUR]")
 # opambó (etim. - ambas as mãos) (num.) - dez (VLB, I, 102)
 opambó = Number("opambó", definition="ten (literally, both hands)", tag="[NUMBER:TEN]")
 # opakombó (etim. - ambas estas mãos) (num.) - dez (Fig., Arte, 4): Opakombó îabi'õ Tupã supé oîepé asé mba'e moîa'oka... - De cada dez, repartir uma de nossas coisas com Deus. (Ar., Cat., 78)
-opakombó = Number("opakombó", definition="ten (literally, both these hands)", tag="[NUMBER:TEN]")
+opakombó = Number(
+    "opakombó", definition="ten (literally, both these hands)", tag="[NUMBER:TEN]"
+)
 # mokõmokõîsyk (etim. - dois e dois no total) (num.) - quatro (VLB, I, 154)
-mokõmokõîsyk = Number("mokõmokõîsyk", definition="four (literally, two and two in total)", tag="[NUMBER:FOUR]")
+mokõmokõîsyk = Number(
+    "mokõmokõîsyk",
+    definition="four (literally, two and two in total)",
+    tag="[NUMBER:FOUR]",
+)

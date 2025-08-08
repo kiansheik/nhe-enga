@@ -231,7 +231,9 @@ class Noun(TupiAntigo):
         )
 
     def base_substantivo(self):
-        return f"{self.verbete(anotated=True)}{'a[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING]' if self.verbete(anotated=False)[-1] not in self.vogais else '[SUBSTANTIVE_SUFFIX:VOWEL_ENDING]'}"
+        if self.latest_verbete.get_annotated().endswith("[VOCATIVE_REDUCED_FORM]"):
+            return self.verbete(anotated=True)
+        return f"{self.verbete(anotated=True)}{'a[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING]' if (self.verbete(anotated=False)[-1] not in self.vogais) else '[SUBSTANTIVE_SUFFIX:VOWEL_ENDING]'}"
 
     def substantivo(self, anotated=False):
         bs = (
@@ -452,10 +454,10 @@ class Noun(TupiAntigo):
             prefix = ret_noun.pluriform_prefix(person)
         # Determine possessive pronoun or custom possessor noun
         if possessor:
-            poss_str = f"{possessor}[NOUN:POSSESSOR] "
+            poss_str = f"{possessor.strip()}[NOUN:POSSESSOR] "
         elif not ("3p" in person and self.pluriforme):
             poss_str = (
-                f"{self.personal_inflections[person][1]}[POSSESSIVE_PRONOUN:{person}] "
+                f"{self.personal_inflections[person][1].strip()}[POSSESSIVE_PRONOUN:{person}] "
             )
         else:
             poss_str = ""  # no prefix for 3p pluriforme without possessor
@@ -482,6 +484,24 @@ class Noun(TupiAntigo):
         pref = ret_noun.pluriform_prefix("absoluta")
         if pref:
             vbt.insert_prefix(pref)
+        ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.recreate += f".{func_name}({args_str})"
+        return ret_noun
+
+    def vocativo(self):
+        frame = inspect.currentframe()
+        func_name = frame.f_code.co_name
+        args, _, _, values = inspect.getargvalues(frame)
+        args_str = ", ".join(
+            f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
+        )
+        ret_noun = copy.deepcopy(self)
+        ret_noun.aglutinantes[-1] = self
+        # --------------------------------
+        vbt = ret_noun.latest_verbete
+        if vbt[-1] in "a":
+            vbt.replace_clean(-1, 1, "")
+        vbt.insert_suffix("[VOCATIVE_REDUCED_FORM]")
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun

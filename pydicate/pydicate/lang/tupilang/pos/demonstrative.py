@@ -2,14 +2,13 @@ from pydicate.lang.tupilang.pos.noun import Noun
 from copy import deepcopy
 from tupi import AnnotatedString
 
+
 class Demonstrative(Noun):
-    def __init__(self, value, definition="", tag="[DEMONSTRATIVE]"):
+    def __init__(self, value, definition="", tag="[DEMONSTRATIVE]", category="demonstrative_pronoun"):
         """Initialize a Demonstrative object."""
-        super().__init__(value, inflection=None, pro_drop=False, definition=definition)
+        super().__init__(value, inflection=None, pro_drop=False, definition=definition, tag=tag, category=category)
         self.min_args = 0
         self.max_args = 1
-        self.category = "demonstrative"
-        self.tag = tag
 
     def preval(self, annotated=False):
         """Evaluate the Demonstrative object."""
@@ -34,6 +33,7 @@ class Demonstrative(Noun):
             return cop
         return super().__mul__(other)
 
+
 kó = Demonstrative("kó", tag="[DEMONSTRATIVE:1p:VISIBLE]")
 ikód = Demonstrative("ikó", tag="[DEMONSTRATIVE:1p:VISIBLE]")
 
@@ -56,4 +56,6 @@ akûeî = Demonstrative("akûeî", tag="[DEMONSTRATIVE:3p:NOT_VISIBLE]")
 aîpó = Demonstrative("aîpó", tag="[DEMONSTRATIVE:3p:NOT_VISIBLE:AUDIBLE]")
 
 amõ = Demonstrative("amõ", definition="some", tag="[DEMONSTRATIVE:3p:INDETERMINATE]")
-amoaé = Demonstrative("amoaé", definition="other, another", tag="[DEMONSTRATIVE:3p:OTHER]")
+amoaé = Demonstrative(
+    "amoaé", definition="other, another", tag="[DEMONSTRATIVE:3p:OTHER]"
+)

@@ -124,6 +124,13 @@ class Verb(TupiAntigo):
             #     breakpoint()
             subj_key = subject_tense if subject_tense else "ø"
             obj_key = object_tense if object_tense else "ø"
+            if obj_key == "absoluta":
+                if self.transitivo:
+                    subj_key = "3p"
+                    obj_key = "3p"
+                else:
+                    subj_key = "3p"
+                    obj_key = "ø"
             subj = self.irregular.get(subj_key)
             if subj:
                 obj = subj.get(obj_key)
@@ -131,6 +138,8 @@ class Verb(TupiAntigo):
                     ms = mode[:2]
                     if mode == "permissivo":
                         ms = "in"
+                    elif mode == "nominal":
+                        ms = "co"
                     tr = obj.get(ms)
                     if tr:
                         base_verbete = tr["verbete"]
@@ -138,7 +147,6 @@ class Verb(TupiAntigo):
                         overwrite = tr["overwrite"]
         if not subject_tense:
             subject_tense = object_tense
-
         if mode == "permissivo":
             perm_mode = True
         if mode == "gerundio":
@@ -294,12 +302,20 @@ class Verb(TupiAntigo):
                         self.personal_inflections[subject_tense][0]
                         + f"[SUBJECT:{subject_tense}]"
                     )
+                
+                if (subject_tense == "3p" and dir_subj_raw is None) and ( object_tense == "refl" or object_tense == "mut"):
+                    subj = "i" + f"[SUBJECT:{subject_tense}]"
                 if (
                     subject_tense == object_tense and subject_tense != "3p"
                 ) or object_tense == "refl":
                     obj = "îe" + f"[OBJECT:REFLEXIVE]"
                 elif object_tense == "mut":
                     obj = "îo" + f"[OBJECT:MUTUAL]"
+                elif object_tense == "absoluta" and dir_obj_raw is None:
+                    if self.pluriforme:
+                        obj = f"t[PLURIFORM_PREFIX:T]"
+                    else:
+                        obj = f""
                 else:
                     obj = (
                         self.personal_inflections[object_tense][1]
@@ -314,12 +330,11 @@ class Verb(TupiAntigo):
                                 if not self.t_type
                                 else "t[PLURIFORM_PREFIX:T]"
                             )
-                        else:
-                            obj = f"{obj}r[PLURIFORM_PREFIX:R]"
             vbt = base_verbete
             if pluri_check and not self.transitivo:
                 if "3p" in subject_tense and dir_subj_raw is None:
                     obj = (
+                        f"t[PLURIFORM_PREFIX:T]" if object_tense == "absoluta" else
                         f"s[PLURIFORM_PREFIX:S]"
                         if not self.t_type
                         else "t[PLURIFORM_PREFIX:T]"
@@ -430,7 +445,10 @@ class Verb(TupiAntigo):
             vb = f"{perm}{vbt}"
             if negative:
                 vb = self.negate_verb(vb, mode)
-            result = f"{subj if not pro_drop else ''} {vb}"
+            if pos == "anteposto":
+                result = f"{subj if not pro_drop else ''} {vb}"
+            else:
+                result = f"{vb} {subj if not pro_drop else ''}"
         elif self.transitivo:
             if pos not in ["posposto", "incorporado", "anteposto"]:
                 raise Exception("Position Not Valid")

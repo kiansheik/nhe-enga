@@ -2,6 +2,9 @@ from copy import deepcopy
 import re
 from tupi import Noun as TupiNoun
 from pydicate.trackable import Trackable
+from pydicate.dbexplorer import NavarroDB
+
+db_explorer = NavarroDB()
 
 # let's make a function which takes a string and where there are sumbolys like ˜i, ˜u, ˆy, ˜y, ´y; it will combine then into a single unicode character
 def combine_symbols(s):
@@ -44,6 +47,16 @@ class Predicate(Trackable):
         self.principal = None
         self.rua = False
         self.tag = tag  # Tag for the predicate, useful for debugging or annotation
+        self.gloss = db_explorer.search_word(self.verbete, self.category) if db_explorer else None
+        self.functional_definition = definition
+        self.functional_gloss = None
+        if self.gloss and len(self.gloss) > 0:
+            for g in self.gloss:
+                # find the g.definition that is most similar to definition
+                if g.definition and definition in g.definition:
+                    self.functional_definition = g.definition
+                    self.functional_gloss = g
+                    break
 
     def copy(self):
         """
@@ -167,8 +180,12 @@ class Predicate(Trackable):
             post_adjuncts = f" << ({post_adjuncts})"
         if args:
             args = f"({args})"
-        return f"{pre_adjuncts}[{self.definition if self.definition else self.tag}]{args}{post_adjuncts}"
-    
+        if self.functional_gloss:
+            tl = ', '.join(self.functional_gloss.english_glosses)
+        else:
+            tl = ', '.join([y for x in self.gloss for y in x.english_glosses]) if self.gloss else self.definition if self.definition else self.tag
+        return f"{pre_adjuncts}[{tl}]{args}{post_adjuncts}"
+
     def __repr__(self):
         return self.eval(annotated=False)
 
@@ -239,11 +256,16 @@ class Predicate(Trackable):
         Get the first part of the definition, split by comma (not including initial () which should be ignored for the , split but then reprepended before returning)
         :return: The first part of the definition or an empty string if no definition is set.
         """
-        parts = self.definition.split(") ")
-        if len(parts) == 1:
-            return parts[0].split(",")[0].strip()
-        elif len(parts) > 1:
-            return parts[0] + ") " + parts[1].split(",")[0].strip()
+        if self.functional_gloss:
+            return ", ".join(self.functional_gloss.english_glosses[:3]) if self.functional_gloss else ""
+        elif self.gloss:
+            return ", ".join(self.gloss[0].english_glosses[:3]) if self.gloss else ""
+        else:
+            parts = self.definition.split(") ")
+            if len(parts) == 1:
+                return ", ".join(x.strip() for x in parts[0].split(",")[:1]).strip()
+            elif len(parts) > 1:
+                return parts[0] + ") " + ", ".join(x.strip() for x in parts[1].split(",")[:1]).strip()
 
     def same_subject(self):
         one = self.subject() if self.subject() else None
@@ -307,13 +329,13 @@ edge path={{
             style = ""
         if self.tag and (not self.arguments or ctype in ['core']):
             tag_text = self.format_tag()
-            if len(self.arguments) == 0 and self.definition:
+            if len(self.arguments) == 0 and self.definition_simple():
                 def_text = escape_latex(self.definition_simple())
                 label = f"[\\shortstack{{\\textit{{{label_text}}} \\\\ \\texttt{{{tag_text}}} \\\\ \\texttt{{{def_text}}}}}, {ctype}{style}"
             else:
                 label = f"[\\shortstack{{\\textit{{{label_text}}} \\\\ \\texttt{{{tag_text}}}}}, {ctype}{style}"
         else:
-            if len(self.arguments) == 0 and self.definition:
+            if len(self.arguments) == 0 and self.definition_simple():
                 def_text = escape_latex(self.definition_simple())
                 label = f"[\\shortstack{{\\textit{{{label_text}}} \\\\ \\texttt{{{def_text}}}}}, {ctype}{style}"
             else:
@@ -347,7 +369,7 @@ edge path={{
             def_label = ""
             if stripped.tag:
                 tag_label = f" \\\\ \\texttt{{{stripped.format_tag()}}}"
-            if stripped.definition:
+            if stripped.definition_simple():
                 def_label = f" \\\\ \\texttt{{{escape_latex(stripped.definition_simple())}}}"
             if tag_label or def_label:
                 core_label = f"\\shortstack{{\\textit{{{stripped_text}}}{tag_label}{def_label}}}"

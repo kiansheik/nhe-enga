@@ -12,7 +12,7 @@ from threading import Thread, Lock
 NUM_WORKERS = 5  # can scale based on cores / quota
 
 # load the dictionary file in ../docs/dict-conjugated.json.gz
-with gzip.open("../docs/dict-conjugated.json.gz", "rt") as f:
+with gzip.open("/Users/kian/code/nhe-enga/docs/dict-conjugated.json.gz", "rt") as f:
     dictionary = json.load(f)
     # rename
 
@@ -67,12 +67,12 @@ for i, vbt in dicc_dict.items():
 job_queue = Queue()
 db_lock = Lock()  # to prevent sqlite write collisions
 
-USAGE_FILE = "api_usage_log.json"
+USAGE_FILE = "/Users/kian/code/nhe-enga/translate/api_usage_log.json"
 # Define rate limits
 ONE_MINUTE = 60
 ONE_HOUR = 60 * ONE_MINUTE
 ONE_DAY = 24 * ONE_HOUR
-DB_PATH = os.path.abspath("tupi_only.db")
+DB_PATH = os.path.abspath("/Users/kian/code/nhe-enga/translate/tupi_only.db")
 
 final_keys = []
 
@@ -227,7 +227,7 @@ class ApiKeyMultiplexer:
             print("⚠️ All key+model combinations are rate-limited. Sleeping 60s...")
             time.sleep(60)
 
-with open("google_api_keys.json", "r") as f:
+with open("/Users/kian/code/nhe-enga/translate/google_api_keys.json", "r") as f:
     greenlit = json.load(f)
 
 APIMux = ApiKeyMultiplexer(greenlit, test_google_api_key)
@@ -261,6 +261,9 @@ def get_ai_response(prompt, system_prompt):
             data = response.json()
             if "candidates" not in data or not data["candidates"]:
                 print(f"⚠️ No candidates returned for key {key} on model {model}.")
+                continue
+            if "content" not in data["candidates"][0] or "parts" not in data["candidates"][0]["content"]:
+                print(f"⚠️ Invalid response structure for key {key} on model {model}.")
                 continue
             return data["candidates"][0]["content"]["parts"][0]["text"]
 
