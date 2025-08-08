@@ -14,6 +14,13 @@ class Copula(Predicate):
             tag="[COPULA]",
         )
         self.negated = False
+        self.pro_drop = False
+        self.posto = "posposto"
+
+    def inflection(self):
+        if self.arguments:
+            return self.arguments[0].inflection()
+        return "3p"
 
     def preval(self, annotated=False):
         """Evaluate the Copula object."""
@@ -48,3 +55,9 @@ class Copula(Predicate):
 
     def __matmul__(self, other):
         return self.__eq__(other)
+
+    def __mul__(self, other):
+        if other.category == "verb":
+            self.posto = "anteposto"
+            return other * self
+        return super().__mul__(other)

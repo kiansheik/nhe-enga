@@ -27,7 +27,11 @@ class Adverb(Predicate):
         return AnnotatedString(ret_val).verbete(annotated=annotated)
 
     def __add__(self, other):
-        if isinstance(other, Adverb) or isinstance(other, Particle) or isinstance(other, Interjection):
+        if (
+            isinstance(other, Adverb)
+            or isinstance(other, Particle)
+            or isinstance(other, Interjection)
+        ):
             return super().__add__(other)
         return other.__addpre__(self)
 

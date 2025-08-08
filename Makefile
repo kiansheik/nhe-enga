@@ -6,6 +6,7 @@ REPOSITORY=""
 FULL_IMAGE_NAME=${IMAGE_NAME}:${TAG_NAME}
 
 lint:
+	black .
 	zsh -c 'cd tupi; python3.11 setup.py sdist bdist_wheel;'
 	zsh -c 'cd pydicate; python3.11 setup.py sdist bdist_wheel;'
 	cp tupi/dist/tupi-* gramatica/docs/src/.vuepress/public/pylibs/

@@ -140,7 +140,9 @@ class Noun(TupiAntigo):
             vbt.insert_suffix(semivogal)
             if not self.is_nasal(mod_vbt):
                 mod_vbt.nasaliza_prefixo()
-        elif ends_with_any(vbt, self.semi_vogais) and ends_with_any(vbt[:-1], vogais_nasais):
+        elif ends_with_any(vbt, self.semi_vogais) and ends_with_any(
+            vbt[:-1], vogais_nasais
+        ):
             if not self.is_nasal(mod_vbt):
                 mod_vbt.nasaliza_prefixo()
         vbt.insert_suffix(str(mod_vbt))
@@ -281,7 +283,7 @@ class Noun(TupiAntigo):
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         vbt = ret_noun.latest_verbete
-        # implement the logic for the "supe" postposition. check each 
+        # implement the logic for the "supe" postposition. check each
         found = False
         for infl, vals in self.personal_inflections.items():
             if str(vbt.get_clean()) == vals[0]:
@@ -297,7 +299,6 @@ class Noun(TupiAntigo):
         ret_noun.transitivo = False
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
-
 
     def pe(self):
         frame = inspect.currentframe()
@@ -456,9 +457,7 @@ class Noun(TupiAntigo):
         if possessor:
             poss_str = f"{possessor.strip()}[NOUN:POSSESSOR] "
         elif not ("3p" in person and self.pluriforme):
-            poss_str = (
-                f"{self.personal_inflections[person][1].strip()}[POSSESSIVE_PRONOUN:{person}] "
-            )
+            poss_str = f"{self.personal_inflections[person][1].strip()}[POSSESSIVE_PRONOUN:{person}] "
         else:
             poss_str = ""  # no prefix for 3p pluriforme without possessor
         # Build annotated string

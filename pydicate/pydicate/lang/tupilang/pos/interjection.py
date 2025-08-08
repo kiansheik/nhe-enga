@@ -2,7 +2,9 @@ from pydicate import Predicate
 
 
 class Interjection(Predicate):
-    def __init__(self, value, definition="", tag="[INTERJECTION]", category="interjection"):
+    def __init__(
+        self, value, definition="", tag="[INTERJECTION]", category="interjection"
+    ):
         """Initialize a Interjection object."""
         super().__init__(
             verbete=value,
@@ -10,7 +12,7 @@ class Interjection(Predicate):
             min_args=0,
             max_args=0,
             definition=definition,
-            tag=tag
+            tag=tag,
         )
 
     def preval(self, annotated=False):

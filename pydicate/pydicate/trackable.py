@@ -11,7 +11,9 @@ class Trackable:
 
     @classmethod
     def add(cls, obj):
-        cls._instances[id(obj)] = weakref.ref(obj, lambda _: cls._instances.pop(id(obj), None))
+        cls._instances[id(obj)] = weakref.ref(
+            obj, lambda _: cls._instances.pop(id(obj), None)
+        )
 
     @classmethod
     def instances(cls):

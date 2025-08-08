@@ -5,7 +5,9 @@ from tupi import Noun as TupiNoun, AnnotatedString
 
 
 class Postposition(Adverb):
-    def __init__(self, value, definition="", tag="[POSTPOSITION]", category="postposition"):
+    def __init__(
+        self, value, definition="", tag="[POSTPOSITION]", category="postposition"
+    ):
         """Initialize a Postposition object."""
         super().__init__(value, definition=definition, tag=tag, category=category)
         self.min_args = 1
@@ -56,7 +58,7 @@ class Postposition(Adverb):
             + (f"{self.verbete}{self.tag}" if annotated else self.verbete)
             + post_adjuncts
         ).strip()
-    
+
     def __mul__(self, other):
         """
         Multiply a Postposition with another object.

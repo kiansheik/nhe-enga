@@ -7,10 +7,20 @@ from pydicate.lang.tupilang.pos.y_fix import YFix
 from tupi import Noun as TupiNoun, AnnotatedString
 from copy import deepcopy
 
+
 class Deverbal(Noun):
-    def __init__(self, value, definition="", tag="[DEVERBAL]", category="deverbal_noun"):
+    def __init__(
+        self, value, definition="", tag="[DEVERBAL]", category="deverbal_noun"
+    ):
         """Initialize a Deverbal object."""
-        super().__init__(value, inflection=None, pro_drop=False, definition=definition, tag=tag, category=category)
+        super().__init__(
+            value,
+            inflection=None,
+            pro_drop=False,
+            definition=definition,
+            tag=tag,
+            category=category,
+        )
         self.min_args = 0
         self.max_args = 1
         self._augment_noun = None
@@ -21,12 +31,13 @@ class Deverbal(Noun):
         if self._augment_noun:
             return self._augment_noun
         if self.arguments and isinstance(self.arguments[0], Verb):
-            verb = self.arguments[0]    
+            verb = self.arguments[0]
             vbt = verb.copy()
             if vbt.arguments:
                 vbt.arguments[0].pro_drop = True
             return vbt.base_nominal(True).noun
         return TupiNoun(self.verbete, self.functional_definition)
+
     @noun.setter
     def noun(self, value):
         self._augment_noun = value
@@ -52,33 +63,33 @@ class Deverbal(Noun):
                 retval = retval.strip() + " " + adj.eval(annotated=annotated)
             retval = f"{retval.strip()} {mf}".strip()
         else:
-            retval = AnnotatedString(f"{retval}{self.tag}").verbete(
+            retval = AnnotatedString(f"{self.verbete}{self.tag}").verbete(
                 annotated=annotated
             )
-            print(retval, )
         return retval
 
     def __mul__(self, other):
-        if isinstance(other, Verb):
+        if isinstance(other, Verb) and not self.arguments:
             cop = self.copy()
             cop.arguments.append(other)
             return cop
         else:
             return super().__mul__(other)
-    
+
     def __add__(self, other):
         selfcop = self.copy()
         if selfcop.arguments:
             selfcop.arguments[0] = selfcop.arguments[0].__add__(other)
             return selfcop
         return super().__add__(other)
-    
+
     def __addpre__(self, other):
         selfcop = self.copy()
         if selfcop.arguments:
             selfcop.arguments[0] = selfcop.arguments[0].__addpre__(other)
             return selfcop
         return super().__addpre__(other)
+
 
 def bae_morphology(self, verb, annotated=False):
     """Resolve the morphology of the Deverbal object."""
@@ -90,6 +101,7 @@ def bae_morphology(self, verb, annotated=False):
         else:
             return sara_morphology(verb, annotated=annotated)
     return verb.verb.bae(anotar=annotated)
+
 
 def pyra_morphology(self, verb, annotated=False):
     """Resolve the morphology of the Deverbal object."""
@@ -120,12 +132,11 @@ def emi_morphology(self, verb, annotated=False):
             None if subj.category == "pronoun" else subj.eval(annotated=True),
         )
     else:
-        nom = nom.possessive(
-            subj._inflection, None
-        )
+        nom = nom.possessive(subj._inflection, None)
     if self.vocative:
         nom = nom.vocativo()
     return nom.substantivo(annotated)
+
 
 def sara_morphology(self, verb, annotated=False):
     """Resolve the morphology of the Deverbal object."""

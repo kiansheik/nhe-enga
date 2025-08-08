@@ -22,7 +22,13 @@ with path.open("rb") as raw_file:  # Open in binary mode for gzip
 
 class Verb(Predicate):
     def __init__(
-        self, value=None, verb_class="", definition="", vid=None, tag="[VERB]", category="verb"
+        self,
+        value=None,
+        verb_class="",
+        definition="",
+        vid=None,
+        tag="[VERB]",
+        category="verb",
     ):
         """Initialize a Verb object."""
         super().__init__(
@@ -305,7 +311,7 @@ class Verb(Predicate):
         imp_copy = self.copy()
         imp_copy.mood = "imperativo"
         return imp_copy
-    
+
     def perm(self):
         perm_copy = self.copy()
         perm_copy.mood = "permissivo"

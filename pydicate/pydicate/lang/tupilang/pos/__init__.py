@@ -9,6 +9,7 @@ from .deverbal import *
 from .particle import *
 from .interjection import *
 from .number import *
+from .deadverbal import *
 
 abé = Conjunction("abé", tag="[CONJUNCTION:AND]")  # Tupi for "and"
 erimbae = Adverb("erimba'e", tag="[ADVERB]")  # Tupi for "also" or "too"

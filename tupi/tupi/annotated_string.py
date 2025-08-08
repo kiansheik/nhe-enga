@@ -8,6 +8,7 @@ nasal_prefix_map = {
     "s": "nd",
 }
 
+
 class AnnotatedString:
     def __init__(self, annotated: str):
         self.original = annotated
@@ -59,7 +60,7 @@ class AnnotatedString:
 
     def get_annotated(self):
         return self.original
-    
+
     def verbete(self, annotated=False):
         """Return the verbete of the annotated string."""
         if annotated:
@@ -86,12 +87,20 @@ class AnnotatedString:
     def insert_prefix(self, prefix):
         self.original = prefix + self.original
         self._rebuild_maps()
+        return self
 
     def insert_suffix(self, suffix):
         self.original += suffix
         self._rebuild_maps()
+        return self
 
-    def replace_clean(self, start: int, length: int = 1, replacement: str = "", drop_trailing_tag=False):
+    def replace_clean(
+        self,
+        start: int,
+        length: int = 1,
+        replacement: str = "",
+        drop_trailing_tag=False,
+    ):
         clean_len = len(self.clean)
 
         # Normalize negative start
@@ -128,7 +137,11 @@ class AnnotatedString:
         if drop_trailing_tag and self.original and self.original[-1] == "]":
             last_open = self.original.rfind("[")
             last_close = self.original.rfind("]")
-            if last_open != -1 and last_close == len(self.original) - 1 and last_open < last_close:
+            if (
+                last_open != -1
+                and last_close == len(self.original) - 1
+                and last_open < last_close
+            ):
                 self.original = self.original[:last_open]
                 self._rebuild_maps()
 
@@ -156,7 +169,7 @@ class AnnotatedString:
             # Remove the accent from the last vowel
             self.replace_clean(-1, 1, TupiAntigo.nasal_map[self[-1]])
         return self
-    
+
     def nasaliza_prefixo(self):
         if self[0] in nasal_prefix_map.keys():
             return self.replace_clean(0, 1, nasal_prefix_map[self[0]])
@@ -175,17 +188,17 @@ class AnnotatedString:
         self.original = self.original.strip(to_strip)
         self._rebuild_maps()
         return self
-    
+
     def strip_original(self, to_strip=" "):
         """Strip whitespace from the original string."""
         self.original = self.original.strip(to_strip)
         self._rebuild_maps()
         return self
-    
+
     def removesuffix_original(self, suffix):
         """Remove the suffix from the annotated string."""
         if self.original.endswith(suffix):
-            self.original = self.original[:-len(suffix)]
+            self.original = self.original[: -len(suffix)]
             self._rebuild_maps()
         return self
 
@@ -195,6 +208,20 @@ class AnnotatedString:
             last_open = self.original.rfind("[")
             last_close = self.original.rfind("]")
             if last_open != -1 and last_close != -1 and last_open < last_close:
-                self.original = self.original[:last_open] + self.original[last_close + 1:]
+                self.original = (
+                    self.original[:last_open] + self.original[last_close + 1 :]
+                )
                 self._rebuild_maps()
         return self.strip()
+
+    def __add__(self, other):
+        """Concatenate two AnnotatedString objects."""
+        if isinstance(other, AnnotatedString):
+            new_string = self.original + other.original
+            return AnnotatedString(new_string)
+        elif isinstance(other, str):
+            return self.insert_suffix(other)
+        else:
+            raise TypeError(
+                "Can only concatenate AnnotatedString or str to AnnotatedString"
+            )

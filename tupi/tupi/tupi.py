@@ -17,12 +17,33 @@ class TupiAntigo(object):
         "mut": ["îo"],
     }
     dative_inflections = {
-        "1ps": ["ixé[PATIENT_PREFIX:1ps]bo", "ixé[PATIENT_PREFIX:1ps]be", "xé[PATIENT_PREFIX:1ps]bo", "xé[PATIENT_PREFIX:1ps]be"],
-        "1ppi": ["îandé[PATIENT_PREFIX:1ppi]bo", "îandé[PATIENT_PREFIX:1ppi]be",],
-        "1ppe": ["oré[PATIENT_PREFIX:1ppe]bo", "oré[PATIENT_PREFIX:1ppe]be",],
-        "2ps": ["endé[PATIENT_PREFIX:2ps]bo", "endé[PATIENT_PREFIX:2ps]be", "ndé[PATIENT_PREFIX:2ps]bo", "ndé[PATIENT_PREFIX:2ps]be"],
-        "2pp": ["peẽ[PATIENT_PREFIX:2pp]mo", "peẽ[PATIENT_PREFIX:2pp]me",],
-        "3p": ["i[PATIENT_PREFIX:3p]xupé",],
+        "1ps": [
+            "ixé[PATIENT_PREFIX:1ps]bo",
+            "ixé[PATIENT_PREFIX:1ps]be",
+            "xé[PATIENT_PREFIX:1ps]bo",
+            "xé[PATIENT_PREFIX:1ps]be",
+        ],
+        "1ppi": [
+            "îandé[PATIENT_PREFIX:1ppi]bo",
+            "îandé[PATIENT_PREFIX:1ppi]be",
+        ],
+        "1ppe": [
+            "oré[PATIENT_PREFIX:1ppe]bo",
+            "oré[PATIENT_PREFIX:1ppe]be",
+        ],
+        "2ps": [
+            "endé[PATIENT_PREFIX:2ps]bo",
+            "endé[PATIENT_PREFIX:2ps]be",
+            "ndé[PATIENT_PREFIX:2ps]bo",
+            "ndé[PATIENT_PREFIX:2ps]be",
+        ],
+        "2pp": [
+            "peẽ[PATIENT_PREFIX:2pp]mo",
+            "peẽ[PATIENT_PREFIX:2pp]me",
+        ],
+        "3p": [
+            "i[PATIENT_PREFIX:3p]xupé",
+        ],
     }
 
     gerundio = {

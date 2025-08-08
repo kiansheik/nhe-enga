@@ -3,11 +3,12 @@ from concurrent.futures import ThreadPoolExecutor
 from tqdm import tqdm
 import json, gzip
 
-with gzip.open('../dict-conjugated.json.gz', 'r') as f:
+with gzip.open("../dict-conjugated.json.gz", "r") as f:
     tupi_dictionary = json.load(f)
 tupi_dict_json = json.dumps(tupi_dictionary, ensure_ascii=False)
 
-def align_strings_nw(s1, s2, pad_char='_'):
+
+def align_strings_nw(s1, s2, pad_char="_"):
     match_score = 2
     mismatch_penalty = -1
     gap_penalty = -2
@@ -29,7 +30,9 @@ def align_strings_nw(s1, s2, pad_char='_'):
             j = k - i
             if j < 1 or j > m:
                 continue
-            match = score[i - 1][j - 1] + (match_score if s1[i - 1] == s2[j - 1] else mismatch_penalty)
+            match = score[i - 1][j - 1] + (
+                match_score if s1[i - 1] == s2[j - 1] else mismatch_penalty
+            )
             delete = score[i - 1][j] + gap_penalty
             insert = score[i][j - 1] + gap_penalty
             tasks.append((i, j, max(match, delete, insert)))
@@ -50,26 +53,32 @@ def align_strings_nw(s1, s2, pad_char='_'):
 
     while i > 0 or j > 0:
         current = score[i][j]
-        if i > 0 and j > 0 and current == score[i - 1][j - 1] + (match_score if s1[i - 1] == s2[j - 1] else mismatch_penalty):
+        if (
+            i > 0
+            and j > 0
+            and current
+            == score[i - 1][j - 1]
+            + (match_score if s1[i - 1] == s2[j - 1] else mismatch_penalty)
+        ):
             aligned_s1.append(s1[i - 1])
             aligned_s2.append(s2[j - 1])
-            match_line.append('|' if s1[i - 1] == s2[j - 1] else ' ')
+            match_line.append("|" if s1[i - 1] == s2[j - 1] else " ")
             i -= 1
             j -= 1
         elif i > 0 and current == score[i - 1][j] + gap_penalty:
             aligned_s1.append(s1[i - 1])
             aligned_s2.append(pad_char)
-            match_line.append(' ')
+            match_line.append(" ")
             i -= 1
         else:
             aligned_s1.append(pad_char)
             aligned_s2.append(s2[j - 1])
-            match_line.append(' ')
+            match_line.append(" ")
             j -= 1
 
-    aligned_s1 = ''.join(reversed(aligned_s1))
-    aligned_s2 = ''.join(reversed(aligned_s2))
-    match_line = ''.join(reversed(match_line))
+    aligned_s1 = "".join(reversed(aligned_s1))
+    aligned_s2 = "".join(reversed(aligned_s2))
+    match_line = "".join(reversed(match_line))
 
     min_len = min(len(s1), len(s2))
     match_search = []
@@ -87,8 +96,9 @@ def align_strings_nw(s1, s2, pad_char='_'):
         aligned_s1,
         match_line,
         aligned_s2,
-        (''.join(match_search), ''.join(match_base))
+        ("".join(match_search), "".join(match_base)),
     )
+
 
 if __name__ == "__main__":
     target = tupi_dict_json
@@ -97,9 +107,12 @@ if __name__ == "__main__":
     # print(a)
     # print(b)
     # print(m)
-    a, b, m, matching_search, matching_base = align_strings_nw(base, target,)
+    a, b, m, matching_search, matching_base = align_strings_nw(
+        base,
+        target,
+    )
     print(a)
     print(b)
     print(m)
-    print(matching_base)    
+    print(matching_base)
     print(matching_search)

@@ -7,6 +7,7 @@ import json
 import unicodedata
 from importlib import resources
 
+
 def get_irregular_verb(verbete, id):
     verbete = unicodedata.normalize("NFC", verbete)
     target_suffix = f"{verbete}_{id}.json"
@@ -19,7 +20,6 @@ def get_irregular_verb(verbete, id):
     except ModuleNotFoundError:
         pass
     return None
-
 
 
 class Verb(TupiAntigo):
@@ -50,7 +50,7 @@ class Verb(TupiAntigo):
         elif "(r, s)" in self.verb_class:
             self.pluriforme_type = "r, s"
             self.pluriforme = True
-        
+
         self.ios = "-îo-" in self.verb_class and "-s-" in self.verb_class
         self.segunda_classe = (
             "2ª classe" in self.verb_class or "adj." in self.verb_class
@@ -183,7 +183,8 @@ class Verb(TupiAntigo):
                     elif object_tense == "mut":
                         dir_obj = "îo" + f"[OBJECT:MUTUAL]"
                     subj_pref = (
-                        self.gerundio[subject_tense][0] + dir_obj
+                        self.gerundio[subject_tense][0]
+                        + dir_obj
                         + f"[GERUND_SUBJECT_PREFIX:{subject_tense}]"
                     )
                     pref = f"{subj_pref}"
@@ -302,8 +303,10 @@ class Verb(TupiAntigo):
                         self.personal_inflections[subject_tense][0]
                         + f"[SUBJECT:{subject_tense}]"
                     )
-                
-                if (subject_tense == "3p" and dir_subj_raw is None) and ( object_tense == "refl" or object_tense == "mut"):
+
+                if (subject_tense == "3p" and dir_subj_raw is None) and (
+                    object_tense == "refl" or object_tense == "mut"
+                ):
                     subj = "i" + f"[SUBJECT:{subject_tense}]"
                 if (
                     subject_tense == object_tense and subject_tense != "3p"
@@ -334,8 +337,9 @@ class Verb(TupiAntigo):
             if pluri_check and not self.transitivo:
                 if "3p" in subject_tense and dir_subj_raw is None:
                     obj = (
-                        f"t[PLURIFORM_PREFIX:T]" if object_tense == "absoluta" else
-                        f"s[PLURIFORM_PREFIX:S]"
+                        f"t[PLURIFORM_PREFIX:T]"
+                        if object_tense == "absoluta"
+                        else f"s[PLURIFORM_PREFIX:S]"
                         if not self.t_type
                         else "t[PLURIFORM_PREFIX:T]"
                     )
@@ -343,7 +347,9 @@ class Verb(TupiAntigo):
                 else:
                     obj += f"r[PLURIFORM_PREFIX:R]"
             vbt = f"{vbt}[ROOT]"
-            result = (f"{subj if not pro_drop else ''}{' ' if not self.segunda_classe else ''}{obj}{vbt}").strip()
+            result = (
+                f"{subj if not pro_drop else ''}{' ' if not self.segunda_classe else ''}{obj}{vbt}"
+            ).strip()
         elif "2p" not in subject_tense and mode == "circunstancial":
             subj = (
                 self.personal_inflections[subject_tense][1]
@@ -528,7 +534,9 @@ class Verb(TupiAntigo):
                         vb = f"{perm}{trm}"
                         if negative:
                             vb = self.negate_verb(vb, mode)
-                        result = f"{subj} {vb} {dir_obj if not pro_drop_obj else ''}".strip()
+                        result = (
+                            f"{subj} {vb} {dir_obj if not pro_drop_obj else ''}".strip()
+                        )
                     elif pos == "anteposto":
                         perm = self.choose_perm(conj, perm_mode)
                         trm = f"{conj}-{pluriforme}-{vbt}"
@@ -537,7 +545,9 @@ class Verb(TupiAntigo):
                         vb = f"{perm}{trm}"
                         if negative:
                             vb = self.negate_verb(vb, mode)
-                        result = f"{subj}{' '+ dir_obj if not pro_drop_obj else ''} {vb}"
+                        result = (
+                            f"{subj}{' '+ dir_obj if not pro_drop_obj else ''} {vb}"
+                        )
                     elif pos == "incorporado":
                         perm = self.choose_perm(conj, perm_mode)
                         vb = f"{perm}{conj}-{pluriforme if dir_obj_raw is None else dir_obj}-{vbt}"

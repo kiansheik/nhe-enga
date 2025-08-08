@@ -1,6 +1,7 @@
 from pydicate.lang.tupilang import *
 from pydicate.lang.tupilang.pos import *
 from pydicate import Predicate
+
 # one line random hash function
 rhash = lambda x: sum([ord(c) for c in str(x)])
 from graphviz import Digraph
@@ -89,6 +90,7 @@ def build_graphviz(predicate, graph=None, parent_name=None, edge_label=None):
 
     return graph
 
+
 prompt = """
 The following has a passage which is in tupi, but annotated grammatically,
 then you see the same structure of the sentence below in a hierarchical way, 
@@ -157,7 +159,9 @@ Do not get creative and pay attention to context, try to make the most adequate 
 
 print("Let's write a story in Tupi!\n\n")
 
-arakae = Adverb("araka'e", definition="a long time ago, distant past", tag="[ADVERB:DISTANT_PAST]")
+arakae = Adverb(
+    "araka'e", definition="a long time ago, distant past", tag="[ADVERB:DISTANT_PAST]"
+)
 kunumim = Noun("kunum˜i", definition="young boy")
 ikó = Verb("ikó", definition="to live")
 taba = Noun("taba", definition="village")
@@ -173,20 +177,31 @@ ara = Noun("'ara", definition="day, light, sunlight, time, period, era")
 ekar = Verb("ekar", definition="to search, to seek, to look for")
 só = Verb("só", definition="to go, to leave, to travel")
 îuká = Verb("îuká", definition="to murder, to kill, to slay")
-monhang = Verb("monhang", definition="to do, to make, to create, to cause, to perform, to commit")
+monhang = Verb(
+    "monhang", definition="to do, to make, to create, to cause, to perform, to commit"
+)
 mongetá = Verb("mongetá", definition="to talk, to converse, to speak with")
 kanhem = Verb("kanhem", definition="to disappear, to vanish, to lose oneself")
 oka = Noun("oka", definition="(t); house, home, dwelling, abode, residence")
-lost = (bae * kanhem)
+lost = bae * kanhem
 potar = Verb("potar", definition="to want, to desire, to wish for")
 kaa = Noun("ka'a", definition="(t); forest, jungle, woods, bush, thicket")
-opá = Adverb("opá", definition="everything, all, whole, entire, complete", tag="[ADVERB:ALL]")
+opá = Adverb(
+    "opá", definition="everything, all, whole, entire, complete", tag="[ADVERB:ALL]"
+)
 basem = Verb("basem", definition="to find, to discover, to encounter")
 mboryb = Verb("mboryb", definition="to please, to delight, to satisfy")
-eté = Adverb("eté", definition="true, real, genuine, authentic, very good, more, better", tag="[ADVERB:TRUE]")
+eté = Adverb(
+    "eté",
+    definition="true, real, genuine, authentic, very good, more, better",
+    tag="[ADVERB:TRUE]",
+)
 apé = Noun("apé", definition="(s, r, s) path, way, road, route")
 epenhan = Verb("epenhan", definition="to attack, to assault, to fight with")
-îagûara = Noun("îagûara", definition="jaguar, onça, onça-pintada, large wild cat of the Americas, also means dog in some contexts")
+îagûara = Noun(
+    "îagûara",
+    definition="jaguar, onça, onça-pintada, large wild cat of the Americas, also means dog in some contexts",
+)
 îebyr = Verb("îebyr", definition="to return, to come back, to go back")
 epîak = Verb("epîak", definition="to see, to look at, to watch, to observe")
 atã = Noun("atã", definition="(t) strong, brave, firm, hard, tough, rigid, arduous")
@@ -194,7 +209,10 @@ gûarinin = Noun("gûarinin", definition="war, warfare, battle, warrior, soldier
 ur = Verb("îur", definition="to come")
 poî = Verb("poî", definition="to feed, to nourish, to sustain")
 # 'i / 'é1 (v. intr. irreg.) 1) dizer: Marã e'ipe asé, karaibebé o arõana mongetábo? - Que a gente diz, conversando com o anjo seu guardião? (Ar., Cat., 23v); Aîpó eré supikatu... - Isso dizes com razão... (Anch., Teatro, 32); 2) rezar, enunciar-se, prescrever: Aîpó tekoangaîpaba robaîara nã e'i. - Os opostos daqueles pecados assim se enunciam. (Ar., Cat., 18); 3) querer dizer, querer significar, pensar, supor, presumir, cogitar, julgar: Marã e'ipe asé o py'ape aîpó o'îabo i xupé? - Que quer dizer a gente em seu coração, dizendo isso para ela? (Ar., Cat., 31v); "Osó ipó re'a" a'é. - Presumo que ele deve ter ido. (VLB, II, 86); 4) concluir, julgar por indícios: Emonã ûĩ re'a a'é. - Concluo que talvez isso seja assim. (VLB, II, 16); Amõ îuká-potá ûĩ sekóû a'é. - Concluí que ele está querendo matar alguém. (VLB, II, 16) ● e'iba'e - o que diz: Mendara... "xe mena koîpó xe remirekó re'õ ré t'îamendar îandé îoesé" e'iba'e, se'õ nhẽ roîré nd'e'ikatuî sesé omendá. - O cônjuge que diz: "-Após a morte de meu marido ou de minha esposa havemos de nos casar", após sua morte não pode casar-se com ele (ou ela). (Ar., Cat., 1686, 279-280); 'îara (ou e'îara) - o que diz; o indicador: Îaîuká memẽ aîpó 'îara... - Matemos juntos o que diz isso. (Ar., Cat., 79); ...Îasytatá serekoarama resé... pé 'îaramo i xupé... - Por causa da estrela sua guardiã,... como indicadora do caminho para eles. (Ar., Cat., 3); ...Marã e'îara... - As que dizem coisas más. (Anch., Teatro, 36); "...-Our temõ anhanga xe rerasóbo mã" e'îara. - O que diz: -Oxalá venha o diabo para me levar... (Ar., Cat., 67); 'îaba (ou 'eaba ou 'esaba) - 1) tempo, lugar, modo, etc. de dizer; o dizer: Okaî oupa aûîeramanhẽ... o îurupe nhote aîpó o 'eagûera repyramo. - Estão queimando para sempre como pena de dizerem isso somente em suas bocas. (Ar., Cat., 1686, 248); 2) o que alguém diz, o chamado por alguém, o dito: Ybytyra Monte Calvário 'îápe... - Para o monte chamado Calvário (Ar., Cat., 89); Erimba'epe aîpó nde 'îaba ereîmopóne? - Quando cumprirás isso que tu dizes? (Ar., Cat., 111v); O'u nhẽpe a'e 'ybá, tegûama, Tupã 'îaba? - Comeu aquele fruto, causa da morte, que Deus dissera? (Ar., Cat., 40v); Aîpó i 'eagûera rerekóbo, semimbo'e-etá... miapé rari o pópe... - Tendo isso que ele disse, seus discípulos tomaram o pão em suas mãos. (Ar., Cat., 84v)
-ei = Verb("'i", definition="to say, to tell, to speak, to indicate, to mean, to conclude, to judge", )
+ei = Verb(
+    "'i",
+    definition="to say, to tell, to speak, to indicate, to mean, to conclude, to judge",
+)
 
 pdb = +(pindo * abé * pedro)
 
@@ -208,8 +226,8 @@ pedro_and_pindoba = [
     amõ * ara * pupé + (pedro * só) << (pedro * ekar * pindo),
     (lost == pindo) + é,
     amo * lost + (pindo * ikó),
-    pupé * (opá + kaa) + (pedro * ekar * pindo), 
-    (iré * (mosapyr + ara)) + ((pedro * ekar * pindo) >> +pedro * basem + (ae*supé)),
+    pupé * (opá + kaa) + (pedro * ekar * pindo),
+    (iré * (mosapyr + ara)) + ((pedro * ekar * pindo) >> +pedro * basem + (ae * supé)),
     ((pindo * abé * pedro) * (mboryb) * îo) << ((pindo * abé * pedro) * epîak * îo),
     (((ae * apé) * pe + te) + (îebyr * pdb)) >> ((amõ * îagûara) * epenhan * +pdb),
     (amo * (gûarinin)) + (pedro * îuká * (aîpó * îagûara)),
@@ -229,33 +247,41 @@ aang = Verb("a'ang")
 pysyro = Verb("pysyrõ")
 îara = Noun("îara")
 amotar = Verb("amotar")
-tb = Conjunction("",tag="[CONJUNCTION:AND]")
+tb = Conjunction("", tag="[CONJUNCTION:AND]")
 tuba = Noun("uba", "pai")
 tayra = Noun("a'yra", "filho")
 espirito_santo = ProperNoun("Espírito Santo")
-amen = Interjection("amém", definition="so be it, truly, let it be", tag="[INTERJECTION:AMEN]")
+amen = Interjection(
+    "amém", definition="so be it, truly, let it be", tag="[INTERJECTION:AMEN]"
+)
 jesus = ProperNoun("Jesus")
 ybaka = Noun("ybaka")
 moeté = Verb("moeté")
-reino = Noun("Reino", definition="kingdom, realm, dominion", tag="[NOUN:LOAN_WORD:PORTUGUESE]")
+reino = Noun(
+    "Reino", definition="kingdom, realm, dominion", tag="[NOUN:LOAN_WORD:PORTUGUESE]"
+)
 yby = Noun("yby", definition="earth, land, ground, soil, country, world")
-
+u = Verb("'u")
+iabiõ = Postposition("îabi'õ", "each, every", tag="[POSTPOSITION:EVERY]")
+meeng = Verb("me'eng")
+kori = Adverb("kori")
 
 bettendorff_compendio_pt_1 = [
-    ((saba * (santa_cruz * aang)) * esé) + 
-    (endé * (pysyro.imp()) * oré) + 
-    ((tupan == (oré * îara.voc()))) + 
-    ((sara * (-(oré * amotar))) * suí),
-
+    ((saba * (santa_cruz * aang)) * esé)
+    + (endé * (pysyro.imp()) * oré)
+    + ((tupan == (oré * îara.voc())))
+    + ((sara * (-(oré * amotar))) * suí),
     (((endé + tuba + espirito_santo) * era) * pupé) + (amen + jesus),
-
-    (oré * tuba).voc() @ (((pe * ybaka)) + (sara * ikó).voc()) + (amo * (pyra * moeté)) + (ikó * (nde * era)).perm(),
-
+    (oré * tuba).voc() @ (((pe * ybaka)) + (sara * ikó).voc())
+    + (amo * (pyra * moeté))
+    + (ikó * (nde * era)).perm(),
     (ur * (nde * reino)).perm(),
-
-    (monhang * (emi * (potar * nde)) * îe).perm() + (pe * yby) + (pe * ybaka) + (îabé * (monhang * ae * îe)),
-
-    
+    (monhang * (emi * (potar * nde)) * îe).perm()
+    + (pe * yby)
+    + (pe * ybaka)
+    + (îabé * (monhang * ae * îe)),
+    (((emi * (u * oré)) @ (nduara * (ara * iabiõ))) * (meeng * +endé)).imp()
+    + (oré * supé),
 ]
 
 

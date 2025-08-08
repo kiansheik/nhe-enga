@@ -6,26 +6,31 @@ from pydicate.dbexplorer import NavarroDB
 
 db_explorer = NavarroDB()
 
+
 # let's make a function which takes a string and where there are sumbolys like ˜i, ˜u, ˆy, ˜y, ´y; it will combine then into a single unicode character
 def combine_symbols(s):
-    symbol_map = {
-        "˜i": "ĩ",
-        "˜u": "ũ",
-        "ˆy": "ŷ",
-        "˜y": "ỹ",
-        "´y": "ý"
-    }
+    symbol_map = {"˜i": "ĩ", "˜u": "ũ", "ˆy": "ŷ", "˜y": "ỹ", "´y": "ý"}
     for key, value in symbol_map.items():
         s = s.replace(key, value)
     return s
+
 
 def remove_adjacent_tags(to_remove_from):
     # Remove adjacent duplicate tags from the string.
     pattern = r"(\[.*?\])(?=\1)"
     return re.sub(pattern, "", to_remove_from)
 
+
 class Predicate(Trackable):
-    def __init__(self, verbete, category, min_args, max_args=None, definition="", tag="[PREDICATE]"):
+    def __init__(
+        self,
+        verbete,
+        category,
+        min_args,
+        max_args=None,
+        definition="",
+        tag="[PREDICATE]",
+    ):
         """
         Initialize a Predicate object.
         :param verbete: The core lexeme or word root.
@@ -47,7 +52,11 @@ class Predicate(Trackable):
         self.principal = None
         self.rua = False
         self.tag = tag  # Tag for the predicate, useful for debugging or annotation
-        self.gloss = db_explorer.search_word(self.verbete, self.category) if db_explorer else None
+        self.gloss = (
+            db_explorer.search_word(self.verbete, self.category)
+            if db_explorer
+            else None
+        )
         self.functional_definition = definition
         self.functional_gloss = None
         if self.gloss and len(self.gloss) > 0:
@@ -147,28 +156,38 @@ class Predicate(Trackable):
         pre_adjuncts = ", ".join(repr(adj) for adj in self.pre_adjuncts)
         post_adjuncts = ", ".join(repr(adj) for adj in self.post_adjuncts)
         return (
-            f"{self.var_name} = " + self.__class__.__name__ + f"(verbete=\"{self.verbete}\", category=\"{self.category}\", "
+            f"{self.var_name} = "
+            + self.__class__.__name__
+            + f'(verbete="{self.verbete}", category="{self.category}", '
             f"arguments=[{args}], pre_adjuncts=[{pre_adjuncts}], post_adjuncts=[{post_adjuncts}], "
             f"min_args={self.min_args}, max_args={self.max_args}, "
-            f"negated={self.negated}, rua={self.rua}, definition=\"{self.definition}\", tag=\"{self.tag}\")"
+            f'negated={self.negated}, rua={self.rua}, definition="{self.definition}", tag="{self.tag}")'
         )
-
 
     def simple_signature(self):
         tr = self.var_name
-        tr = self.var_name if self.var_name else self.verbete.replace("'", '_').replace(" ", "_").replace('-', '_').replace('(', '').replace(')', '')
+        tr = (
+            self.var_name
+            if self.var_name
+            else self.verbete.replace("'", "_")
+            .replace(" ", "_")
+            .replace("-", "_")
+            .replace("(", "")
+            .replace(")", "")
+        )
         if self.category == "pronoun":
             vbt = self.inflection()
         else:
             vbt = self.verbete
         return (
-            f"{tr} = " + self.__class__.__name__ + f"(\"{vbt}\", definition=\"{self.definition}\", tag=\"{self.tag}\")"
+            f"{tr} = "
+            + self.__class__.__name__
+            + f'("{vbt}", definition="{self.definition}", tag="{self.tag}")'
         )
-
 
     def semantic(self):
         """
-        Get self.definition for each of the arguments and adjuncts recusrively and show it in a clear string representation. 
+        Get self.definition for each of the arguments and adjuncts recusrively and show it in a clear string representation.
         Assume each argument and adjunct is a Predicate object.
         """
         args = ", ".join(arg.semantic() for arg in self.arguments)
@@ -181,9 +200,15 @@ class Predicate(Trackable):
         if args:
             args = f"({args})"
         if self.functional_gloss:
-            tl = ', '.join(self.functional_gloss.english_glosses)
+            tl = ", ".join(self.functional_gloss.english_glosses)
         else:
-            tl = ', '.join([y for x in self.gloss for y in x.english_glosses]) if self.gloss else self.definition if self.definition else self.tag
+            tl = (
+                ", ".join([y for x in self.gloss for y in x.english_glosses])
+                if self.gloss
+                else self.definition
+                if self.definition
+                else self.tag
+            )
         return f"{pre_adjuncts}[{tl}]{args}{post_adjuncts}"
 
     def __repr__(self):
@@ -250,14 +275,18 @@ class Predicate(Trackable):
         if self.is_subordinated():
             return self.subject().verbete == self.principal.subject().verbete
         return None
-    
+
     def definition_simple(self):
         """
         Get the first part of the definition, split by comma (not including initial () which should be ignored for the , split but then reprepended before returning)
         :return: The first part of the definition or an empty string if no definition is set.
         """
         if self.functional_gloss:
-            return ", ".join(self.functional_gloss.english_glosses[:3]) if self.functional_gloss else ""
+            return (
+                ", ".join(self.functional_gloss.english_glosses[:3])
+                if self.functional_gloss
+                else ""
+            )
         elif self.gloss:
             return ", ".join(self.gloss[0].english_glosses[:3]) if self.gloss else ""
         else:
@@ -265,11 +294,19 @@ class Predicate(Trackable):
             if len(parts) == 1:
                 return ", ".join(x.strip() for x in parts[0].split(",")[:1]).strip()
             elif len(parts) > 1:
-                return parts[0] + ") " + ", ".join(x.strip() for x in parts[1].split(",")[:1]).strip()
+                return (
+                    parts[0]
+                    + ") "
+                    + ", ".join(x.strip() for x in parts[1].split(",")[:1]).strip()
+                )
 
     def same_subject(self):
         one = self.subject() if self.subject() else None
-        princ = self.principal.subject() if (self.principal.subject() and self.is_subordinated()) else None
+        princ = (
+            self.principal.subject()
+            if (self.principal.subject() and self.is_subordinated())
+            else None
+        )
         return one.verbete == princ.verbete if one and princ else False
 
     def subordinate(self, sub, pre=True):
@@ -283,27 +320,32 @@ class Predicate(Trackable):
         return principalled
 
     def format_tag(self):
-        tf = [escape_latex(x.lower().capitalize().replace("_", " ")) for x in self.tag[1:-1].split(":")]
+        tf = [
+            escape_latex(x.lower().capitalize().replace("_", " "))
+            for x in self.tag[1:-1].split(":")
+        ]
         return "\\textit{" + (", ".join(tf)) + "}"
-    
+
     def __len__(self):
-        return 1 + sum(len(x) for x in self.arguments + self.pre_adjuncts + self.post_adjuncts)
+        return 1 + sum(
+            len(x) for x in self.arguments + self.pre_adjuncts + self.post_adjuncts
+        )
 
     def __lshift__(self, other):
         return self.subordinate(other, pre=False)
 
     def __rshift__(self, other):
         return other.subordinate(self, pre=True)
-    
-    def to_forest_tree(self, indent=0, ctype='result', parent=None) -> str:
+
+    def to_forest_tree(self, indent=0, ctype="result", parent=None) -> str:
         """
         Recursively generate a forest-compatible LaTeX forest package string from a Predicate.
         Displays tag (if present) below the word using \shortstack.
         Adds an intermediate stripped node if tag is present and eval != verbete.
         Appends adjuncts at the same level as the core predicate.
         """
-        indent_str = " " # "\t" * indent
-        child_indent = " " #  "\n" + "\t" * (indent + 1)
+        indent_str = " "  # "\t" * indent
+        child_indent = " "  #  "\n" + "\t" * (indent + 1)
 
         # Compose top label
 
@@ -317,17 +359,17 @@ edge path={{
     (\\forestoption{{name}}.east) .. controls +(north:7pt) and +(north:7pt) .. (core{indent-1}{id(parent)}.west) \\forestoption{{edge label}};
 }}
 """
-        
+
         style_post = f"""
 edge path={{
     \\noexpand\path[black!200, draw]
     (\\forestoption{{name}}.west) .. controls +(north:7pt) and +(north:7pt) .. (core{indent-1}{id(parent)}.east) \\forestoption{{edge label}};
 }}
 """
-        style = ", " + (style_pre if ctype == 'pre_adjunct' else style_post)
-        if 'adjunct' not in ctype:
+        style = ", " + (style_pre if ctype == "pre_adjunct" else style_post)
+        if "adjunct" not in ctype:
             style = ""
-        if self.tag and (not self.arguments or ctype in ['core']):
+        if self.tag and (not self.arguments or ctype in ["core"]):
             tag_text = self.format_tag()
             if len(self.arguments) == 0 and self.definition_simple():
                 def_text = escape_latex(self.definition_simple())
@@ -343,17 +385,18 @@ edge path={{
 
         # Collect post_adjuncts (they go to the left in rendering)
         post_children = [
-            adj.to_forest_tree(indent + 1, ctype='pre_adjunct', parent=self)
+            adj.to_forest_tree(indent + 1, ctype="pre_adjunct", parent=self)
             for adj in self.pre_adjuncts or []
         ]
         # Collect pre_adjuncts (they go to the right in rendering)
         pre_children = [
-            adj.to_forest_tree(indent + 1, ctype='post_adjunct', parent=self)
+            adj.to_forest_tree(indent + 1, ctype="post_adjunct", parent=self)
             for adj in reversed(self.post_adjuncts or [])
         ]
         # Collect arguments (default style, can be tagged 'arg' if desired)
         arg_children = [
-            arg.to_forest_tree(indent + 1, ctype='arg', parent=self) for arg in reversed(self.arguments or [])
+            arg.to_forest_tree(indent + 1, ctype="arg", parent=self)
+            for arg in reversed(self.arguments or [])
         ]
 
         children = []
@@ -370,13 +413,22 @@ edge path={{
             if stripped.tag:
                 tag_label = f" \\\\ \\texttt{{{stripped.format_tag()}}}"
             if stripped.definition_simple():
-                def_label = f" \\\\ \\texttt{{{escape_latex(stripped.definition_simple())}}}"
+                def_label = (
+                    f" \\\\ \\texttt{{{escape_latex(stripped.definition_simple())}}}"
+                )
             if tag_label or def_label:
-                core_label = f"\\shortstack{{\\textit{{{stripped_text}}}{tag_label}{def_label}}}"
+                core_label = (
+                    f"\\shortstack{{\\textit{{{stripped_text}}}{tag_label}{def_label}}}"
+                )
             else:
                 core_label = f"\\textit{{{stripped_text}}}"
 
-            stripped_node = f"[{core_label}, core, name=core{indent}{id(self)}" + child_indent + child_indent.join(arg_children) + f"]"
+            stripped_node = (
+                f"[{core_label}, core, name=core{indent}{id(self)}"
+                + child_indent
+                + child_indent.join(arg_children)
+                + f"]"
+            )
             children.append(stripped_node)
         else:
             children.extend(arg_children)
@@ -396,12 +448,12 @@ edge path={{
 def escape_latex(text: str) -> str:
     return (
         text.replace("\\", "\\textbackslash{}")
-            .replace("{", "\\textbraceleft{}")
-            .replace("}", "\\textbraceright{}")
-            .replace("_", "\\_")
-            .replace("#", "\\#")
-            .replace("%", "\\%")
-            .replace("&", "\\&")
-            .replace("^", "\\^{}")
-            .replace("~", "\\~{}")
+        .replace("{", "\\textbraceleft{}")
+        .replace("}", "\\textbraceright{}")
+        .replace("_", "\\_")
+        .replace("#", "\\#")
+        .replace("%", "\\%")
+        .replace("&", "\\&")
+        .replace("^", "\\^{}")
+        .replace("~", "\\~{}")
     )

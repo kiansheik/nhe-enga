@@ -140,6 +140,7 @@ MODEL_LIMITS = {
     "gemini-1.5-flash-8b": {"rpm": 15, "rpd": 50},
 }
 
+
 class ApiKeyMultiplexer:
     def __init__(self, keys, test_func):
         self.test_func = test_func
@@ -168,18 +169,22 @@ class ApiKeyMultiplexer:
 
                 for k_model, timestamps in saved.get("usage_day", {}).items():
                     key, model = k_model.split("||")
-                    self.usage_day[(key, model)] = [t for t in timestamps if now - t < 86400]
+                    self.usage_day[(key, model)] = [
+                        t for t in timestamps if now - t < 86400
+                    ]
 
                 for k_model, timestamps in saved.get("usage_minute", {}).items():
                     key, model = k_model.split("||")
-                    self.usage_minute[(key, model)] = [t for t in timestamps if now - t < 60]
+                    self.usage_minute[(key, model)] = [
+                        t for t in timestamps if now - t < 60
+                    ]
 
     def _save_usage_data(self):
-        def key_tuple_to_str(t): return f"{t[0]}||{t[1]}"
+        def key_tuple_to_str(t):
+            return f"{t[0]}||{t[1]}"
+
         data = {
-            "usage_day": {
-                key_tuple_to_str(k): v for k, v in self.usage_day.items()
-            },
+            "usage_day": {key_tuple_to_str(k): v for k, v in self.usage_day.items()},
             "usage_minute": {
                 key_tuple_to_str(k): v for k, v in self.usage_minute.items()
             },
@@ -210,13 +215,18 @@ class ApiKeyMultiplexer:
                             continue
 
                     # Clean expired usage
-                    self.usage_minute[(key, model)] = [t for t in self.usage_minute[(key, model)] if now - t < 60]
-                    self.usage_day[(key, model)] = [t for t in self.usage_day[(key, model)] if now - t < 86400]
+                    self.usage_minute[(key, model)] = [
+                        t for t in self.usage_minute[(key, model)] if now - t < 60
+                    ]
+                    self.usage_day[(key, model)] = [
+                        t for t in self.usage_day[(key, model)] if now - t < 86400
+                    ]
 
                     limits = MODEL_LIMITS[model]
-                    if (len(self.usage_minute[(key, model)]) < limits["rpm"] and
-                        len(self.usage_day[(key, model)]) < limits["rpd"]):
-
+                    if (
+                        len(self.usage_minute[(key, model)]) < limits["rpm"]
+                        and len(self.usage_day[(key, model)]) < limits["rpd"]
+                    ):
                         # Register usage
                         self.usage_minute[(key, model)].append(now)
                         self.usage_day[(key, model)].append(now)
@@ -226,6 +236,7 @@ class ApiKeyMultiplexer:
             # All combos exhausted — wait a little and try again
             print("⚠️ All key+model combinations are rate-limited. Sleeping 60s...")
             time.sleep(60)
+
 
 with open("/Users/kian/code/nhe-enga/translate/google_api_keys.json", "r") as f:
     greenlit = json.load(f)
@@ -262,7 +273,10 @@ def get_ai_response(prompt, system_prompt):
             if "candidates" not in data or not data["candidates"]:
                 print(f"⚠️ No candidates returned for key {key} on model {model}.")
                 continue
-            if "content" not in data["candidates"][0] or "parts" not in data["candidates"][0]["content"]:
+            if (
+                "content" not in data["candidates"][0]
+                or "parts" not in data["candidates"][0]["content"]
+            ):
                 print(f"⚠️ Invalid response structure for key {key} on model {model}.")
                 continue
             return data["candidates"][0]["content"]["parts"][0]["text"]
@@ -307,6 +321,7 @@ with sqlite3.connect(DB_PATH) as conn:
         "CREATE INDEX IF NOT EXISTS idx_human_verified ON tupi_only(human_verified)"
     )
 
+
 def worker():
     # function to check if a word is already in the database based on first word and definition
     def is_word_in_db(first_word, definition):
@@ -319,6 +334,7 @@ def worker():
                 )
                 count = c.fetchone()[0]
             return count > 0
+
     while True:
         vbt = job_queue.get()
         if vbt is None:
@@ -353,6 +369,7 @@ def worker():
                             )
 
         job_queue.task_done()
+
 
 if __name__ == "__main__":
     random.shuffle(tupi_only)

@@ -3,9 +3,16 @@ from tupi import Noun as TupiNoun
 from pydicate.lang.tupilang.pos.copula import Copula
 from tupi import AnnotatedString
 
+
 class Noun(Predicate):
     def __init__(
-        self, value, definition="", inflection=None, pro_drop=False, tag="[NOUN]", category="noun"
+        self,
+        value,
+        definition="",
+        inflection=None,
+        pro_drop=False,
+        tag="[NOUN]",
+        category="noun",
     ):
         """Initialize a Noun object."""
         super().__init__(
@@ -34,7 +41,7 @@ class Noun(Predicate):
         neg = self.copy()
         neg.pro_drop = True
         return neg
-    
+
     def __add__(self, other):
         """
         Add a Noun or Copula to the current Noun.
@@ -55,7 +62,6 @@ class Noun(Predicate):
             conj.arguments.append(oth)
             return conj
         return super().__add__(other)
-
 
     def __addpre__(self, other):
         """
@@ -133,22 +139,32 @@ class Noun(Predicate):
 
 
 class Conjunction(Noun):
-    def __init__(self, value, definition="", tag="[CONJUNCTION]", category="conjunction"):
+    def __init__(
+        self, value, definition="", tag="[CONJUNCTION]", category="conjunction"
+    ):
         """Initialize a Conjunction object."""
-        super().__init__(value, inflection="3p", pro_drop=False, definition=definition, tag=tag, category=category)
+        super().__init__(
+            value,
+            inflection="3p",
+            pro_drop=False,
+            definition=definition,
+            tag=tag,
+            category=category,
+        )
         self.min_args = 2
         self.tag = tag
         self.max_args = None
 
     def preval(self, annotated=False):
         """Evaluate the Conjunction object."""
-        nec = (
-            " ".join([x.eval(annotated=annotated) for x in self.arguments])
-            + (f" {self.verbete}{self.tag}" if self.verbete else f"{self.tag}")
+        nec = " ".join([x.eval(annotated=annotated) for x in self.arguments]) + (
+            f" {self.verbete}{self.tag}" if self.verbete else f"{self.tag}"
         )
         if self.post_adjuncts:
             # TODO: When evaling adjunct, check if yfix for space or y
-            nec += " " + " ".join([x.eval(annotated=annotated).strip() for x in self.adjuncts])
+            nec += " " + " ".join(
+                [x.eval(annotated=annotated).strip() for x in self.adjuncts]
+            )
         if self.pre_adjuncts:
             nec = (
                 " ".join([x.eval(annotated=annotated) for x in self.pre_adjuncts])
@@ -180,13 +196,17 @@ class Conjunction(Noun):
             return super().__add__(other)
 
 
-
 class ProperNoun(Noun):
     def __init__(self, value, tag="[PROPER_NOUN]", category="proper_noun"):
         super().__init__(
-            value=value, inflection="3p", definition=value, pro_drop=False, tag=tag, category=category
+            value=value,
+            inflection="3p",
+            definition=value,
+            pro_drop=False,
+            tag=tag,
+            category=category,
         )
-    
+
     def noun_function(self, neg=False, annotated=False):
         """Return the noun in its base form."""
         if neg:
@@ -196,7 +216,12 @@ class ProperNoun(Noun):
 
 class Pronoun(Noun):
     def __init__(
-        self, inflection_or_verbete, pro_drop=False, definition="", tag="[PRONOUN]", category="pronoun"
+        self,
+        inflection_or_verbete,
+        pro_drop=False,
+        definition="",
+        tag="[PRONOUN]",
+        category="pronoun",
     ):
         """Initialize a Pronoun object."""
         if inflection_or_verbete in TupiNoun.personal_inflections.keys():

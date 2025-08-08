@@ -4,9 +4,22 @@ from tupi import AnnotatedString
 
 
 class Demonstrative(Noun):
-    def __init__(self, value, definition="", tag="[DEMONSTRATIVE]", category="demonstrative_pronoun"):
+    def __init__(
+        self,
+        value,
+        definition="",
+        tag="[DEMONSTRATIVE]",
+        category="demonstrative_pronoun",
+    ):
         """Initialize a Demonstrative object."""
-        super().__init__(value, inflection=None, pro_drop=False, definition=definition, tag=tag, category=category)
+        super().__init__(
+            value,
+            inflection=None,
+            pro_drop=False,
+            definition=definition,
+            tag=tag,
+            category=category,
+        )
         self.min_args = 0
         self.max_args = 1
 

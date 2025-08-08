@@ -81,13 +81,20 @@ class NavarroDB:
             WHERE
               first_word = ?
             """
-                + (("AND (" +
-                    (" OR ".join([f" definition LIKE ? " for _ in def_search])
-                    if type(def_search) is list
-                    else f" definition LIKE ?") + ")")
+                + (
+                    (
+                        "AND ("
+                        + (
+                            " OR ".join([f" definition LIKE ? " for _ in def_search])
+                            if type(def_search) is list
+                            else f" definition LIKE ?"
+                        )
+                        + ")"
+                    )
                     if def_search
                     else ""
-                )+ """ GROUP BY
+                )
+                + """ GROUP BY
               vid, first_word, definition, gloss_language
             """
             )
