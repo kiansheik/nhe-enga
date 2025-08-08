@@ -119,6 +119,12 @@ class TupiAntigo(object):
         "t": "nd",
         "s": "nd",
     }
+    nasal_prefix_map_emi = {
+        "p": "m",
+        "k": "ng",
+        "t": "nd",
+        "s": "nd",
+    }
     nasal_map = {
         "á": "ã",
         "é": "ẽ",

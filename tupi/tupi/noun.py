@@ -696,24 +696,24 @@ class Noun(TupiAntigo):
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
         vbt = ret_noun.latest_verbete
-        ret_noun.pluriforme = "t"
         token = "[PATIENT_PREFIX]"
-        if vbt[0] in self.nasal_prefix_map.keys():
+        if vbt[0] in self.nasal_prefix_map_emi.keys():
             # if any of self.nasais are present in vbt
             if not any(nasal in vbt for nasal in self.nasais):
                 suf = "emi"
                 if self.monosilibica():
                     suf = "embi"
-                vbt.replace_clean(0, 1, self.nasal_prefix_map[vbt[0]])
-                vbt.insert_suffix(f"{suf}{token}")
+                vbt.replace_clean(0, 1, self.nasal_prefix_map_emi[vbt[0]])
+                vbt.insert_prefix(f"{suf}{token}")
         elif self.monosilibica() and not any(nasal in vbt for nasal in self.nasais):
             vbt.insert_prefix(f"embi{token}")
         else:
             vbt.insert_prefix(f"emi{token}")
-        ret_noun.aglutinantes.append(ret_noun)
         ret_noun.segunda_classe = True
         ret_noun.transitivo = False
+        ret_noun.pluriforme = "t"
         ret_noun.recreate += f".{func_name}({args_str})"
+        ret_noun.aglutinantes.append(ret_noun)
         return ret_noun
 
     def eym(self):

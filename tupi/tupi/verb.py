@@ -487,7 +487,10 @@ class Verb(TupiAntigo):
                     vb = f"{perm}{vbt}"
                     if negative:
                         vb = self.negate_verb(vb, mode)
-                    result = f"{subj if not pro_drop else ''} {vb}"
+                    subj = subj if not pro_drop else ""
+                    result = f"{vb} {subj}".strip()
+                    if pos == "anteposto":
+                        result = f"{subj} {vb}"
                 elif "3p" in object_tense:
                     subj = (
                         (
