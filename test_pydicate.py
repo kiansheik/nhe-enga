@@ -164,6 +164,9 @@ Do not get creative and pay attention to context, try to make the most adequate 
 arakae = Adverb(
     "araka'e", definition="a long time ago, distant past", tag="[ADVERB:DISTANT_PAST]"
 )
+rakae = Adverb(
+    "raka'e", definition="a long time ago, distant past", tag="[ADVERB:DISTANT_PAST]"
+)
 kunumim = Noun("kunum˜i", definition="young boy")
 ikó = Verb("ikó", definition="to live")
 taba = Noun("taba", definition="village")
@@ -215,7 +218,7 @@ ei = Verb(
     "'i",
     definition="to say, to tell, to speak, to indicate, to mean, to conclude, to judge",
 )
-
+er = Verb("er", verb_class="(s) (adj.)", definition="to have a name")
 pdb = +(pindo * abé * pedro)
 
 pedro_and_pindoba = [
@@ -282,6 +285,20 @@ eõ = Verb("manõ")
 poreaûsub = Verb(
     "poreaûsub", definition="sad, forlorn, mourn", verb_class="(2ª classe)"
 )
+tyb = Verb("tyb")
+bebé = Verb("bebé")
+okendabok = Verb("okendabok")
+gûyrá = Noun("gûyrá")
+pab = Verb("pab", verb_class="(v.tr)", definition="to rear, animal husbandry")
+Enza = ProperNoun("Enza")
+iké = Verb("iké")
+
+tom_story = [
+    ((tyb + rakae) * gûyrá),
+    (emi * (xe * pab)) == ae,
+    (Enza) == (bae * er),
+    (ae * (okendabok * Enza)) << (+Enza * bebé),
+]
 
 bettendorff_compendio_pt_1 = [
     # Santa Cruz
@@ -317,19 +334,20 @@ switch_ref = [
     ((nde * tuba) * eõ) >> (+xe * poreaûsub.circ(False)),
 ]
 
-# frases = bettendorff_compendio_pt_1
-# output = []
-# for frase in frases:
-#     output.append(f"{frase.eval(annotated=False)}.")
-# output.append("")
+
+frases = tom_story
+output = []
+for frase in frases:
+    output.append(f"{frase.eval(annotated=False)}.")
+output.append("")
 # for frase in frases:
 #     output.append(f"{frase.eval(annotated=True)}.")
 # output.append("")
 # for frase in frases:
 #     output.append(f"{frase.semantic()}")
 
-# result_string = "\n\n".join(output)
-# print(result_string)
+result_string = "\n\n".join(output)
+print(result_string)
 
 print(switch_ref[-1].to_forest_tree())
 
