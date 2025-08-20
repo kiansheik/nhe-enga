@@ -47,6 +47,7 @@ class Predicate(Trackable):
         self.compositions = []
         self.pre_adjuncts = []
         self.post_adjuncts = []
+        self.v_adjuncts = []
         self.negated = False
         self.definition = definition
         self.principal = None
@@ -154,7 +155,9 @@ class Predicate(Trackable):
     def signature(self):
         args = ", ".join(repr(arg) for arg in self.arguments)
         pre_adjuncts = ", ".join(repr(adj) for adj in self.pre_adjuncts)
-        post_adjuncts = ", ".join(repr(adj) for adj in self.post_adjuncts)
+        post_adjuncts = ", ".join(
+            repr(adj) for adj in self.v_adjuncts + self.post_adjuncts
+        )
         return (
             f"{self.var_name} = "
             + self.__class__.__name__
@@ -194,7 +197,9 @@ class Predicate(Trackable):
         pre_adjuncts = " + ".join(adj.semantic() for adj in reversed(self.pre_adjuncts))
         if len(pre_adjuncts) > 1:
             pre_adjuncts = f"({pre_adjuncts}) >> "
-        post_adjuncts = " + ".join(adj.semantic() for adj in self.post_adjuncts)
+        post_adjuncts = " + ".join(
+            adj.semantic() for adj in self.v_adjuncts + self.post_adjuncts
+        )
         if len(post_adjuncts) > 1:
             post_adjuncts = f" << ({post_adjuncts})"
         if args:
@@ -355,14 +360,14 @@ class Predicate(Trackable):
         label_text = escape_latex(this.eval())
         style_pre = f"""
 edge path={{
-    \\noexpand\path[black!200, draw]
+    \\noexpand\path[black!99, draw]
     (\\forestoption{{name}}.east) .. controls +(north:7pt) and +(north:7pt) .. (core{indent-1}{id(parent)}.west) \\forestoption{{edge label}};
 }}
 """
 
         style_post = f"""
 edge path={{
-    \\noexpand\path[black!200, draw]
+    \\noexpand\path[black!99, draw]
     (\\forestoption{{name}}.west) .. controls +(north:7pt) and +(north:7pt) .. (core{indent-1}{id(parent)}.east) \\forestoption{{edge label}};
 }}
 """

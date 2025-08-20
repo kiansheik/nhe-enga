@@ -1,10 +1,12 @@
 from pydicate import Predicate
 from typing import TYPE_CHECKING
+import copy
 
 # if TYPE_CHECKING:
 # from .deverbal import Deverbal  # only used for type checking, not at runtime
 from tupi import Verb as TupiVerb
 from tupi import Noun as TupiNoun
+from tupi import AnnotatedString
 from pydicate.lang.tupilang.pos.noun import pronoun_verbetes, Noun
 from pydicate.lang.tupilang.pos.adverb import Adverb
 from pydicate.lang.tupilang.pos.y_fix import YFix
@@ -67,6 +69,8 @@ class Verb(Predicate):
         self.user_definition = f"{self.definition} ".strip()
         self.raw_definition = definition
         self.mood = "indicativo"
+        self.v_adjuncts = []
+        self.circumstancial = None
 
     def raw_noun(self):
         """Return the noun form of the verb."""
@@ -81,6 +85,13 @@ class Verb(Predicate):
             )
             else None
         )
+
+    def __lshift__(self, other):
+        if other.category != "verb":
+            cop = self.copy()
+            cop.v_adjuncts.append(other.copy())
+            return cop
+        return super().__lshift__(other)
 
     def object(self):
         return (
@@ -97,6 +108,9 @@ class Verb(Predicate):
 
     def preval(self, annotated=False):
         """Evaluate the Verb object."""
+        vadjs = ""
+        if self.v_adjuncts:
+            vadjs = "".join([x.eval(annotated=annotated) for x in self.v_adjuncts])
         retval = ""
         obj_delocated = ""
         arglen = len(self.arguments)
@@ -128,6 +142,7 @@ class Verb(Predicate):
                         pro_drop=True,
                         mode=self.mood,
                         negative=self.negated,
+                        vadjs=vadjs,
                     )
                 else:  # otherwise it's a direct object
                     retval = self.verb.conjugate(
@@ -138,6 +153,7 @@ class Verb(Predicate):
                         pro_drop=True,
                         mode=self.mood,
                         negative=self.negated,
+                        vadjs=vadjs,
                     )
             else:  # intransitive
                 suj = self.arguments[0]
@@ -149,6 +165,7 @@ class Verb(Predicate):
                         negative=self.negated,
                         pro_drop=suj.pro_drop,
                         pos=suj.posto,
+                        vadjs=vadjs,
                     )
                 else:
                     retval = self.verb.conjugate(
@@ -159,6 +176,7 @@ class Verb(Predicate):
                         negative=self.negated,
                         pro_drop=suj.pro_drop,
                         pos=suj.posto,
+                        vadjs=vadjs,
                     )
         elif arglen == 2:  # transitive
             suj = self.arguments[0]
@@ -185,6 +203,7 @@ class Verb(Predicate):
                 pro_drop=suj.pro_drop,
                 pro_drop_obj=obj.pro_drop,
                 pos=obj.posto,
+                vadjs=vadjs,
             )
         if obj_delocated:
             retval = retval + " " + obj_delocated
@@ -223,6 +242,8 @@ class Verb(Predicate):
                 inflection="3p",
                 pro_drop=False,
             )
+            final.pre_adjuncts = [x.copy() for x in self.pre_adjuncts]
+            final.post_adjuncts = [x.copy() for x in self.post_adjuncts]
             return final
         if len(self.arguments) < 2:
             if self.verb.transitivo:
@@ -291,6 +312,9 @@ class Verb(Predicate):
             inflection="3p",
             pro_drop=subj_obj.pro_drop if subj_obj else False,
         )
+        final.pre_adjuncts = [x.copy() for x in self.pre_adjuncts]
+        final.post_adjuncts = [x.copy() for x in self.post_adjuncts]
+        final.arguments = [arg.copy() for arg in self.arguments]
         return final
 
     # first arg is the subject, second arg is the object
@@ -317,7 +341,14 @@ class Verb(Predicate):
         perm_copy.mood = "permissivo"
         return perm_copy
 
+    def circ(self, val=True):
+        cop = self.copy()
+        cop.circumstancial = val
+        return cop
+
     def indicative(self):
+        if self.circumstancial is not None:
+            return "circunstancial" if self.circumstancial else "indicativo"
         for adj in self.pre_adjuncts:
             if isinstance(adj, Adverb):
                 return "circunstancial"
@@ -342,5 +373,76 @@ class Verb(Predicate):
         return super().__mul__(fin)
 
 
+class VerbAugmentor(Verb):
+    def __init__(
+        self,
+        value="mo",
+        definition="to make another do another verb",
+        tag="[CAUSATIVE_PREFIX:MO]",
+        category="verb_transitivizer",
+        ero_switch=False,
+    ):
+        super().__init__(value=value, definition=definition, tag=tag, category=category)
+        self._arguments = []
+        self.ero_switch = ero_switch
+
+    def __mul__(self, other):
+        """
+        Divide a Transitivizer with another object.
+        :param other: The object to divide with.
+        :return: A new Transitivizer with the added argument.
+        """
+        if len(self.arguments) == 0:
+            new_verb = VerbAugmentor.from_existing(other)
+            new_verb.verb.verbete = f"{self.verbete}{self.tag}{other.verbete}"
+            new_verb.verb.transitivo = True
+            new_verb.verbete = new_verb.verb.verbete
+            new_verb.verb.pluriforme = False
+            new_verb.verb.t_type = False
+            new_verb.verb.tr_type = False
+            new_verb.verb.pluriforme_type = None
+            new_verb.verb.segunda_classe = False
+            new_verb.verb.ero = False
+            if self.ero_switch:
+                new_verb.verb.ero = True
+                new_verb.verb.pluriforme = True
+            new_verb.tag = f"{other.tag}"
+            new_verb.arguments = [other.copy()]
+            return new_verb
+        noun = other.copy()
+        cop = self.copy()
+        cop.arguments[0].arguments.append(noun)
+        return cop
+
+    def preval(self, annotated=False):
+        if len(self.arguments) == 0:
+            return AnnotatedString(f"{self.verbete}{self.tag}").verbete(
+                annotated=annotated
+            )
+        cop = self.copy()
+        cop.arguments = [x.copy() for x in cop.arguments[0].arguments]
+        # return super function of preval for cop
+        return super(VerbAugmentor, cop).preval(annotated=annotated)
+
+    @classmethod
+    def from_existing(cls, original: Verb):
+        new_verb = cls.__new__(cls)  # create blank instance
+        new_verb.__dict__ = copy.deepcopy(original.__dict__)
+        return new_verb
+
+
 só = Verb("só", definition="to go")
 aûsub = Verb("aûsub", definition="to love")
+mo = VerbAugmentor(
+    value="mo",
+    definition="to make another do another verb",
+    tag="[CAUSATIVE_PREFIX:MO]",
+    category="verb_transitivizer",
+)  # TODO: Fix the phonetic rules for this
+ero = VerbAugmentor(
+    value="ero",
+    definition="to do an action with something/someone else (object of verb as company or instrument in modified)",
+    tag="[CAUSATIVE_PREFIX:ERO]",
+    category="verb_transitivizer",
+    ero_switch=True,
+)  # TODO: Implement this properly

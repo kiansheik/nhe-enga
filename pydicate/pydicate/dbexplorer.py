@@ -27,7 +27,7 @@
 import os
 import sqlite3
 
-DB_PATH = os.path.abspath("/Users/kian/code/nhe-enga/translate/tupi_only.db")
+DB_PATH = os.path.join(os.path.dirname(__file__), "tupi_only.db")
 
 
 class NavarroDB:
@@ -143,6 +143,63 @@ class NavarroDB:
                     )
                 )
             return tupi_verbetes if tupi_verbetes else []
+
+    def filter_words_by_definition(self, definition):
+        """Filter words in the tupi_only table by definition."""
+        with sqlite3.connect(self.db_path) as self.conn:
+            self.cursor = self.conn.cursor()
+            query = """
+            SELECT
+              vid,
+              first_word,
+              definition,
+              gloss_language,
+              GROUP_CONCAT(gloss, ', ') AS glosses
+            FROM
+              tupi_only
+            WHERE
+              definition LIKE ?
+            GROUP BY
+              vid, first_word, definition, gloss_language
+            """
+            params = [f"%{definition}%"]
+            self.cursor.execute(query, params)
+            results = self.cursor.fetchall()
+            # Fit the results into TupiVerbete objects, consolodating the languages
+            vids = set(row[0] for row in results)
+            tupi_verbetes = dict()
+            for row in results:
+                vid = row[0]
+                if vid not in tupi_verbetes:
+                    tupi_verbetes[vid] = TupiVerbete(
+                        row[1],
+                        definition=row[2],
+                        english_glosses="",
+                        portuguese_glosses="",
+                    )
+                if row[3].strip() == "en":
+                    tupi_verbetes[vid].english_glosses_string += (
+                        ", " + row[4]
+                        if tupi_verbetes[vid].english_glosses_string
+                        else row[4]
+                    )
+                    # recalculate the english glosses list
+                    tupi_verbetes[vid].english_glosses = [
+                        x.strip()
+                        for x in tupi_verbetes[vid].english_glosses_string.split(",")
+                    ]
+                elif row[3].strip() == "pt":
+                    tupi_verbetes[vid].portuguese_glosses_string += (
+                        ", " + row[4]
+                        if tupi_verbetes[vid].portuguese_glosses_string
+                        else row[4]
+                    )
+                    # recalculate the portuguese glosses list
+                    tupi_verbetes[vid].portuguese_glosses = [
+                        x.strip()
+                        for x in tupi_verbetes[vid].portuguese_glosses_string.split(",")
+                    ]
+            return list(tupi_verbetes.values()) if tupi_verbetes else []
 
 
 class TupiVerbete:

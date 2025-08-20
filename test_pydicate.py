@@ -1,6 +1,8 @@
+import random
 from pydicate.lang.tupilang import *
 from pydicate.lang.tupilang.pos import *
 from pydicate import Predicate
+from tqdm import tqdm
 
 # one line random hash function
 rhash = lambda x: sum([ord(c) for c in str(x)])
@@ -157,7 +159,7 @@ Do not get creative and pay attention to context, try to make the most adequate 
 # build_graphviz(hego).render("and_predicate1", view=True)
 # build_graphviz(hego_circ).render("and_predicate_circ1", view=True)
 
-print("Let's write a story in Tupi!\n\n")
+# print("Let's write a story in Tupi!\n\n")
 
 arakae = Adverb(
     "araka'e", definition="a long time ago, distant past", tag="[ADVERB:DISTANT_PAST]"
@@ -264,14 +266,32 @@ yby = Noun("yby", definition="earth, land, ground, soil, country, world")
 u = Verb("'u")
 iabiõ = Postposition("îabi'õ", "each, every", tag="[POSTPOSITION:EVERY]")
 meeng = Verb("me'eng")
+nheeng = Verb("nhe'eng")
 kori = Adverb("kori")
+nhyron = Verb("nhyrõ", "adj.")
+angaipaba = Noun("angaîpaba")
+erekomemûã = Verb("erekomemûã")
+ar = Verb("'ar")
+ukar = Verb("ukar")
+tentação = Noun("tentação")
+mbae = Noun("mba'e")
+aiba = Noun("aíba")
+obaîtin = Verb("obaît˜i")
+ykyyra = Noun("yky'yra")
+eõ = Verb("manõ")
+poreaûsub = Verb(
+    "poreaûsub", definition="sad, forlorn, mourn", verb_class="(2ª classe)"
+)
 
 bettendorff_compendio_pt_1 = [
+    # Santa Cruz
     ((saba * (santa_cruz * aang)) * esé)
     + (endé * (pysyro.imp()) * oré)
     + ((tupan == (oré * îara.voc())))
     + ((sara * (-(oré * amotar))) * suí),
-    (((endé + tuba + espirito_santo) * era) * pupé) + (amen + jesus),
+    (((tuba + tayra + espirito_santo) * era) * pupé),
+    (amen + jesus),
+    # Pai nosso
     (oré * tuba).voc() @ (((pe * ybaka)) + (sara * ikó).voc())
     + (amo * (pyra * moeté))
     + (ikó * (nde * era)).perm(),
@@ -282,26 +302,62 @@ bettendorff_compendio_pt_1 = [
     + (îabé * (monhang * ae * îe)),
     (((emi * (u * oré)) @ (nduara * (ara * iabiõ))) * (meeng * +endé)).imp()
     + (oré * supé),
+    ((nde * nhyron).imp() + (oré * angaipaba * esé) + (oré * supé))
+    + (îabé * ((((sara * (erekomemûã * oré))) * supé) + (oré * nhyron))),
+    (oré * -(mo * (ar / ukar)).imp()) + (tentação * pupé),
+    ((oré * ((pysyro * endé))).imp() << te) + ((mbae / aiba) * suí),
+    (amen + jesus),
 ]
 
 
-frases = bettendorff_compendio_pt_1[-1:]
-output = []
-for frase in frases:
-    output.append(f"{frase.eval(annotated=False)}.")
-output.append("")
-for frase in frases:
-    output.append(f"{frase.eval(annotated=True)}.")
-output.append("")
-for frase in frases:
-    output.append(f"{frase.semantic()}")
+switch_ref = [
+    (ixé * nheeng) << (ixé * só),
+    (ixé * nheeng) << (nde * só),
+    (ixé * só) >> (+ixé * obaîtin * (endé * ykyyra)),
+    ((nde * tuba) * eõ) >> (+xe * poreaûsub.circ(False)),
+]
 
-result_string = "\n\n".join(output)
-print(result_string)
+# frases = bettendorff_compendio_pt_1
+# output = []
+# for frase in frases:
+#     output.append(f"{frase.eval(annotated=False)}.")
+# output.append("")
+# for frase in frases:
+#     output.append(f"{frase.eval(annotated=True)}.")
+# output.append("")
+# for frase in frases:
+#     output.append(f"{frase.semantic()}")
 
-breakpoint()
-from translate.generate_glosses import get_ai_response
+# result_string = "\n\n".join(output)
+# print(result_string)
 
-response = get_ai_response(result_string, prompt)
+print(switch_ref[-1].to_forest_tree())
 
-print(response)
+# breakpoint()
+# from translate.generate_glosses import get_ai_response
+
+# response = get_ai_response(result_string, prompt)
+
+# print(response)
+
+# from pydicate.dbexplorer import NavarroDB
+
+# db = NavarroDB()
+# # aggregate the nouns with '(s.)'
+# raw_nouns = db.filter_words_by_definition("s.")
+# finished_nouns = []
+# for raw_noun in raw_nouns:
+#     for prefix in ["mi", "emi", "temi", "tembi", "mbi", "embi", "(e)mi", "(e)mbi"]:
+#         if raw_noun.verbete.startswith(prefix):
+#             new_vtb = raw_noun.verbete[len(prefix) :]
+#             verb = Verb(new_vtb)
+#             new_noun = +emi * verb
+#             new_noun.definition = raw_noun.definition
+#             new_noun.functional_definition = new_noun.definition
+#             new_noun.gloss = Noun(
+#                 raw_noun.verbete, definition=new_noun.definition
+#             ).gloss
+#             finished_nouns.append(new_noun)
+#             break
+
+# random.shuffle(finished_nouns)

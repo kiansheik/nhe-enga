@@ -14,7 +14,7 @@ from .deadverbal import *
 abé = Conjunction("abé", tag="[CONJUNCTION:AND]")  # Tupi for "and"
 erimbae = Adverb("erimba'e", tag="[ADVERB]")  # Tupi for "also" or "too"
 ne = YFix(Adverb("ne", tag="[FUTURE]"))
-mo = YFix(Adverb("mo", tag="[IRREALIS_SUFIX]"))  # Make into a irreal particle
+ymo = YFix(Adverb("mo", tag="[IRREALIS_SUFIX]"))  # Make into a irreal particle
 umã = Adverb("umã", tag="[PRETERITE]")
 mã = YFix(Adverb("mã", tag="[EXHALTIVE_SUFIX]"))  # Make into a irreal particle
 temõ = YFix(Adverb("temõ", tag="[WISHFUL_SUFIX]"))  # Make into a irreal particle

@@ -1,0 +1,176 @@
+{
+  "1ppe": {
+    "ø": {
+      "in": {
+        "verbete": "manõ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "manõ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "e'õ",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "manõ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "e'õ",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "1ppi": {
+    "ø": {
+      "in": {
+        "verbete": "manõ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "manõ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "e'õ",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "manõ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "e'õ",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "1ps": {
+    "ø": {
+      "in": {
+        "verbete": "manõ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "te'õ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "e'õ",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "manõ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "e'õ",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "2pp": {
+    "ø": {
+      "in": {
+        "verbete": "manõ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "manõ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "manõ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "manõ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "e'õ",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "2ps": {
+    "ø": {
+      "in": {
+        "verbete": "manõ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "manõ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "im": {
+        "verbete": "manõ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "manõ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "e'õ",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  },
+  "3p": {
+    "ø": {
+      "in": {
+        "verbete": "manõ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ge": {
+        "verbete": "manõ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "ci": {
+        "verbete": "e'õ",
+        "pluriforme": true,
+        "overwrite": false
+      },
+      "pe": {
+        "verbete": "manõ",
+        "pluriforme": false,
+        "overwrite": false
+      },
+      "co": {
+        "verbete": "e'õ",
+        "pluriforme": true,
+        "overwrite": false
+      }
+    }
+  }
+}

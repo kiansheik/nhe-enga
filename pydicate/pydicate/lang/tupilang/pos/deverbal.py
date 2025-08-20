@@ -131,6 +131,8 @@ def emi_morphology(self, verb, annotated=False):
             subj._inflection,
             None if subj.category == "pronoun" else subj.eval(annotated=True),
         )
+    elif not subj:
+        nom = nom.possessive("absoluta", self.pro_drop)
     else:
         nom = nom.possessive(subj._inflection, None)
     if self.vocative:
@@ -141,6 +143,8 @@ def emi_morphology(self, verb, annotated=False):
 def sara_morphology(self, verb, annotated=False):
     """Resolve the morphology of the Deverbal object."""
     nom = self.noun
+    # breakpoint()
+    nom.latest_verbete.drop_until_last_tag()
     if verb.negated:
         nom = nom.eym()
     nom = nom.sara()

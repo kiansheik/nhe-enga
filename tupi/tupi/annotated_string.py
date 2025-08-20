@@ -214,6 +214,55 @@ class AnnotatedString:
                 self._rebuild_maps()
         return self.strip()
 
+    def drop_all_last_tags(self):
+        """Drop all tags from the end of the annotated string."""
+        while "[" in self.original and self.original.endswith("]"):
+            last_open = self.original.rfind("[")
+            last_close = self.original.rfind("]")
+            if last_open != -1 and last_close != -1 and last_open < last_close:
+                self.original = (
+                    self.original[:last_open] + self.original[last_close + 1 :]
+                )
+                self._rebuild_maps()
+        return self.strip()
+
+    def drop_until_last_tag(self):
+        """
+        From the last real character, drop any tags that follow it in sequence,
+        but preserve the first tag immediately after the character (if any).
+        """
+        if not self.clean or not self.map_clean_to_annotated:
+            return self.strip()
+
+        # Get the index in self.original of the last real character
+        last_char_idx = self.map_clean_to_annotated[-1]
+
+        # Scan forward from last_char_idx+1 to find tags
+        i = last_char_idx + 1
+        kept_tag = False
+        new_original = self.original[:i]
+
+        while i < len(self.original):
+            if self.original[i] == "[":
+                tag_start = i
+                tag_end = self.original.find("]", tag_start)
+                if tag_end == -1:
+                    break  # malformed tag, stop
+
+                if not kept_tag:
+                    # keep the first tag
+                    new_original += self.original[tag_start : tag_end + 1]
+                    kept_tag = True
+                # skip the rest (i.e., drop tag)
+                i = tag_end + 1
+            else:
+                # stray character after the last real one — usually shouldn't happen
+                break
+
+        self.original = new_original
+        self._rebuild_maps()
+        return self.strip()
+
     def __add__(self, other):
         """Concatenate two AnnotatedString objects."""
         if isinstance(other, AnnotatedString):

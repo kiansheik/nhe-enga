@@ -66,13 +66,13 @@ def tokenize_string(annotated_string):
 
 
 class Noun(TupiAntigo):
-    def __init__(self, verbete, raw_definition):
+    def __init__(self, verbete, raw_definition, noroot=False):
         super().__init__()
         vbt = AnnotatedString(verbete)
         if len(vbt.clean) >= 2 and vbt[-1] == "a" and vbt[-2] not in self.vogais:
             vbt.replace_clean(-1, 1, "", drop_trailing_tag=True)
             # breakpoint()
-        if not vbt.get_annotated().endswith("[ROOT]"):
+        if not vbt.get_annotated().endswith("[ROOT]") and not noroot:
             vbt.insert_suffix("[ROOT]")
         self.base_verbete = vbt.get_annotated()
         self.latest_verbete = AnnotatedString(
@@ -282,7 +282,8 @@ class Noun(TupiAntigo):
         )
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
-        vbt = ret_noun.latest_verbete
+        # ret_noun.latest_verbete.drop_last_tag()
+        vbt = AnnotatedString(ret_noun.substantivo(True))
         # implement the logic for the "supe" postposition. check each
         found = False
         for infl, vals in self.personal_inflections.items():
@@ -357,7 +358,7 @@ class Noun(TupiAntigo):
         ret_noun.aglutinantes[-1] = self
         annotated = ret_noun.latest_verbete
 
-        if ends_with_any(annotated, ret_noun.vogais_nasais):
+        if ends_with_any(annotated, ret_noun.consoantes_nasais):
             annotated.insert_suffix("an")
         elif ends_with_any(annotated, ["î"]):
             if ends_with_any(annotated[:-1], ret_noun.nasais):
@@ -427,7 +428,7 @@ class Noun(TupiAntigo):
         return ret_noun
 
     def possessive(self, person=None, possessor=None):
-        if possessor is not None:
+        if possessor is not None and person != "absoluta":
             person = "3p"
         else:
             if person is None:
@@ -441,7 +442,11 @@ class Noun(TupiAntigo):
         )
 
         if person == "absoluta":
-            return self.absoluta()
+            tl = self.absoluta()
+            if type(possessor) == bool and possessor:  # this is code for (te)mi-drop
+                tl.latest_verbete.replace_clean(0, 2, "")
+                return tl
+            return tl
 
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self

@@ -13,9 +13,10 @@ class Postposition(Adverb):
         self.min_args = 1
         self.max_args = 1
         self.pluriforme = "(t)" in definition.lower()
+        self.arg0 = None  # This will be set when the first argument is a verb
 
     def morphology(self, annotated=False):
-        arg0_object = self.arguments[0]
+        arg0_object = self.arg0
         arg0 = arg0_object.verbete
         found = False
         for val, infl in TupiNoun.personal_inflections.items():
@@ -27,13 +28,18 @@ class Postposition(Adverb):
             arg0 = arg0_object.eval(annotated=annotated)
         if self.pluriforme:
             return (
-                TupiNoun(self.verbete, self.definition)
-                .possessive(
-                    arg0_object._inflection,
-                    None if arg0_object.category == "pronoun" else arg0,
+                (
+                    TupiNoun(self.verbete, self.definition)
+                    .possessive(
+                        arg0_object._inflection,
+                        None if arg0_object.category == "pronoun" else arg0,
+                    )
+                    .latest_verbete.drop_all_last_tags()
+                    + (self.tag)
                 )
-                .verbete(annotated)
-            ).strip()
+                .strip()
+                .verbete(annotated=annotated)
+            )
         return (
             f"{arg0} {self.verbete}{self.tag}"
             if annotated
@@ -65,10 +71,13 @@ class Postposition(Adverb):
         :param other: The object to multiply with.
         :return: A new Postposition with the added argument.
         """
-        if isinstance(other, (Verb)):
-            self.arguments.append(other.base_nominal(True))
-            return self
-        return super().__mul__(other)
+        cop = self.copy()
+        arg0 = other.copy()
+        if isinstance(arg0, Verb):
+            arg0 = arg0.base_nominal(True)
+        cop.arguments.append(other.copy())
+        cop.arg0 = arg0
+        return cop
 
 
 class Locative(Postposition):
@@ -81,7 +90,7 @@ class Locative(Postposition):
         if len(self.arguments) == 0:
             return f"{self.verbete}{self.tag}"
         tn = (
-            TupiNoun(self.arguments[0].eval(annotated), self.arguments[0].definition)
+            TupiNoun(self.arg0.eval(annotated), self.arg0.definition)
             .pe()
             .verbete(annotated)
         )
@@ -98,7 +107,7 @@ class Dative(Postposition):
         if len(self.arguments) == 0:
             return f"{self.verbete}{self.tag}"
         tn = (
-            TupiNoun(self.arguments[0].eval(annotated), self.arguments[0].definition)
+            TupiNoun(self.arg0.eval(annotated), self.arg0.definition, noroot=True)
             .supe()
             .verbete(annotated)
         )
@@ -115,7 +124,7 @@ class Temporal(Postposition):
         if len(self.arguments) == 0:
             return f"{self.verbete}{self.tag}"
         tn = (
-            TupiNoun(self.arguments[0].eval(annotated), self.arguments[0].definition)
+            TupiNoun(self.arg0.eval(annotated), self.arg0.definition)
             .reme()
             .verbete(annotated)
         )
@@ -134,13 +143,13 @@ class Simulational(Postposition):
         """Evaluate the Postposition object."""
         if len(self.arguments) == 0:
             return f"{self.verbete}{self.tag}"
-        arg0 = self.arguments[0]
+        arg0 = self.arg0
         while not isinstance(arg0, Deverbal):
             if len(arg0.arguments) == 0:
                 break
             arg0 = arg0.arguments[0]
         tn = (
-            TupiNoun(self.arguments[0].eval(annotated), arg0.definition)
+            TupiNoun(arg0.eval(annotated), arg0.definition, noroot=True)
             .ramo()
             .verbete(annotated)
         )
@@ -156,12 +165,12 @@ class Beyond(Postposition):
         """Evaluate the Postposition object."""
         if len(self.arguments) == 0:
             return f"{self.verbete}{self.tag}"
-        if isinstance(self.arguments[0], Verb):
+        if isinstance(self.ar0, Verb):
             vbt = AnnotatedString(
-                self.arguments[0].base_nominal(annotated=True).eval(True)
+                self.ar0.base_nominal(annotated=True).eval(True)
             ).removesuffix_original("a[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING]")
         else:
-            vbt = AnnotatedString(self.arguments[0].eval(True)).removesuffix_original(
+            vbt = AnnotatedString(self.ar0.eval(True)).removesuffix_original(
                 "a[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING]"
             )
         suffix = "iré"
@@ -179,9 +188,7 @@ class SoonAfter(Beyond):
 
     def morphology(self, annotated=False):
         """Evaluate the Postposition object."""
-        retval = AnnotatedString(
-            (Beyond() * self.arguments[0]).preval(annotated=annotated)
-        )
+        retval = AnnotatedString((Beyond() * self.ar0).preval(annotated=annotated))
         retval.replace_clean(-1, 1, "e")
         retval.insert_suffix("mẽ")
         retval.insert_suffix(self.tag)

@@ -96,6 +96,10 @@ class Noun(Predicate):
 
     def __mul__(self, other):
         # When its another Noun, we treat it as a possessive construction
+        if other.verbete == "emi":
+            deverbal = other.copy()
+            deverbal.arguments[0].arguments.append(self.copy())
+            return deverbal
         if isinstance(other, Noun):
             possessor = self.copy()
             base_noun = other.copy()
