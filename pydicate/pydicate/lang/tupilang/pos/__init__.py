@@ -19,3 +19,15 @@ umã = Adverb("umã", tag="[PRETERITE]")
 mã = YFix(Adverb("mã", tag="[EXHALTIVE_SUFIX]"))  # Make into a irreal particle
 temõ = YFix(Adverb("temõ", tag="[WISHFUL_SUFIX]"))  # Make into a irreal particle
 peQ = YFix(Postposition("pe", tag="[INTERROGATIVE]"))
+
+
+def v(noun):
+    pf = noun.noun.pluriform_prefix()
+    vc = "(adj.)"
+    if pf:
+        vc = f"({pf})" + vc
+    return Verb(
+        noun.noun.verbete(anotated=True),
+        verb_class=vc,
+        definition=noun.noun.raw_definition,
+    )

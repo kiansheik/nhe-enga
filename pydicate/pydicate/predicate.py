@@ -342,6 +342,30 @@ class Predicate(Trackable):
     def __rshift__(self, other):
         return other.subordinate(self, pre=True)
 
+    def translation_prompt(self, target_lang="English"):
+        """
+        Generate a prompt for translating a Tupi passage with grammatical annotation and syntax tree.
+        :param target_lang: The target language for translation (default: English).
+        :return: A formatted prompt string.
+        """
+        prompt = (
+            f"The following passage is in Tupi, annotated grammatically.\n"
+            f"Below, you see the same sentence structure represented hierarchically as a syntax tree, "
+            f"recursively showing each part with English glosses as node values, including both arguments and adjuncts.\n"
+            f"There are multiple sentences in the same narrative.\n"
+            f"Interpret each into a {target_lang} story, choosing the best words to represent the meaning and structure.\n"
+            f"Do not be creative; pay close attention to context and provide the most accurate {target_lang} interpretation possible."
+        )
+        output = [prompt, "\n\n"]
+        output.append(f"{self.eval(annotated=False)}.")
+        output.append("")
+        output.append(f"{self.eval(annotated=True)}.")
+        output.append("")
+        output.append(f"{self.semantic()}")
+
+        result_string = "\n\n".join(output)
+        return result_string
+
     def to_forest_tree(self, indent=0, ctype="result", parent=None) -> str:
         """
         Recursively generate a forest-compatible LaTeX forest package string from a Predicate.

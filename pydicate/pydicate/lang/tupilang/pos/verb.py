@@ -80,8 +80,8 @@ class Verb(Predicate):
         return (
             self.arguments[0]
             if (
-                len(self.arguments) > 1
-                or (len(self.arguments) > 0 and not self.verb.transitivo)
+                len(self.arguments) >= 2
+                or (len(self.arguments) == 1 and not self.verb.transitivo)
             )
             else None
         )
@@ -96,9 +96,9 @@ class Verb(Predicate):
     def object(self):
         return (
             self.arguments[1]
-            if len(self.arguments) > 1
+            if len(self.arguments) >= 2
             else self.arguments[0]
-            if (len(self.arguments) > 0 and self.verb.transitivo)
+            if (len(self.arguments) == 1 and self.verb.transitivo)
             else None
         )
 
@@ -127,13 +127,13 @@ class Verb(Predicate):
         if arglen == 0:
             retval = self.verb.verbete
         elif arglen == 1:
-            obj = self.arguments[0]
-            arg0 = None if obj.pro_drop else obj.eval(annotated=annotated)
-            infl0 = obj.inflection()
+            arg0_obj = self.arguments[0]
+            arg0 = None if arg0_obj.pro_drop else arg0_obj.eval(annotated=annotated)
+            infl0 = arg0_obj.inflection()
             if self.verb.transitivo:
                 # TODO: render "nominal form"
                 if (
-                    obj.category == "pronoun"
+                    arg0_obj.category == "pronoun"
                 ):  # if the verb has a personal inflection then it's a pronoun
                     retval = self.verb.conjugate(
                         anotar=annotated,
@@ -156,7 +156,7 @@ class Verb(Predicate):
                         vadjs=vadjs,
                     )
             else:  # intransitive
-                suj = self.arguments[0]
+                suj = self.subject()
                 if suj.category == "pronoun":
                     retval = self.verb.conjugate(
                         anotar=annotated,
@@ -179,8 +179,8 @@ class Verb(Predicate):
                         vadjs=vadjs,
                     )
         elif arglen == 2:  # transitive
-            suj = self.arguments[0]
-            obj = self.arguments[1]
+            suj = self.subject()
+            obj = self.object()
             arg0 = suj.eval(annotated=annotated)
             infl0 = suj.inflection()
             arg1 = (
@@ -247,15 +247,11 @@ class Verb(Predicate):
             return final
         if len(self.arguments) < 2:
             if self.verb.transitivo:
-                obj_tense = self.arguments[0].inflection()
-                obj_obj = (
-                    self.arguments[0]
-                    if self.arguments[0].category != "pronoun"
-                    else None
-                )
+                obj_tense = self.object().inflection()
+                obj_obj = self.object() if self.object().category != "pronoun" else None
                 obj = (
                     obj_obj.eval(annotated=annotated)
-                    if self.arguments[0].category != "pronoun"
+                    if self.object().category != "pronoun"
                     else None
                 )
                 subj_tense = None
@@ -264,34 +260,28 @@ class Verb(Predicate):
             else:
                 obj_tense = "3p"
                 obj = None
-                subj_tense = self.arguments[0].inflection()
+                subj_tense = self.subject().inflection()
                 subj_obj = (
-                    self.arguments[0]
-                    if self.arguments[0].category != "pronoun"
-                    else None
+                    self.subject() if self.subject().category != "pronoun" else None
                 )
                 subj = (
                     subj_obj.eval(annotated=annotated)
-                    if self.arguments[0].category != "pronoun"
+                    if self.subject().category != "pronoun"
                     else None
                 )
         else:
-            obj_tense = self.arguments[1].inflection()
-            obj_obj = (
-                self.arguments[1] if self.arguments[1].category != "pronoun" else None
-            )
+            obj_tense = self.object().inflection()
+            obj_obj = self.object() if self.object().category != "pronoun" else None
             obj = (
                 obj_obj.eval(annotated=annotated)
-                if self.arguments[1].category != "pronoun"
+                if self.object().category != "pronoun"
                 else None
             )
-            subj_tense = self.arguments[0].inflection()
-            subj_obj = (
-                self.arguments[0] if self.arguments[0].category != "pronoun" else None
-            )
+            subj_tense = self.subject().inflection()
+            subj_obj = self.subject() if self.subject().category != "pronoun" else None
             subj = (
                 subj_obj.eval(annotated=annotated)
-                if self.arguments[0].category != "pronoun"
+                if self.subject().category != "pronoun"
                 else None
             )
         nom = self.verb.conjugate(
@@ -354,10 +344,10 @@ class Verb(Predicate):
                 return "circunstancial"
             if isinstance(adj, Verb):
                 if len(adj.arguments) >= 1:
-                    # Gerund does not force circumstancial mood
-                    if adj.subject() and self.subject():
-                        if adj.subject().eval(True) != self.subject().eval(True):
-                            return "circunstancial"
+                    # # Gerund does not force circumstancial mood
+                    # if adj.subject() and self.subject():
+                    #     if adj.subject().eval(True) != self.subject().eval(True):
+                    return "circunstancial"
         return "indicativo"
 
     def __mul__(self, other):

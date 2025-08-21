@@ -201,7 +201,9 @@ class Conjunction(Noun):
 
 
 class ProperNoun(Noun):
-    def __init__(self, value, tag="[PROPER_NOUN]", category="proper_noun"):
+    def __init__(
+        self, value, tag="[PROPER_NOUN]", category="proper_noun", definition=""
+    ):
         super().__init__(
             value=value,
             inflection="3p",
