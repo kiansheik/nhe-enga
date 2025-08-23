@@ -335,7 +335,14 @@ switch_ref = [
 ]
 
 
-frases = tom_story
+# Marakaîá nda sepyme'engymbyrama ruã, kûépe é asé oîar tenhẽ, pokémon îabé.
+
+epymeeng = Verb("epyme'eng")
+marakaîá = Noun("marakaîá")
+
+emerson_saying = [(pyra * (epymeeng * ae))]
+
+frases = emerson_saying
 output = []
 for frase in frases:
     output.append(f"{frase.eval(annotated=False)}.")
@@ -349,7 +356,7 @@ output.append("")
 result_string = "\n\n".join(output)
 print(result_string)
 
-print(switch_ref[-1].to_forest_tree())
+# print(switch_ref[-1].to_forest_tree())
 
 # breakpoint()
 # from translate.generate_glosses import get_ai_response

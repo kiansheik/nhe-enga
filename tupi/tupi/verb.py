@@ -123,8 +123,6 @@ class Verb(TupiAntigo):
         overwrite = False
         # search for the (subject_tense, mode) in the irregular verb and if found, set base_verbete and pluriform to those values
         if self.irregular:
-            # if mode == "gerundio":
-            #     breakpoint()
             subj_key = subject_tense if subject_tense else "ø"
             obj_key = object_tense if object_tense else "ø"
             if obj_key == "absoluta":
@@ -351,7 +349,7 @@ class Verb(TupiAntigo):
                     subj = ""
                 else:
                     obj += f"r[PLURIFORM_PREFIX:R]"
-            elif pluri_check and self.transitivo:
+            elif pluri_check and self.transitivo and dir_obj_raw is not None:
                 obj += f"r[PLURIFORM_PREFIX:R]"
             vbt = f"{vbt}[ROOT]"
             result = (

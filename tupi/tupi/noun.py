@@ -637,27 +637,28 @@ class Noun(TupiAntigo):
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
+        # breakpoint()
+        suf = "pyr"
         vbt = ret_noun.latest_verbete
-        if vbt[-1] in self.vogais:
-            if vbt[-1] in self.vogais_nasais:
-                vbt.insert_suffix("mbyr")
-            else:
-                vbt.insert_suffix("pyr")
-        elif vbt[-1] in ["b", "p"]:
+        if ends_with_any(vbt, self.nasais):
+            suf = "mbyr"
+        if vbt[-1] in ["b", "p"]:
             vbt.replace_clean(-1, 1, "")
-            vbt.insert_suffix("pyr")
-        else:
-            vbt.insert_suffix("ypyr")
-        obj_pref = f"{ret_noun.pluriform_prefix('3p')}"
-        if obj_pref:
-            obj_pref += "[OBJECT_PRONOUN]"
-        else:
-            obj_pref = "i[OBJECT_PRONOUN]"
-        vbt.insert_prefix(obj_pref)
+        elif ends_with_any(vbt, self.consoantes):
+            suf = f"y[CONSONANT_CLASH]{suf}"
+        # breakpoint()
+        # obj_pref = f"{ret_noun.pluriform_prefix('3p')}"
+        # if obj_pref:
+        #     obj_pref += "[OBJECT_PRONOUN]"
+        # else:
+        #     obj_pref = "i[OBJECT_PRONOUN]"
+        # vbt.insert_prefix(obj_pref)
+        vbt.insert_suffix(suf)
         vbt.insert_suffix("[AGENTLESS_PATIENT_SUFFIX]")
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.segunda_classe = True
         ret_noun.transitivo = False
+        ret_noun.pluriforme = False
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
 

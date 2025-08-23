@@ -226,7 +226,7 @@ class Verb(Predicate):
         if len(self.arguments) == 0:
             nom = self.verb.conjugate(
                 subject_tense="3p",
-                object_tense="absoluta",
+                object_tense="3p",
                 dir_obj_raw=None,
                 dir_subj_raw=None,
                 mode="nominal",
@@ -242,10 +242,11 @@ class Verb(Predicate):
                 inflection="3p",
                 pro_drop=False,
             )
+            final.noun.pluriforme = False
             final.pre_adjuncts = [x.copy() for x in self.pre_adjuncts]
             final.post_adjuncts = [x.copy() for x in self.post_adjuncts]
             return final
-        if len(self.arguments) < 2:
+        if len(self.arguments) <= 1:
             if self.verb.transitivo:
                 obj_tense = self.object().inflection()
                 obj_obj = self.object() if self.object().category != "pronoun" else None

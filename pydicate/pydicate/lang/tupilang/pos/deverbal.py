@@ -207,3 +207,16 @@ saba.morphology = (
     .substantivo(annotated)
     .strip()
 )
+
+# -sab(a) (suf. nominalizador) - 1) nominalizador de complemento circunstancial. Traduz-se por tempo, lugar, companhia, modo, causa, instrumento, finalidade, etc. Tem os alomorfes -ab(a), -b(a), -á, -ndab(a), etc.: îukasaba - tempo, lugar, instrumento, causa, modo, companhia, etc. de matar (Anch., Arte, 19); ...N'i papasabi. - Não há modo de contá-los. (Ar., Cat., 38); ...i 'ekatûaba kotysaba é... - o que estava à sua direita (isto é, a companhia do lado da sua mão direita) (Anch., Diál. da Fé, 190); Xe 'angorypaba. - A causa da alegria de minha alma. (Anch., Poemas, 106); 2) Forma substantivos abstratos: angaipaba - maldade (lit. - qualidade da alma ruim) (Anch., Teatro, 34)
+rama = Deverbal(
+    "rama",
+    definition="Nominal future, what will be",
+    tag="[DEVERBAL:CIRCUMSTANTIAL]",
+)
+rama.morphology = (
+    lambda self, verb, annotated=False: verb.base_nominal(annotated)
+    .noun.ram()
+    .substantivo(annotated)
+    .strip()
+)
