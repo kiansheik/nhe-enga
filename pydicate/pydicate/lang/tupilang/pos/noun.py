@@ -257,5 +257,11 @@ pee = Pronoun("2pp", definition="y'all'")
 ae = Pronoun("3p", definition="he/she/it/they")
 îe = Pronoun("refl", definition="to oneself, one's own")
 îo = Pronoun("mut", definition="to one another")
+og = Pronoun(
+    "o",
+    definition="refers to the subject of the main clause",
+    tag="[PRONOUN:MAIN_CLAUSE_SUBJECT]",
+)
+og._inflection = "suj"
 
 pronoun_verbetes = [x.verbete for x in [ixé, îandé, oré, endé, pee, ae]]

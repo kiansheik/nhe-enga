@@ -358,7 +358,9 @@ class Noun(TupiAntigo):
         ret_noun.aglutinantes[-1] = self
         annotated = ret_noun.latest_verbete
 
-        if ends_with_any(annotated, ret_noun.consoantes_nasais):
+        if ends_with_any(annotated, ["m"]):
+            annotated.insert_suffix("bar")
+        elif ends_with_any(annotated, ret_noun.consoantes_nasais):
             annotated.insert_suffix("an")
         elif ends_with_any(annotated, ["î"]):
             if ends_with_any(annotated[:-1], ret_noun.nasais):
@@ -646,13 +648,6 @@ class Noun(TupiAntigo):
             vbt.replace_clean(-1, 1, "")
         elif ends_with_any(vbt, self.consoantes):
             suf = f"y[CONSONANT_CLASH]{suf}"
-        # breakpoint()
-        # obj_pref = f"{ret_noun.pluriform_prefix('3p')}"
-        # if obj_pref:
-        #     obj_pref += "[OBJECT_PRONOUN]"
-        # else:
-        #     obj_pref = "i[OBJECT_PRONOUN]"
-        # vbt.insert_prefix(obj_pref)
         vbt.insert_suffix(suf)
         vbt.insert_suffix("[AGENTLESS_PATIENT_SUFFIX]")
         ret_noun.aglutinantes.append(ret_noun)
@@ -733,7 +728,7 @@ class Noun(TupiAntigo):
         # --------------------------------
         vbt = ret_noun.latest_verbete
         vbt.remove_accent_last_vowel()
-        vbt.insert_suffix("eym")
+        vbt.insert_suffix("e'ym")
         vbt.insert_suffix("[NEGATION_SUFFIX]")
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"

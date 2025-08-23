@@ -1,5 +1,6 @@
 from pydicate.lang.tupilang.pos.adverb import Adverb
 from pydicate.lang.tupilang.pos.verb import Verb
+from pydicate.lang.tupilang.pos.noun import Noun
 from pydicate.lang.tupilang.pos.deverbal import Deverbal
 from tupi import Noun as TupiNoun, AnnotatedString
 
@@ -144,10 +145,10 @@ class Simulational(Postposition):
         if len(self.arguments) == 0:
             return f"{self.verbete}{self.tag}"
         arg0 = self.arg0
-        while not isinstance(arg0, Deverbal):
-            if len(arg0.arguments) == 0:
-                break
-            arg0 = arg0.arguments[0]
+        # while not isinstance(arg0, Deverbal):
+        #     if len(arg0.arguments) == 0:
+        #         break
+        #     arg0 = arg0.arguments[0]
         tn = (
             TupiNoun(arg0.eval(annotated), arg0.definition, noroot=True)
             .ramo()

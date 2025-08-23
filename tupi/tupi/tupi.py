@@ -13,8 +13,13 @@ class TupiAntigo(object):
         "2ps": ["endé", "nde", "ere", "oro", "îepé"],
         "2pp": ["peẽ", "pe", "pe", "opo", "peîepé"],
         "3p": ["a'e", "i", "o"],
-        "refl": ["îe"],
-        "mut": ["îo"],
+        "refl": [
+            "îe",
+        ],
+        "suj": ["og", "og"],
+        "mut": [
+            "îo",
+        ],
     }
     dative_inflections = {
         "1ps": [

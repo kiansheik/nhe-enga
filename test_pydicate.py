@@ -4,6 +4,7 @@ from pydicate.lang.tupilang.pos import *
 from pydicate import Predicate
 from tqdm import tqdm
 
+
 # one line random hash function
 rhash = lambda x: sum([ord(c) for c in str(x)])
 from graphviz import Digraph
@@ -339,10 +340,45 @@ switch_ref = [
 
 epymeeng = Verb("epyme'eng")
 marakaîá = Noun("marakaîá")
+tenhen = Adverb(
+    "tenh˜e",
+    definition="in vain, for nothing, without results, without reason, for free, by mistake",
+    tag="[ADVERB:IN_VAIN]",
+)
+pokémon = ProperNoun("Pokémon")
+asé = Noun(
+    "asé", definition="We, people in general, all of us", tag="[PRONOUN:ALL_OF_US]"
+)
+îar = Verb("îar")
+kûépe = Adverb("kûépe", definition="there, in that place", tag="[ADVERB:THERE]")
+amb = amõ * abá
+nã = Adverb("nã", definition="like that", tag="[ADVERB]")
+# Amõ abá e'i marakaîá repyme'enga? Nd'aîmo'ãngi nã sekó!
+moang = Verb("mo'ang")
 
-emerson_saying = [(pyra * (epymeeng * ae))]
+emerson_saying = [
+    (amb * ei) << (amb * epymeeng * marakaîá),
+    -(+ixé * moang) * (nã + (ae * ikó)),
+    Copula() * marakaîá * ~(rama * (pyra * (epymeeng * ae))),
+    (kûépe + é) + (((asé * îar * ae) + tenhen) + (pokémon * îabé)),
+]
 
-frases = emerson_saying
+sistema = Noun(
+    "sistema", definition="system, method, scheme", tag="[NOUN:LOAN_WORD:PORTUGUESE]"
+)
+erekó = Verb("erekó")
+ekobîara = Noun("ekobîara")
+kuab = Verb("kuab")
+
+nosf = ((amo * (asé * ekobîara))) + ((og * ikó))
+
+mateus_saying = [
+    (Copula() * (nde * sistema) * (rama * ((îandé * ekobîara)))) + é,
+    # Oîkuab umã asé rekobîáramo o ekorama
+    ((+ae * kuab) << umã) * (rama * nosf.base_nominal(True)),
+]
+
+frases = bettendorff_compendio_pt_1
 output = []
 for frase in frases:
     output.append(f"{frase.eval(annotated=False)}.")
@@ -355,6 +391,8 @@ output.append("")
 
 result_string = "\n\n".join(output)
 print(result_string)
+
+# [print(x.translation_prompt('Portuguese')) for x in frases]
 
 # print(switch_ref[-1].to_forest_tree())
 

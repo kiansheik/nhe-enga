@@ -9,7 +9,7 @@ db_explorer = NavarroDB()
 
 # let's make a function which takes a string and where there are sumbolys like ˜i, ˜u, ˆy, ˜y, ´y; it will combine then into a single unicode character
 def combine_symbols(s):
-    symbol_map = {"˜i": "ĩ", "˜u": "ũ", "ˆy": "ŷ", "˜y": "ỹ", "´y": "ý"}
+    symbol_map = {"˜i": "ĩ", "˜u": "ũ", "ˆy": "ŷ", "˜y": "ỹ", "´y": "ý", "˜e": "ẽ"}
     for key, value in symbol_map.items():
         s = s.replace(key, value)
     return s
