@@ -22,14 +22,15 @@ class Demonstrative(Noun):
         )
         self.min_args = 0
         self.max_args = 1
+        self._inflection = "3p"
 
     def preval(self, annotated=False):
         """Evaluate the Demonstrative object."""
         if len(self.arguments) >= 1:
             arg0 = self.arguments[0].copy()
-            vbt = arg0.noun.latest_verbete
+            vbt = AnnotatedString(arg0.eval(annotated=annotated))
             vbt.insert_prefix(f"{self.verbete}{self.tag} ")
-            return arg0.eval(annotated)
+            return vbt.verbete(annotated=annotated)
         # TODO: a few demonstratives have multiple attested noun forms, so we need to handle that in the future
         suf = "ba'e[SUBSTANTIVE_SUFFIX:DEMONSTRATIVE_VOWEL_ENDING]"
         if any(self.noun.verbete().endswith(x) for x in self.noun.consoantes):

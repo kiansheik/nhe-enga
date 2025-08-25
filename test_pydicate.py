@@ -331,6 +331,15 @@ eva = ProperNoun("Eva")
 nheangerur = Verb("nhe'angerur")
 poasema = Noun("poasema")
 îaseo = Verb("îase'o")
+ybytygûaîa = Noun("ybytygûaîa")
+esá = Noun("esá")
+
+enein = Interjection("ene'ĩ")
+îeruré = Verb("îeruré")
+erobak = Verb("erobak")
+aec = Adverb("a'e")
+jatf = Copula() * (jesus == (pyra * (mombeu / katu))) * (nde * membyra)
+syk = Verb("syk")
 
 bettendorff_compendio_pt_1 = [
     # Santa Cruz
@@ -352,7 +361,7 @@ bettendorff_compendio_pt_1 = [
     (((emi * (u * oré)) @ (nduara * (ara * iabiõ))) * (meeng * +endé)).imp()
     + kori
     + (oré * supé),
-    ((nde * nhyron).imp() + (oré * angaipaba * esé) + (oré * supé))
+    ((+nde * nhyron).imp() + (oré * angaipaba * esé) + (oré * supé))
     + (îabé * ((((sara * (erekomemûã * oré))) * supé) + (oré * nhyron))),
     (endé * -(mo * (ar / ukar)).imp() * oré) + (tentação * pupé),
     ((oré * ((pysyro * endé))).imp() << te) + ((mbae / aiba) * suí),
@@ -378,7 +387,14 @@ bettendorff_compendio_pt_1 = [
     + (amo * (pyra * pea))
     + (amo * (eva * membyra)),
     (nde * supé) + ((+oré * nheangerur.circ(False)) << (oré * v(poasema)))
-    << (+oré * îaseo),
+    << ((+oré * îaseo) + (pupé * ((ikód * ybytygûaîa) == (saba * îaseo)))),
+    enein + (sara * ((esé * oré) + (îeruré))).voc(),
+    ((eboûing * (nde * (esá / poraûsubara))) * (+endé * erobak.imp())) + (oré * koty),
+    (aec)
+    + (
+        (iré * (syk * (ikód * (pûera * (saba * (pea * îe))))))
+        >> ((jatf * (+endé * (epîak / ukar))).imp() + (oré * supé))
+    ),
 ]
 
 
@@ -413,8 +429,17 @@ imombe'ukatupyramo ereikó kunhã suí.
 
 imombe'ukatupyra abé nde membyra Jesus.
 
-Santa Maria Tupã sy etupãmongetá oré iangaîpaba'e resé ko'yr irã oré îekyî oré rúmebéno."""
+Santa Maria Tupã sy etupãmongetá oré iangaîpaba'e resé ko'yr irã oré îekyî oré rúmebéno.
 
+amém Jesus.
+
+Salva Rainha moraûsubara sy tekobé se'ẽba'e oré îerobîasaba salve.
+
+endébo orosapukapukaî ipe'apyramo Eva membyramo.
+
+endébo oronhe'angerur orépoasemamo oroîasegûabo ikó ybytygûaîa îase'ûaba pupé.
+
+ene'ĩ oré resé îeruresar."""
 # split into lines
 
 bettendorf_ground_truth_lines = bettendorf_ground_truth.split("\n")

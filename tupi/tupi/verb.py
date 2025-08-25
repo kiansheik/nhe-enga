@@ -31,7 +31,7 @@ class Verb(TupiAntigo):
             " ", ""
         )  # Whether the verb is transitive (boolean)
         self.raw_definition = raw_definition  # Raw definition of the verb (string)
-        self.irregular = get_irregular_verb(verbete, vid)
+        self.irregular = get_irregular_verb(verbete, vid + 1 if vid else None)
         self.t_type = "(t, t)" in raw_definition[:500]
         self.tr_type = "(t)" in raw_definition[:100]
         self.pluriforme = False  # Whether the verb has a plural form (boolean)
@@ -115,6 +115,7 @@ class Verb(TupiAntigo):
         anotar=False,
         pro_drop_obj=False,
         vadjs="",
+        vadjs_pre="",
         redup=False,
     ):
         result = ""
@@ -122,8 +123,11 @@ class Verb(TupiAntigo):
         pluri_check = self.pluriforme
         base_verbete = self.verbete
         overwrite = False
+        if vadjs_pre:
+            vadjs_pre = f" {vadjs_pre} "
         # search for the (subject_tense, mode) in the irregular verb and if found, set base_verbete and pluriform to those values
         if self.irregular:
+            # breakpoint()
             subj_key = subject_tense if subject_tense else "ø"
             obj_key = object_tense if object_tense else "ø"
             if obj_key == "absoluta":
@@ -183,7 +187,7 @@ class Verb(TupiAntigo):
                 elif base_verbete[-1] not in self.vogais:
                     suf = "a" + "[GERUND_SUFFIX:CLASS_1:CONSONANT]"
                 elif base_verbete[-2:] in ["'o", "'u"]:
-                    vbt = vbt[:-2] + "gûa"
+                    vbt = vbt[:-2] + "'ûa"
                 if not self.transitivo or object_tense in ["refl", "mut"]:
                     dir_obj = ""
                     if object_tense == "refl":
@@ -219,7 +223,7 @@ class Verb(TupiAntigo):
                 vbt += f"[ROOT]"
                 if redup:
                     vbt = self.reduplicate(AnnotatedString(vbt)).get_annotated()
-                result = f"{pref}{vbt}{suf}{vadjs}".strip()
+                result = f"{vadjs_pre}{pref}{vbt}{suf}{vadjs}".strip()
             else:
                 subj = (
                     self.personal_inflections[subject_tense][1]
@@ -237,7 +241,7 @@ class Verb(TupiAntigo):
                     pluriforme += "r[PLURIFORM_PREFIX:R]"
                 if negative:
                     suf = "e'ym[NEGATION_SUFFIX]amo[GERUND_SUFFIX:CLASS_2:DEFAULT]"
-                result = f"{subj}{pluriforme}{vbt}{suf}{vadjs}".strip()
+                result = f"{vadjs_pre}{subj}{pluriforme}{vbt}{suf}{vadjs}".strip()
         elif mode == "conjuntivo":
             subj = (
                 self.personal_inflections[subject_tense][1]
@@ -305,7 +309,7 @@ class Verb(TupiAntigo):
                 redup_space = self.reduplicate(
                     AnnotatedString(redup_space)
                 ).get_annotated()
-            result = f"{redup_space}{eme}{vadjs}".strip()
+            result = f"{vadjs_pre}{redup_space}{eme}{vadjs}".strip()
         elif mode == "nominal":
             subj = self.personal_inflections[subject_tense][1]
             tag = (
@@ -385,7 +389,7 @@ class Verb(TupiAntigo):
                 redup_space = self.reduplicate(
                     AnnotatedString(redup_space)
                 ).get_annotated()
-            result = (f"{redup_space}{vadjs}").strip()
+            result = (f"{vadjs_pre}{redup_space}{vadjs}").strip()
         elif "2p" not in subject_tense and mode == "circunstancial":
             subj = (
                 self.personal_inflections[subject_tense][1]
@@ -447,7 +451,7 @@ class Verb(TupiAntigo):
                 redup_space = self.reduplicate(
                     AnnotatedString(redup_space)
                 ).get_annotated()
-            result = f"{redup_space}{circ}{vadjs}".strip()
+            result = f"{vadjs_pre}{redup_space}{circ}{vadjs}".strip()
         elif self.segunda_classe:
             subj_prefix = (
                 self.personal_inflections[subject_tense][1]
@@ -455,6 +459,11 @@ class Verb(TupiAntigo):
                 + ("]" if not mode == "imperativo" else ":IMPERATIVE]")
             )
             subj = ""
+            if not pro_drop:
+                subj = (
+                    self.personal_inflections[subject_tense][0]
+                    + f"[SUBJECT_PRONOUN:{subject_tense}]"
+                )
             if dir_subj_raw is not None:
                 subj = dir_subj_raw + f"[SUBJECT:{subject_tense}:DIRECT]"
             pluriforme = ""
@@ -472,10 +481,14 @@ class Verb(TupiAntigo):
             if redup:
                 vb = self.reduplicate(AnnotatedString(vb)).get_annotated()
             perm = self.choose_perm(vb, perm_mode)
-            result = f"{subj} {perm}{vb}"
+            result = f"{perm}{vb}"
             if negative:
                 result = self.negate_verb(result, mode)
             result += vadjs
+            if pos == "anteposto":
+                result = f"{subj} {vadjs_pre}{result}"
+            else:
+                result = f"{vadjs_pre}{result} {subj}"
         elif not self.segunda_classe and not self.transitivo:
             subj = (
                 self.personal_inflections[subject_tense][0]
@@ -499,9 +512,9 @@ class Verb(TupiAntigo):
             if negative:
                 vb = self.negate_verb(vb, mode)
             if pos == "anteposto":
-                result = f"{subj if not pro_drop else ''} {vb}{vadjs}"
+                result = f"{subj if not pro_drop else ''} {vadjs_pre}{vb}{vadjs}"
             else:
-                result = f"{vb}{vadjs} {subj if not pro_drop else ''}"
+                result = f"{vadjs_pre}{vb}{vadjs} {subj if not pro_drop else ''}"
         elif self.transitivo:
             if pos not in ["posposto", "incorporado", "anteposto"]:
                 raise Exception("Position Not Valid")
@@ -543,9 +556,9 @@ class Verb(TupiAntigo):
                     if negative:
                         vb = self.negate_verb(vb, mode)
                     subj = subj if not pro_drop else ""
-                    result = f"{vb}{vadjs} {subj}".strip()
+                    result = f"{vadjs_pre}{vb}{vadjs} {subj}".strip()
                     if pos == "anteposto":
-                        result = f"{subj} {vb}{vadjs}"
+                        result = f"{subj} {vadjs_pre}{vb}{vadjs}"
                 elif "3p" in object_tense:
                     subj = (
                         (
@@ -585,7 +598,7 @@ class Verb(TupiAntigo):
                         vb = f"{perm}{trm}"
                         if negative:
                             vb = self.negate_verb(vb, mode)
-                        result = f"{subj} {vb}{vadjs} {dir_obj if not pro_drop_obj else ''}".strip()
+                        result = f"{subj} {vadjs_pre}{vb}{vadjs} {dir_obj if not pro_drop_obj else ''}".strip()
                     elif pos == "anteposto":
                         perm = self.choose_perm(conj, perm_mode)
                         trm = f"{conj}-{pluriforme}-{vbt}"
@@ -596,7 +609,7 @@ class Verb(TupiAntigo):
                         vb = f"{perm}{trm}"
                         if negative:
                             vb = self.negate_verb(vb, mode)
-                        result = f"{subj}{' '+ dir_obj if not pro_drop_obj else ''} {vb}{vadjs}".strip()
+                        result = f"{subj}{' '+ dir_obj if not pro_drop_obj else ''} {vadjs_pre}{vb}{vadjs}".strip()
                     elif pos == "incorporado":
                         perm = self.choose_perm(conj, perm_mode)
                         vb = f"{perm}{conj}-{pluriforme if dir_obj_raw is None else dir_obj}-{vbt}"
@@ -604,7 +617,7 @@ class Verb(TupiAntigo):
                             vb = self.reduplicate(AnnotatedString(vb)).get_annotated()
                         if negative:
                             vb = self.negate_verb(vb, mode)
-                        result = f"{subj} {vb}{vadjs}"
+                        result = f"{subj} {vadjs_pre}{vb}{vadjs}"
                 if "2p" in object_tense:
                     if "1p" in subject_tense:
                         subj = (
@@ -627,7 +640,9 @@ class Verb(TupiAntigo):
                         result = f"{perm}{vbt}"
                         if negative:
                             result = self.negate_verb(result, mode)
-                        result = f"{subj if not pro_drop else ''} {result}{vadjs}"
+                        result = (
+                            f"{subj if not pro_drop else ''} {vadjs_pre}{result}{vadjs}"
+                        )
 
                 if "1p" in object_tense:
                     if "2p" in subject_tense:
@@ -649,7 +664,7 @@ class Verb(TupiAntigo):
                         vb = f"{perm}{vbt}"
                         if negative:
                             vb = self.negate_verb(vb, mode)
-                        result = f"{vb}{vadjs} {subj}"
+                        result = f"{vadjs_pre}{vb}{vadjs} {subj}"
                 if "2p" in object_tense or "1p" in object_tense:
                     if "3p" in subject_tense:
                         subj = (
@@ -675,9 +690,9 @@ class Verb(TupiAntigo):
                         if negative:
                             vb = self.negate_verb(vb, mode)
                         result = (
-                            f"{vb}{vadjs} {subj if not pro_drop else ''}"
+                            f"{vadjs_pre}{vb}{vadjs} {subj if not pro_drop else ''}"
                             if pos == "anteposto"
-                            else f"{subj if not pro_drop else ''} {vb}{vadjs}"
+                            else f"{subj if not pro_drop else ''} {vadjs_pre}{vb}{vadjs}"
                         )
         return (
             result

@@ -220,13 +220,13 @@ def emi_morphology(self, verb, annotated=False):
         nom = nom.eym()
     if subj and subj.inflection() in ["3p", None]:
         nom = nom.possessive(
-            subj._inflection,
+            subj.inflection(),
             None if subj.category == "pronoun" else subj.eval(annotated=True),
         )
     elif not subj:
         nom = nom.possessive("absoluta", self.pro_drop)
     else:
-        nom = nom.possessive(subj._inflection, None)
+        nom = nom.possessive(subj.inflection(), None)
     if self.vocative:
         nom = nom.vocativo()
     return nom.substantivo(annotated)

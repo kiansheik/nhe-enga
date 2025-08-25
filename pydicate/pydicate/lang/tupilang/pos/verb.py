@@ -70,6 +70,7 @@ class Verb(Predicate):
         self.raw_definition = definition
         self.mood = "indicativo"
         self.v_adjuncts = []
+        self.v_adjuncts_pre = []
         self.circumstancial = None
         self.reduplicated = False
 
@@ -99,6 +100,13 @@ class Verb(Predicate):
             return cop
         return super().__lshift__(other)
 
+    # def __rshift__(self, other):
+    #     if other.category != "verb":
+    #         cop = self.copy()
+    #         cop.v_adjuncts_pre.append(other.copy())
+    #         return cop
+    #     return super().__rshift__(other)
+
     def object(self):
         return (
             self.arguments[1]
@@ -115,8 +123,13 @@ class Verb(Predicate):
     def preval(self, annotated=False):
         """Evaluate the Verb object."""
         vadjs = ""
+        vadjs_pre = ""
         if self.v_adjuncts:
             vadjs = "".join([x.eval(annotated=annotated) for x in self.v_adjuncts])
+        if self.v_adjuncts_pre:
+            vadjs_pre = "".join(
+                [x.eval(annotated=annotated) for x in reversed(self.v_adjuncts_pre)]
+            )
         retval = ""
         obj_delocated = ""
         arglen = len(self.arguments)
@@ -156,7 +169,9 @@ class Verb(Predicate):
                         mode=base_verb.mood,
                         negative=base_verb.negated,
                         vadjs=vadjs,
+                        vadjs_pre=vadjs_pre,
                         redup=base_verb.reduplicated,
+                        pos=arg0_obj.posto,
                     )
                 else:  # otherwise it's a direct object
                     retval = base_verb.verb.conjugate(
@@ -168,7 +183,9 @@ class Verb(Predicate):
                         mode=base_verb.mood,
                         negative=base_verb.negated,
                         vadjs=vadjs,
+                        vadjs_pre=vadjs_pre,
                         redup=base_verb.reduplicated,
+                        pos=arg0_obj.posto,
                     )
             else:  # intransitive
                 suj = base_verb.subject()
@@ -181,6 +198,7 @@ class Verb(Predicate):
                         pro_drop=suj.pro_drop,
                         pos=suj.posto,
                         vadjs=vadjs,
+                        vadjs_pre=vadjs_pre,
                         redup=base_verb.reduplicated,
                     )
                 else:
@@ -193,6 +211,7 @@ class Verb(Predicate):
                         pro_drop=suj.pro_drop,
                         pos=suj.posto,
                         vadjs=vadjs,
+                        vadjs_pre=vadjs_pre,
                         redup=base_verb.reduplicated,
                     )
         elif arglen == 2:  # transitive
@@ -221,6 +240,7 @@ class Verb(Predicate):
                 pro_drop_obj=obj.pro_drop,
                 pos=obj.posto,
                 vadjs=vadjs,
+                vadjs_pre=vadjs_pre,
                 redup=base_verb.reduplicated,
             )
         if obj_delocated:
@@ -316,6 +336,7 @@ class Verb(Predicate):
                 if self.subject().category != "pronoun"
                 else None
             )
+        # print((subj_obj.pro_drop if subj_obj else False), not subj_tense,)
         nom = self.verb.conjugate(
             subject_tense=subj_tense if subj_tense else "3p",
             object_tense=obj_tense,

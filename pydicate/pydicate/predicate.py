@@ -45,9 +45,11 @@ class Predicate(Trackable):
         self.max_args = max_args if max_args is not None else min_args
         self.arguments = []
         self.compositions = []
+        self._inflection = None
         self.pre_adjuncts = []
         self.post_adjuncts = []
         self.v_adjuncts = []
+        self.v_adjuncts_pre = []
         self.negated = False
         self.definition = definition
         self.principal = None
@@ -67,6 +69,18 @@ class Predicate(Trackable):
                     self.functional_definition = g.definition
                     self.functional_gloss = g
                     break
+
+    def inflection(self):
+        """
+        Get the inflection of the predicate.
+        :return: The inflection of the predicate.
+        """
+        if self._inflection:
+            return self._inflection
+        if len(self.arguments) > 0:
+            return self.arguments[0].inflection()
+        else:
+            return "3p"
 
     def copy(self):
         """
@@ -99,8 +113,8 @@ class Predicate(Trackable):
         :return: Self (to enable chaining).
         """
         orig = self.copy()
-        orig_n = TupiNoun(orig.eval(True), orig.definition, noroot=True)
-        mod_n = TupiNoun(modifier.eval(True), modifier.definition, noroot=True)
+        orig_n = TupiNoun(orig.verbete, orig.definition, noroot=True)
+        mod_n = TupiNoun(modifier.verbete, modifier.definition, noroot=True)
         new_n = orig_n.compose(mod_n).verbete(True)
         # Modify the copy of self
         orig.compositions += [modifier]
@@ -193,7 +207,9 @@ class Predicate(Trackable):
         Assume each argument and adjunct is a Predicate object.
         """
         args = ", ".join(arg.semantic() for arg in self.arguments)
-        pre_adjuncts = " + ".join(adj.semantic() for adj in reversed(self.pre_adjuncts))
+        pre_adjuncts = " + ".join(
+            adj.semantic() for adj in reversed(self.v_adjuncts_pre + self.pre_adjuncts)
+        )
         if len(pre_adjuncts) > 1:
             pre_adjuncts = f"({pre_adjuncts}) >> "
         post_adjuncts = " + ".join(
@@ -206,6 +222,10 @@ class Predicate(Trackable):
         if self.functional_gloss:
             tl = ", ".join(self.functional_gloss.english_glosses)
         else:
+            comp_glosses = []
+            for comp in self.compositions:
+                if comp.functional_gloss:
+                    comp_glosses.extend(comp.functional_gloss.english_glosses)
             tl = (
                 ", ".join([y for x in self.gloss for y in x.english_glosses])
                 if self.gloss
@@ -213,6 +233,10 @@ class Predicate(Trackable):
                 if self.definition
                 else self.tag
             )
+            # add comp_glosses in as adjectives
+            if comp_glosses:
+                # make it aparent in structure that these are modifiers of meaning on the original term like adjectives
+                tl = f"{tl} adjectives_modifying_previous_term([{', '.join(comp_glosses)}])"
         return f"{pre_adjuncts}[{tl}]{args}{post_adjuncts}"
 
     def __repr__(self):
@@ -345,6 +369,11 @@ class Predicate(Trackable):
         return self.subordinate(other, pre=False)
 
     def __rshift__(self, other):
+        if self.category != "verb" and other.category == "verb":
+            self_cop = self.copy()
+            other_cop = other.copy()
+            other_cop.v_adjuncts_pre.append(self_cop)
+            return other_cop
         return other.subordinate(self, pre=True)
 
     def translation_prompt(self, target_lang="English"):

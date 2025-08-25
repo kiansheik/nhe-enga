@@ -30,8 +30,11 @@ class Noun(Predicate):
         self.posto = "posposto"
 
     def refresh_verbete(self, new_verbete):
+        old = self.copy()
         self.verbete = new_verbete
         self.noun = TupiNoun(self.verbete, self.definition)
+        self.noun.m_pluriforme = old.noun.m_pluriforme
+        self.noun.pluriforme = old.noun.pluriforme
 
     def __pos__(self):
         """
@@ -104,7 +107,7 @@ class Noun(Predicate):
 
             base_noun.arguments.append(possessor)
             base_noun.noun = base_noun.noun.possessive(
-                possessor._inflection,
+                possessor.inflection(),
                 None
                 if possessor.category == "pronoun"
                 else possessor.eval(annotated=True),
@@ -117,7 +120,7 @@ class Noun(Predicate):
 
             base_noun.arguments.append(possessor)
             base_noun.noun = base_noun.noun.possessive(
-                possessor._inflection,
+                possessor.inflection(),
                 None
                 if possessor.category == "pronoun"
                 else possessor.eval(annotated=True),
@@ -126,8 +129,10 @@ class Noun(Predicate):
             base_noun.noun.m_pluriforme = possessor.noun.m_pluriforme
             return base_noun
         # Otherwise, treat itself as the argument to the other predicate
-        self.posto = "anteposto"
-        return other * self
+        self_cop = self.copy()
+        other_cop = other.copy()
+        self_cop.posto = "anteposto"
+        return other_cop * self_cop
 
     def __eq__(self, other):
         # Make sure both are Noun objects
@@ -142,7 +147,7 @@ class Noun(Predicate):
     def inflection(self, setter=None):
         if setter:
             self._inflection = setter
-        return self._inflection
+        return self._inflection if self._inflection else "3p"
 
     def __repr__(self):
         return self.eval(annotated=False)
@@ -192,6 +197,7 @@ class Conjunction(Noun):
     def inflection(self):
         retval = "3p"
         arg_inflections = [x.inflection() for x in self.arguments]
+        arg_inflections = [x for x in arg_inflections if x]
         # if "1p" or "2p" are present in any strings in arg_inflections, then return true
         if any("1p" in x for x in arg_inflections) and any(
             "2p" in x for x in arg_inflections

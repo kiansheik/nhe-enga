@@ -3,7 +3,11 @@ from tupi import Noun as TupiNoun
 
 
 class Copula(Predicate):
-    def __init__(self, definition="to be", category="copula"):
+    def __init__(
+        self,
+        definition="copula, to be, the arguments are all identical and one unit",
+        category="copula",
+    ):
         """Initialize a Copula object."""
         super().__init__(
             verbete="=",
@@ -16,15 +20,6 @@ class Copula(Predicate):
         self.negated = False
         self.pro_drop = False
         self.posto = "posposto"
-
-    @property
-    def _inflection(self):
-        return self.inflection()
-
-    def inflection(self):
-        if self.arguments:
-            return self.arguments[0].inflection()
-        return "3p"
 
     def preval(self, annotated=False):
         """Evaluate the Copula object."""

@@ -42,7 +42,7 @@ class Postposition(Adverb):
                 (
                     TupiNoun(self.verbete, self.definition)
                     .possessive(
-                        arg0_object._inflection,
+                        arg0_object.inflection(),
                         None if arg0_object.category == "pronoun" else arg0,
                     )
                     .latest_verbete.drop_all_last_tags()
@@ -176,12 +176,12 @@ class Beyond(Postposition):
         """Evaluate the Postposition object."""
         if len(self.arguments) == 0:
             return f"{self.verbete}{self.tag}"
-        if isinstance(self.ar0, Verb):
+        if isinstance(self.arg0, Verb):
             vbt = AnnotatedString(
-                self.ar0.base_nominal(annotated=True).eval(True)
+                self.arg0.base_nominal(annotated=True).eval(True)
             ).removesuffix_original("a[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING]")
         else:
-            vbt = AnnotatedString(self.ar0.eval(True)).removesuffix_original(
+            vbt = AnnotatedString(self.arg0.eval(True)).removesuffix_original(
                 "a[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING]"
             )
         suffix = "iré"
