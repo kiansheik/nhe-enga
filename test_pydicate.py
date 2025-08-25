@@ -328,6 +328,9 @@ salve = Interjection("salve", definition="hail", tag="[INTERJECTION:HAIL]")
 sapukai = Verb("sapukaî")
 pea = Verb("pe'a")
 eva = ProperNoun("Eva")
+nheangerur = Verb("nhe'angerur")
+poasema = Noun("poasema")
+îaseo = Verb("îase'o")
 
 bettendorff_compendio_pt_1 = [
     # Santa Cruz
@@ -374,6 +377,8 @@ bettendorff_compendio_pt_1 = [
     + (+oré * sapukai.redup()).circ(False)
     + (amo * (pyra * pea))
     + (amo * (eva * membyra)),
+    (nde * supé) + ((+oré * nheangerur.circ(False)) << (oré * v(poasema)))
+    << (+oré * îaseo),
 ]
 
 

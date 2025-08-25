@@ -84,7 +84,7 @@ class Noun(TupiAntigo):
         raw_def = self.raw_definition[:50]
         if "(m)" in raw_def:
             self.m_pluriforme = True
-            vbt.replace_clean(0, 1, "")
+            # vbt.replace_clean(0, 1, "")
         self.base_verbete = vbt.get_annotated()
         self.latest_verbete = AnnotatedString(
             self.base_verbete
@@ -97,6 +97,8 @@ class Noun(TupiAntigo):
             self.pluriforme = "t"
         elif "(t, t)" in raw_def:
             self.pluriforme = "t, t"
+        elif "(m)" in raw_def:
+            self.pluriforme = "m"
         else:
             self.pluriforme = None
         self.recreate = f'Noun("{self.verbete()}", "({self.pluriforme})")'
@@ -481,6 +483,8 @@ class Noun(TupiAntigo):
         else:
             poss_str = ""  # no prefix for 3p pluriforme without possessor
         # Build annotated string
+        if self.m_pluriforme:
+            vbt.replace_clean(0, 1, "")
         vbt.insert_prefix(prefix)
         vbt.insert_prefix(poss_str)
         ret_noun.aglutinantes.append(ret_noun)
@@ -502,6 +506,8 @@ class Noun(TupiAntigo):
         vbt = ret_noun.latest_verbete
         pref = ret_noun.pluriform_prefix("absoluta")
         if pref:
+            if self.m_pluriforme:
+                vbt.replace_clean(0, 1, "")
             vbt.insert_prefix(pref)
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"

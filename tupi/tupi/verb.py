@@ -182,6 +182,8 @@ class Verb(TupiAntigo):
                     vbt = vbt[:-1]
                 elif base_verbete[-1] not in self.vogais:
                     suf = "a" + "[GERUND_SUFFIX:CLASS_1:CONSONANT]"
+                elif base_verbete[-2:] in ["'o", "'u"]:
+                    vbt = vbt[:-2] + "gûa"
                 if not self.transitivo or object_tense in ["refl", "mut"]:
                     dir_obj = ""
                     if object_tense == "refl":
