@@ -71,10 +71,16 @@ class Verb(Predicate):
         self.mood = "indicativo"
         self.v_adjuncts = []
         self.circumstancial = None
+        self.reduplicated = False
 
     def raw_noun(self):
         """Return the noun form of the verb."""
         return TupiNoun(self.verbete, self.raw_definition)
+
+    def redup(self):
+        cop = self.copy()
+        cop.reduplicated = True
+        return cop
 
     def subject(self):
         return (
@@ -150,6 +156,7 @@ class Verb(Predicate):
                         mode=base_verb.mood,
                         negative=base_verb.negated,
                         vadjs=vadjs,
+                        redup=base_verb.reduplicated,
                     )
                 else:  # otherwise it's a direct object
                     retval = base_verb.verb.conjugate(
@@ -161,6 +168,7 @@ class Verb(Predicate):
                         mode=base_verb.mood,
                         negative=base_verb.negated,
                         vadjs=vadjs,
+                        redup=base_verb.reduplicated,
                     )
             else:  # intransitive
                 suj = base_verb.subject()
@@ -173,6 +181,7 @@ class Verb(Predicate):
                         pro_drop=suj.pro_drop,
                         pos=suj.posto,
                         vadjs=vadjs,
+                        redup=base_verb.reduplicated,
                     )
                 else:
                     retval = base_verb.verb.conjugate(
@@ -184,6 +193,7 @@ class Verb(Predicate):
                         pro_drop=suj.pro_drop,
                         pos=suj.posto,
                         vadjs=vadjs,
+                        redup=base_verb.reduplicated,
                     )
         elif arglen == 2:  # transitive
             suj = base_verb.subject()
@@ -211,6 +221,7 @@ class Verb(Predicate):
                 pro_drop_obj=obj.pro_drop,
                 pos=obj.posto,
                 vadjs=vadjs,
+                redup=base_verb.reduplicated,
             )
         if obj_delocated:
             retval = retval + " " + obj_delocated
@@ -253,6 +264,7 @@ class Verb(Predicate):
                 pro_drop=True,
                 negative=False,
                 anotar=annotated,
+                redup=self.reduplicated,
             )
             tn = TupiNoun(nom, self.raw_definition)
             final = Noun(
@@ -314,6 +326,7 @@ class Verb(Predicate):
             pro_drop=(subj_obj.pro_drop if subj_obj else False) or not subj_tense,
             negative=self.negated,
             anotar=annotated,
+            redup=self.reduplicated,
         )
         tn = TupiNoun(nom, self.raw_definition)
         final = Noun(

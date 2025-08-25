@@ -1,11 +1,34 @@
 import unicodedata
-from .tupi import TupiAntigo
 
 nasal_prefix_map = {
     "p": "mb",
     "k": "ng",
     "t": "nd",
     "s": "nd",
+}
+
+accent_map = {
+    "á": "a",
+    "é": "e",
+    "í": "i",
+    "ý": "y",
+    "ó": "o",
+    "ú": "u",
+}
+
+nasal_map = {
+    "á": "ã",
+    "é": "ẽ",
+    "í": "ĩ",
+    "ý": "ỹ",
+    "ó": "õ",
+    "ú": "ũ",
+    "a": "ã",
+    "e": "ẽ",
+    "i": "ĩ",
+    "y": "ỹ",
+    "o": "õ",
+    "u": "ũ",
 }
 
 
@@ -150,7 +173,7 @@ class AnnotatedString:
         # Check if the last character is an accented vowel
         if self[-1] in vowels:
             # Remove the accent from the last vowel
-            self.replace_clean(-1, 1, TupiAntigo.accent_map[self[-1]])
+            self.replace_clean(-1, 1, accent_map[self[-1]])
         return self
 
     def accent_last_vowel(self):
@@ -165,9 +188,9 @@ class AnnotatedString:
 
     def nasaliza_final(self):
         # Check if the last character is an accented vowel
-        if self[-1] in TupiAntigo.nasal_map.keys():
+        if self[-1] in nasal_map.keys():
             # Remove the accent from the last vowel
-            self.replace_clean(-1, 1, TupiAntigo.nasal_map[self[-1]])
+            self.replace_clean(-1, 1, nasal_map[self[-1]])
         return self
 
     def nasaliza_prefixo(self):

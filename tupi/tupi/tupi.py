@@ -1,3 +1,4 @@
+from .annotated_string import AnnotatedString
 from .orth import ALT_ORTS, get_nasality_î
 
 import re, random
@@ -380,6 +381,123 @@ class TupiAntigo(object):
                 start = position + len(replacement)
 
         return result_string
+
+    def reduplicate(self, x):
+        if isinstance(x, AnnotatedString):
+            return self._reduplicate_annotated(x)
+        elif isinstance(x, str):
+            return self._reduplicate_str(x)
+        else:
+            raise TypeError("Expected str or AnnotatedString")
+
+    # ---------- Core logic (string) ----------
+
+    def _reduplicate_str(self, s: str) -> str:
+        base, tail = self._strip_tail_semivogais(s)
+        spans = self._silaba_spans(base)
+        if len(spans) < 2:
+            return base + tail
+        start_last_two = spans[-2][0]
+        redup_chunk = base[start_last_two:]  # last two syllables
+        return base + redup_chunk + tail
+
+    # ---------- Core logic (AnnotatedString) ----------
+
+    def _reduplicate_annotated(self, a: AnnotatedString) -> AnnotatedString:
+        # Work on the "clean" layer while preserving tags in `original`
+        clean = a.get_clean()
+
+        # 1) Strip tail semivogais from clean + annotated together
+        tail = ""
+        while True:
+            hit = False
+            for sv in self.semi_vogais:
+                if sv and clean.endswith(sv):
+                    # remove from annotated via clean-indexed replace
+                    a.replace_clean(len(clean) - len(sv), len(sv), "")
+                    # a.drop_all_last_tags()
+                    clean = clean[: -len(sv)]
+                    tail = sv + tail
+                    hit = True
+                    break
+            if not hit:
+                break
+
+        # 2) Syllabify base (clean)
+        spans = self._silaba_spans(clean)
+        if len(spans) < 2:
+            # just put the tail back (if any) and return
+            if tail:
+                a.insert_suffix(tail)
+            return a
+
+        # 3) Redup chunk = last two syllables of clean
+        start_last_two = spans[-2][0]
+        redup_chunk = clean[start_last_two:]  # string (no tags)
+
+        # 4) Insert redup chunk at the end (clean-wise)
+        a.insert_suffix(redup_chunk)
+
+        # 5) Reattach stripped tail
+        if tail:
+            a.insert_suffix(tail)
+        a.insert_suffix("[REDUPLICATION:CONTINUOUS_ACTION]")
+        return a
+
+    # ---------- Helpers ----------
+
+    def _strip_tail_semivogais(self, s: str):
+        """Return (base, tail) stripping any chain of final semivogais (longest-first)."""
+        tail = ""
+        while True:
+            hit = False
+            for sv in self.semi_vogais:
+                if sv and s.endswith(sv):
+                    s = s[: -len(sv)]
+                    tail = sv + tail
+                    hit = True
+                    break
+            if not hit:
+                break
+        return s, tail
+
+    def _nucleos(self, s: str):
+        """
+        Find vowel nuclei as (start, end) spans, greedy longest-first per position,
+        based on self.vogais (supports multi-character vowels/diphthongs).
+        """
+        spans = []
+        i, n = 0, len(s)
+        while i < n:
+            hit = False
+            for v in self.vogais:
+                L = len(v)
+                if L and i + L <= n and s[i : i + L] == v:
+                    spans.append((i, i + L))
+                    i += L
+                    hit = True
+                    break
+            if not hit:
+                i += 1
+        return spans
+
+    def _silaba_spans(self, s: str):
+        """
+        Maximal-onset syllable spans over plain string `s`.
+        For each nucleus i (< last), syllable ends at nucleus_end[i].
+        Last syllable ends at len(s).
+        Returns list of (start, end) spans covering the word.
+        """
+        nucs = self._nucleos(s)
+        if not nucs:
+            return [(0, len(s))] if s else []
+        spans = []
+        start = 0
+        for i, (_, nuc_end) in enumerate(nucs):
+            end = nuc_end if i < len(nucs) - 1 else len(s)
+            spans.append((start, end))
+            start = end
+        return spans
 
     def ipa(self, inp=None):
         return self.transliterate("ipa", inp=inp)

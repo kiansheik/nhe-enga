@@ -371,7 +371,7 @@ bettendorff_compendio_pt_1 = [
     + (saba * (oré * erobîar * îe))
     + (salve),
     (nde * supé)
-    + (+oré * sapukai).circ(False)
+    + (+oré * sapukai.redup()).circ(False)
     + (amo * (pyra * pea))
     + (amo * (eva * membyra)),
 ]

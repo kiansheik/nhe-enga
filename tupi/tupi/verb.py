@@ -115,6 +115,7 @@ class Verb(TupiAntigo):
         anotar=False,
         pro_drop_obj=False,
         vadjs="",
+        redup=False,
     ):
         result = ""
         perm_mode = False
@@ -214,6 +215,8 @@ class Verb(TupiAntigo):
                 if suf[0] in self.vogais and vbt[-1] in "i y u".split():
                     vbt = vbt[:-1] + self.semi_vogais_map[vbt[-1]]
                 vbt += f"[ROOT]"
+                if redup:
+                    vbt = self.reduplicate(AnnotatedString(vbt)).get_annotated()
                 result = f"{pref}{vbt}{suf}{vadjs}".strip()
             else:
                 subj = (
@@ -295,7 +298,12 @@ class Verb(TupiAntigo):
             elif pluri_check and self.transitivo:
                 obj += f"r[PLURIFORM_PREFIX:R]"
             vbt = f"{vbt}[ROOT]"
-            result = f"{subj if not pro_drop else ''}{' ' if not self.segunda_classe else ''}{obj}{vbt}{eme}{vadjs}".strip()
+            redup_space = f"{subj if not pro_drop else ''}{' ' if not self.segunda_classe else ''}{obj}{vbt}"
+            if redup:
+                redup_space = self.reduplicate(
+                    AnnotatedString(redup_space)
+                ).get_annotated()
+            result = f"{redup_space}{eme}{vadjs}".strip()
         elif mode == "nominal":
             subj = self.personal_inflections[subject_tense][1]
             tag = (
@@ -370,9 +378,12 @@ class Verb(TupiAntigo):
             ):
                 obj += f"r[PLURIFORM_PREFIX:R]"
             vbt = f"{vbt}[ROOT]"
-            result = (
-                f"{subj if not pro_drop else ''}{' ' if not self.segunda_classe else ''}{obj}{vbt}{vadjs}"
-            ).strip()
+            redup_space = f"{subj if not pro_drop else ''}{' ' if not self.segunda_classe else ''}{obj}{vbt}"
+            if redup:
+                redup_space = self.reduplicate(
+                    AnnotatedString(redup_space)
+                ).get_annotated()
+            result = (f"{redup_space}{vadjs}").strip()
         elif "2p" not in subject_tense and mode == "circunstancial":
             subj = (
                 self.personal_inflections[subject_tense][1]
@@ -429,7 +440,12 @@ class Verb(TupiAntigo):
             if negative:
                 circ = "e'ym[NEGATION_SUFFIX]i[CIRCUMSTANTIAL_SUFFIX:CONSONANT_ENDING]"
             vbt = f"{base_verbete}[ROOT]"
-            result = f"{subj if (not pro_drop or not self.transitivo) else ''}{' ' if not self.segunda_classe else ''}{obj}{vbt}{circ}{vadjs}".strip()
+            redup_space = f"{subj if (not pro_drop or not self.transitivo) else ''}{' ' if not self.segunda_classe else ''}{obj}{vbt}"
+            if redup:
+                redup_space = self.reduplicate(
+                    AnnotatedString(redup_space)
+                ).get_annotated()
+            result = f"{redup_space}{circ}{vadjs}".strip()
         elif self.segunda_classe:
             subj_prefix = (
                 self.personal_inflections[subject_tense][1]
@@ -451,6 +467,8 @@ class Verb(TupiAntigo):
                 else:
                     pluriforme = f"r[PLURIFORM_PREFIX:R]"
             vb = f"{subj_prefix}{pluriforme}{base_verbete}[ROOT]"
+            if redup:
+                vb = self.reduplicate(AnnotatedString(vb)).get_annotated()
             perm = self.choose_perm(vb, perm_mode)
             result = f"{subj} {perm}{vb}"
             if negative:
@@ -472,6 +490,8 @@ class Verb(TupiAntigo):
             )
             conj = "" if overwrite else conj
             vbt = f"{conj}{base_verbete}[ROOT]"
+            if redup:
+                vbt = self.reduplicate(AnnotatedString(vbt)).get_annotated()
             perm = self.choose_perm(vbt, perm_mode)
             vb = f"{perm}{vbt}"
             if negative:
@@ -515,6 +535,8 @@ class Verb(TupiAntigo):
                     perm = self.choose_perm(vbt, perm_mode)
                     if overwrite:
                         vbt = f"{base_verbete[1:]}[ROOT]"
+                    if redup:
+                        vbt = self.reduplicate(AnnotatedString(vbt)).get_annotated()
                     vb = f"{perm}{vbt}"
                     if negative:
                         vb = self.negate_verb(vb, mode)
@@ -556,6 +578,8 @@ class Verb(TupiAntigo):
                         trm = f"{conj}-{pluriforme}-{vbt}"
                         if overwrite:
                             trm = f"{vbt}"
+                        if redup:
+                            trm = self.reduplicate(AnnotatedString(trm)).get_annotated()
                         vb = f"{perm}{trm}"
                         if negative:
                             vb = self.negate_verb(vb, mode)
@@ -565,6 +589,8 @@ class Verb(TupiAntigo):
                         trm = f"{conj}-{pluriforme}-{vbt}"
                         if overwrite:
                             trm = f"{vbt}"
+                        if redup:
+                            trm = self.reduplicate(AnnotatedString(trm)).get_annotated()
                         vb = f"{perm}{trm}"
                         if negative:
                             vb = self.negate_verb(vb, mode)
@@ -572,6 +598,8 @@ class Verb(TupiAntigo):
                     elif pos == "incorporado":
                         perm = self.choose_perm(conj, perm_mode)
                         vb = f"{perm}{conj}-{pluriforme if dir_obj_raw is None else dir_obj}-{vbt}"
+                        if redup:
+                            vb = self.reduplicate(AnnotatedString(vb)).get_annotated()
                         if negative:
                             vb = self.negate_verb(vb, mode)
                         result = f"{subj} {vb}{vadjs}"
@@ -590,6 +618,9 @@ class Verb(TupiAntigo):
                         vbt = f"{obj}{base_verbete}[ROOT]"
                         if overwrite:
                             vbt = f"{base_verbete}[ROOT]"
+                        if redup:
+                            vbt = self.reduplicate(AnnotatedString(vbt)).get_annotated()
+
                         perm = self.choose_perm(vbt, perm_mode)
                         result = f"{perm}{vbt}"
                         if negative:
@@ -610,6 +641,8 @@ class Verb(TupiAntigo):
                             f"r[PLURIFORM_PREFIX:R]" if pluri_check or self.ero else ""
                         )
                         vbt = f"{obj}{pluriforme}{base_verbete}[ROOT]"
+                        if redup:
+                            vbt = self.reduplicate(AnnotatedString(vbt)).get_annotated()
                         perm = self.choose_perm(vbt, perm_mode)
                         vb = f"{perm}{vbt}"
                         if negative:
@@ -633,6 +666,8 @@ class Verb(TupiAntigo):
                             f"r[PLURIFORM_PREFIX:R]" if pluri_check or self.ero else ""
                         )
                         vbt = f"{obj}{pluriforme}{base_verbete}[ROOT]"
+                        if redup:
+                            vbt = self.reduplicate(AnnotatedString(vbt)).get_annotated()
                         perm = self.choose_perm(vbt, perm_mode)
                         vb = f"{perm}{vbt}"
                         if negative:
