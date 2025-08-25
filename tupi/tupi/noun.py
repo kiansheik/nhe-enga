@@ -69,18 +69,26 @@ class Noun(TupiAntigo):
     def __init__(self, verbete, raw_definition, noroot=False):
         super().__init__()
         vbt = AnnotatedString(verbete)
-        if len(vbt.clean) >= 2 and vbt[-1] == "a" and vbt[-2] not in self.vogais:
+        if (
+            len(vbt.clean) >= 2
+            and (vbt[-1] == "a" and vbt[-2] != "'")
+            and vbt[-2] not in self.vogais
+        ):
             vbt.replace_clean(-1, 1, "", drop_trailing_tag=True)
             # breakpoint()
         if not vbt.get_annotated().endswith("[ROOT]") and not noroot:
             vbt.insert_suffix("[ROOT]")
+        self.m_pluriforme = False
+        self.raw_definition = raw_definition  # Raw definition of the verb (string)
+        self.aglutinantes = [self]
+        raw_def = self.raw_definition[:50]
+        if "(m)" in raw_def:
+            self.m_pluriforme = True
+            vbt.replace_clean(0, 1, "")
         self.base_verbete = vbt.get_annotated()
         self.latest_verbete = AnnotatedString(
             self.base_verbete
         )  # The name of the verb in its dictionary form
-        self.raw_definition = raw_definition  # Raw definition of the verb (string)
-        self.aglutinantes = [self]
-        raw_def = self.raw_definition[:50]
         if "(r, s)" in raw_def or "(s)" in raw_def or "-s-" in raw_def:
             self.pluriforme = "r, s"
         elif "(s, r, s)" in raw_def:
@@ -145,7 +153,7 @@ class Noun(TupiAntigo):
         ):
             if not self.is_nasal(mod_vbt):
                 mod_vbt.nasaliza_prefixo()
-        vbt.insert_suffix(str(mod_vbt))
+        vbt.insert_suffix(mod_vbt.get_annotated())
         # ret_noun.pluriforme = self.pluriforme
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
@@ -271,6 +279,11 @@ class Noun(TupiAntigo):
                     return prefix + "[AGENT_PREFIX:GENERIC:PEOPLE:ABSOLUTE]"
             if "1p" in person or "2p" in person:
                 return "r[PLURIFORM_PREFIX:R]"
+        if self.m_pluriforme:
+            if person == "absoluta":
+                return "m[PLURIFORM_PREFIX:M:ABSOLUTE]"
+            else:
+                return "p[PLURIFORM_PREFIX:P]"
         return ""
 
     def supe(self):
@@ -648,6 +661,8 @@ class Noun(TupiAntigo):
             vbt.replace_clean(-1, 1, "")
         elif ends_with_any(vbt, self.consoantes):
             suf = f"y[CONSONANT_CLASH]{suf}"
+        if not self.pluriforme:
+            vbt.insert_prefix("i[OBJECT:3p:NON_MAIN_CLAUSE_SUBJECT]")
         vbt.insert_suffix(suf)
         vbt.insert_suffix("[AGENTLESS_PATIENT_SUFFIX]")
         ret_noun.aglutinantes.append(ret_noun)

@@ -99,11 +99,10 @@ class Predicate(Trackable):
         :return: Self (to enable chaining).
         """
         orig = self.copy()
-        orig_n = TupiNoun(self.verbete, self.definition)
-        mod_n = TupiNoun(modifier.verbete, modifier.definition)
-        new_n = orig_n.compose(mod_n).verbete()
+        orig_n = TupiNoun(orig.eval(True), orig.definition, noroot=True)
+        mod_n = TupiNoun(modifier.eval(True), modifier.definition, noroot=True)
+        new_n = orig_n.compose(mod_n).verbete(True)
         # Modify the copy of self
-        orig.definition = self.definition
         orig.compositions += [modifier]
         orig.refresh_verbete(new_n)
         return orig
@@ -272,6 +271,12 @@ class Predicate(Trackable):
 
     def is_subordinated(self):
         return self.principal is not None
+
+    def is_gerund_composto(self):
+        for adj in self.pre_adjuncts + self.post_adjuncts:
+            if adj.principal == self and adj.same_subject():
+                return adj
+        return None
 
     def subject(self):
         return self.arguments[0] if self.arguments else None

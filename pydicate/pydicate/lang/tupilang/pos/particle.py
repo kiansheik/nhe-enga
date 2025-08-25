@@ -34,3 +34,10 @@ te = Particle(
     definition="however, 'on the other hand...', adversitive discourse marker, shifting focus to what precedes it, 'but this in contrast...",
     tag="[PARTICLE:ADVERSATIVE]",
 )
+
+
+peQ = Particle(
+    "pe",
+    definition="question marker, marks topic of question",
+    tag="[PARTICLE:INTERROGATIVE]",
+)

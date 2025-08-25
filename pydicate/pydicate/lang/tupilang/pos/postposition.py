@@ -16,6 +16,16 @@ class Postposition(Adverb):
         self.pluriforme = "(t)" in definition.lower()
         self.arg0 = None  # This will be set when the first argument is a verb
 
+    @property
+    def noun(self):
+        if self.arguments:
+            return TupiNoun(self.eval(True), self.functional_definition, noroot=True)
+        return TupiNoun(self.verbete, self.functional_definition, noroot=True)
+
+    @property
+    def n(self):
+        return Noun(self.noun.verbete(True), definition=self.definition)
+
     def morphology(self, annotated=False):
         arg0_object = self.arg0
         arg0 = arg0_object.verbete

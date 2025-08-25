@@ -114,73 +114,80 @@ class Verb(Predicate):
         retval = ""
         obj_delocated = ""
         arglen = len(self.arguments)
+        gerund_composto = None
+        base_verb = self
         if self.is_subordinated():
             if self.mood == "indicativo":
                 if self.same_subject():
                     self.mood = "gerundio"
                 else:
                     self.mood = "conjuntivo"
+                    ger = self.is_gerund_composto()
+                    if ger:
+                        base_verb = ger.copy()
+                        base_verb.mood = "conjuntivo"
+                        gerund_composto = self.copy()
             elif self.mood == "imperativo":
                 self.mood = "permissivo"
         elif self.mood == "indicativo":
             self.mood = self.indicative()
         if arglen == 0:
-            retval = self.verb.verbete
+            retval = base_verb.verb.verbete
         elif arglen == 1:
-            arg0_obj = self.arguments[0]
+            arg0_obj = base_verb.arguments[0]
             arg0 = None if arg0_obj.pro_drop else arg0_obj.eval(annotated=annotated)
             infl0 = arg0_obj.inflection()
-            if self.verb.transitivo:
+            if base_verb.verb.transitivo:
                 # TODO: render "nominal form"
                 if (
                     arg0_obj.category == "pronoun"
                 ):  # if the verb has a personal inflection then it's a pronoun
-                    retval = self.verb.conjugate(
+                    retval = base_verb.verb.conjugate(
                         anotar=annotated,
                         subject_tense="3p",
                         object_tense=infl0,
                         pro_drop=True,
-                        mode=self.mood,
-                        negative=self.negated,
+                        mode=base_verb.mood,
+                        negative=base_verb.negated,
                         vadjs=vadjs,
                     )
                 else:  # otherwise it's a direct object
-                    retval = self.verb.conjugate(
+                    retval = base_verb.verb.conjugate(
                         anotar=annotated,
                         subject_tense="3p",
                         object_tense="3p",
                         dir_obj_raw=arg0,
                         pro_drop=True,
-                        mode=self.mood,
-                        negative=self.negated,
+                        mode=base_verb.mood,
+                        negative=base_verb.negated,
                         vadjs=vadjs,
                     )
             else:  # intransitive
-                suj = self.subject()
+                suj = base_verb.subject()
                 if suj.category == "pronoun":
-                    retval = self.verb.conjugate(
+                    retval = base_verb.verb.conjugate(
                         anotar=annotated,
                         subject_tense=infl0,
-                        mode=self.mood,
-                        negative=self.negated,
+                        mode=base_verb.mood,
+                        negative=base_verb.negated,
                         pro_drop=suj.pro_drop,
                         pos=suj.posto,
                         vadjs=vadjs,
                     )
                 else:
-                    retval = self.verb.conjugate(
+                    retval = base_verb.verb.conjugate(
                         anotar=annotated,
                         subject_tense="3p",
                         dir_subj_raw=arg0,
-                        mode=self.mood,
-                        negative=self.negated,
+                        mode=base_verb.mood,
+                        negative=base_verb.negated,
                         pro_drop=suj.pro_drop,
                         pos=suj.posto,
                         vadjs=vadjs,
                     )
         elif arglen == 2:  # transitive
-            suj = self.subject()
-            obj = self.object()
+            suj = base_verb.subject()
+            obj = base_verb.object()
             arg0 = suj.eval(annotated=annotated)
             infl0 = suj.inflection()
             arg1 = (
@@ -192,14 +199,14 @@ class Verb(Predicate):
             if obj.category == "conjunction":
                 arg1 = None
                 obj_delocated = None if obj.pro_drop else obj.eval(annotated=annotated)
-            retval = self.verb.conjugate(
+            retval = base_verb.verb.conjugate(
                 anotar=annotated,
                 subject_tense=infl0 if infl0 else "3p",
                 object_tense=infl1 if infl1 else "3p",
                 dir_subj_raw=arg0,
                 dir_obj_raw=arg1,
-                mode=self.mood,
-                negative=self.negated,
+                mode=base_verb.mood,
+                negative=base_verb.negated,
                 pro_drop=suj.pro_drop,
                 pro_drop_obj=obj.pro_drop,
                 pos=obj.posto,
@@ -209,9 +216,21 @@ class Verb(Predicate):
             retval = retval + " " + obj_delocated
         # deal with adverbs
         # We need to know if the adverb was added before the verb or after: `go * Noun("Endé") + Adverb("koritei")` or `Adverb("koritei") + go * Noun("Endé")`
-        for adj in self.pre_adjuncts:
+        if gerund_composto:
+            retval = f"{gerund_composto.base_nominal(True).verbete} {retval}"
+            # filter self.pre_adjuncts and self.post_adjuncts to not render the gerund again
+            filtered_pre_adjuncts = [
+                adj for adj in self.pre_adjuncts if adj.verbete != base_verb.verbete
+            ]
+            filtered_post_adjuncts = [
+                adj for adj in self.post_adjuncts if adj.verbete != base_verb.verbete
+            ]
+        else:
+            filtered_pre_adjuncts = [adj for adj in self.pre_adjuncts]
+            filtered_post_adjuncts = [adj for adj in self.post_adjuncts]
+        for adj in filtered_pre_adjuncts:
             retval = adj.eval(annotated=annotated) + " " + retval
-        for adj in self.post_adjuncts:
+        for adj in filtered_post_adjuncts:
             sepchar = " "
             # remove [*] from end of retval and get last character
             lastchar = self.verb.remove_brackets_and_contents(retval).strip()[-1]
@@ -226,7 +245,7 @@ class Verb(Predicate):
         if len(self.arguments) == 0:
             nom = self.verb.conjugate(
                 subject_tense="3p",
-                object_tense=None,
+                object_tense="absoluta",
                 dir_obj_raw=None,
                 dir_subj_raw=None,
                 mode="nominal",
@@ -237,7 +256,7 @@ class Verb(Predicate):
             )
             tn = TupiNoun(nom, self.raw_definition)
             final = Noun(
-                tn.substantivo(True),
+                tn.verbete(True),
                 definition=self.definition,
                 inflection="3p",
                 pro_drop=False,
@@ -298,7 +317,7 @@ class Verb(Predicate):
         )
         tn = TupiNoun(nom, self.raw_definition)
         final = Noun(
-            tn.substantivo(True),
+            tn.verbete(True),
             definition=self.definition,
             inflection="3p",
             pro_drop=subj_obj.pro_drop if subj_obj else False,

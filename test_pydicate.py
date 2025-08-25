@@ -301,6 +301,34 @@ tom_story = [
     (ae * (okendabok * Enza)) << (+Enza * bebé),
 ]
 
+avemaria = ProperNoun("Ave Maria")
+santamaria = ProperNoun("Santa Maria")
+graça = Noun(
+    "graça", definition="grace, favor, blessing", tag="[NOUN:LOAN_WORD:PORTUGUESE]"
+)
+ynysema = Noun("ynysema")
+mombeu = Verb("mombe'u")
+kunhã = Noun("kunhã")
+katu = Noun("katu")
+membyra = Noun("membyra")
+sy = Noun("sy")
+tupãmongetá = Verb("tupãmongetá")
+koyr = Adverb("ko'yr")
+irã = Adverb("irã")
+îekyî = Verb("îekyî")
+îub = Verb("îub")
+béno = Adverb("béno")
+erobîar = Verb("erobîar")
+
+salve_rainha = ProperNoun("Salva Rainha")
+poraûsubara = Noun("poraûsubara")
+ikobé = Verb("ikobé")
+een = Noun("e'ẽ")
+salve = Interjection("salve", definition="hail", tag="[INTERJECTION:HAIL]")
+sapukai = Verb("sapukaî")
+pea = Verb("pe'a")
+eva = ProperNoun("Eva")
+
 bettendorff_compendio_pt_1 = [
     # Santa Cruz
     ((saba * (santa_cruz * aang)) * esé)
@@ -319,13 +347,82 @@ bettendorff_compendio_pt_1 = [
     + (pe * ybaka)
     + (îabé * (monhang * ae * îe)),
     (((emi * (u * oré)) @ (nduara * (ara * iabiõ))) * (meeng * +endé)).imp()
+    + kori
     + (oré * supé),
     ((nde * nhyron).imp() + (oré * angaipaba * esé) + (oré * supé))
     + (îabé * ((((sara * (erekomemûã * oré))) * supé) + (oré * nhyron))),
-    (oré * -(mo * (ar / ukar)).imp()) + (tentação * pupé),
+    (endé * -(mo * (ar / ukar)).imp() * oré) + (tentação * pupé),
     ((oré * ((pysyro * endé))).imp() << te) + ((mbae / aiba) * suí),
     (amen + jesus),
+    # Ave Maria
+    Copula() * avemaria * (bae * ((esé * graça) + v(ynysema))),
+    (amo * (nde * irun)) + (ikó * (îandé * îara)),
+    (amo * (pyra * (mombeu / katu))) + (ikó * +endé) + (kunhã * suí),
+    Copula() * ((pyra * (mombeu / katu)) + abé) * (Copula() * (nde * membyra) * jesus),
+    (Copula() * santamaria * (tupan * sy))
+    + (+endé * tupãmongetá).imp()
+    + (esé * (Copula() * oré * (bae * v(angaipaba))))
+    + koyr
+    << (irã + ((îub * oré) >> (îekyî * oré)) << béno),
+    (amen + jesus),
+    # salva rainha
+    (Copula() * (salve_rainha == (poraûsubara * sy)) + ikobé.base_nominal(True))
+    + (bae * v(een))
+    + (saba * (oré * erobîar * îe))
+    + (salve),
+    (nde * supé)
+    + (+oré * sapukai).circ(False)
+    + (amo * (pyra * pea))
+    + (amo * (eva * membyra)),
 ]
+
+
+# make sure first lines of bettendorf match this
+bettendorf_ground_truth = """Santa Cruzra'angaba resé orépysyrõ îepé Tupã oré îar oréamotare'ymbara suí.
+
+tuba ta'yra Espírito Santo rera pupé.
+
+amém Jesus.
+
+oré rub ybakype tekoar imoetépyramo toîkó nde rera.
+
+tour nde Reino.
+
+toîemonhang nde remimotara ybype ybakype i îemonhanga îabé.
+
+oré rembi'u 'ara îabi'õndûara eîme'eng kori orébo.
+
+ndenhyrõ oré angaîpaba resé orébo orérerekomemûãsara supé orénhyrõ îabé.
+
+orémo'arukar umẽ îepé tentação pupé.
+
+orépysyrõte îepé mba'eaíba suí.
+
+amém Jesus.
+
+Ave Maria graça resé tynysemba'e.
+
+nde irũnamo îandé îara rekóû.
+
+imombe'ukatupyramo ereikó kunhã suí.
+
+imombe'ukatupyra abé nde membyra Jesus.
+
+Santa Maria Tupã sy etupãmongetá oré iangaîpaba'e resé ko'yr irã oré îekyî oré rúmebéno."""
+
+# split into lines
+
+bettendorf_ground_truth_lines = bettendorf_ground_truth.split("\n")
+# clean empty lines
+bettendorf_ground_truth_lines = [
+    x.strip()[:-1] for x in bettendorf_ground_truth_lines if x.strip()
+]
+for i, line in enumerate(bettendorf_ground_truth_lines):
+    if bettendorff_compendio_pt_1[i].eval().strip() != line:
+        print(f"Line {i+1} does not match:")
+        print(f"Expected: {line}")
+        print(f"Got:      {bettendorff_compendio_pt_1[i].eval()}")
+        print()
 
 
 switch_ref = [
@@ -338,26 +435,27 @@ switch_ref = [
 
 # Marakaîá nda sepyme'engymbyrama ruã, kûépe é asé oîar tenhẽ, pokémon îabé.
 
-epymeeng = Verb("epyme'eng")
-marakaîá = Noun("marakaîá")
+epymeeng = Verb("epyme'eng", definition="to pay for, to buy")
+marakaîá = Noun("marakaîá", definition="a cat")
 tenhen = Adverb(
     "tenh˜e",
-    definition="in vain, for nothing, without results, without reason, for free, by mistake",
+    definition="in vain, for nothing, for free",
     tag="[ADVERB:IN_VAIN]",
 )
 pokémon = ProperNoun("Pokémon")
 asé = Noun(
-    "asé", definition="We, people in general, all of us", tag="[PRONOUN:ALL_OF_US]"
+    "asé", definition="We, people in general, all of us", tag="[PRONOUN:UNIVERSAL_WE]"
 )
-îar = Verb("îar")
-kûépe = Adverb("kûépe", definition="there, in that place", tag="[ADVERB:THERE]")
-amb = amõ * abá
+îar = Verb("îar", definition="to capture, to catch")
+kûépe = Adverb("kûépe", definition="from far away", tag="[ADVERB:FROM_DISTANCE]")
+
+amb = amõamõ * abá
 nã = Adverb("nã", definition="like that", tag="[ADVERB]")
 # Amõ abá e'i marakaîá repyme'enga? Nd'aîmo'ãngi nã sekó!
-moang = Verb("mo'ang")
+moang = Verb("mo'ang", definition="to imagine")
 
 emerson_saying = [
-    (amb * ei) << (amb * epymeeng * marakaîá),
+    ((amb * ei) << peQ) << (amb * epymeeng * marakaîá),
     -(+ixé * moang) * (nã + (ae * ikó)),
     Copula() * marakaîá * ~(rama * (pyra * (epymeeng * ae))),
     (kûépe + é) + (((asé * îar * ae) + tenhen) + (pokémon * îabé)),
@@ -424,3 +522,10 @@ print(result_string)
 #             break
 
 # random.shuffle(finished_nouns)
+ker = Verb("ker")
+pytá = Verb("pytá")
+inv = Verb("in")
+tu_dorm = (nde * ker) << (nde * îub)
+eu_fic = (ixé * pytá) << (ixé * inv)
+ele_foi = ae * só
+complex = ele_foi << (eu_fic << tu_dorm)

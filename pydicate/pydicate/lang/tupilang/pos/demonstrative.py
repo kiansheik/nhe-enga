@@ -68,7 +68,12 @@ akó = Demonstrative("akó", tag="[DEMONSTRATIVE:3p:NOT_VISIBLE]")
 akûeî = Demonstrative("akûeî", tag="[DEMONSTRATIVE:3p:NOT_VISIBLE]")
 aîpó = Demonstrative("aîpó", tag="[DEMONSTRATIVE:3p:NOT_VISIBLE:AUDIBLE]")
 
-amõ = Demonstrative("amõ", definition="some", tag="[DEMONSTRATIVE:3p:INDETERMINATE]")
+amõ = Demonstrative(
+    "amõ", definition="some (singular)", tag="[DEMONSTRATIVE:3p:INDETERMINATE]"
+)
+amõamõ = Demonstrative(
+    "amõ amõ", definition="some (plural)", tag="[DEMONSTRATIVE:3p:INDETERMINATE:PLURAL]"
+)
 amoaé = Demonstrative(
     "amoaé", definition="other, another", tag="[DEMONSTRATIVE:3p:OTHER]"
 )

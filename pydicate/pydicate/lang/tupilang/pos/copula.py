@@ -17,6 +17,10 @@ class Copula(Predicate):
         self.pro_drop = False
         self.posto = "posposto"
 
+    @property
+    def _inflection(self):
+        return self.inflection()
+
     def inflection(self):
         if self.arguments:
             return self.arguments[0].inflection()
@@ -32,7 +36,7 @@ class Copula(Predicate):
             neg_prefix = "nd" if vbt[0] in TupiNoun.vogais else "nda"
             vbt = f"{neg_prefix} {vbt} ruã"
         nec = " ".join([x.eval(annotated=annotated) for x in self.arguments[1:]])
-        nec = f"{vbt} {nec}"
+        nec = f"{vbt} {nec}".strip()
         if self.post_adjuncts:
             nec += " " + " ".join(
                 [x.eval(annotated=annotated) for x in self.post_adjuncts]
@@ -43,7 +47,7 @@ class Copula(Predicate):
                 + " "
                 + nec
             )
-        return nec
+        return nec.strip()
 
     def __eq__(self, other):
         if isinstance(other, Copula):

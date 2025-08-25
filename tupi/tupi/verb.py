@@ -661,24 +661,24 @@ class Verb(TupiAntigo):
             negative=False,
             anotar=True,
         )
-        no_brackets = self.remove_brackets_and_contents(vbt)
-        if no_brackets[-1] in "bp":
-            parts = vbt.split("[")
-            start = "[".join(parts[:-1])
-            vbt = f"{self.remove_accent_last_vowel(start[:-1])}[{parts[-1]}ba'e"
-        elif no_brackets[-1] in "m":
-            parts = vbt.split("[")
-            start = "[".join(parts[:-1])
-            vbt = f"{self.remove_accent_last_vowel(start[:-1])}m[{parts[-1]}ba'e"
-        elif no_brackets[-1] in self.vogais:
-            parts = vbt.split("[")
-            start = "[".join(parts[:-1])
-            vbt = f"{self.remove_accent_last_vowel(start)}[{parts[-1]}ba'e"
+        vbt = AnnotatedString(vbt)
+        if ends_with_any(vbt, ["b", "p"]):
+            vbt.replace_clean(-1, 1, "")
+            vbt.insert_suffix("ba'e")
+        elif ends_with_any(vbt, ["m"]):
+            vbt.insert_suffix("ba'e")
+        elif ends_with_any(vbt, self.vogais):
+            vbt.replace_clean(-1, 1, self.remove_accent_last_vowel(vbt[-1]))
+            vbt.insert_suffix("ba'e")
         else:
-            vbt = f"{vbt}y[CONSONANT_CLASH]ba'e"
+            vbt.insert_suffix("y[CONSONANT_CLASH]ba'e")
         vbt += "[RELATIVE_AGENT_SUFFIX]"
-        return (
-            vbt.strip()
-            if anotar
-            else self.fix_phonetics(self.remove_brackets_and_contents(vbt)).strip()
-        )
+        return vbt.verbete(anotar)
+
+
+def ends_with_any(s, endings):
+    return any(s.endswith(ending) for ending in endings)
+
+
+def starts_with_any(s, endings):
+    return any(s.startswith(ending) for ending in endings)

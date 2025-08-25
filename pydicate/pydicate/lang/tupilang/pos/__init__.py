@@ -18,7 +18,6 @@ ymo = YFix(Adverb("mo", tag="[IRREALIS_SUFIX]"))  # Make into a irreal particle
 umã = Adverb("umã", tag="[PRETERITE]")
 mã = YFix(Adverb("mã", tag="[EXHALTIVE_SUFIX]"))  # Make into a irreal particle
 temõ = YFix(Adverb("temõ", tag="[WISHFUL_SUFIX]"))  # Make into a irreal particle
-peQ = YFix(Postposition("pe", tag="[INTERROGATIVE]"))
 
 
 def v(noun):

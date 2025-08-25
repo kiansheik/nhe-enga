@@ -61,10 +61,11 @@ class Deverbal(Noun):
             mf = self.morphology(self, verb, annotated=annotated)
             retval = ""
             for adj in verb.pre_adjuncts:
-                retval = adj.eval(annotated=annotated) + " " + retval
+                retval = adj.eval(annotated=annotated) + " " + retval.strip()
+            retval = f"{retval.strip()} {mf.strip()}".strip()
             for adj in verb.post_adjuncts:
                 retval = retval.strip() + " " + adj.eval(annotated=annotated)
-            retval = f"{retval.strip()} {mf}".strip()
+            retval = retval.strip()
         else:
             retval = AnnotatedString(f"{self.verbete}{self.tag}").verbete(
                 annotated=annotated
@@ -72,6 +73,8 @@ class Deverbal(Noun):
         return retval
 
     def __mul__(self, other):
+        if len(self.arguments) == 1:
+            return other * self
         if isinstance(other, Verb) and not self.arguments:
             cop = self.copy()
             cop.arguments.append(other)

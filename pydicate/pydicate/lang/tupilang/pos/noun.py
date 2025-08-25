@@ -84,14 +84,12 @@ class Noun(Predicate):
     def preval(self, annotated=False):
         """Evaluate the Noun object."""
         vbt = self.noun_function(neg=self.negated, annotated=annotated)
-        ret_val = ""
+        ret_val = f"{vbt}"
         for adj in self.pre_adjuncts:
-            ret_val += " " + adj.eval(annotated=annotated)
+            ret_val = f"{adj.eval(annotated=annotated)} {ret_val}"
         ret_val = ret_val.strip()
         for adj in self.post_adjuncts:
-            ret_val = adj.eval(annotated=annotated) + " " + ret_val
-        ret_val = ret_val.strip()
-        ret_val += " " + vbt if ret_val else vbt
+            ret_val = f"{ret_val} {adj.eval(annotated=annotated)}"
         return ret_val.strip()
 
     def __mul__(self, other):
@@ -100,6 +98,19 @@ class Noun(Predicate):
             deverbal = other.copy()
             deverbal.arguments[0].arguments.append(self.copy())
             return deverbal
+        if "deverbal" in other.category:
+            possessor = self.copy()
+            base_noun = Noun(other.eval(True), definition=other.definition)
+
+            base_noun.arguments.append(possessor)
+            base_noun.noun = base_noun.noun.possessive(
+                possessor._inflection,
+                None
+                if possessor.category == "pronoun"
+                else possessor.eval(annotated=True),
+            )
+            base_noun.noun.pluriforme = possessor.noun.pluriforme
+            return base_noun
         if isinstance(other, Noun):
             possessor = self.copy()
             base_noun = other.copy()
@@ -112,6 +123,7 @@ class Noun(Predicate):
                 else possessor.eval(annotated=True),
             )
             base_noun.noun.pluriforme = possessor.noun.pluriforme
+            base_noun.noun.m_pluriforme = possessor.noun.m_pluriforme
             return base_noun
         # Otherwise, treat itself as the argument to the other predicate
         self.posto = "anteposto"
@@ -216,8 +228,8 @@ class ProperNoun(Noun):
     def noun_function(self, neg=False, annotated=False):
         """Return the noun in its base form."""
         if neg:
-            return self.noun.eym().verbete(annotated)
-        return self.noun.absoluta().verbete(annotated)
+            return self.noun.eym().substantivo(annotated)
+        return AnnotatedString(f"{self.verbete}{self.tag}").verbete(annotated)
 
 
 class Pronoun(Noun):
