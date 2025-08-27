@@ -21,7 +21,7 @@ temõ = YFix(Adverb("temõ", tag="[WISHFUL_SUFIX]"))  # Make into a irreal parti
 
 
 def v(noun):
-    pf = noun.noun.pluriform_prefix()
+    pf = noun.noun.pluriforme
     vc = "(adj.)"
     if pf:
         vc = f"({pf})" + vc

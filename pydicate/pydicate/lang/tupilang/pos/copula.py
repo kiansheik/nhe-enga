@@ -13,7 +13,7 @@ class Copula(Predicate):
             verbete="=",
             category=category,
             min_args=1,
-            max_args=2,
+            max_args=100000,
             definition=definition,
             tag="[COPULA]",
         )

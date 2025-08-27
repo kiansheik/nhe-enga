@@ -340,6 +340,28 @@ erobak = Verb("erobak")
 aec = Adverb("a'e")
 jatf = Copula() * (jesus == (pyra * (mombeu / katu))) * (nde * membyra)
 syk = Verb("syk")
+nheraneym = Noun("nherane'yma")
+erekó = Verb("erekó")
+poreaûsuberekó = Noun("poreaûsuberekó")
+virgem_maria = ProperNoun("Virgem Maria")
+angaturama = Noun("angaturama")
+christo = ProperNoun("Christo")
+enõî = Verb("enõî")
+îekosub = Verb("îekosub")
+eikatu = Verb("'ikatu")
+tt = tupan == tuba
+oîepebae = Noun("oîepeba'e", definition="unique, only one")
+pitangin = Noun("pitang˜i")
+
+ababykagûereyma = Noun("ababykagûere'yma")
+morubixaba = Noun("morubixaba")
+ponciopilato = ProperNoun("Poncio Pilato")
+memûã = Noun("memûã")
+maria = ProperNoun("Maria")
+ybyrá = Noun("ybyrá")
+îoasaba = Noun("îoasaba")
+moîar = Verb("moîar")
+tym = Verb("tym")
 
 bettendorff_compendio_pt_1 = [
     # Santa Cruz
@@ -395,6 +417,49 @@ bettendorff_compendio_pt_1 = [
         (iré * (syk * (ikód * (pûera * (saba * (pea * îe))))))
         >> ((jatf * (+endé * (epîak / ukar))).imp() + (oré * supé))
     ),
+    Copula()
+    * (nheraneym.voc())
+    * ((sara * v(poreaûsuberekó)).voc())
+    * ((bae * v(een)).voc())
+    * virgem_maria.voc(),  # fix absoluta m
+    ((Copula() * santamaria * (tupan * sy)) + (v(angaturama).perm() * +oré) << ne)
+    + (esé * (pûera * (emi * (christo * enõî))))
+    + (
+        ri * (rama * (saba * (oré * îekosub)))
+    ),  # îekosupagûama here is îekosuBagûama in bettendorf, displaying already some early divergences of loss of phonetic composition which we see in nheengatu
+    (amen + jesus),
+    # Creio em Deus Padre
+    erobîar
+    * +ixé
+    * (
+        (
+            (Copula() * (tt))
+            * (bae * ((+tt * monhang * (opakatu + (mbae + tetiruã))) >> (+tt * eikatu)))
+        )
+        * (sara * (monhang * (abé + ybaka + yby)))
+    ),
+    (
+        +ixé
+        * erobîar
+        * ((Copula() * (jesus / christo / abé)) * (tayra) * (oîepebae) * (asé * îara))
+    ),  # fix abé rendering on correct element
+    (
+        pûera
+        * (
+            bae
+            * (
+                (pe * (saba * (espirito_santo * monhang * ae)))
+                >> ((amo * pitangin) >> (((monhang) * îe)))
+            )
+        )
+    ),
+    (aebae * ar) + (suí * (Copula() * (maria) * (ababykagûereyma))),
+    (ponciopilato * ((amo * morubixaba) >> (ikó)))
+    >> ((amo * (pyra * (erekó / memûã))) + (+aebae * ikó)),
+    (esé * (ybyrá / îoasaba))
+    + (amo * (pyra * moîar) + (ikó * +aebae))
+    + (amo * (pyra * îuká))
+    + (amo * (pyra * tym) + (ikó * +aebae)),
 ]
 
 
@@ -439,7 +504,17 @@ endébo orosapukapukaî ipe'apyramo Eva membyramo.
 
 endébo oronhe'angerur orépoasemamo oroîasegûabo ikó ybytygûaîa îase'ûaba pupé.
 
-ene'ĩ oré resé îeruresar."""
+ene'ĩ oré resé îeruresar.
+
+eboûing nde resaporaûsubara erobak oré koty.
+
+a'e Jesus imombe'ukatupyra nde membyra ikó îepe'asagûera sykiré esepîakukar orébo.
+
+nherane'ym poreaûsuberekoar se'ẽba'e Virgem Maria.
+
+Santa Maria Tupã sy toréangaturam ne Christo remienõîûera resé oré îekosupagûama ri.
+
+amém Jesus."""
 # split into lines
 
 bettendorf_ground_truth_lines = bettendorf_ground_truth.split("\n")
@@ -473,9 +548,6 @@ tenhen = Adverb(
     tag="[ADVERB:IN_VAIN]",
 )
 pokémon = ProperNoun("Pokémon")
-asé = Noun(
-    "asé", definition="We, people in general, all of us", tag="[PRONOUN:UNIVERSAL_WE]"
-)
 îar = Verb("îar", definition="to capture, to catch")
 kûépe = Adverb("kûépe", definition="from far away", tag="[ADVERB:FROM_DISTANCE]")
 

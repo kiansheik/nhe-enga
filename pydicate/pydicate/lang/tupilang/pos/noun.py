@@ -87,7 +87,7 @@ class Noun(Predicate):
     def preval(self, annotated=False):
         """Evaluate the Noun object."""
         vbt = self.noun_function(neg=self.negated, annotated=annotated)
-        ret_val = f"{vbt}"
+        ret_val = f"{vbt}{self.tag if annotated else ''}"
         for adj in self.pre_adjuncts:
             ret_val = f"{adj.eval(annotated=annotated)} {ret_val}"
         ret_val = ret_val.strip()
@@ -264,6 +264,12 @@ class Pronoun(Noun):
         )
         self.category = "pronoun"
 
+    def noun_function(self, neg=False, annotated=False):
+        """Return the noun in its base form."""
+        if neg:
+            return AnnotatedString(self.noun.eym().verbete()).verbete(annotated)
+        return AnnotatedString(self.noun.verbete()).verbete(annotated)
+
 
 ixé = Pronoun("1ps", definition="I")
 xe = Pronoun("1ps", definition="I")
@@ -273,13 +279,19 @@ endé = Pronoun("2ps", definition="you")
 nde = Pronoun("2ps", definition="you")
 pee = Pronoun("2pp", definition="y'all'")
 ae = Pronoun("3p", definition="he/she/it/they")
-îe = Pronoun("refl", definition="to oneself, one's own")
-îo = Pronoun("mut", definition="to one another")
+îe = Pronoun(
+    "refl", definition="to oneself, one's own", tag="[OBJECT_PREFIX:REFLEXIVE]"
+)
+îo = Pronoun("mut", definition="to one another", tag="[OBJECT_PREFIX:RECIPROCAL]")
 og = Pronoun(
     "o",
     definition="refers to the subject of the main clause",
     tag="[PRONOUN:MAIN_CLAUSE_SUBJECT]",
 )
 og._inflection = "suj"
+
+asé = Noun(
+    "asé", definition="We, people in general, all of us", tag="[PRONOUN:UNIVERSAL_WE]"
+)
 
 pronoun_verbetes = [x.verbete for x in [ixé, îandé, oré, endé, pee, ae]]

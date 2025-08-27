@@ -177,12 +177,16 @@ class Beyond(Postposition):
         if len(self.arguments) == 0:
             return f"{self.verbete}{self.tag}"
         if isinstance(self.arg0, Verb):
-            vbt = AnnotatedString(
-                self.arg0.base_nominal(annotated=True).eval(True)
-            ).removesuffix_original("a[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING]")
+            vbt = (
+                AnnotatedString(self.arg0.base_nominal(annotated=True).eval(True))
+                .drop_all_last_tags()
+                .removesuffix_original("a")
+            )
         else:
-            vbt = AnnotatedString(self.arg0.eval(True)).removesuffix_original(
-                "a[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING]"
+            vbt = (
+                AnnotatedString(self.arg0.eval(True))
+                .drop_all_last_tags()
+                .removesuffix_original("a")
             )
         suffix = "iré"
         if vbt[-1] in TupiNoun.vogais:

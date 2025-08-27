@@ -24,6 +24,7 @@ class Number(Predicate):
 
 
 oîepé = Number("oîepé", definition="one, a single one", tag="[NUMBER:ONE]")
+îepé = Number("îepé", definition="one, a single one", tag="[NUMBER:ONE]")
 # mokõî1 (num.) - 1) dois (Fig., Arte, 4): mokõî apŷaba - dois homens (Anch., Arte, 9v); ...Mokõî nhõ abá rekoabane... - Duas, somente, serão as moradas das pessoas. (Ar, Cat.,163); 2) par, dupla de qualquer coisa (VLB, II, 64) ● mokõ-mokõî - de dois em dois, dois a dois (VLB, I, 106)
 mokõî = Number("mokõî", definition="two, a pair, a couple", tag="[NUMBER:TWO]")
 # mosapyr1 (num.) - três: Iîá mosapyr-y bé pekaî oîepegûasune. - Ainda bem que vós três, novamente, queimareis juntos. (Anch., Teatro, 50); Mosapyr o boîá... - Três de seus discípulos. (Ar., Cat., 52v); Mosapyr abá our. - Três pessoas vieram. (Anch., Arte, 9v) ● mosapy-sapyr - de três em três, três cada um (VLB, II, 136)

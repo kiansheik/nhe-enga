@@ -167,7 +167,9 @@ class Predicate(Trackable):
 
     def signature(self):
         args = ", ".join(repr(arg) for arg in self.arguments)
-        pre_adjuncts = ", ".join(repr(adj) for adj in self.pre_adjuncts)
+        pre_adjuncts = ", ".join(
+            repr(adj) for adj in self.v_adjuncts_pre + self.pre_adjuncts
+        )
         post_adjuncts = ", ".join(
             repr(adj) for adj in self.v_adjuncts + self.post_adjuncts
         )
@@ -236,11 +238,20 @@ class Predicate(Trackable):
             # add comp_glosses in as adjectives
             if comp_glosses:
                 # make it aparent in structure that these are modifiers of meaning on the original term like adjectives
-                tl = f"{tl} adjectives_modifying_previous_term([{', '.join(comp_glosses)}])"
+                tl = f"{tl} meanings_modifying_previous_term([{', '.join(comp_glosses)}])"
         return f"{pre_adjuncts}[{tl}]{args}{post_adjuncts}"
 
     def __repr__(self):
         return self.eval(annotated=False)
+
+    def __pos__(self):
+        """
+        Mark noun as pro_drop the predicate using the + operator.
+        :return: Self (to enable chaining).
+        """
+        neg = self.copy()
+        neg.pro_drop = True
+        return neg
 
     def __str__(self):
         return self.__repr__()
@@ -297,7 +308,12 @@ class Predicate(Trackable):
         return self.principal is not None
 
     def is_gerund_composto(self):
-        for adj in self.pre_adjuncts + self.post_adjuncts:
+        for adj in (
+            self.v_adjuncts_pre
+            + self.pre_adjuncts
+            + self.v_adjuncts
+            + self.post_adjuncts
+        ):
             if adj.principal == self and adj.same_subject():
                 return adj
         return None
@@ -362,7 +378,12 @@ class Predicate(Trackable):
 
     def __len__(self):
         return 1 + sum(
-            len(x) for x in self.arguments + self.pre_adjuncts + self.post_adjuncts
+            len(x)
+            for x in self.arguments
+            + self.pre_adjuncts
+            + self.post_adjuncts
+            + self.v_adjuncts
+            + self.v_adjuncts_pre
         )
 
     def __lshift__(self, other):
@@ -449,12 +470,12 @@ edge path={{
         # Collect post_adjuncts (they go to the left in rendering)
         post_children = [
             adj.to_forest_tree(indent + 1, ctype="pre_adjunct", parent=self)
-            for adj in self.pre_adjuncts or []
+            for adj in (self.v_adjuncts_pre + self.pre_adjuncts) or []
         ]
         # Collect pre_adjuncts (they go to the right in rendering)
         pre_children = [
             adj.to_forest_tree(indent + 1, ctype="post_adjunct", parent=self)
-            for adj in reversed(self.post_adjuncts or [])
+            for adj in reversed((self.v_adjuncts + self.post_adjuncts) or [])
         ]
         # Collect arguments (default style, can be tagged 'arg' if desired)
         arg_children = [

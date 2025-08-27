@@ -125,9 +125,9 @@ class Verb(Predicate):
         vadjs = ""
         vadjs_pre = ""
         if self.v_adjuncts:
-            vadjs = "".join([x.eval(annotated=annotated) for x in self.v_adjuncts])
+            vadjs = " ".join([x.eval(annotated=annotated) for x in self.v_adjuncts])
         if self.v_adjuncts_pre:
-            vadjs_pre = "".join(
+            vadjs_pre = " ".join(
                 [x.eval(annotated=annotated) for x in reversed(self.v_adjuncts_pre)]
             )
         retval = ""
@@ -238,7 +238,7 @@ class Verb(Predicate):
                 negative=base_verb.negated,
                 pro_drop=suj.pro_drop,
                 pro_drop_obj=obj.pro_drop,
-                pos=obj.posto,
+                pos=obj.posto if infl1 not in ["refl", "mut", "suj"] else suj.posto,
                 vadjs=vadjs,
                 vadjs_pre=vadjs_pre,
                 redup=base_verb.reduplicated,
@@ -248,6 +248,8 @@ class Verb(Predicate):
         # deal with adverbs
         # We need to know if the adverb was added before the verb or after: `go * Noun("Endé") + Adverb("koritei")` or `Adverb("koritei") + go * Noun("Endé")`
         if gerund_composto:
+            gerund_composto.v_adjuncts = []
+            gerund_composto.v_adjuncts_pre = []
             retval = f"{gerund_composto.base_nominal(True).verbete} {retval}"
             # filter self.pre_adjuncts and self.post_adjuncts to not render the gerund again
             filtered_pre_adjuncts = [
@@ -273,6 +275,14 @@ class Verb(Predicate):
         return retval if annotated else self.verb.remove_brackets_and_contents(retval)
 
     def base_nominal(self, annotated=False):
+        vadjs = ""
+        vadjs_pre = ""
+        if self.v_adjuncts:
+            vadjs = " ".join([x.eval(annotated=annotated) for x in self.v_adjuncts])
+        if self.v_adjuncts_pre:
+            vadjs_pre = " ".join(
+                [x.eval(annotated=annotated) for x in reversed(self.v_adjuncts_pre)]
+            )
         if len(self.arguments) == 0:
             nom = self.verb.conjugate(
                 subject_tense="3p",
@@ -285,6 +295,8 @@ class Verb(Predicate):
                 negative=False,
                 anotar=annotated,
                 redup=self.reduplicated,
+                vadjs=vadjs,
+                vadjs_pre=vadjs_pre,
             )
             tn = TupiNoun(nom, self.raw_definition)
             final = Noun(
@@ -293,7 +305,7 @@ class Verb(Predicate):
                 inflection="3p",
                 pro_drop=False,
             )
-            final.noun.pluriforme = False
+            final.noun.pluriforme = self.verb.pluriforme
             final.pre_adjuncts = [x.copy() for x in self.pre_adjuncts]
             final.post_adjuncts = [x.copy() for x in self.post_adjuncts]
             return final
@@ -347,6 +359,8 @@ class Verb(Predicate):
             pro_drop=(subj_obj.pro_drop if subj_obj else False) or not subj_tense,
             negative=self.negated,
             anotar=annotated,
+            vadjs=vadjs,
+            vadjs_pre=vadjs_pre,
             redup=self.reduplicated,
         )
         tn = TupiNoun(nom, self.raw_definition)
@@ -358,6 +372,8 @@ class Verb(Predicate):
         )
         final.pre_adjuncts = [x.copy() for x in self.pre_adjuncts]
         final.post_adjuncts = [x.copy() for x in self.post_adjuncts]
+        final.v_adjuncts = [x.copy() for x in self.v_adjuncts]
+        final.v_adjuncts_pre = [x.copy() for x in self.v_adjuncts_pre]
         final.arguments = [arg.copy() for arg in self.arguments]
         return final
 
@@ -393,7 +409,10 @@ class Verb(Predicate):
     def indicative(self):
         if self.circumstancial is not None:
             return "circunstancial" if self.circumstancial else "indicativo"
-        for adj in self.pre_adjuncts:
+        pre_adj = copy.deepcopy(self.pre_adjuncts)
+        if self.subject() and self.subject().posto != "anteposto":
+            pre_adj += copy.deepcopy(self.v_adjuncts_pre)
+        for adj in pre_adj:
             if isinstance(adj, Adverb):
                 return "circunstancial"
             if isinstance(adj, Verb):

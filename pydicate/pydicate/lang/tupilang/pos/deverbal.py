@@ -28,18 +28,24 @@ class Deverbal(Noun):
 
     @property
     def noun(self):
+        ret_noun = None
         if self._augment_noun:
-            return self._augment_noun
-        if self.arguments and isinstance(self.arguments[0], Verb):
-            return TupiNoun(self.eval(True), self.functional_definition, noroot=True)
+            ret_noun = self._augment_noun
+        elif self.arguments and isinstance(self.arguments[0], Verb):
+            ret_noun = TupiNoun(
+                self.eval(True), self.functional_definition, noroot=True
+            )
+            ret_noun.pluriforme = self.arguments[0].verb.pluriforme
             # verb = self.arguments[0]
             # vbt = verb.copy()
             # if vbt.arguments:
             #     vbt.arguments[0].pro_drop = True
-            # # return TupiNoun(self.eval(True), self.functional_definition)
+            # # ret_noun = TupiNoun(self.eval(True), self.functional_definition)
             # print(self.eval(True))
-            # return vbt.base_nominal(True).noun
-        return TupiNoun(self.verbete, self.functional_definition, noroot=True)
+            # ret_noun = vbt.base_nominal(True).noun
+        else:
+            ret_noun = TupiNoun(self.verbete, self.functional_definition, noroot=True)
+        return ret_noun
 
     @noun.setter
     def noun(self, value):
@@ -60,10 +66,10 @@ class Deverbal(Noun):
             verb = self.arguments[0]
             mf = self.morphology(self, verb, annotated=annotated)
             retval = ""
-            for adj in verb.pre_adjuncts:
+            for adj in verb.v_adjuncts_pre + verb.pre_adjuncts:
                 retval = adj.eval(annotated=annotated) + " " + retval.strip()
             retval = f"{retval.strip()} {mf.strip()}".strip()
-            for adj in verb.post_adjuncts:
+            for adj in verb.v_adjuncts + verb.post_adjuncts:
                 retval = retval.strip() + " " + adj.eval(annotated=annotated)
             retval = retval.strip()
         else:
@@ -185,10 +191,10 @@ class Classifier(Noun):
 
 def bae_morphology(self, verb, annotated=False):
     """Resolve the morphology of the Deverbal object."""
-    if len(verb.arguments) == 2:
-        if verb.arguments[1].inflection() in ["3p", None]:
+    if verb.object():
+        if verb.object().inflection() in ["3p", "refl", "mut", "suj", None]:
             return verb.verb.bae(
-                obj=verb.arguments[1].eval(annotated=annotated), anotar=annotated
+                obj=verb.object().eval(annotated=annotated), anotar=annotated
             )
         else:
             return sara_morphology(verb, annotated=annotated)

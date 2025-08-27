@@ -375,6 +375,8 @@ class Noun(TupiAntigo):
 
         if ends_with_any(annotated, ["m"]):
             annotated.insert_suffix("bar")
+        elif annotated[-2:] == "ng":
+            annotated.insert_suffix("ar")
         elif ends_with_any(annotated, ret_noun.consoantes_nasais):
             annotated.insert_suffix("an")
         elif ends_with_any(annotated, ["î"]):
@@ -384,8 +386,6 @@ class Noun(TupiAntigo):
                 annotated.insert_suffix("tar")
         elif annotated.endswith("o") and annotated[-2] in (ret_noun.vogais + ["'"]):
             annotated.replace_clean(-1, 1, "ûar")
-        elif annotated[-2:] == "ng":
-            annotated.insert_suffix("ar")
         elif annotated[-1] in sara_consoante_map:
             sar_rep = sara_consoante_map[annotated[-1]]
             annotated.replace_clean(-1, 1, "")
@@ -669,6 +669,9 @@ class Noun(TupiAntigo):
             suf = f"y[CONSONANT_CLASH]{suf}"
         if not self.pluriforme:
             vbt.insert_prefix("i[OBJECT:3p:NON_MAIN_CLAUSE_SUBJECT]")
+        else:
+            prefix = ret_noun.pluriform_prefix("3p")
+            vbt.insert_prefix(prefix)
         vbt.insert_suffix(suf)
         vbt.insert_suffix("[AGENTLESS_PATIENT_SUFFIX]")
         ret_noun.aglutinantes.append(ret_noun)

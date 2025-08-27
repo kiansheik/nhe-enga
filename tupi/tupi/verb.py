@@ -130,6 +130,7 @@ class Verb(TupiAntigo):
             # breakpoint()
             subj_key = subject_tense if subject_tense else "ø"
             obj_key = object_tense if object_tense else "ø"
+            obj_key = "3p" if obj_key == "none" else obj_key
             if obj_key == "absoluta":
                 if self.transitivo:
                     subj_key = "3p"
@@ -137,6 +138,8 @@ class Verb(TupiAntigo):
                 else:
                     subj_key = "3p"
                     obj_key = "ø"
+            if obj_key == "3p" and subj_key == "3p" and not self.transitivo:
+                obj_key = "ø"
             if subj_key in ["refl", "mut", "suj"]:
                 subj_key = "3p"
             if obj_key in ["refl", "mut", "suj"]:
@@ -171,7 +174,7 @@ class Verb(TupiAntigo):
                 vbt = base_verbete
                 if negative:
                     suf = "e'ym[NEGATION_SUFFIX]a[GERUND_SUFFIX:CLASS_1]"
-                elif base_verbete[-1] in "ĩ ỹ ũ".split():
+                elif ends_with_any(base_verbete, "ĩ ỹ ũ".split()):
                     suf = f"amo[GERUND_SUFFIX:CLASS_1:NASAL_IYU]"
                 elif base_verbete[-1] in "i í y ý u ú".split():
                     suf = f"abo[GERUND_SUFFIX:CLASS_1:IYU]"
@@ -292,24 +295,27 @@ class Verb(TupiAntigo):
                         vbt += "r"
                     eme = "eme" + f"[CONJUNCTIVE_SUFFIX]"
             if pluri_check and not self.transitivo:
-                if "3p" in subject_tense and dir_subj_raw is None:
+                if ("3p" in subject_tense and dir_subj_raw is None) or (
+                    vadjs_pre != ""
+                ):
                     obj = (
                         f"s[PLURIFORM_PREFIX:S]"
                         if not self.t_type
                         else "t[PLURIFORM_PREFIX:T]"
                     )
-                    subj = ""
+                    if vadjs_pre == "":
+                        subj = ""
                 else:
                     obj += f"r[PLURIFORM_PREFIX:R]"
-            elif pluri_check and self.transitivo:
+            elif pluri_check and self.transitivo and (vadjs_pre == ""):
                 obj += f"r[PLURIFORM_PREFIX:R]"
             vbt = f"{vbt}[ROOT]"
-            redup_space = f"{subj if not pro_drop else ''}{' ' if not self.segunda_classe else ''}{obj}{vbt}"
+            redup_space = f"{obj}{vbt}"
             if redup:
                 redup_space = self.reduplicate(
                     AnnotatedString(redup_space)
                 ).get_annotated()
-            result = f"{vadjs_pre}{redup_space}{eme}{vadjs}".strip()
+            result = f"{subj if not pro_drop else ''}{' ' if not self.segunda_classe else ''}{vadjs_pre}{redup_space}{eme}{vadjs}".strip()
         elif mode == "nominal":
             subj = self.personal_inflections[subject_tense][1]
             tag = (
@@ -340,14 +346,20 @@ class Verb(TupiAntigo):
                     obj = "îo" + f"[OBJECT:MUTUAL]"
                 elif object_tense == "absoluta" and dir_obj_raw is None:
                     if self.pluriforme:
-                        obj = f"t[PLURIFORM_PREFIX:T]"
+                        obj = f""
+                        # if base_verbete[0] in self.vogais:
+                        #     obj = "mor[OBJECT:GENERIC:PEOPLE]"
+                        # else:
+                        #     obj = "moro[OBJECT:GENERIC:PEOPLE]"
                     else:
                         obj = f""
                 else:
                     obj = ""
                     if object_tense:
                         obj = (
-                            self.personal_inflections[object_tense][1]
+                            self.personal_inflections[
+                                object_tense if object_tense != "none" else "3p"
+                            ][1]
                             + f"[OBJECT:{object_tense}]"
                             if dir_obj_raw is None
                             else f"{dir_obj_raw}" + f"[OBJECT:DIRECT]"
@@ -365,31 +377,38 @@ class Verb(TupiAntigo):
                 and not self.transitivo
                 and (subject_tense not in ["refl", "mut", "suj"])
             ):
-                if "3p" in subject_tense and dir_subj_raw is None:
+                if ("3p" in subject_tense and dir_subj_raw is None) or (
+                    vadjs_pre != ""
+                ):
                     obj = (
-                        f"t[PLURIFORM_PREFIX:T]"
+                        ""
+                        if object_tense == "none"
+                        else f"t[PLURIFORM_PREFIX:T]"
                         if object_tense == "absoluta"
                         else f"s[PLURIFORM_PREFIX:S]"
                         if not self.t_type
                         else "t[PLURIFORM_PREFIX:T]"
                     )
-                    subj = ""
-                else:
+                    if vadjs_pre == "":
+                        subj = ""
+                elif vadjs_pre == "":
                     obj += f"r[PLURIFORM_PREFIX:R]"
             elif (
                 pluri_check
                 and self.transitivo
-                and (object_tense != "3p" or dir_obj_raw is not None)
+                and (object_tense not in ["3p", "absoluta"] or dir_obj_raw is not None)
                 and (object_tense not in ["refl", "mut", "suj"])
             ):
                 obj += f"r[PLURIFORM_PREFIX:R]"
             vbt = f"{vbt}[ROOT]"
-            redup_space = f"{subj if not pro_drop else ''}{' ' if not self.segunda_classe else ''}{obj}{vbt}"
+            redup_space = f"{obj}{vbt}"
             if redup:
                 redup_space = self.reduplicate(
                     AnnotatedString(redup_space)
                 ).get_annotated()
-            result = (f"{vadjs_pre}{redup_space}{vadjs}").strip()
+            result = (
+                f"{subj if not pro_drop else ''}{' ' if not self.segunda_classe else ''}{vadjs_pre}{redup_space}{vadjs}"
+            ).strip()
         elif "2p" not in subject_tense and mode == "circunstancial":
             subj = (
                 self.personal_inflections[subject_tense][1]
@@ -702,9 +721,15 @@ class Verb(TupiAntigo):
 
     def bae(self, obj=None, anotar=False):
         # We will conjugate for the 3rd person prod_drop first, and then apply the suffix
+        obj_t = "3p"
+        obj_clean = None if not obj else AnnotatedString(obj).get_clean()
+        if obj_clean == "îe":
+            obj_t = "refl"
+        elif obj_clean == "îo":
+            obj_t = "mut"
         vbt = self.conjugate(
             subject_tense="3p",
-            object_tense="3p",
+            object_tense=obj_t,
             dir_obj_raw=obj,
             dir_subj_raw=None,
             mode="indicativo",

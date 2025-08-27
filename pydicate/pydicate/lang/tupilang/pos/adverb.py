@@ -39,3 +39,8 @@ class Adverb(Predicate):
 koyré = Adverb(
     "koyré", definition="right now, at this moment", tag="[ADVERB:TEMPORAL:IMMEDIATE]"
 )
+
+opá = Adverb("opá", definition="all, every, completely", tag="[ADVERB:3p:ALL]")
+opakatu = Adverb("opakatu", definition="all, every, completely", tag="[ADVERB:3p:ALL]")
+
+tetiruã = Adverb("tetiruã", definition="any, whichever", tag="[ADVERB:3p:ANY]")
