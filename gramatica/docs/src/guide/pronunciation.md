@@ -47,7 +47,7 @@ Click the **yellow words** to see Navarro's dictionary entry _(Portuguese)_
 | <sound sound="t" />   | t       | <root entryNumber=2 type=absolute root="atá" /> | fire |
 | <sound sound="u" />   | u       | <root root="aruru" /> | sad |
 | <sound sound="ú" />   | ˈu      | <root root="karu" entryNumber=2 /> | eat |
-| <sound sound="ũ" />   | ũ       | <root root="irũ" entryNumber=2 /> | friend |
+| <sound sound="ũ" />   | ũ       | <root root="irũ" entryNumber=2 /> | friend |
 | <sound sound="x" />   | ʃ       | <root root="ixé" /> | I |
 | <sound sound="y" />   | ɨ       | <root root="'y" /> | water, river |
 | <sound sound="ý" />   | ˈɨ      | <root root="gûaîaý" /> | feathered headdress |

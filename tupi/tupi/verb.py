@@ -447,7 +447,7 @@ class Verb(TupiAntigo):
                             obj = f"{obj}r[PLURIFORM_PREFIX:R]"
             circ = (
                 f"[CIRCUMSTANTIAL_SUFFIX:NULL_ENDING]"
-                if base_verbete[-1] in "û u ũ î".split()
+                if base_verbete[-1] in "û u ũ î".split()
                 else "û" + f"[CIRCUMSTANTIAL_SUFFIX:VOWEL_ENDING]"
                 if base_verbete[-1] in self.vogais
                 else "i" + f"[CIRCUMSTANTIAL_SUFFIX:CONSONANT_ENDING]"
