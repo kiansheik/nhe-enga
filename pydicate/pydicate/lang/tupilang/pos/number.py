@@ -25,14 +25,15 @@ class Number(Predicate):
 
     def preval(self, annotated=False):
         """Evaluate the Number object."""
+        tag = ""
+        if annotated:
+            tag = self.tag
         if self.arguments:
             if self.arguments[0].posto == "posposto":
-                return f"{self.verbete}{self.tag} {self.arguments[0].eval(annotated)}"
+                return f"{self.verbete}{tag} {self.arguments[0].eval(annotated)}"
             else:
-                return f"{self.arguments[0].eval(annotated)} {self.verbete}{self.tag}"
-        if annotated:
-            return f"{self.verbete}{self.tag}"
-        return self.verbete
+                return f"{self.arguments[0].eval(annotated)} {self.verbete}{tag}"
+        return f"{self.verbete}{tag}"
 
     def __add__(self, other):
         return other.__addpre__(self)

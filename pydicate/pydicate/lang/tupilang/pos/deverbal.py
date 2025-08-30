@@ -126,9 +126,11 @@ class Classifier(Noun):
         if self._augment_noun:
             return self._augment_noun
         if self.arguments and isinstance(self.arguments[0], Noun):
-            return TupiNoun(
+            ret = TupiNoun(
                 self.arguments[0].eval(True), self.functional_definition, noroot=True
             )
+            ret.pluriforme = self.arguments[0].noun.pluriforme
+            return ret
             # verb = self.arguments[0]
             # vbt = verb.copy()
             # if vbt.arguments:
