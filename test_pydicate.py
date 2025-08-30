@@ -338,7 +338,7 @@ enein = Interjection("ene'ĩ")
 îeruré = Verb("îeruré")
 erobak = Verb("erobak")
 aec = Adverb("a'e")
-jatf = Copula() * (jesus == (pyra * (mombeu / katu))) * (nde * membyra)
+jatf = cop() * (jesus == (pyra * (mombeu / katu))) * (nde * membyra)
 syk = Verb("syk")
 nheraneym = Noun("nherane'yma")
 erekó = Verb("erekó")
@@ -362,6 +362,28 @@ ybyrá = Noun("ybyrá")
 îoasaba = Noun("îoasaba")
 moîar = Verb("moîar")
 tym = Verb("tym")
+gûeîyb = Verb("gûeîyb")
+apytera = Noun("apytera")
+manõ = Verb("manõ")
+ikobé = Verb("ikobé")
+
+upir = Verb("upir")
+ttomtmetkbae = (cop() * (tt)) * (
+    bae * ((+tt * monhang * (opakatu + (mbae + tetiruã))) >> (+tt * eikatu))
+)
+ekatûaba = Noun("'ekatuaba")
+ker = Verb("ker")
+pytá = Verb("pytá")
+inv = Verb("in")
+aesuí = Adverb("a'e suí", definition="dalí, daí", tag="[ADVERB:FROM_THERE]")
+îur = Verb("îur")
+ekomonhang = Verb("ekomonhang")
+santa_igreja = Noun("Santa Igreja Catholica")
+santos = ProperNoun("Santos")
+îaok = Verb("îa'ok")
+moîaoîaok = mo * îaok.redup()
+pytybõ = Verb("pytybõ")
+
 
 bettendorff_compendio_pt_1 = [
     # Santa Cruz
@@ -389,18 +411,18 @@ bettendorff_compendio_pt_1 = [
     ((oré * ((pysyro * endé))).imp() << te) + ((mbae / aiba) * suí),
     (amen + jesus),
     # Ave Maria
-    Copula() * avemaria * (bae * ((esé * graça) + v(ynysema))),
+    cop() * avemaria * (bae * ((esé * graça) + v(ynysema))),
     (amo * (nde * irun)) + (ikó * (îandé * îara)),
     (amo * (pyra * (mombeu / katu))) + (ikó * +endé) + (kunhã * suí),
-    Copula() * ((pyra * (mombeu / katu)) + abé) * (Copula() * (nde * membyra) * jesus),
-    (Copula() * santamaria * (tupan * sy))
+    cop() * ((pyra * (mombeu / katu)) + abé) * (cop() * (nde * membyra) * jesus),
+    (cop() * santamaria * (tupan * sy))
     + (+endé * tupãmongetá).imp()
-    + (esé * (Copula() * oré * (bae * v(angaipaba))))
+    + (esé * (cop() * oré * (bae * v(angaipaba))))
     + koyr
     << (irã + ((îub * oré) >> (îekyî * oré)) << béno),
     (amen + jesus),
     # salva rainha
-    (Copula() * (salve_rainha == (poraûsubara * sy)) + ikobé.base_nominal(True))
+    (cop() * (salve_rainha == (poraûsubara * sy)) + ikobé.base_nominal(True))
     + (bae * v(een))
     + (saba * (oré * erobîar * îe))
     + (salve),
@@ -417,31 +439,23 @@ bettendorff_compendio_pt_1 = [
         (iré * (syk * (ikód * (pûera * (saba * (pea * îe))))))
         >> ((jatf * (+endé * (epîak / ukar))).imp() + (oré * supé))
     ),
-    Copula()
+    cop()
     * (nheraneym.voc())
     * ((sara * v(poreaûsuberekó)).voc())
     * ((bae * v(een)).voc())
     * virgem_maria.voc(),  # fix absoluta m
-    ((Copula() * santamaria * (tupan * sy)) + (v(angaturama).perm() * +oré) << ne)
+    ((cop() * santamaria * (tupan * sy)) + (v(angaturama).perm() * +oré) << ne)
     + (esé * (pûera * (emi * (christo * enõî))))
     + (
         ri * (rama * (saba * (oré * îekosub)))
     ),  # îekosupagûama here is îekosuBagûama in bettendorf, displaying already some early divergences of loss of phonetic composition which we see in nheengatu
     (amen + jesus),
     # Creio em Deus Padre
-    erobîar
-    * +ixé
-    * (
-        (
-            (Copula() * (tt))
-            * (bae * ((+tt * monhang * (opakatu + (mbae + tetiruã))) >> (+tt * eikatu)))
-        )
-        * (sara * (monhang * (abé + ybaka + yby)))
-    ),
+    erobîar * +ixé * ((ttomtmetkbae) * (sara * (monhang * (abé + ybaka + yby)))),
     (
         +ixé
         * erobîar
-        * ((Copula() * (jesus / christo / abé)) * (tayra) * (oîepebae) * (asé * îara))
+        * ((cop() * (jesus / christo / abé)) * (tayra) * (oîepebae) * (asé * îara))
     ),  # fix abé rendering on correct element
     (
         pûera
@@ -453,13 +467,31 @@ bettendorff_compendio_pt_1 = [
             )
         )
     ),
-    (aebae * ar) + (suí * (Copula() * (maria) * (ababykagûereyma))),
+    (aebae * ar) + (suí * (cop() * (maria) * (ababykagûereyma))),
     (ponciopilato * ((amo * morubixaba) >> (ikó)))
     >> ((amo * (pyra * (erekó / memûã))) + (+aebae * ikó)),
     (esé * (ybyrá / îoasaba))
     + (amo * (pyra * moîar) + (ikó * +aebae))
     + (amo * (pyra * îuká))
     + (amo * (pyra * tym) + (ikó * +aebae)),
+    (+jesus * gûeîyb + (pe * (yby * apytera))),
+    (pupé * (ara * mosapyr.card()))
+    + ((suí * (pûera * (bae * (manõ)))) + (+jesus * (ikobé / îebyr))),
+    (upir * +jesus * îe) + (pe * ybaka),
+    (koty * (ttomtmetkbae * ekatûaba)) + (+jesus * inv),
+    aesuí + (+jesus * îur)
+    << (
+        (
+            (((bae * (ikobé))) + ((pûera * (bae * (manõ)))) + paben)
+            * (+jesus * (ekomonhang))
+        )
+    )
+    + ne,
+    +ixé * erobîar * espirito_santo,
+    +ixé * erobîar * santa_igreja,
+    +ixé
+    * erobîar
+    * (((santos * (ikó / katu)).base_nominal(True) * (mo * îaok) * îe).redup()),
 ]
 
 
@@ -514,7 +546,29 @@ nherane'ym poreaûsuberekoar se'ẽba'e Virgem Maria.
 
 Santa Maria Tupã sy toréangaturam ne Christo remienõîûera resé oré îekosupagûama ri.
 
-amém Jesus."""
+amém Jesus.
+
+arobîar Tupã tuba opakatu mba'e tetiruã monhanga e'ikatuba'e ybaka yby abémonhangara.
+
+arobîar JesusChrixtoabé ta'yra oîepeba'e asé îara.
+
+Espírito Santo imonhangápe pitangĩnamo oîemonhangyba'epûera.
+
+a'eba'e o'ar Maria ababykagûere'yma suí.
+
+Poncio Pilato morubixabamo sekóreme serekomemûãmbyramo sekóû.
+
+ybyraîoasaba resé imoîarypyramo sekóû iîukápyramo itymymbyramo sekóû.
+
+ogûeîyb yby apyterype.
+
+'ara mosapyra pupé omanõba'epûera suí sekobeîebyri.
+
+oîeupir ybakype.
+
+Tupã tuba opakatu mba'e tetiruã monhanga e'ikatuba'e 'ekatuaba koty seni.
+
+a'e suí turi oîkobeba'e omanõba'epûera pabẽ rekomonhanga ne."""
 # split into lines
 
 bettendorf_ground_truth_lines = bettendorf_ground_truth.split("\n")
@@ -559,7 +613,7 @@ moang = Verb("mo'ang", definition="to imagine")
 emerson_saying = [
     ((amb * ei) << peQ) << (amb * epymeeng * marakaîá),
     -(+ixé * moang) * (nã + (ae * ikó)),
-    Copula() * marakaîá * ~(rama * (pyra * (epymeeng * ae))),
+    cop() * marakaîá * ~(rama * (pyra * (epymeeng * ae))),
     (kûépe + é) + (((asé * îar * ae) + tenhen) + (pokémon * îabé)),
 ]
 
@@ -569,15 +623,24 @@ sistema = Noun(
 erekó = Verb("erekó")
 ekobîara = Noun("ekobîara")
 kuab = Verb("kuab")
-
+anga = Noun("'anga")
+maenan = Verb("ma'enan")
+europa = ProperNoun("Europa")
+usu = Noun("usu", definition="large, big, grand")
+etama = Noun("etama")
+nheynhang = Verb("nheŷnhang")
+tekó = Noun("ekó")
 nosf = ((amo * (asé * ekobîara))) + ((og * ikó))
 
 mateus_saying = [
-    (Copula() * (nde * sistema) * (rama * ((îandé * ekobîara)))) + é,
-    # Oîkuab umã asé rekobîáramo o ekorama
-    ((+ae * kuab) << umã) * (rama * nosf.base_nominal(True)),
+    # (cop() * (nde * sistema) * (rama * ((îandé * ekobîara)))) + é,
+    # # Oîkuab umã asé rekobîáramo o ekorama
+    # ((+ae * kuab) << umã) * (rama * nosf.base_nominal(True)),
+    (abá * (pûera * anga) * amõ) * maenan + (esé * (europa)),
+    (opakatu)
+    + ((cop() * (etama / usu) * (nduara * (pe * europa)))) * (nheynhang + (esé * îe))
+    << (og * pea * ae),
 ]
-
 frases = bettendorff_compendio_pt_1
 output = []
 for frase in frases:
@@ -624,9 +687,7 @@ print(result_string)
 #             break
 
 # random.shuffle(finished_nouns)
-ker = Verb("ker")
-pytá = Verb("pytá")
-inv = Verb("in")
+
 tu_dorm = (nde * ker) << (nde * îub)
 eu_fic = (ixé * pytá) << (ixé * inv)
 ele_foi = ae * só

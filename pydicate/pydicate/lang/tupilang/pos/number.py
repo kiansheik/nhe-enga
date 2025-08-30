@@ -1,4 +1,5 @@
 from pydicate import Predicate
+from tupi import Noun as TupiNoun
 
 
 class Number(Predicate):
@@ -8,13 +9,27 @@ class Number(Predicate):
             verbete=value,
             category=category,
             min_args=0,
-            max_args=None,
+            max_args=1,
             definition=definition,
         )
         self.tag = tag
+        self.cardinal = False
+
+    def card(self):
+        cop = self.copy()
+        cop.cardinal = True
+        cop.tag += "[CARDINAL]"
+        if not any(cop.verbete.endswith(x) for x in TupiNoun.vogais):
+            cop.verbete += "a"
+        return cop
 
     def preval(self, annotated=False):
         """Evaluate the Number object."""
+        if self.arguments:
+            if self.arguments[0].posto == "posposto":
+                return f"{self.verbete}{self.tag} {self.arguments[0].eval(annotated)}"
+            else:
+                return f"{self.arguments[0].eval(annotated)} {self.verbete}{self.tag}"
         if annotated:
             return f"{self.verbete}{self.tag}"
         return self.verbete

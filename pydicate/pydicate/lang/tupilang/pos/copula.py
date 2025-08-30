@@ -60,3 +60,6 @@ class Copula(Predicate):
             self.posto = "anteposto"
             return other * self
         return super().__mul__(other)
+
+
+cop = Copula

@@ -73,6 +73,7 @@ class Verb(Predicate):
         self.v_adjuncts_pre = []
         self.circumstancial = None
         self.reduplicated = False
+        self._subject = None
 
     def raw_noun(self):
         """Return the noun form of the verb."""
@@ -84,6 +85,8 @@ class Verb(Predicate):
         return cop
 
     def subject(self):
+        if self._subject is not None:
+            return self._subject
         return (
             self.arguments[0]
             if (
@@ -134,22 +137,25 @@ class Verb(Predicate):
         obj_delocated = ""
         arglen = len(self.arguments)
         gerund_composto = None
-        base_verb = self
-        if self.is_subordinated():
-            if self.mood == "indicativo":
-                if self.same_subject():
-                    self.mood = "gerundio"
+        base_verb = self.copy()
+        if base_verb.is_subordinated():
+            if base_verb.mood == "indicativo":
+                if base_verb.same_subject():
+                    base_verb.mood = "gerundio"
+                elif base_verb.subject() and base_verb.subject().inflection() == "suj":
+                    base_verb._subject = base_verb.principal.subject()
+                    base_verb.mood = "gerundio"
                 else:
-                    self.mood = "conjuntivo"
-                    ger = self.is_gerund_composto()
+                    base_verb.mood = "conjuntivo"
+                    ger = base_verb.is_gerund_composto()
                     if ger:
                         base_verb = ger.copy()
                         base_verb.mood = "conjuntivo"
                         gerund_composto = self.copy()
-            elif self.mood == "imperativo":
-                self.mood = "permissivo"
-        elif self.mood == "indicativo":
-            self.mood = self.indicative()
+            elif base_verb.mood == "imperativo":
+                base_verb.mood = "permissivo"
+        elif base_verb.mood == "indicativo":
+            base_verb.mood = base_verb.indicative()
         if arglen == 0:
             retval = base_verb.verb.verbete
         elif arglen == 1:
@@ -348,7 +354,6 @@ class Verb(Predicate):
                 if self.subject().category != "pronoun"
                 else None
             )
-        # print((subj_obj.pro_drop if subj_obj else False), not subj_tense,)
         nom = self.verb.conjugate(
             subject_tense=subj_tense if subj_tense else "3p",
             object_tense=obj_tense,
@@ -448,6 +453,7 @@ class VerbAugmentor(Verb):
         super().__init__(value=value, definition=definition, tag=tag, category=category)
         self._arguments = []
         self.ero_switch = ero_switch
+        self._augmentee = None
 
     def __mul__(self, other):
         """
@@ -455,7 +461,7 @@ class VerbAugmentor(Verb):
         :param other: The object to divide with.
         :return: A new Transitivizer with the added argument.
         """
-        if len(self.arguments) == 0:
+        if self._augmentee is None:
             new_verb = VerbAugmentor.from_existing(other)
             new_verb.verb.verbete = f"{self.verbete}{self.tag}{other.verbete}"
             new_verb.verb.transitivo = True
@@ -470,20 +476,16 @@ class VerbAugmentor(Verb):
                 new_verb.verb.ero = True
                 new_verb.verb.pluriforme = True
             new_verb.tag = f"{other.tag}"
-            new_verb.arguments = [other.copy()]
+            new_verb._augmentee = other
             return new_verb
-        noun = other.copy()
-        cop = self.copy()
-        cop.arguments[0].arguments.append(noun)
-        return cop
+        return super().__mul__(other)
 
     def preval(self, annotated=False):
-        if len(self.arguments) == 0:
+        if len(self._augmentee) == 0:
             return AnnotatedString(f"{self.verbete}{self.tag}").verbete(
                 annotated=annotated
             )
         cop = self.copy()
-        cop.arguments = [x.copy() for x in cop.arguments[0].arguments]
         # return super function of preval for cop
         return super(VerbAugmentor, cop).preval(annotated=annotated)
 

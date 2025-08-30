@@ -119,6 +119,29 @@ class Predicate(Trackable):
         # Modify the copy of self
         orig.compositions += [modifier]
         orig.refresh_verbete(new_n)
+
+        # Compose irregular forms if present
+        if (
+            hasattr(self, "verb")
+            and hasattr(self.verb, "irregular")
+            and isinstance(self.verb.irregular, dict)
+        ):
+            new_irregular = {}
+            for k1, v1 in self.verb.irregular.items():
+                new_irregular[k1] = {}
+                for k2, v2 in v1.items():
+                    new_irregular[k1][k2] = {}
+                    for k3, v3 in v2.items():
+                        # Compose the verbete for each irregular form
+                        base_verbete = v3.get("verbete", "")
+                        base_n = TupiNoun(base_verbete, orig.definition, noroot=True)
+                        composed_n = base_n.compose(mod_n)
+                        new_verbete = composed_n.verbete(True)
+                        # Copy other fields
+                        new_irregular[k1][k2][k3] = dict(v3)
+                        new_irregular[k1][k2][k3]["verbete"] = new_verbete
+            orig.verb.irregular = new_irregular
+            orig.verb.pluriforme = orig.verb.pluriforme
         return orig
 
     def __truediv__(self, modifier):
@@ -221,7 +244,7 @@ class Predicate(Trackable):
             post_adjuncts = f" << ({post_adjuncts})"
         if args:
             args = f"({args})"
-        if self.functional_gloss:
+        if False and self.functional_gloss:
             tl = ", ".join(self.functional_gloss.english_glosses)
         else:
             comp_glosses = []

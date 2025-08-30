@@ -1,6 +1,6 @@
 from pydicate import Predicate
 from tupi import Noun as TupiNoun
-from pydicate.lang.tupilang.pos.copula import Copula
+from pydicate.lang.tupilang.pos.copula import *
 from tupi import AnnotatedString
 
 
@@ -139,7 +139,7 @@ class Noun(Predicate):
         # if not isinstance(other, self.__class__) or not isinstance(other, Copula):
         #     # raise error that the types being compared are not the same
         #     raise TypeError(f"Cannot compare Noun object with {type(other)} object.")
-        return Copula() * self * other
+        return cop() * self * other
 
     def __matmul__(self, other):
         return self.__eq__(other)

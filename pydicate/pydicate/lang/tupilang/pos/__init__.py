@@ -12,6 +12,7 @@ from .number import *
 from .deadverbal import *
 
 abé = Conjunction("abé", tag="[CONJUNCTION:AND]")  # Tupi for "and"
+paben = Conjunction("pab˜e", tag="[CONJUNCTION:ALL]")  # Tupi for "and"
 erimbae = Adverb("erimba'e", tag="[ADVERB]")  # Tupi for "also" or "too"
 ne = YFix(Adverb("ne", tag="[FUTURE]"))
 ymo = YFix(Adverb("mo", tag="[IRREALIS_SUFIX]"))  # Make into a irreal particle

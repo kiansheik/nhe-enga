@@ -208,7 +208,7 @@ class Verb(TupiAntigo):
                         f"{self.personal_inflections[object_tense][1]}[OBJECT:{object_tense}]"
                         if dir_obj_raw is None
                         else dir_obj_raw + f"[OBJECT:DIRECT]"
-                    )
+                    ) + " "
                     if object_tense == "3p" and dir_obj_raw is None:
                         if pluri_check or self.ero:
                             dir_obj = (
@@ -414,8 +414,10 @@ class Verb(TupiAntigo):
                 self.personal_inflections[subject_tense][1]
                 + f"[SUBJECT:{subject_tense}]"
             )
+            dsr = False
             if "3p" in subject_tense and dir_subj_raw:
                 subj = dir_subj_raw + f"[SUBJECT:{subject_tense}:DIRECT]"
+                dsr = True
             obj = ""
             if self.transitivo:
                 if "3p" in subject_tense and dir_subj_raw is None:
@@ -460,17 +462,29 @@ class Verb(TupiAntigo):
                         else "t[PLURIFORM_PREFIX:T]"
                     )
                     subj = ""
+                elif dsr and vadjs_pre != "":
+                    obj += f"s[PLURIFORM_PREFIX:R]"
                 else:
                     obj += f"r[PLURIFORM_PREFIX:R]"
             if negative:
                 circ = "e'ym[NEGATION_SUFFIX]i[CIRCUMSTANTIAL_SUFFIX:CONSONANT_ENDING]"
             vbt = f"{base_verbete}[ROOT]"
-            redup_space = f"{subj if (not pro_drop or not self.transitivo) else ''}{' ' if not self.segunda_classe else ''}{obj}{vbt}"
+            subj = (subj if (not pro_drop or not self.transitivo) else "") + (
+                " " if not self.segunda_classe else ""
+            )
+            if vadjs_pre != "":
+                redup_space = f"{obj}{vbt}"
+            else:
+                redup_space = (
+                    f"{subj}{' ' if not self.segunda_classe else ''}{obj}{vbt}"
+                )
             if redup:
                 redup_space = self.reduplicate(
                     AnnotatedString(redup_space)
                 ).get_annotated()
-            result = f"{vadjs_pre}{redup_space}{circ}{vadjs}".strip()
+            if vadjs_pre == "":
+                subj = ""
+            result = f"{subj}{vadjs_pre}{redup_space}{circ}{vadjs}".strip()
         elif self.segunda_classe:
             subj_prefix = (
                 self.personal_inflections[subject_tense][1]
@@ -609,7 +623,7 @@ class Verb(TupiAntigo):
                     pluriforme = self.object_marker(pluri_check)
                     if pos == "posposto":
                         perm = self.choose_perm(conj, perm_mode)
-                        trm = f"{conj}-{pluriforme}-{vbt}"
+                        trm = f"{conj}{pluriforme}{vbt}"
                         if overwrite:
                             trm = f"{vbt}"
                         if redup:
@@ -620,7 +634,7 @@ class Verb(TupiAntigo):
                         result = f"{subj} {vadjs_pre}{vb}{vadjs} {dir_obj if not pro_drop_obj else ''}".strip()
                     elif pos == "anteposto":
                         perm = self.choose_perm(conj, perm_mode)
-                        trm = f"{conj}-{pluriforme}-{vbt}"
+                        trm = f"{conj}{pluriforme}{vbt}"
                         if overwrite:
                             trm = f"{vbt}"
                         if redup:
@@ -631,7 +645,7 @@ class Verb(TupiAntigo):
                         result = f"{subj}{' '+ dir_obj if not pro_drop_obj else ''} {vadjs_pre}{vb}{vadjs}".strip()
                     elif pos == "incorporado":
                         perm = self.choose_perm(conj, perm_mode)
-                        vb = f"{perm}{conj}-{pluriforme if dir_obj_raw is None else dir_obj}-{vbt}"
+                        vb = f"{perm}{conj}{pluriforme if dir_obj_raw is None else dir_obj}{vbt}"
                         if redup:
                             vb = self.reduplicate(AnnotatedString(vb)).get_annotated()
                         if negative:

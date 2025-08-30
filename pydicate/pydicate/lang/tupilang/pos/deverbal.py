@@ -79,8 +79,8 @@ class Deverbal(Noun):
         return retval
 
     def __mul__(self, other):
-        if len(self.arguments) == 1:
-            return other * self
+        # if len(self.arguments) == 1:
+        #     return other * self
         if isinstance(other, Verb) and not self.arguments:
             cop = self.copy()
             cop.arguments.append(other)
@@ -126,7 +126,9 @@ class Classifier(Noun):
         if self._augment_noun:
             return self._augment_noun
         if self.arguments and isinstance(self.arguments[0], Noun):
-            return TupiNoun(self.eval(True), self.functional_definition, noroot=True)
+            return TupiNoun(
+                self.arguments[0].eval(True), self.functional_definition, noroot=True
+            )
             # verb = self.arguments[0]
             # vbt = verb.copy()
             # if vbt.arguments:
@@ -313,7 +315,7 @@ rama = Classifier(
     tag="[CLASSIFIER:FUTURE]",
 )
 rama.morphology = (
-    lambda self, verb, annotated=False: verb.noun.ram().substantivo(annotated).strip()
+    lambda sef, verb, annotated=False: sef.noun.ram().substantivo(annotated).strip()
 )
 # -sab(a) (suf. nominalizador) - 1) nominalizador de complemento circunstancial. Traduz-se por tempo, lugar, companhia, modo, causa, instrumento, finalidade, etc. Tem os alomorfes -ab(a), -b(a), -á, -ndab(a), etc.: îukasaba - tempo, lugar, instrumento, causa, modo, companhia, etc. de matar (Anch., Arte, 19); ...N'i papasabi. - Não há modo de contá-los. (Ar., Cat., 38); ...i 'ekatûaba kotysaba é... - o que estava à sua direita (isto é, a companhia do lado da sua mão direita) (Anch., Diál. da Fé, 190); Xe 'angorypaba. - A causa da alegria de minha alma. (Anch., Poemas, 106); 2) Forma substantivos abstratos: angaipaba - maldade (lit. - qualidade da alma ruim) (Anch., Teatro, 34)
 pûera = Classifier(
@@ -322,5 +324,5 @@ pûera = Classifier(
     tag="[CLASSIFIER:PAST]",
 )
 pûera.morphology = (
-    lambda self, verb, annotated=False: verb.noun.puer().substantivo(annotated).strip()
+    lambda sef, verb, annotated=False: sef.noun.puer().substantivo(annotated).strip()
 )

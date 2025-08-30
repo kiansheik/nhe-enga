@@ -330,6 +330,8 @@ class Noun(TupiAntigo):
         if ends_with_any(annotated, ["ab"]):
             annotated.replace_clean(-2, 2, "á")
             annotated.insert_suffix("pe")
+        elif ends_with_any(annotated, ["p"]):
+            annotated.insert_suffix("e")
         elif ends_with_any(annotated, ["î", "nh"]):
             if annotated.endswith("nh"):
                 annotated.replace_clean(
