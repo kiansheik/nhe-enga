@@ -9,7 +9,7 @@ Quando vem antes do genitivo ou do adjetivo, muda-se em **P**. Por exemplo: *Ped
 **Exceção**: *mbaê*, que nunca se muda. Por exemplo: *xémbaê* (“minha coisa”), *Pedro mbaê* (“coisa de Pedro”), *Petri res* (“a coisa de Pedro”).
 
 Da mesma maneira, o **P** no meio da palavra vira **MB**, mas no início, quando isolado, não.
-Por exemplo: *Abâ*, *acabome*, *Mbába* (acabamento), em vez de *Paba*, etc.
+Por exemplo: *Apâ*, *acabome*, *Mbába* (acabamento), em vez de *Paba*, etc.
 
 Conforme isso, nunca se pronuncia **B** no começo da palavra sem **M**.
 E, ainda que por descuido se escrevesse sem **M**, sempre se deve colocar **M** antes.
