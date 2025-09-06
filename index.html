@@ -210,7 +210,7 @@
                     obj_dict['definition'] = definition;
                     obj_dict['type'] = 'neo';
 
-                    console.log(obj)
+                    // console.log(obj)
                     jsonData.push(obj_dict);
                 }
                 return jsonData; // Return the sorted data
@@ -527,7 +527,7 @@
             // Create a temporary container element
             const tempContainer = document.createElement("div");
             // Set innerHTML of the container to the HTML string
-            console.log(con)
+            // console.log(con)
             tempContainer.innerHTML = generateConjugationTable(mode, con, un_id, ne);
             var storedState = getCookie('conjugationToggle');
             if (storedState === 'enabled') {

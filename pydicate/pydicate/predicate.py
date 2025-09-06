@@ -1,10 +1,14 @@
 from copy import deepcopy
 import re
+import inspect
 from tupi import Noun as TupiNoun
 from pydicate.trackable import Trackable
 from pydicate.dbexplorer import NavarroDB
 
 db_explorer = NavarroDB()
+
+REGISTRY = dict()
+FULL_REGISTRY = []
 
 
 # let's make a function which takes a string and where there are sumbolys like ˜i, ˜u, ˆy, ˜y, ´y; it will combine then into a single unicode character
