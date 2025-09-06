@@ -43,7 +43,7 @@ Nos pretéritos: *ména*, *mendoéra*, em vez de *menoéra*.
 Nos verbos compostos terminados em **-e**, como: *Anhân*, *Anhanê*, *Anhandê*.
 
 **Nos nomes compostos**, pode-se interpor o **D**, ou não — o uso ensinará qual a forma preferida.
-Exemplo: *Amána ibâ* (“pedra”), *Amánibâ*, *Amándibâ*.
+Exemplo: *Amána (chuva) 'ybá (futa)* (“pedra”), *Amánybá* ou *Amándybá*.
 
 Se o nome seguinte começa com **T**, que se muda em **R**, o mais comum é interpor o **D**.
 Exemplo: *ména túba* → *méndúba*.
