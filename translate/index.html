@@ -411,7 +411,7 @@ function formatVerbetes(verbetes) {
     return verbetes.map((verbete, index) => `${verbete.optional_number} ${verbete.first_word} - ${verbete.definition.slice(0, 100)}`.trim());
 }
 
-const greenlit = 'AIzaSyBpMxS3A2AcdkgjN5BBaZQJpqcBg79MVtE'; // Not safe but meh, it's a free access account
+const greenlit = 'redacted';
 async function getAIResponse(prompt) {
   const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key='+greenlit;
   

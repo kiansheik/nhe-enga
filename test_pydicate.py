@@ -653,7 +653,7 @@ output.append("")
 #     output.append(f"{frase.semantic()}")
 
 result_string = "\n\n".join(output)
-print(result_string)
+# print(result_string)
 
 # [print(x.translation_prompt('Portuguese')) for x in frases]
 
@@ -692,3 +692,37 @@ tu_dorm = (nde * ker) << (nde * îub)
 eu_fic = (ixé * pytá) << (ixé * inv)
 ele_foi = ae * só
 complex = ele_foi << (eu_fic << tu_dorm)
+
+
+pai_nosso = [
+    (oré * tuba).voc() @ (((pe * ybaka)) + (sara * ikó).voc())
+    + (amo * (pyra * moeté))
+    + (ikó * (nde * era)).perm(),
+    (ur * (nde * reino)).perm(),
+    (monhang * (emi * (potar * nde)) * îe).perm()
+    + (pe * yby)
+    + (pe * ybaka)
+    + (îabé * (monhang * ae * îe)),
+    (((emi * (u * oré)) @ (nduara * (ara * iabiõ))) * (meeng * +endé)).imp()
+    + kori
+    + (oré * supé),
+    ((+nde * nhyron).imp() + (oré * angaipaba * esé) + (oré * supé))
+    + (îabé * ((((sara * (erekomemûã * oré))) * supé) + (oré * nhyron))),
+    (endé * -(mo * (ar / ukar)).imp() * oré) + (tentação * pupé),
+    ((oré * ((pysyro * endé))).imp() << te) + ((mbae / aiba) * suí),
+    (amen + jesus),
+]
+
+jp = lambda x: ikó.verb.map_orthography(x.eval(False).strip(), "JAPANESE").strip()
+jp = lambda x: x.eval(True).strip()
+print(prompt)
+print("\n")
+for line in pai_nosso:
+    print(line.eval(False))
+print()
+for line in pai_nosso:
+    print(line.eval(True))
+print()
+for line in pai_nosso:
+    print(line.semantic())
+print()

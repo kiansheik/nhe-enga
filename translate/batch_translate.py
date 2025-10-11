@@ -11,9 +11,7 @@ import csv
 ONE_MINUTE = 60
 ONE_DAY = 86400  # 24 hours in seconds
 
-greenlit = (
-    "AIzaSyBpMxS3A2AcdkgjN5BBaZQJpqcBg79MVtE"  # Not safe but for a free access account
-)
+greenlit = "redacted"
 
 system = (
     "You are a linguist for tupi-guaranian languages. I will give you an old tupi/tupinambá sentence in addition to a lengthty linguistic analysis. The definitions are in portuguese.\n"
