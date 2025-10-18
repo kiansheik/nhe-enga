@@ -66,6 +66,8 @@ class NavarroDB:
                 def_search = ["(adv.)", "(conj.)"]
             elif "pronoun" in classname:
                 def_search = "pron."
+            elif classname == "verb":
+                def_search = "(v."
         with sqlite3.connect(self.db_path) as self.conn:
             self.cursor = self.conn.cursor()
             query = (

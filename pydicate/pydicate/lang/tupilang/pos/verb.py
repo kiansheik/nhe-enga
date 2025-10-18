@@ -477,11 +477,14 @@ class VerbAugmentor(Verb):
                 new_verb.verb.pluriforme = True
             new_verb.tag = f"{other.tag}"
             new_verb._augmentee = other
+            new_verb._augmentor = self.copy()
+            if hasattr(new_verb._augmentor, "_augmentee"):
+                new_verb._augmentor._augmentee = None
             return new_verb
         return super().__mul__(other)
 
     def preval(self, annotated=False):
-        if len(self._augmentee) == 0:
+        if not self._augmentee or len(self._augmentee) == 0:
             return AnnotatedString(f"{self.verbete}{self.tag}").verbete(
                 annotated=annotated
             )

@@ -475,11 +475,10 @@ class Predicate(Trackable):
             links = []
 
         augmentee = getattr(self, "_augmentee", None)
-        augmentor = getattr(self, "_augmentor", None)
-        effective_self = self.copy()
+        core_self = self.copy()
         if augmentee is not None:
             effective_arguments = [augmentee]
-            effective_self = augmentor.copy()
+            core_self = core_self._augmentor.copy()
         else:
             effective_arguments = list(self.arguments or [])
 
@@ -490,16 +489,16 @@ class Predicate(Trackable):
         myname = f"n{indent}_{id(self)}"
 
         # ---- Build label text ----
-        this = effective_self.copy()
+        this = self.copy()
         if indent != 0:
             this.principal = None  # Prevent recursion
-        label_text = escape_latex(self.eval())
+        label_text = escape_latex(this.eval())
 
         # label content with optional tag/definition
-        if effective_self.tag and (not effective_arguments or ctype in ["core"]):
-            tag_text = effective_self.format_tag()
-            if not effective_arguments and effective_self.definition_simple():
-                def_text = escape_latex_forest_node(effective_self.definition_simple())
+        if self.tag and (not effective_arguments or ctype in ["core"]):
+            tag_text = self.format_tag()
+            if augmentee is not None or (not effective_arguments and self.definition_simple()):
+                def_text = escape_latex_forest_node(self.definition_simple())
                 label = (
                     f"[\\shortstack{{\\textit{{{label_text}}} \\\\ "
                     f"\\texttt{{{tag_text}}} \\\\ \\texttt{{{def_text}}}}}, "
@@ -511,8 +510,8 @@ class Predicate(Trackable):
                     f"\\texttt{{{tag_text}}}}}, {ctype}, name={myname}"
                 )
         else:
-            if not effective_arguments and effective_self.definition_simple():
-                def_text = escape_latex_forest_node(effective_self.definition_simple())
+            if augmentee is not None or (not effective_arguments and self.definition_simple()):
+                def_text = escape_latex_forest_node(self.definition_simple())
                 label = (
                     f"[\\shortstack{{\\textit{{{label_text}}} \\\\ "
                     f"\\texttt{{{def_text}}}}}, {ctype}, name={myname}"
@@ -529,11 +528,11 @@ class Predicate(Trackable):
 
         # stripped core (if needed)
         children = []
-        stripped = effective_self.copy()
+        stripped = core_self
         stripped.pre_adjuncts = []
         stripped.post_adjuncts = []
         stripped.principal = None
-        if effective_arguments and stripped.eval() != stripped.verbete:
+        if effective_arguments and self.eval() != stripped.verbete:
             stripped_text = escape_latex(stripped.verbete)
             bits = [f"\\textit{{{stripped_text}}}"]
             if stripped.tag:
