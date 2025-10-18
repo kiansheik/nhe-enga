@@ -1,6 +1,7 @@
 from copy import deepcopy
 import re
 import inspect
+from xml.etree.ElementTree import indent
 from tupi import Noun as TupiNoun
 from pydicate.trackable import Trackable
 from pydicate.dbexplorer import NavarroDB
@@ -358,23 +359,39 @@ class Predicate(Trackable):
         Get the first part of the definition, split by comma (not including initial () which should be ignored for the , split but then reprepended before returning)
         :return: The first part of the definition or an empty string if no definition is set.
         """
+        JOIN_STR = ",\n"
+        clean_def = self.definition.strip()
+        if "); " in self.definition:
+            clean_def_idx = clean_def.index("); ")
+            clean_def = clean_def[clean_def_idx + 3 :].strip()
         if self.functional_gloss:
             return (
-                ", ".join(self.functional_gloss.english_glosses[:3])
-                if self.functional_gloss
-                else ""
+                JOIN_STR.join(self.functional_gloss.english_glosses[:3])
             )
         elif self.gloss:
-            return ", ".join(self.gloss[0].english_glosses[:3]) if self.gloss else ""
+            # if the clean_def string appears in any of the gloss definitions, return that gloss's english_glosses
+            for g in self.gloss:
+                if clean_def and g.definition and clean_def in g.definition:
+                    return JOIN_STR.join(g.english_glosses[:3])
+            # then check if it appears in any of the english_glosses themselves, if so return those english_glosses
+            for g in self.gloss:
+                if clean_def and any(
+                    clean_def in eg for eg in g.english_glosses
+                ):
+                    return JOIN_STR.join(g.english_glosses[:3])
+            # if we get to the end, return the first gloss's english_glosses which is not None or empty
+            for g in self.gloss:
+                if g.english_glosses and len(g.english_glosses) > 0:
+                    return JOIN_STR.join(g.english_glosses[:3])
         else:
             parts = self.definition.split(") ")
             if len(parts) == 1:
-                return ", ".join(x.strip() for x in parts[0].split(",")[:1]).strip()
+                return JOIN_STR.join(x.strip() for x in parts[0].split(",")[:1]).strip()
             elif len(parts) > 1:
                 return (
                     parts[0]
                     + ") "
-                    + ", ".join(x.strip() for x in parts[1].split(",")[:1]).strip()
+                    + JOIN_STR.join(x.strip() for x in parts[1].split(",")[:1]).strip()
                 )
 
     def same_subject(self):
@@ -448,113 +465,141 @@ class Predicate(Trackable):
         result_string = "\n\n".join(output)
         return result_string
 
-    def to_forest_tree(self, indent=0, ctype="result", parent=None) -> str:
+    def to_forest_tree(self, indent=0, ctype="result", parent=None, links=None):
         """
-        Recursively generate a forest-compatible LaTeX forest package string from a Predicate.
-        Displays tag (if present) below the word using \shortstack.
-        Adds an intermediate stripped node if tag is present and eval != verbete.
-        Appends adjuncts at the same level as the core predicate.
+        Returns a tuple: (forest_body_str, tikz_overlay_str_list).
+        - forest_body_str: Forest node string (with children) for inclusion inside \begin{forest}...\end{forest}
+        - tikz_overlay_str_list: list of strings with TikZ \path[...] ...; to draw AFTER the forest
         """
-        indent_str = " "  # "\t" * indent
-        child_indent = " "  #  "\n" + "\t" * (indent + 1)
+        if links is None:
+            links = []
 
-        # Compose top label
+        augmentee = getattr(self, "_augmentee", None)
+        augmentor = getattr(self, "_augmentor", None)
+        effective_self = self.copy()
+        if augmentee is not None:
+            effective_arguments = [augmentee]
+            effective_self = augmentor.copy()
+        else:
+            effective_arguments = list(self.arguments or [])
 
-        this = self.copy()
+        indent_str = " "
+        child_indent = " "
+
+        # ---- Safe, unique node names ----
+        myname = f"n{indent}_{id(self)}"
+
+        # ---- Build label text ----
+        this = effective_self.copy()
         if indent != 0:
             this.principal = None  # Prevent recursion
-        label_text = escape_latex(this.eval())
-        style_pre = f"""
-edge path={{
-    \\noexpand\path[black!99, draw]
-    (\\forestoption{{name}}.east) .. controls +(north:7pt) and +(north:7pt) .. (core{indent-1}{id(parent)}.west) \\forestoption{{edge label}};
-}}
-"""
+        label_text = escape_latex(self.eval())
 
-        style_post = f"""
-edge path={{
-    \\noexpand\path[black!99, draw]
-    (\\forestoption{{name}}.west) .. controls +(north:7pt) and +(north:7pt) .. (core{indent-1}{id(parent)}.east) \\forestoption{{edge label}};
-}}
-"""
-        style = ", " + (style_pre if ctype == "pre_adjunct" else style_post)
-        if "adjunct" not in ctype:
-            style = ""
-        if self.tag and (not self.arguments or ctype in ["core"]):
-            tag_text = self.format_tag()
-            if len(self.arguments) == 0 and self.definition_simple():
-                def_text = escape_latex(self.definition_simple())
-                label = f"[\\shortstack{{\\textit{{{label_text}}} \\\\ \\texttt{{{tag_text}}} \\\\ \\texttt{{{def_text}}}}}, {ctype}{style}"
+        # label content with optional tag/definition
+        if effective_self.tag and (not effective_arguments or ctype in ["core"]):
+            tag_text = effective_self.format_tag()
+            if not effective_arguments and effective_self.definition_simple():
+                def_text = escape_latex_forest_node(effective_self.definition_simple())
+                label = (
+                    f"[\\shortstack{{\\textit{{{label_text}}} \\\\ "
+                    f"\\texttt{{{tag_text}}} \\\\ \\texttt{{{def_text}}}}}, "
+                    f"{ctype}, name={myname}"
+                )
             else:
-                label = f"[\\shortstack{{\\textit{{{label_text}}} \\\\ \\texttt{{{tag_text}}}}}, {ctype}{style}"
+                label = (
+                    f"[\\shortstack{{\\textit{{{label_text}}} \\\\ "
+                    f"\\texttt{{{tag_text}}}}}, {ctype}, name={myname}"
+                )
         else:
-            if len(self.arguments) == 0 and self.definition_simple():
-                def_text = escape_latex(self.definition_simple())
-                label = f"[\\shortstack{{\\textit{{{label_text}}} \\\\ \\texttt{{{def_text}}}}}, {ctype}{style}"
+            if not effective_arguments and effective_self.definition_simple():
+                def_text = escape_latex_forest_node(effective_self.definition_simple())
+                label = (
+                    f"[\\shortstack{{\\textit{{{label_text}}} \\\\ "
+                    f"\\texttt{{{def_text}}}}}, {ctype}, name={myname}"
+                )
             else:
-                label = f"[\\textit{{{label_text}}}, {ctype}{style}"
+                label = f"[\\textit{{{label_text}}}, {ctype}, name={myname}"
 
-        # Collect post_adjuncts (they go to the left in rendering)
-        post_children = [
-            adj.to_forest_tree(indent + 1, ctype="pre_adjunct", parent=self)
-            for adj in (self.v_adjuncts_pre + self.pre_adjuncts) or []
-        ]
-        # Collect pre_adjuncts (they go to the right in rendering)
-        pre_children = [
-            adj.to_forest_tree(indent + 1, ctype="post_adjunct", parent=self)
-            for adj in reversed((self.v_adjuncts + self.post_adjuncts) or [])
-        ]
-        # Collect arguments (default style, can be tagged 'arg' if desired)
+        # ---- children: we will emit CORE first so it exists ----
+        # arguments
         arg_children = [
-            arg.to_forest_tree(indent + 1, ctype="arg", parent=self)
-            for arg in reversed(self.arguments or [])
+            arg.to_forest_tree(indent + 1, ctype="arg", parent=self, links=links)[0]
+            for arg in reversed(effective_arguments)
         ]
 
+        # stripped core (if needed)
         children = []
-
-        # Prepare stripped node
-        stripped = self.copy()
+        stripped = effective_self.copy()
         stripped.pre_adjuncts = []
         stripped.post_adjuncts = []
         stripped.principal = None
-        if self.arguments and stripped.eval() != stripped.verbete:
+        if effective_arguments and stripped.eval() != stripped.verbete:
             stripped_text = escape_latex(stripped.verbete)
-            tag_label = ""
-            def_label = ""
+            bits = [f"\\textit{{{stripped_text}}}"]
             if stripped.tag:
-                tag_label = f" \\\\ \\texttt{{{stripped.format_tag()}}}"
+                bits.append(f"\\texttt{{{stripped.format_tag()}}}")
             if stripped.definition_simple():
-                def_label = (
-                    f" \\\\ \\texttt{{{escape_latex(stripped.definition_simple())}}}"
-                )
-            if tag_label or def_label:
-                core_label = (
-                    f"\\shortstack{{\\textit{{{stripped_text}}}{tag_label}{def_label}}}"
-                )
-            else:
-                core_label = f"\\textit{{{stripped_text}}}"
+                bits.append(f"\\texttt{{{escape_latex_forest_node(stripped.definition_simple())}}}")
+            core_label = "\\shortstack{" + " \\\\ ".join(bits) + "}"
 
+            core_name = f"n{indent}_core_{id(self)}"
             stripped_node = (
-                f"[{core_label}, core, name=core{indent}{id(self)}"
+                f"[{core_label}, core, name={core_name}"
                 + child_indent
                 + child_indent.join(arg_children)
                 + f"]"
             )
             children.append(stripped_node)
         else:
+            core_name = myname  # if no extra core node, the current node is the anchor
             children.extend(arg_children)
 
-        # Combine all
-        all_children = pre_children + children + post_children
+        # adjuncts
+        pre_adjuncts = list(reversed((self.v_adjuncts + self.post_adjuncts) or []))
+        post_adjuncts = (self.v_adjuncts_pre + self.pre_adjuncts) or []
 
+        pre_children = []
+        for adj in pre_adjuncts:
+            subtree, adj_links = adj.to_forest_tree(indent + 1, ctype="pre_adjunct", parent=self, links=links)
+            pre_children.append(subtree)
+            # cross-edge: adjunct (east) -> core (west)
+            adj_name = f"n{indent+1}_{id(adj)}"
+            links.append(
+                f"\\path[black!70] ({adj_name}.east) .. controls +(0,7pt) and +(0,7pt) .. ({core_name}.west);"
+            )
+
+        post_children = []
+        for adj in post_adjuncts:
+            subtree, adj_links = adj.to_forest_tree(indent + 1, ctype="post_adjunct", parent=self, links=links)
+            post_children.append(subtree)
+            # cross-edge: adjunct (west) -> core (east)
+            adj_name = f"n{indent+1}_{id(adj)}"
+            links.append(
+                f"\\path[black!70] ({adj_name}.west) .. controls +(0,7pt) and +(0,7pt) .. ({core_name}.east);"
+            )
+
+        # Emit order: core chunk first so anchors exist, then pre (left), then post (right)
+        all_children = children + pre_children + post_children
+        if indent == 0:
+            all_children = reversed(all_children)
         if all_children:
             child_str = child_indent + child_indent.join(all_children)
-            return f"{label} {child_str}\n{indent_str}]"
+            forest_str = f"{label} {child_str}\n{indent_str}]"
         else:
-            retval = f"{label}]"
-            # retval = f"[, {ctype} "+retval[1:]
-            return retval
+            forest_str = f"{label}]"
 
+        return forest_str, links
+
+
+def stack3(head=None, tag=None, gloss=None, align="l"):
+    rows = []
+    if head:
+        rows.append(r"{\headfont " + head + "}")
+    if tag:
+        rows.append(r"{\tagfont " + tag + "}")
+    if gloss:
+        rows.append(r"{\glossfont " + gloss + "}")
+    return r"\shortstack[" + align + "]{" + r" \\ ".join(rows) + "}"
 
 def escape_latex(text: str) -> str:
     return (
@@ -568,3 +613,15 @@ def escape_latex(text: str) -> str:
         .replace("^", "\\^{}")
         .replace("~", "\\~{}")
     )
+
+def escape_latex_forest_node(text: str) -> str:
+    # For Forest/TikZ NODE CONTENT ONLY
+    # (1) Do NOT escape backslashes (we need \\ for line breaks)
+    s = (text.replace("{", "\\{").replace("}", "\\}")
+             .replace("_", "\\_").replace("#", "\\#")
+             .replace("%", "\\%").replace("&", "\\&")
+             .replace("^", "\\^{}").replace("~", "\\~{}"))
+    # (2) Support both real newlines and literal "\n"
+    s = s.replace("\\n", r"\\").replace("\n", r"\\")
+    # (3) Keep the breaks confined to the node with a shortstack
+    return r"\shortstack{" + s + r"}"
