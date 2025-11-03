@@ -143,11 +143,11 @@ class Temporal(Postposition):
 
 
 # -(r)amo (posp. átona - sua forma nasalizada é -namo): 1) como, na condição de; em [Com o verbo ikó / ekó (t) forma locução correspondente ao verbo ser do português.]: ...Ybyramo i moingó-ukare'yma. - Em terra não os fazendo transformar. (Ar., Cat., 179v); ...Serekoaramo ûitekóbo... - Estando como seu guardião (ou sendo seu guardião). (Anch., Teatro, 4); Pitangamo seni Maria îybápe. - Como criança está sentado nos braços de Maria. (Anch., Poemas, 108); Nde manhanamo t'oîkóne! - Ele há de ser (ou há de estar na condição de) teu espião! (Anch., Teatro, 32); ...Xe boîáramo pabẽ xe pópe arekó-katu. - Como meus súditos em minhas mãos bem os tenho a todos. (Anch., Teatro, 34); Pitangĩnamo ereîkó… - Uma criancinha és (ou na condição de uma criancinha estás). (Anch., Poemas, 100); 2) segundo, conforme: Xe anama, erimba'e, tekó-ypyramo sekóû. - Minha nação, outrora, estava segundo a lei primeira. (Anch., Poemas, 114); 3) Forma o gerúndio de predicados nominais: ...o mba'epûeramo... - sendo coisa antiga (Ar., Cat., 74); O angaîpabamo... - Sendo mau. (Ar., Cat., 27); Xe katuramo. - Sendo eu bom; Nde katuramo. - Sendo tu bom. (Anch., Arte, 29); 4) Forma o modo indicativo circunstancial dos verbos da segunda classe: Koromõ xe rorybamo. - Logo eu estou feliz. (Anch., Arte, 40)
-class Simulational(Postposition):
+class Translational(Postposition):
     def __init__(self, definition="as, in the condition of, in the duty of"):
         """Initialize a Locative object."""
         super().__init__(
-            "amo", definition=definition, tag="[POSTPOSITION:SIMULATIONAL]"
+            "amo", definition=definition, tag="[POSTPOSITION:TRANSLATIONAL]"
         )
 
     def morphology(self, annotated=False):
@@ -244,7 +244,7 @@ porupi = Postposition("porupi", definition="alongside, parallel to, next to")
 pupé = Postposition(
     "pupé", definition="inside, within, in, into, inside of, using, with, during"
 )
-amo = Simulational()
+amo = Translational()
 iré = Beyond()
 iremen = SoonAfter()
 eme = Temporal()

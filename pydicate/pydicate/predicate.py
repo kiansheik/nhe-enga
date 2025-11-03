@@ -5,11 +5,15 @@ from xml.etree.ElementTree import indent
 from tupi import Noun as TupiNoun
 from pydicate.trackable import Trackable
 from pydicate.dbexplorer import NavarroDB
+from collections import Counter
+from typing import Dict, List, Tuple, Optional
 
 db_explorer = NavarroDB()
 
 REGISTRY = dict()
 FULL_REGISTRY = []
+
+_MORPH_TAG_RE = re.compile(r"([^\[\]\s]+)((?:\[[^\]]+\])+)", flags=re.UNICODE)
 
 
 # let's make a function which takes a string and where there are sumbolys like ˜i, ˜u, ˆy, ˜y, ´y; it will combine then into a single unicode character
@@ -325,12 +329,12 @@ class Predicate(Trackable):
         post_adjuncts_repr = (
             f"{args_repr} + {post_adjuncts}" if post_adjuncts else args_repr
         )
-        pre_adjuncts_repr = (
+        final_pf = (
             f"{pre_adjuncts} + {post_adjuncts_repr}"
             if pre_adjuncts
             else post_adjuncts_repr
         )
-        return pre_adjuncts_repr
+        return final_pf
 
     def is_subordinated(self):
         return self.principal is not None
@@ -365,9 +369,7 @@ class Predicate(Trackable):
             clean_def_idx = clean_def.index("); ")
             clean_def = clean_def[clean_def_idx + 3 :].strip()
         if self.functional_gloss:
-            return (
-                JOIN_STR.join(self.functional_gloss.english_glosses[:3])
-            )
+            return JOIN_STR.join(self.functional_gloss.english_glosses[:3])
         elif self.gloss:
             # if the clean_def string appears in any of the gloss definitions, return that gloss's english_glosses
             for g in self.gloss:
@@ -375,9 +377,7 @@ class Predicate(Trackable):
                     return JOIN_STR.join(g.english_glosses[:3])
             # then check if it appears in any of the english_glosses themselves, if so return those english_glosses
             for g in self.gloss:
-                if clean_def and any(
-                    clean_def in eg for eg in g.english_glosses
-                ):
+                if clean_def and any(clean_def in eg for eg in g.english_glosses):
                     return JOIN_STR.join(g.english_glosses[:3])
             # if we get to the end, return the first gloss's english_glosses which is not None or empty
             for g in self.gloss:
@@ -482,6 +482,17 @@ class Predicate(Trackable):
         else:
             effective_arguments = list(self.arguments or [])
 
+        has_adjuncts = any(
+            (
+                self.v_adjuncts,
+                self.post_adjuncts,
+                self.v_adjuncts_pre,
+                self.pre_adjuncts,
+            )
+        )
+
+        has_leaves = effective_arguments or has_adjuncts
+
         indent_str = " "
         child_indent = " "
 
@@ -495,9 +506,9 @@ class Predicate(Trackable):
         label_text = escape_latex(this.eval())
 
         # label content with optional tag/definition
-        if self.tag and (not effective_arguments or ctype in ["core"]):
+        if self.tag and (not has_leaves or ctype in ["core"]):
             tag_text = self.format_tag()
-            if augmentee is not None or (not effective_arguments and self.definition_simple()):
+            if augmentee is not None or (not has_leaves and self.definition_simple()):
                 def_text = escape_latex_forest_node(self.definition_simple())
                 label = (
                     f"[\\shortstack{{\\textit{{{label_text}}} \\\\ "
@@ -510,7 +521,7 @@ class Predicate(Trackable):
                     f"\\texttt{{{tag_text}}}}}, {ctype}, name={myname}"
                 )
         else:
-            if augmentee is not None or (not effective_arguments and self.definition_simple()):
+            if augmentee is not None or (not has_leaves and self.definition_simple()):
                 def_text = escape_latex_forest_node(self.definition_simple())
                 label = (
                     f"[\\shortstack{{\\textit{{{label_text}}} \\\\ "
@@ -532,22 +543,30 @@ class Predicate(Trackable):
         stripped.pre_adjuncts = []
         stripped.post_adjuncts = []
         stripped.principal = None
-        if effective_arguments and self.eval() != stripped.verbete:
+        emit_core_node = has_leaves and self.eval() != stripped.verbete
+        cnn = myname
+        if emit_core_node:
             stripped_text = escape_latex(stripped.verbete)
             bits = [f"\\textit{{{stripped_text}}}"]
             if stripped.tag:
                 bits.append(f"\\texttt{{{stripped.format_tag()}}}")
             if stripped.definition_simple():
-                bits.append(f"\\texttt{{{escape_latex_forest_node(stripped.definition_simple())}}}")
+                bits.append(
+                    f"\\texttt{{{escape_latex_forest_node(stripped.definition_simple())}}}"
+                )
             core_label = "\\shortstack{" + " \\\\ ".join(bits) + "}"
 
             core_name = f"n{indent}_core_{id(self)}"
-            stripped_node = (
-                f"[{core_label}, core, name={core_name}"
-                + child_indent
-                + child_indent.join(arg_children)
-                + f"]"
-            )
+            cnn = core_name
+            if arg_children:
+                stripped_node = (
+                    f"[{core_label}, core, name={core_name}"
+                    + child_indent
+                    + child_indent.join(arg_children)
+                    + "]"
+                )
+            else:
+                stripped_node = f"[{core_label}, core, name={core_name}]"
             children.append(stripped_node)
         else:
             core_name = myname  # if no extra core node, the current node is the anchor
@@ -559,28 +578,31 @@ class Predicate(Trackable):
 
         pre_children = []
         for adj in pre_adjuncts:
-            subtree, adj_links = adj.to_forest_tree(indent + 1, ctype="pre_adjunct", parent=self, links=links)
+            subtree, adj_links = adj.to_forest_tree(
+                indent + 1, ctype="pre_adjunct", parent=self, links=links
+            )
             pre_children.append(subtree)
             # cross-edge: adjunct (east) -> core (west)
             adj_name = f"n{indent+1}_{id(adj)}"
-            links.append(
-                f"\\path[black!70] ({adj_name}.east) .. controls +(0,7pt) and +(0,7pt) .. ({core_name}.west);"
-            )
+            # links.append(
+            #     f"\\path[black!70] ({adj_name}.east) .. controls +(0,7pt) and +(0,7pt) .. ({cnn}.west);"
+            # )
 
         post_children = []
         for adj in post_adjuncts:
-            subtree, adj_links = adj.to_forest_tree(indent + 1, ctype="post_adjunct", parent=self, links=links)
+            subtree, adj_links = adj.to_forest_tree(
+                indent + 1, ctype="post_adjunct", parent=self, links=links
+            )
             post_children.append(subtree)
             # cross-edge: adjunct (west) -> core (east)
             adj_name = f"n{indent+1}_{id(adj)}"
-            links.append(
-                f"\\path[black!70] ({adj_name}.west) .. controls +(0,7pt) and +(0,7pt) .. ({core_name}.east);"
-            )
-
+            # links.append(
+            #     f"\\path[black!70] ({adj_name}.west) .. controls +(0,7pt) and +(0,7pt) .. ({cnn}.east);"
+            # )
         # Emit order: core chunk first so anchors exist, then pre (left), then post (right)
-        all_children = children + pre_children + post_children
-        if indent == 0:
-            all_children = reversed(all_children)
+        all_children = pre_children + children + post_children
+        # if indent == 0:
+        #     all_children = reversed(all_children)
         if all_children:
             child_str = child_indent + child_indent.join(all_children)
             forest_str = f"{label} {child_str}\n{indent_str}]"
@@ -588,6 +610,192 @@ class Predicate(Trackable):
             forest_str = f"{label}]"
 
         return forest_str, links
+
+    def to_semantic_forest(self, indent=0, width_break=3):
+        """
+        Build the *semantics* forest subtree string.
+        width_break: max items per line before inserting '\\' (smaller => taller tree).
+        """
+        comp_glosses = []
+        for comp in getattr(self, "compositions", []) or []:
+            if comp.functional_gloss:
+                comp_glosses.extend(comp.functional_gloss.english_glosses)
+
+        if getattr(self, "gloss", None):
+            base_gloss = [g for x in self.gloss for g in x.english_glosses]
+        elif getattr(self, "definition", None):
+            base_gloss = [self.definition]
+        elif getattr(self, "tag", None):
+            base_gloss = [self.tag]
+        else:
+            base_gloss = [getattr(self, "verbete", "")]
+
+        base_gloss = [escape_latex_forest_node(x) for x in base_gloss]
+        comp_glosses = [escape_latex_forest_node(x) for x in comp_glosses]
+
+        # ✅ Centered, wrapped node text
+        core_label = _format_semfit_label(
+            base_gloss, modifiers=comp_glosses, width_break=width_break
+        )
+
+        pre_adjuncts = list(reversed((self.v_adjuncts_pre + self.pre_adjuncts) or []))
+        post_adjuncts = (self.v_adjuncts + self.post_adjuncts) or []
+        args = list(self.arguments or [])
+
+        def plus_group(nodes, name_op):
+            if not nodes:
+                return ""
+            children = [
+                n.to_semantic_forest(indent + 2, width_break=width_break) for n in nodes
+            ]
+            if len(children) == 1:
+                return f"[{name_op}, semop " + " ".join(children) + "]"
+            plus = "[$\\oplus$, semop " + " ".join(children) + "]"
+            return f"[{name_op}, semop {plus}]"
+
+        pre_branch = plus_group(pre_adjuncts, r"$\gg$")
+        arg_branch = plus_group(args, r"$\bullet$")
+        post_branch = plus_group(post_adjuncts, r"$\ll$")
+
+        kids = " ".join(x for x in [pre_branch, arg_branch, post_branch] if x)
+        name_here = f"s{indent}_{id(self)}"
+        return (
+            f"[{core_label}, semroot, name={name_here} {kids}]"
+            if kids
+            else f"[{core_label}, semroot, name={name_here}]"
+        )
+
+    def to_semantic_block(
+        self,
+        width_ratio=0.38,  # narrower nodes => taller tree
+        width_break=3,  # more wrapping
+        s_sep_pt=5,  # tighter siblings (horizontal)
+        l_sep_pt=16,  # more vertical spacing
+        edge_style="-Latex",  # either a raw TikZ spec ('-Latex')
+        use_named_edge_style=False,  # or a named style (edge_style) set via \tikzset
+    ):
+        sem_body = self.to_semantic_forest(width_break=width_break)
+        # If you defined \tikzset{edge_style/.style=...}, set use_named_edge_style=True
+        edge_clause = (
+            "edge=edge_style"
+            if use_named_edge_style
+            else f"edge={{{{ {edge_style} }}}}"
+        )
+
+        return rf"""
+    % --- semantics tree only ---
+    \begingroup
+    \setlength\semtextwidth{{{width_ratio}\linewidth}}
+    \begin{{forest}}
+    for tree={{
+    grow'=south,
+    s sep={s_sep_pt}pt,
+    l sep={l_sep_pt}pt,
+    {edge_clause}
+    }}
+    {sem_body}
+    \end{{forest}}
+    \endgroup
+    """
+
+    def morpheme_tag_frequencies(
+        self, annotated_text: Optional[str] = None, top_pairs: Optional[int] = None
+    ):
+        """
+        Parse self.eval(annotated=True) output and compute frequencies.
+
+        All tag counting collapses tags to their *kind* = substring before the first ':'.
+        Examples:
+        'SUBSTANTIVE_SUFFIX:CONSONANT_ENDING:CLITIC' -> 'SUBSTANTIVE_SUFFIX'
+
+        Returns a dict with:
+        - morph_counts: Counter of morpheme -> count
+        - tag_counts:   Counter of tag-kind -> count
+        - pair_counts:  Counter of (morpheme, tag-kind) -> count
+        - latex_morpheme_table: LaTeX tabular (morpheme, freq)
+        - latex_tag_table:      LaTeX tabular (tag, freq)
+        - latex_pair_table:     LaTeX tabular (morpheme, tag, freq)
+        """
+        if annotated_text is None:
+            annotated_text = self.eval(annotated=True)
+
+        morph_counts = Counter()
+        tag_counts = Counter()
+        pair_counts = Counter()
+
+        for m in _MORPH_TAG_RE.finditer(annotated_text):
+            morph = m.group(1)
+            tags_blob = m.group(2)
+            tags = re.findall(r"\[([^\]]+)\]", tags_blob)
+
+            morph_counts[morph] += 1
+            for t in tags:
+                tag_kind = t.split(":", 1)[0]  # <-- take only index 0
+                tag_counts[tag_kind] += 1
+                pair_counts[(morph, tag_kind)] += 1
+
+        # Sort descending by count, tie-breaker lexicographically
+        def _sort_counts(c: Counter):
+            return sorted(c.items(), key=lambda kv: (-kv[1], kv[0]))
+
+        morph_rows = _sort_counts(morph_counts)
+        tag_rows = _sort_counts(tag_counts)
+
+        # pairs -> 3-column table
+        pair_rows = _sort_counts(pair_counts)
+        if top_pairs is not None:
+            pair_rows = pair_rows[:top_pairs]
+
+        # Build LaTeX tables
+        latex_morph = _make_simple_table(morph_rows, "Morpheme", "Freq")
+        latex_tags = _make_simple_table(tag_rows, "Tag", "Freq")
+
+        # 3-col pair table
+        lines = [
+            r"\begin{tabular}{l l r}",
+            r"\hline",
+            r"Morpheme & Tag & Freq \\",
+            r"\hline",
+        ]
+        for (morph, tag_kind), n in pair_rows:
+            lines.append(f"{_latex_escape(morph)} & {_latex_escape(tag_kind)} & {n} \\")
+        lines += [r"\hline", r"\end{tabular}"]
+        latex_pairs = "\n".join(lines)
+
+        return {
+            "morph_counts": morph_counts,
+            "tag_counts": tag_counts,
+            "pair_counts": pair_counts,
+            "latex_morpheme_table": latex_morph,
+            "latex_tag_table": latex_tags,
+            "latex_pair_table": latex_pairs,
+        }
+
+
+def _format_semfit_label(gloss_main, modifiers=None, width_break=3):
+    """
+    Return a single LaTeX label wrapped in \semfit{...}, with optional '\\'
+    inserted every `width_break` items to encourage vertical wrapping.
+    All strings are assumed already escaped for forest via escape_latex_forest_node.
+    """
+    modifiers = modifiers or []
+
+    def block(items):
+        if not items:
+            return ""
+        parts = []
+        for i, s in enumerate(items, 1):
+            parts.append(s)
+            if i < len(items):
+                parts.append(", ")
+            if width_break and (i % width_break == 0) and (i < len(items)):
+                parts.append(r"\\ ")
+        return "".join(parts)
+
+    body = block(gloss_main)
+    if modifiers:
+        body += r"\\ \textcolor{black!60}{\footnotesize modifiers:} " + block(modifiers)
+    return rf"\semfit{{{body}}}"
 
 
 def stack3(head=None, tag=None, gloss=None, align="l"):
@@ -599,6 +807,7 @@ def stack3(head=None, tag=None, gloss=None, align="l"):
     if gloss:
         rows.append(r"{\glossfont " + gloss + "}")
     return r"\shortstack[" + align + "]{" + r" \\ ".join(rows) + "}"
+
 
 def escape_latex(text: str) -> str:
     return (
@@ -613,14 +822,68 @@ def escape_latex(text: str) -> str:
         .replace("~", "\\~{}")
     )
 
+
+def _make_simple_table(
+    rows: List[Tuple[str, int]], left_header: str, right_header: str
+) -> str:
+    lines = [
+        r"\begin{tabular}{l r}",
+        r"\hline",
+        f"{_latex_escape(left_header)} & {_latex_escape(right_header)} \\\\",
+        r"\hline",
+    ]
+    for name, n in rows:
+        lines.append(f"{_latex_escape(name)} & {n} \\\\")
+    lines += [r"\hline", r"\end{tabular}"]
+    return "\n".join(lines)
+
+
+def _latex_escape(s: str) -> str:
+    return escape_latex(s)
+
+
 def escape_latex_forest_node(text: str) -> str:
     # For Forest/TikZ NODE CONTENT ONLY
     # (1) Do NOT escape backslashes (we need \\ for line breaks)
-    s = (text.replace("{", "\\{").replace("}", "\\}")
-             .replace("_", "\\_").replace("#", "\\#")
-             .replace("%", "\\%").replace("&", "\\&")
-             .replace("^", "\\^{}").replace("~", "\\~{}"))
+    s = (
+        text.replace("{", "\\{")
+        .replace("}", "\\}")
+        .replace("_", "\\_")
+        .replace("#", "\\#")
+        .replace("%", "\\%")
+        .replace("&", "\\&")
+        .replace("^", "\\^{}")
+        .replace("~", "\\~{}")
+    )
     # (2) Support both real newlines and literal "\n"
     s = s.replace("\\n", r"\\").replace("\n", r"\\")
     # (3) Keep the breaks confined to the node with a shortstack
     return r"\shortstack{" + s + r"}"
+
+
+def _chunk_list(xs, n):
+    for i in range(0, len(xs), n):
+        yield xs[i : i + n]
+
+
+def _shortstack(lines):
+    return r"\shortstack{" + r"\\ ".join(lines) + "}" if lines else r"\phantom{~}"
+
+
+def _escape_join(chunk):
+    return ", ".join(chunk)  # assume inputs already forest-safe
+
+
+def _escape_lines_for_stack(texts, max_per_line=5):
+    return [_escape_join(chunk) for chunk in _chunk_list(texts, max_per_line)]
+
+
+def _format_sem_label(gloss_main, modifiers=None, width_break=3):
+    """Wrap lists into multiple lines; smaller width_break => more vertical growth."""
+    modifiers = modifiers or []
+    lines = []
+    lines.extend(_escape_lines_for_stack(gloss_main, width_break))
+    if modifiers:
+        lines.append(r"\textcolor{black!60}{\footnotesize modifiers:}")
+        lines.extend(_escape_lines_for_stack(modifiers, max(2, width_break - 1)))
+    return _shortstack(lines)

@@ -89,6 +89,8 @@ class Deverbal(Noun):
             return super().__mul__(other)
 
     def __add__(self, other):
+        if self.vocative:
+            return other.__addpre__(self)
         selfcop = self.copy()
         if selfcop.arguments:
             selfcop.arguments[0] = selfcop.arguments[0].__add__(other)
@@ -179,6 +181,8 @@ class Classifier(Noun):
             return super().__mul__(other)
 
     def __add__(self, other):
+        if self.vocative:
+            return other.__addpre__(self)
         selfcop = self.copy()
         if selfcop.arguments:
             selfcop.arguments[0] = selfcop.arguments[0].__add__(other)

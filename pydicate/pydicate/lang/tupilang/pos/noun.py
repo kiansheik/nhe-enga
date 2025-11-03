@@ -2,6 +2,8 @@ from pydicate import Predicate
 from tupi import Noun as TupiNoun
 from pydicate.lang.tupilang.pos.copula import *
 from tupi import AnnotatedString
+from pydicate.lang.tupilang.pos.interjection import *
+from pydicate.lang.tupilang.pos.adverb import *
 
 
 class Noun(Predicate):
@@ -51,6 +53,8 @@ class Noun(Predicate):
         :param other: The Noun or Copula to add.
         :return: A new Noun with the added argument.
         """
+        if isinstance(other, Interjection) or isinstance(other, Adverb):
+            return super().__add__(other)
         if isinstance(other, Conjunction):
             cop = self.copy()
             conj = other.copy()
@@ -154,9 +158,23 @@ class Noun(Predicate):
 
     def voc(self):
         """Return the noun in its vocative form."""
-        voc_cop = self.copy()
-        voc_cop.noun = voc_cop.noun.vocativo()
-        return voc_cop
+        return VocativeNoun(self)
+
+
+# define VocativeNoun subclass of Noun which implements Interjetion type behavior
+class VocativeNoun(Noun, Interjection):
+    # the class simply takes a Noun object and returns a deep copy of the noun, plus voctative flag as it currently implements
+    def __init__(self, noun: Noun):
+        voc_copy = noun.copy()
+        voc_copy.noun = voc_copy.noun.vocativo()
+        # alter voc_copy to be of new class type
+        voc_copy.__class__ = VocativeNoun
+        # set all of self's attributes to voc_copy's attributes
+        self.__dict__.update(voc_copy.__dict__)
+        self.tag = "[VOCATIVE]"
+
+    def __add__(self, other):
+        return other.__addpre__(self)
 
 
 class Conjunction(Noun):

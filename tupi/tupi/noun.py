@@ -243,7 +243,7 @@ class Noun(TupiAntigo):
         )
 
     def base_substantivo(self):
-        if self.latest_verbete.get_annotated().endswith("[VOCATIVE_REDUCED_FORM]"):
+        if self.latest_verbete.get_annotated().endswith("[VOCATIVE]"):
             return self.verbete(anotated=True)
         return f"{self.verbete(anotated=True)}{'a[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING]' if (self.verbete(anotated=False)[-1] not in self.vogais) else '[SUBSTANTIVE_SUFFIX:VOWEL_ENDING]'}"
 
@@ -528,7 +528,7 @@ class Noun(TupiAntigo):
         vbt = ret_noun.latest_verbete
         if vbt[-1] in "a":
             vbt.replace_clean(-1, 1, "")
-        vbt.insert_suffix("[VOCATIVE_REDUCED_FORM]")
+        vbt.insert_suffix("[VOCATIVE]")
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
@@ -674,6 +674,8 @@ class Noun(TupiAntigo):
         else:
             prefix = ret_noun.pluriform_prefix("3p")
             vbt.insert_prefix(prefix)
+        # remove any ´ the last vowel may have
+        vbt.remove_accent_last_vowel()
         vbt.insert_suffix(suf)
         vbt.insert_suffix("[AGENTLESS_PATIENT_SUFFIX]")
         ret_noun.aglutinantes.append(ret_noun)

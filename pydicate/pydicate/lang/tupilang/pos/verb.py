@@ -503,7 +503,7 @@ só = Verb("só", definition="to go")
 aûsub = Verb("aûsub", definition="to love")
 mo = VerbAugmentor(
     value="mo",
-    definition="to make another do another verb",
+    definition="to make someone perform target verb",
     tag="[CAUSATIVE_PREFIX:MO]",
     category="verb_transitivizer",
 )  # TODO: Fix the phonetic rules for this
