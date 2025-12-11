@@ -130,9 +130,10 @@ class Noun(TupiAntigo):
         # Define some useful groups
         vogais_nasais = self.vogais_nasais
         nasais = self.consoantes_nasais
-        consoantes = self.consoantes_orais_normais
+        consoantes = self.consoantes_orais_normais + self.semi_vogais
 
         vbt.remove_accent_last_vowel()
+
         if ends_with_any(vbt, consoantes) and starts_with_any(
             mod_vbt, consoantes + nasais
         ):
@@ -660,15 +661,27 @@ class Noun(TupiAntigo):
         ret_noun = copy.deepcopy(self)
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
-        # breakpoint()
         suf = "pyr"
         vbt = ret_noun.latest_verbete
+
+        # Handle semivowel endings for nasality
+        semivowel = None
+        if ends_with_any(vbt, self.semi_vogais):
+            semivowel = vbt[-1]
+            vbt.replace_clean(-1, 1, "")  # Temporarily remove semivowel
+
+        # Check nasality and consonant clash as if semivowel was not there
         if ends_with_any(vbt, self.nasais):
             suf = "mbyr"
         if vbt[-1] in ["b", "p"]:
             vbt.replace_clean(-1, 1, "")
         elif ends_with_any(vbt, self.consoantes):
             suf = f"y[CONSONANT_CLASH]{suf}"
+
+        # Restore semivowel before adding suffixes
+        if semivowel:
+            vbt.insert_suffix(semivowel)
+
         if not self.pluriforme:
             vbt.insert_prefix("i[OBJECT:3p:NON_MAIN_CLAUSE_SUBJECT]")
         else:

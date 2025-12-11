@@ -497,7 +497,7 @@ class Verb(TupiAntigo):
                     self.personal_inflections[subject_tense][0]
                     + f"[SUBJECT_PRONOUN:{subject_tense}]"
                 )
-            if dir_subj_raw is not None:
+            if dir_subj_raw is not None and not pro_drop:
                 subj = dir_subj_raw + f"[SUBJECT:{subject_tense}:DIRECT]"
             pluriforme = ""
             if pluri_check:
@@ -510,6 +510,11 @@ class Verb(TupiAntigo):
                     subj_prefix = ""
                 else:
                     pluriforme = f"r[PLURIFORM_PREFIX:R]"
+            # TODO: Organize the pluriform types into a table like Gerardi has, but adding the ting case
+            if base_verbete.split("[")[0].startswith(
+                "ting"
+            ):  # as anchieta says, it is a unique exception which gets not P
+                subj_prefix = "[PLURIFORM_PREFIX:NULL:TING]"
             vb = f"{subj_prefix}{pluriforme}{base_verbete}[ROOT]"
             if redup:
                 vb = self.reduplicate(AnnotatedString(vb)).get_annotated()
@@ -673,9 +678,11 @@ class Verb(TupiAntigo):
                         result = f"{perm}{vbt}"
                         if negative:
                             result = self.negate_verb(result, mode)
-                        result = (
-                            f"{subj if not pro_drop else ''} {vadjs_pre}{result}{vadjs}"
-                        )
+                        # breakpoint()
+                        if pos == "posposto":
+                            result = f"{vadjs_pre}{result}{vadjs} {subj if not pro_drop else ''}"
+                        else:
+                            result = f"{subj if not pro_drop else ''} {vadjs_pre}{result}{vadjs}"
 
                 if "1p" in object_tense:
                     if "2p" in subject_tense:
@@ -724,7 +731,7 @@ class Verb(TupiAntigo):
                             vb = self.negate_verb(vb, mode)
                         result = (
                             f"{vadjs_pre}{vb}{vadjs} {subj if not pro_drop else ''}"
-                            if pos == "anteposto"
+                            if pos == "posposto"
                             else f"{subj if not pro_drop else ''} {vadjs_pre}{vb}{vadjs}"
                         )
         return (

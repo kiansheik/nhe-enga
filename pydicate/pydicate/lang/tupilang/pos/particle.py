@@ -29,15 +29,19 @@ class Particle(Predicate):
     definition="really is, actually is, gives focus to what precedes",
     tag="[PARTICLE:FOCUS]",
 )
-te = Particle(
-    "te",
-    definition="however, 'on the other hand...', adversitive discourse marker, shifting focus to what precedes it, 'but this in contrast...",
-    tag="[PARTICLE:ADVERSATIVE]",
+te = YFix(
+    Particle(
+        "te",
+        definition="however, 'on the other hand...', adversitive discourse marker, shifting focus to what precedes it, 'but this in contrast...",
+        tag="[PARTICLE:ADVERSATIVE]",
+    )
 )
 
 
-peQ = Particle(
-    "pe",
-    definition="question marker, marks topic of question",
-    tag="[PARTICLE:INTERROGATIVE]",
+peQ = YFix(
+    Particle(
+        "pe",
+        definition="question marker, marks topic of question",
+        tag="[PARTICLE:INTERROGATIVE]",
+    )
 )

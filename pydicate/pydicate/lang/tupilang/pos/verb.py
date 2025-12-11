@@ -128,7 +128,34 @@ class Verb(Predicate):
         vadjs = ""
         vadjs_pre = ""
         if self.v_adjuncts:
-            vadjs = " ".join([x.eval(annotated=annotated) for x in self.v_adjuncts])
+            vadj_strs = []
+            for x in self.v_adjuncts:
+                val = x.eval(annotated=annotated)
+                # If it's a YFix, check if we need to insert 'y' between consonants
+                if isinstance(x, YFix):
+                    # Get the last char of retval so far (or verbete if empty)
+                    prev = retval if "retval" in locals() and retval else self.verbete
+                    prev_last = (
+                        self.verb.remove_brackets_and_contents(prev).strip()[-1]
+                        if prev
+                        else ""
+                    )
+                    # Get the first char of val
+                    val_first = val[0] if val else ""
+                    # If both are consonants, insert 'y'
+                    if (
+                        prev_last
+                        and val_first
+                        and prev_last not in (TupiVerb.vogais + TupiVerb.semi_vogais)
+                        and val_first not in (TupiVerb.vogais + TupiVerb.semi_vogais)
+                    ):
+                        val = "y" + ("[CONSONANT_CLASH]" if annotated else "") + val
+            vadj_strs.append(val)
+            vadjs = " ".join(vadj_strs)
+        if self.v_adjuncts_pre:
+            vadjs_pre = " ".join(
+                [x.eval(annotated=annotated) for x in reversed(self.v_adjuncts_pre)]
+            )
         if self.v_adjuncts_pre:
             vadjs_pre = " ".join(
                 [x.eval(annotated=annotated) for x in reversed(self.v_adjuncts_pre)]
@@ -223,7 +250,9 @@ class Verb(Predicate):
         elif arglen == 2:  # transitive
             suj = base_verb.subject()
             obj = base_verb.object()
-            arg0 = suj.eval(annotated=annotated)
+            arg0 = (
+                suj.eval(annotated=annotated) if not suj.category == "pronoun" else None
+            )
             infl0 = suj.inflection()
             arg1 = (
                 None
@@ -234,6 +263,15 @@ class Verb(Predicate):
             if obj.category == "conjunction":
                 arg1 = None
                 obj_delocated = None if obj.pro_drop else obj.eval(annotated=annotated)
+            use_obj_posto = infl1 in ["refl", "mut", "suj"] and (
+                infl1 == "3p" or infl0 != "3p"
+            )
+            if "1" in infl1 and "2" in infl0:
+                use_obj_posto = False
+            if "2" in infl1 and "1" in infl0:
+                use_obj_posto = False
+            if "3" not in infl1 and "3" in infl0:
+                use_obj_posto = False
             retval = base_verb.verb.conjugate(
                 anotar=annotated,
                 subject_tense=infl0 if infl0 else "3p",
@@ -244,7 +282,7 @@ class Verb(Predicate):
                 negative=base_verb.negated,
                 pro_drop=suj.pro_drop,
                 pro_drop_obj=obj.pro_drop,
-                pos=obj.posto if infl1 not in ["refl", "mut", "suj"] else suj.posto,
+                pos=obj.posto if use_obj_posto else suj.posto,
                 vadjs=vadjs,
                 vadjs_pre=vadjs_pre,
                 redup=base_verb.reduplicated,
@@ -277,6 +315,8 @@ class Verb(Predicate):
                 lastchar not in (TupiVerb.vogais + TupiVerb.semi_vogais)
             ):
                 sepchar = "y" + ("[CONSONANT_CLASH]" if annotated else "")
+            # elif type(adj) == YFix: #TODO: fix this for any predicate, not just verbs
+            #     sepchar = ""
             retval = retval + sepchar + adj.eval(annotated=annotated)
         return retval if annotated else self.verb.remove_brackets_and_contents(retval)
 

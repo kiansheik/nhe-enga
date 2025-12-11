@@ -14,6 +14,8 @@ REGISTRY = dict()
 FULL_REGISTRY = []
 
 _MORPH_TAG_RE = re.compile(r"([^\[\]\s]+)((?:\[[^\]]+\])+)", flags=re.UNICODE)
+_PEDAGOGICAL_NEWLINE_RE = re.compile(r",n\s*")
+_PEDAGOGICAL_LINE_JOIN = " // "
 
 
 # let's make a function which takes a string and where there are sumbolys like ˜i, ˜u, ˆy, ˜y, ´y; it will combine then into a single unicode character
@@ -63,6 +65,7 @@ class Predicate(Trackable):
         self.definition = definition
         self.principal = None
         self.rua = False
+        self.ped_label = None
         self.tag = tag  # Tag for the predicate, useful for debugging or annotation
         self.gloss = (
             db_explorer.search_word(self.verbete, self.category)
@@ -294,7 +297,7 @@ class Predicate(Trackable):
         neg = "" if not annotated else "[NEGATION_PARTICLE:NA]"
         neg_suf = "" if not annotated else "[NEGATION_PARTICLE:RUA]"
         if prev.rua:
-            pre = f"nda{neg} {pre} ruã{neg_suf}"
+            pre = f"na{neg} {pre} ruã{neg_suf}"
         return remove_adjacent_tags(pre).strip()
 
     def __invert__(self):
@@ -771,6 +774,68 @@ class Predicate(Trackable):
             "latex_pair_table": latex_pairs,
         }
 
+    def pedagogical_representation(self):
+        """
+        Return a string representation suitable for pedagogical purposes,
+        showing the verbete along with its main glosses and definition.
+        Only print out the potiguara and tupi lines if they differ from the navarro line.
+        """
+        navarro = self.eval(False)
+        tn = TupiNoun("na", "na")
+        potiguara = tn.map_orthography(navarro, "POTIGUARA")
+        tupinamba = tn.map_orthography(navarro, "TUPINAMBA")
+
+        def format_variant_text(text: str) -> str:
+            if not text:
+                return ""
+            parts = []
+            for chunk in text.split("\n"):
+                chunk = chunk.strip()
+                if not chunk:
+                    continue
+                parts.append(chunk[:1].upper() + chunk[1:])
+            return _PEDAGOGICAL_LINE_JOIN.join(parts) if parts else ""
+
+        nl = format_variant_text(escape_latex(navarro))
+        pl = format_variant_text(escape_latex(potiguara))
+        tl = format_variant_text(escape_latex(tupinamba))
+        derf = self.definition.strip() if not self.ped_label else self.ped_label.strip()
+        capdfn = format_variant_text(escape_latex(derf))
+
+        # get self.definition but as a unix-safe filename
+        def_fn = re.sub(r"[^a-zA-Z0-9_-áéíóúãõâêôçÁÉÍÓÚÃÕÂÊÔÇ]", "_", derf)[:40].lower()
+
+        latex_lines = []
+        all_same = True
+        one_different = None
+        if pl.lower() != nl.lower():
+            latex_lines.append(f"\\tp{{{pl}}}")
+            all_same = False
+            one_different = "tdo"
+        if tl.lower() != nl.lower():
+            latex_lines.append(f"\\tdo{{{tl}}}")
+            all_same = False
+            if one_different:
+                one_different = None
+            else:
+                one_different = "tp"
+        # if all of them are the same then use \tall for navarro and prepend the others with it
+        if all_same:
+            latex_lines = [f"\\tall{{{nl}}}"]
+        elif one_different:
+            latex_lines = [f"\\ta{one_different}{{{nl}}}"] + latex_lines
+        else:
+            latex_lines = [f"\\ta{{{nl}}}"] + latex_lines
+
+        latex_template = f"""
+        \\variantgroupimg{{{capdfn}}}{{
+            {' '.join(latex_lines)}
+        }}
+        {{imgs/{def_fn}.png}}
+        """
+
+        return latex_template
+
 
 def _format_semfit_label(gloss_main, modifiers=None, width_break=3):
     """
@@ -810,6 +875,7 @@ def stack3(head=None, tag=None, gloss=None, align="l"):
 
 
 def escape_latex(text: str) -> str:
+    text = _PEDAGOGICAL_NEWLINE_RE.sub("\n", text)
     return (
         text.replace("\\", "\\textbackslash{}")
         .replace("{", "\\textbraceleft{}")
@@ -845,6 +911,8 @@ def _latex_escape(s: str) -> str:
 def escape_latex_forest_node(text: str) -> str:
     # For Forest/TikZ NODE CONTENT ONLY
     # (1) Do NOT escape backslashes (we need \\ for line breaks)
+    # Replace ",n " (comma n space) with a newline for better formatting
+    text = _PEDAGOGICAL_NEWLINE_RE.sub("\n", text)
     s = (
         text.replace("{", "\\{")
         .replace("}", "\\}")
