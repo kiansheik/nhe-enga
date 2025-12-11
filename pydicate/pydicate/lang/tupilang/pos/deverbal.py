@@ -246,8 +246,10 @@ def emi_morphology(self, verb, annotated=False):
     return nom.substantivo(annotated)
 
 
-def sara_morphology(self, verb, annotated=False):
+def sara_morphology(self, verbin, annotated=False):
     """Resolve the morphology of the Deverbal object."""
+    verb = verbin.copy()
+    verb.arguments = [verb.object()] if verb.object() else []
     nom = verb.base_nominal(True).noun
     # breakpoint()
     nom.latest_verbete.drop_until_last_tag()
