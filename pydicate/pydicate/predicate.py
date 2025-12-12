@@ -67,6 +67,7 @@ class Predicate(Trackable):
         self.rua = False
         self.ped_label = None
         self.tag = tag  # Tag for the predicate, useful for debugging or annotation
+        self.fname = None  # Filename or picture
         self.gloss = (
             db_explorer.search_word(self.verbete, self.category)
             if db_explorer
@@ -800,10 +801,19 @@ class Predicate(Trackable):
         pl = format_variant_text(escape_latex(potiguara))
         tl = format_variant_text(escape_latex(tupinamba))
         derf = self.definition.strip() if not self.ped_label else self.ped_label.strip()
+        derfn = (
+            self.fname.strip()
+            if self.fname
+            else self.definition.strip()
+            if not self.ped_label
+            else self.ped_label.strip()
+        )
         capdfn = format_variant_text(escape_latex(derf))
 
         # get self.definition but as a unix-safe filename
-        def_fn = re.sub(r"[^a-zA-Z0-9_-áéíóúãõâêôçÁÉÍÓÚÃÕÂÊÔÇ]", "_", derf)[:40].lower()
+        def_fn = re.sub(r"[^a-zA-Z0-9_-áéíóúãõâêôçÁÉÍÓÚÃÕÂÊÔÇ]", "_", derfn)[
+            :40
+        ].lower()
 
         latex_lines = []
         all_same = True

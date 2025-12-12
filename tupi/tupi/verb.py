@@ -511,8 +511,8 @@ class Verb(TupiAntigo):
                 else:
                     pluriforme = f"r[PLURIFORM_PREFIX:R]"
             # TODO: Organize the pluriform types into a table like Gerardi has, but adding the ting case
-            if base_verbete.split("[")[0].startswith(
-                "ting"
+            if (
+                base_verbete.split("[")[0].startswith("ting") and subject_tense == "3p"
             ):  # as anchieta says, it is a unique exception which gets not P
                 subj_prefix = "[PLURIFORM_PREFIX:NULL:TING]"
             vb = f"{subj_prefix}{pluriforme}{base_verbete}[ROOT]"
