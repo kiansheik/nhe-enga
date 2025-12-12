@@ -77,10 +77,11 @@ Example:
 ```python
 from tupi import Verb
 
-ver = Verb("epîak", "(v.tr.)", "to see")
-# ixé osé epîak - "I see myself" (reflexive)
+ver = Verb("epîak", "(v.tr.) (s)", "to see")
+
+# ixé aîeepîak
 print(ver.conjugate(subject_tense="1ps", object_tense="refl", mode="indicativo"))
-# 'a'e oseepîak? -> toggling negation or other moods is just extra flags:
+a'e sepîake'ymi
 print(ver.conjugate(subject_tense="3p", mode="circunstancial", negative=True))
 ```
 
