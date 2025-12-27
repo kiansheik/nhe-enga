@@ -266,6 +266,7 @@ class Verb(Predicate):
             use_obj_posto = infl1 in ["refl", "mut", "suj"] and (
                 infl1 == "3p" or infl0 != "3p"
             )
+            use_obj_posto = use_obj_posto or suj.pro_drop
             if "1" in infl1 and "2" in infl0:
                 use_obj_posto = False
             if "2" in infl1 and "1" in infl0:

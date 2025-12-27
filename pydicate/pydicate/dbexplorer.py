@@ -26,6 +26,7 @@
 # The following file will be an interface to interact with the tupi_only database.
 import os
 import sqlite3
+from contextlib import closing
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "tupi_only.db")
 
@@ -34,12 +35,14 @@ class NavarroDB:
     def __init__(self, db_path=DB_PATH):
         """Initialize the NavarroDB object."""
         self.db_path = db_path
+        self.conn = None
+        self.cursor = None
 
     def create_table(self):
-        with sqlite3.connect(self.db_path) as self.conn:
-            self.cursor = self.conn.cursor()
+        with closing(sqlite3.connect(self.db_path)) as conn:
+            cursor = conn.cursor()
             """Create the tupi_only table if it doesn't exist."""
-            self.cursor.execute(
+            cursor.execute(
                 """
                 CREATE TABLE IF NOT EXISTS tupi_only (
                     id INTEGER PRIMARY KEY,
@@ -52,7 +55,7 @@ class NavarroDB:
                 )
                 """
             )
-            self.conn.commit()
+            conn.commit()
 
     # search for word in the tupi_only table
     def search_word(self, word, classname=None):
@@ -68,8 +71,8 @@ class NavarroDB:
                 def_search = "pron."
             elif classname == "verb":
                 def_search = "(v."
-        with sqlite3.connect(self.db_path) as self.conn:
-            self.cursor = self.conn.cursor()
+        with closing(sqlite3.connect(self.db_path)) as conn:
+            cursor = conn.cursor()
             query = (
                 """
             SELECT
@@ -111,8 +114,8 @@ class NavarroDB:
             )
             try:
                 # print(f"Executing query: {query} with params: {params}")
-                self.cursor.execute(query, params)
-                results = self.cursor.fetchall()
+                cursor.execute(query, params)
+                results = cursor.fetchall()
             except sqlite3.Error as e:
                 print(f"Error executing query: \n{query}\n with params \n{params}\n")
                 print(f"Error fetching data: {e}")
@@ -148,8 +151,8 @@ class NavarroDB:
 
     def filter_words_by_definition(self, definition):
         """Filter words in the tupi_only table by definition."""
-        with sqlite3.connect(self.db_path) as self.conn:
-            self.cursor = self.conn.cursor()
+        with closing(sqlite3.connect(self.db_path)) as conn:
+            cursor = conn.cursor()
             query = """
             SELECT
               vid,
@@ -165,8 +168,8 @@ class NavarroDB:
               vid, first_word, definition, gloss_language
             """
             params = [f"%{definition}%"]
-            self.cursor.execute(query, params)
-            results = self.cursor.fetchall()
+            cursor.execute(query, params)
+            results = cursor.fetchall()
             # Fit the results into TupiVerbete objects, consolodating the languages
             vids = set(row[0] for row in results)
             tupi_verbetes = dict()
