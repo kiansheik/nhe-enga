@@ -289,7 +289,7 @@ class Noun(TupiAntigo):
                 return "p[PLURIFORM_PREFIX:P]"
         return ""
 
-    def supe(self):
+    def supe(self, variation_id=0):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
         args, _, _, values = inspect.getargvalues(frame)
@@ -304,7 +304,7 @@ class Noun(TupiAntigo):
         found = False
         for infl, vals in self.personal_inflections.items():
             if str(vbt.get_clean()) == vals[0]:
-                new_vbt = AnnotatedString(self.dative_inflections[infl][0])
+                new_vbt = AnnotatedString(self.dative_inflections[infl][variation_id])
                 found = True
                 vbt = new_vbt
                 break

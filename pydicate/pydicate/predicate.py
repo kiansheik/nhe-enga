@@ -68,6 +68,7 @@ class Predicate(Trackable):
         self.ped_label = None
         self.tag = tag  # Tag for the predicate, useful for debugging or annotation
         self.fname = None  # Filename or picture
+        self.variation_id = None  # Variation ID for different forms
         self.gloss = (
             db_explorer.search_word(self.verbete, self.category)
             if db_explorer
@@ -94,6 +95,17 @@ class Predicate(Trackable):
             return self.arguments[0].inflection()
         else:
             return "3p"
+
+    def var(self, setter):
+        """
+        set the variation ID of the predicate.
+        :param setter: The new variation ID to set (optional).
+        :return: The variation ID of the predicate.
+        """
+        varcop = self.copy()
+        if setter is not None:
+            varcop.variation_id = setter
+        return varcop
 
     def copy(self):
         """
