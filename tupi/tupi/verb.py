@@ -131,6 +131,10 @@ class Verb(TupiAntigo):
             subj_key = subject_tense if subject_tense else "ø"
             obj_key = object_tense if object_tense else "ø"
             obj_key = "3p" if obj_key == "none" else obj_key
+            if mode == "gerundio" and self.transitivo:
+                # In transitive gerund, the subject prefix is not realized;
+                # irregular gerund forms are keyed under "ø".
+                subj_key = "ø"
             if obj_key == "absoluta":
                 if self.transitivo:
                     subj_key = "3p"
@@ -208,7 +212,9 @@ class Verb(TupiAntigo):
                         f"{self.personal_inflections[object_tense][1]}[OBJECT:{object_tense}]"
                         if dir_obj_raw is None
                         else dir_obj_raw + f"[OBJECT:DIRECT]"
-                    ) + " "
+                    )
+                    if dir_obj_raw is not None:
+                        dir_obj += " "
                     if object_tense == "3p" and dir_obj_raw is None:
                         if pluri_check or self.ero:
                             dir_obj = (
@@ -221,7 +227,7 @@ class Verb(TupiAntigo):
                     else:
                         dir_obj += f'{f"r[PLURIFORM_PREFIX:R]" if pluri_check or self.ero else ""}'
                     pref = dir_obj
-                if suf[0] in self.vogais and vbt[-1] in "i y u".split():
+                if vbt and suf[0] in self.vogais and vbt[-1] in "i y u".split():
                     vbt = vbt[:-1] + self.semi_vogais_map[vbt[-1]]
                 vbt += f"[ROOT]"
                 if redup:
