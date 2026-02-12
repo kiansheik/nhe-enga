@@ -241,9 +241,9 @@
         "overwrite": true
       },
       "im": {
-        "verbete": "îar",
+        "verbete": "eîá",
         "pluriforme": false,
-        "overwrite": false
+        "overwrite": true
       },
       "co": {
         "verbete": "ar",
@@ -301,9 +301,9 @@
         "overwrite": true
       },
       "im": {
-        "verbete": "îar",
+        "verbete": "peîá",
         "pluriforme": false,
-        "overwrite": false
+        "overwrite": true
       },
       "co": {
         "verbete": "ar",
