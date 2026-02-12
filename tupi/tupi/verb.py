@@ -146,11 +146,12 @@ class Verb(TupiAntigo):
                 obj_key = "ø"
             if subj_key in ["refl", "mut", "suj"]:
                 subj_key = "3p"
-            if obj_key in ["refl", "mut", "suj"]:
-                obj_key = "3p"
             subj = self.irregular.get(subj_key)
             if subj:
                 obj = subj.get(obj_key)
+                if obj is None and obj_key in ["refl", "mut", "suj"]:
+                    # fall back to 3p object if no irregular refl/mut entry exists
+                    obj = subj.get("3p")
                 if obj:
                     ms = mode[:2]
                     if mode == "permissivo":
