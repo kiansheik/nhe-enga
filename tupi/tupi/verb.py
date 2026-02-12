@@ -307,8 +307,9 @@ class Verb(TupiAntigo):
                         subj = ""
                 else:
                     obj += f"r[PLURIFORM_PREFIX:R]"
-            elif pluri_check and self.transitivo and (vadjs_pre == ""):
-                obj += f"r[PLURIFORM_PREFIX:R]"
+            # For transitives, the pluriforme R (if any) is already handled
+            # when building the object prefix above. Adding it again here
+            # yields double R (e.g., "nderrareme").
             vbt = f"{vbt}[ROOT]"
             redup_space = f"{obj}{vbt}"
             if redup:
