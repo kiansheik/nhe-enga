@@ -215,16 +215,16 @@ class Verb(TupiAntigo):
                     )
                     if dir_obj_raw is not None:
                         dir_obj += " "
-                    else:
-                        # remove accented ´ from dir_obj if present, as it will be combined without a space
-                        dir_obj = (
-                            dir_obj.replace("á", "a")
-                            .replace("é", "e")
-                            .replace("í", "i")
-                            .replace("ó", "o")
-                            .replace("ú", "u")
-                            .replace("ý", "y")
-                        )
+                    # else:
+                    #     # remove accented ´ from dir_obj if present, as it will be combined without a space
+                    #     dir_obj = (
+                    #         dir_obj.replace("á", "a")
+                    #         .replace("é", "e")
+                    #         .replace("í", "i")
+                    #         .replace("ó", "o")
+                    #         .replace("ú", "u")
+                    #         .replace("ý", "y")
+                    #     )
                     if object_tense == "3p" and dir_obj_raw is None:
                         if pluri_check or self.ero:
                             dir_obj = (
