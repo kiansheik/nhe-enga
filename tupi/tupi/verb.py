@@ -604,7 +604,15 @@ class Verb(TupiAntigo):
                     vbt = f"{conj}{obj}{base_verbete}[ROOT]"
                     perm = self.choose_perm(vbt, perm_mode)
                     if overwrite:
-                        vbt = f"{base_verbete[1:]}[ROOT]"
+                        # base_verbete already contains the subject prefix; keep conj/object
+                        # but avoid duplicating the subject prefix from base_verbete.
+                        subj_pref_raw = self.remove_brackets_and_contents(conj)
+                        stem = (
+                            base_verbete[len(subj_pref_raw) :]
+                            if subj_pref_raw and base_verbete.startswith(subj_pref_raw)
+                            else base_verbete
+                        )
+                        vbt = f"{conj}{obj}{stem}[ROOT]"
                     if redup:
                         vbt = self.reduplicate(AnnotatedString(vbt)).get_annotated()
                     vb = f"{perm}{vbt}"
