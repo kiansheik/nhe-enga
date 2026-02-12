@@ -439,6 +439,11 @@
         "verbete": "ar",
         "pluriforme": true,
         "overwrite": false
+      },
+      "in": {
+        "verbete": "îar",
+        "pluriforme": false,
+        "overwrite": false
       }
     },
     "mut": {
@@ -450,6 +455,11 @@
       "co": {
         "verbete": "ar",
         "pluriforme": true,
+        "overwrite": false
+      },
+      "in": {
+        "verbete": "îar",
+        "pluriforme": false,
         "overwrite": false
       }
     }
