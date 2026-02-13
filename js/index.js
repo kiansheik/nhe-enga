@@ -45,7 +45,7 @@
       rank: 2,
       rankSymbol: '2',
       term: '2ª pessoa singular',
-      ptSubj: 'tu',
+      ptSubj: 'você',
       ptObj: 'te',
     },
     '3p': {
@@ -73,7 +73,7 @@
       rank: 2,
       rankSymbol: '2',
       term: '2ª pessoa plural',
-      ptSubj: 'vós',
+      ptSubj: 'vocês',
       ptObj: 'vos',
     },
     'refl': {
