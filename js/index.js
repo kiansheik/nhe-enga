@@ -33,6 +33,87 @@
     'îo': 'mut',
   };
 
+  const PERSON_META = {
+    '1ps': {
+      rank: 1,
+      rankSymbol: '1',
+      term: '1ª pessoa singular',
+      ptSubj: 'eu',
+      ptObj: 'me',
+    },
+    '2ps': {
+      rank: 2,
+      rankSymbol: '2',
+      term: '2ª pessoa singular',
+      ptSubj: 'tu',
+      ptObj: 'te',
+    },
+    '3p': {
+      rank: 3,
+      rankSymbol: '3',
+      term: '3ª pessoa (sg/pl; sem gênero)',
+      ptSubj: 'el@',
+      ptObj: '@s',
+    },
+    '1ppe': {
+      rank: 1,
+      rankSymbol: '1',
+      term: '1ª pessoa plural (excl.)',
+      ptSubj: 'nós (excl.)',
+      ptObj: 'nos (excl.)',
+    },
+    '1ppi': {
+      rank: 1,
+      rankSymbol: '1',
+      term: '1ª pessoa plural (incl.)',
+      ptSubj: 'nós (incl.)',
+      ptObj: 'nos (incl.)',
+    },
+    '2pp': {
+      rank: 2,
+      rankSymbol: '2',
+      term: '2ª pessoa plural',
+      ptSubj: 'vós',
+      ptObj: 'vos',
+    },
+    'refl': {
+      rank: 0,
+      rankSymbol: '=',
+      term: 'reflexivo',
+      ptSubj: 'se',
+      ptObj: 'se',
+    },
+    'mut': {
+      rank: 0,
+      rankSymbol: '↔',
+      term: 'mútuo',
+      ptSubj: 'um ao outro',
+      ptObj: 'um ao outro',
+    },
+  };
+
+  const PERSON_RANK = {
+    '1ps': 1,
+    '1ppe': 1,
+    '1ppi': 1,
+    '2ps': 2,
+    '2pp': 2,
+    '3p': 3,
+  };
+
+  const PERSON_ORDER = {
+    '1ps': 1,
+    '1ppe': 2,
+    '1ppi': 3,
+    '2ps': 4,
+    '2pp': 5,
+    '3p': 6,
+    'refl': 7,
+    'mut': 8,
+    null: 9,
+    undefined: 9,
+  };
+
   const searchButton = document.getElementById('searchButton');
   const searchInput = document.getElementById('searchInput');
   const resultsDiv = document.getElementById('results');
@@ -243,6 +324,483 @@
     return resultObject;
   }
 
+  function getPersonMeta(code, role) {
+    if (code === null || code === undefined) {
+      return {
+        rank: 0,
+        rankSymbol: 'Ø',
+        term: 'impessoal',
+        pt: '—',
+      };
+    }
+
+    const meta = PERSON_META[code] || {};
+    return {
+      rank: meta.rank || 0,
+      rankSymbol: meta.rankSymbol || '',
+      term: meta.term || '',
+      pt: role === 'subj' ? meta.ptSubj || '' : meta.ptObj || '',
+    };
+  }
+
+  function isIntransitive(objectsVals) {
+    return objectsVals.length === 0 || (objectsVals.length === 1 && objectsVals[0] === null);
+  }
+
+  function getMorphKind(subj, obj) {
+    if (obj === 'refl' || obj === 'mut') return 'equal';
+
+    const subjRank = PERSON_RANK[subj];
+    const objRank = PERSON_RANK[obj];
+
+    if (!subjRank || !objRank) return 'neutral';
+    if (subjRank === objRank) return 'equal';
+    return subjRank < objRank ? 'active' : 'stative';
+  }
+
+  function getReflexivePt(subj) {
+    switch (subj) {
+      case '1ps':
+        return 'me';
+      case '2ps':
+        return 'te';
+      case '3p':
+        return 'se';
+      case '1ppe':
+      case '1ppi':
+        return 'nos';
+      case '2pp':
+        return 'vos';
+      default:
+        return 'se';
+    }
+  }
+
+  function getBucketKey(subj, obj) {
+    if (obj === 'refl' || obj === 'mut') {
+      return obj === 'mut' ? 'mut' : 'refl';
+    }
+
+    const subjRank = PERSON_RANK[subj] || 0;
+    const objRank = PERSON_RANK[obj] || 0;
+    if (!subjRank || !objRank) return null;
+    return subjRank === 3 || objRank === 3 ? '123-3' : '12';
+  }
+
+  function renderPairLine(subj, obj, conj, morphKind) {
+    const subjMeta = getPersonMeta(subj, 'subj');
+    const objMeta = getPersonMeta(obj, 'obj');
+    const objPt = obj === 'refl' ? getReflexivePt(subj) : objMeta.pt;
+    const ptLine = subjMeta.pt && objPt ? `${subjMeta.pt} ${objPt}` : '';
+
+    return `
+      <div class="conj-line morph-${morphKind || 'neutral'}">
+        <span class="conj-form">${conj}</span>
+        ${ptLine ? `<span class="conj-gloss">${ptLine}</span>` : ''}
+      </div>
+    `;
+  }
+
+  function renderSubjectLine(subj, conj) {
+    const subjMeta = getPersonMeta(subj, 'subj');
+    const ptLine = subjMeta.pt || '';
+    return `
+      <div class="conj-line morph-neutral">
+        <span class="conj-form">${conj}</span>
+        ${ptLine ? `<span class="conj-gloss">${ptLine}</span>` : ''}
+      </div>
+    `;
+  }
+
+  function renderObjectLine(obj, conj) {
+    const objMeta = getPersonMeta(obj, 'obj');
+    const ptLine = objMeta.pt || '';
+    return `
+      <div class="conj-line morph-neutral">
+        <span class="conj-form">${conj}</span>
+        ${ptLine ? `<span class="conj-gloss">${ptLine}</span>` : ''}
+      </div>
+    `;
+  }
+
+  function generateConjugationTableImperative({
+    conjugations,
+    subjectsVals,
+    objectsVals,
+    unId,
+    negar,
+  }) {
+    const groups = {
+      sing: { active: [], stative: [], refl: [] },
+      pl: { active: [], stative: [], refl: [] },
+    };
+
+    const subjGroupFor = (subj) => (subj === '2pp' ? 'pl' : 'sing');
+
+    subjectsVals.forEach((subj) => {
+      objectsVals.forEach((obj) => {
+        const conj = conjugations[JSON.stringify([subj, obj])] || '-';
+        if (!conj || conj === '-') return;
+        const groupKey = subjGroupFor(subj);
+
+        if (obj === 'refl' || obj === 'mut') {
+          groups[groupKey].refl.push(renderPairLine(subj, obj, conj, 'equal'));
+          return;
+        }
+
+        const objRank = PERSON_RANK[obj];
+        if (objRank === 1) {
+          groups[groupKey].stative.push(renderPairLine(subj, obj, conj, 'stative'));
+        } else if (objRank === 3) {
+          groups[groupKey].active.push(renderPairLine(subj, obj, conj, 'active'));
+        } else {
+          groups[groupKey].refl.push(renderPairLine(subj, obj, conj, 'equal'));
+        }
+      });
+    });
+
+    const renderGroupCell = (items) => (items.length ? items.join('') : '<div class="conj-empty">—</div>');
+
+    let htmlString = `<div class="options-container conj-wrap" id="conj-${unId}">`;
+    htmlString += renderControls(unId, negar);
+    htmlString += `
+      <table class="conj-rank-table conj-imperative-table">
+        <colgroup>
+          <col class="conj-col-rowhead">
+          <col class="conj-col-main">
+          <col class="conj-col-main">
+          <col class="conj-col-side">
+        </colgroup>
+        <thead>
+          <tr class="conj-subhead is-active">
+            <th></th>
+            <th>2 &gt; 3</th>
+            <th>2 &gt; 1</th>
+            <th class="conj-side-head">Reflexivo / Mútuo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="conj-group">
+            <th class="conj-rowhead">Singular</th>
+            <td class="conj-bucket">${renderGroupCell(groups.sing.active)}</td>
+            <td class="conj-bucket">${renderGroupCell(groups.sing.stative)}</td>
+            <td class="conj-bucket conj-bucket-side">${renderGroupCell(groups.sing.refl)}</td>
+          </tr>
+          <tr class="conj-group">
+            <th class="conj-rowhead">Plural</th>
+            <td class="conj-bucket">${renderGroupCell(groups.pl.active)}</td>
+            <td class="conj-bucket">${renderGroupCell(groups.pl.stative)}</td>
+            <td class="conj-bucket conj-bucket-side">${renderGroupCell(groups.pl.refl)}</td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+    htmlString += '</div>';
+    return htmlString;
+  }
+
+  function renderBucket(items) {
+    if (!items.length) {
+      return '<div class="conj-empty">—</div>';
+    }
+    return items.map((item) => renderPairLine(item.subj, item.obj, item.conj, item.morphKind)).join('');
+  }
+
+  function renderControls(unId, negar) {
+    return `
+      <div class="conj-controls-bar">
+        <div class="conj-controls">
+          <label class="conj-controls-label" for="mode-${unId}">Modo</label>
+          <select id="mode-${unId}" class="option">
+            <!-- Add options dynamically using JavaScript -->
+          </select>
+        </div>
+        <div class="conj-legend">
+          <div class="conj-legend-title">Ordem: quem faz &gt; quem recebe</div>
+          <br><div class="conj-legend-note">el@ = ele/ela/eles/elas/elus/isso</div>
+          <br><div class="conj-legend-note">@s = o/a/os/as</div>
+        </div>
+        <label class="conj-toggle" for="negarCheckbox-${unId}">
+          <input type="checkbox" id="negarCheckbox-${unId}" ${negar ? 'checked' : ''} name="negarCheckbox">
+          <span>Negar</span>
+        </label>
+      </div>
+    `;
+  }
+
+  function generateConjugationTableRanked({ mode, conjugations, subjectsVals, objectsVals, unId, negar }) {
+    const showLabels = mode !== 'circunstancial' && mode !== 'conjuntivo';
+    const buckets = {
+      active: { '12': [], '123-3': [], refl: [], mut: [] },
+      stative: { '12': [], '123-3': [], refl: [], mut: [] },
+    };
+
+    subjectsVals.forEach((subj) => {
+      objectsVals.forEach((obj) => {
+        const conj = conjugations[JSON.stringify([subj, obj])] || '-';
+        if (!conj || conj === '-') return;
+        const morphKind = getMorphKind(subj, obj);
+        const group = morphKind === 'stative' ? 'stative' : 'active';
+        const bucketKey = getBucketKey(subj, obj);
+        if (!bucketKey) return;
+        buckets[group][bucketKey].push({ subj, obj, conj, morphKind });
+      });
+    });
+
+    const sortPairs = (a, b) => {
+      const subjOrder = (PERSON_ORDER[a.subj] ?? 99) - (PERSON_ORDER[b.subj] ?? 99);
+      if (subjOrder !== 0) return subjOrder;
+      return (PERSON_ORDER[a.obj] ?? 99) - (PERSON_ORDER[b.obj] ?? 99);
+    };
+
+    buckets.active['12'].sort(sortPairs);
+    buckets.active['123-3'].sort(sortPairs);
+    buckets.active.refl.sort(sortPairs);
+    buckets.active.mut.sort(sortPairs);
+    buckets.stative['12'].sort(sortPairs);
+    buckets.stative['123-3'].sort(sortPairs);
+    buckets.stative.refl.sort(sortPairs);
+    buckets.stative.mut.sort(sortPairs);
+
+    const headWithLabel = (label, text) => (
+      showLabels ? `<span class="conj-subhead-label">${label}</span> ${text}` : text
+    );
+
+    if (mode === 'circunstancial') {
+      let htmlString = `<div class="options-container conj-wrap" id="conj-${unId}">`;
+      htmlString += renderControls(unId, negar);
+      htmlString += `
+        <table class="conj-rank-table">
+          <colgroup>
+            <col class="conj-col-main">
+            <col class="conj-col-main">
+            <col class="conj-col-side">
+          </colgroup>
+          <tbody>
+            <tr class="conj-subhead is-active">
+              <th>${headWithLabel('Ativa', '1 &gt; 2')}</th>
+              <th>123 &gt; 3</th>
+              <th class="conj-side-head">Reflexivo</th>
+            </tr>
+            <tr class="conj-group conj-group-active">
+              <td class="conj-bucket conj-bucket-span" rowspan="3">${renderBucket(buckets.active['12'])}</td>
+              <td class="conj-bucket">${renderBucket(buckets.active['123-3'])}</td>
+              <td class="conj-bucket conj-bucket-side">${renderBucket(buckets.active.refl)}</td>
+            </tr>
+            <tr class="conj-subhead-lower is-stative">
+              <td class="conj-subhead-cell">3 &gt; 12</td>
+              <td class="conj-side-head">Mútuo</td>
+            </tr>
+            <tr class="conj-group conj-group-stative">
+              <td class="conj-bucket conj-bucket-lower">${renderBucket(buckets.stative['123-3'])}</td>
+              <td class="conj-bucket conj-bucket-side conj-bucket-lower">${renderBucket(buckets.active.mut)}</td>
+            </tr>
+          </tbody>
+        </table>
+      `;
+      htmlString += '</div>';
+      return htmlString;
+    }
+
+    let htmlString = `<div class="options-container conj-wrap" id="conj-${unId}">`;
+    htmlString += renderControls(unId, negar);
+    htmlString += `
+      <table class="conj-rank-table">
+        <colgroup>
+          <col class="conj-col-main">
+          <col class="conj-col-main">
+          <col class="conj-col-side">
+        </colgroup>
+        <tbody>
+          <tr class="conj-subhead is-active">
+            <th>${headWithLabel('Ativa', '1 &gt; 2')}</th>
+            <th>123 &gt; 3</th>
+            <th class="conj-side-head">Reflexivo</th>
+          </tr>
+          <tr class="conj-group conj-group-active">
+            <td class="conj-bucket">${renderBucket(buckets.active['12'])}</td>
+            <td class="conj-bucket">${renderBucket(buckets.active['123-3'])}</td>
+            <td class="conj-bucket conj-bucket-side">${renderBucket(buckets.active.refl)}</td>
+          </tr>
+          <tr class="conj-divider">
+            <td colspan="2"></td>
+            <td class="conj-side-empty"></td>
+          </tr>
+          <tr class="conj-subhead is-stative">
+            <th>${headWithLabel('Estativa', '2 &gt; 1')}</th>
+            <th>3 &gt; 12</th>
+            <th class="conj-side-head">Mútuo</th>
+          </tr>
+          <tr class="conj-group conj-group-stative">
+            <td class="conj-bucket">${renderBucket(buckets.stative['12'])}</td>
+            <td class="conj-bucket">${renderBucket(buckets.stative['123-3'])}</td>
+            <td class="conj-bucket conj-bucket-side">${renderBucket(buckets.active.mut)}</td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+    htmlString += '</div>';
+    return htmlString;
+  }
+
+  function generateConjugationTableIntransitive({
+    conjugations,
+    subjectsVals,
+    objectsVals,
+    unId,
+    negar,
+  }) {
+    const obj = objectsVals.length ? objectsVals[0] : null;
+    const lines = subjectsVals.map((subj) => {
+      const conj = conjugations[JSON.stringify([subj, obj])] || '-';
+      if (!conj || conj === '-') return '';
+      return renderSubjectLine(subj, conj);
+    }).filter(Boolean);
+
+    let htmlString = `<div class="options-container conj-wrap" id="conj-${unId}">`;
+    htmlString += renderControls(unId, negar);
+    htmlString += `
+      <table class="conj-simple-table">
+        <thead>
+          <tr class="conj-subhead">
+            <th><span class="conj-subhead-label">Sujeito</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="conj-bucket conj-bucket-simple">${lines.join('') || '<div class="conj-empty">—</div>'}</td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+    htmlString += '</div>';
+    return htmlString;
+  }
+
+  function generateConjugationTableObjectOnly({
+    conjugations,
+    subjectsVals,
+    objectsVals,
+    unId,
+    negar,
+  }) {
+    const lines = objectsVals.map((obj) => {
+      let conj = '-';
+      for (let i = 0; i < subjectsVals.length; i += 1) {
+        const subj = subjectsVals[i];
+        const found = conjugations[JSON.stringify([subj, obj])];
+        if (found) {
+          conj = found;
+          break;
+        }
+      }
+      if (!conj || conj === '-') return '';
+      return renderObjectLine(obj, conj);
+    }).filter(Boolean);
+
+    let htmlString = `<div class="options-container conj-wrap" id="conj-${unId}">`;
+    htmlString += renderControls(unId, negar);
+    htmlString += `
+      <table class="conj-simple-table">
+        <thead>
+          <tr class="conj-subhead">
+            <th><span class="conj-subhead-label">Objeto</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="conj-bucket conj-bucket-simple">${lines.join('') || '<div class="conj-empty">—</div>'}</td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+    htmlString += '</div>';
+    return htmlString;
+  }
+
+  function renderPersonHeader(label, code, role, scope) {
+    const meta = getPersonMeta(code, role);
+    const scopeAttr = scope ? ` scope="${scope}"` : '';
+    const rankChip = meta.rankSymbol ? `<span class="conj-rank">${meta.rankSymbol}</span>` : '';
+    const ptLine = meta.pt ? `<div class="conj-pt">${meta.pt}</div>` : '';
+    const termLine = meta.term ? `<div class="conj-term">${meta.term}</div>` : '';
+
+    return `
+      <th${scopeAttr} class="conj-person conj-person-${role}">
+        <div class="conj-person-top">
+          <span class="conj-person-form">${label}</span>
+          ${rankChip}
+        </div>
+        <div class="conj-person-meta">
+          ${ptLine}
+          ${termLine}
+        </div>
+      </th>
+    `;
+  }
+
+  function generateConjugationTableGrid({
+    mode,
+    conjugations,
+    subjects,
+    subjectsVals,
+    objects,
+    objectsVals,
+    unId,
+    negar,
+  }) {
+    let htmlString = `<div class="options-container conj-wrap" id="conj-${unId}">`;
+    htmlString += renderControls(unId, negar);
+    htmlString += `<table class="conj-table">
+      <thead>
+        <tr class="conj-header-row">
+          <th class="conj-axis conj-axis-subj" scope="col">
+            <div class="conj-axis-title">Sujeito</div>
+            <div class="conj-axis-sub">Agente</div>
+          </th>`;
+
+    objects.forEach((object, index) => {
+      htmlString += renderPersonHeader(object, objectsVals[index], 'obj', 'col');
+    });
+
+    htmlString += `</tr>
+      </thead>
+      <tbody>`;
+
+    for (let i = 0; i < subjects.length; i++) {
+      htmlString += '<tr>';
+      htmlString += renderPersonHeader(subjects[i], subjectsVals[i], 'subj', 'row');
+      const subj = subjectsVals[i];
+
+      for (let j = 0; j < objects.length; j++) {
+        const obj = objectsVals[j];
+        const conj = conjugations[JSON.stringify([subj, obj])] || '-';
+        const isEmpty = conj === '-' || conj === '';
+        const morphKind = getMorphKind(subj, obj);
+        const morphClass = morphKind ? `morph-${morphKind}` : '';
+        const morphLabel = morphKind === 'active'
+          ? 'ativo'
+          : morphKind === 'stative'
+            ? 'estativo'
+            : morphKind === 'equal'
+              ? 'igual'
+              : '';
+
+        htmlString += `
+          <td class="conj-cell ${morphClass}${isEmpty ? ' is-empty' : ''}" data-morph="${morphKind}">
+            <span class="sr-only">${morphLabel}</span>
+            <div class="conj-form">${conj}</div>
+          </td>
+        `;
+      }
+
+      htmlString += '</tr>';
+    }
+
+    htmlString += '</tbody></table></div>';
+    return htmlString;
+  }
+
   function generateConjugationTable(mode, conjugationsRaw, unId, ne) {
     const negar = ne || false;
     const filteredConjugations = conjugationsRaw.filter((item) => item.m === mode.slice(0, 2));
@@ -268,52 +826,59 @@
       };
     }
 
-    const subjectsVals = Object.entries(subjMap)
+    const subjectPairs = Object.entries(subjMap)
       .filter((item) => uniqueSubjects.has(item[1]))
-      .map(([_, value]) => value);
+      .map(([label, value]) => ({ label, value }))
+      .sort((a, b) => (PERSON_ORDER[a.value] ?? 99) - (PERSON_ORDER[b.value] ?? 99));
 
-    const objectsVals = Object.entries(objMap)
+    const objectPairs = Object.entries(objMap)
       .filter((item) => uniqueObjects.has(item[1]))
-      .map(([_, value]) => value);
+      .map(([label, value]) => ({ label, value }))
+      .sort((a, b) => (PERSON_ORDER[a.value] ?? 99) - (PERSON_ORDER[b.value] ?? 99));
 
-    const subjects = Object.entries(subjMap)
-      .filter((item) => uniqueSubjects.has(item[1]))
-      .map(([key]) => key);
+    const subjectsVals = subjectPairs.map((item) => item.value);
+    const subjects = subjectPairs.map((item) => item.label);
+    const objectsVals = objectPairs.map((item) => item.value);
+    const objects = objectPairs.map((item) => item.label);
 
-    const objects = Object.entries(objMap)
-      .filter((item) => uniqueObjects.has(item[1]))
-      .map(([key]) => key);
-
-    let htmlString = `<table class="options-container" id="conj-${unId}">`;
-    htmlString += `<tr><th>
-        Modo<br><select id="mode-${unId}" class="option">
-        <!-- Add options dynamically using JavaScript -->
-    </select><br>
-        <input type="checkbox" id="negarCheckbox-${unId}" ${negar ? 'checked' : ''} name="negarCheckbox">
-        <label for="negarCheckbox">Negar</label>
-    </th><th class="label" style="background-color: #e4ffe4;" colspan="${objects.length + 1}">Objeto</th></tr>`;
-    htmlString += `<th style="background-color: #fef9c3ab;" class="label">
-        Sujeito</th>`;
-
-    objects.forEach((object) => {
-      htmlString += `<th style="background-color: #e4ffe4;">${object}</th>`;
-    });
-
-    htmlString += '</tr>';
-
-    for (let i = 0; i < subjects.length; i++) {
-      htmlString += `<tr><th style="background-color: #fef9c3ab;">${subjects[i]}</th>`;
-      const subj = subjectsVals[i];
-      for (let j = 0; j < objects.length; j++) {
-        const obj = objectsVals[j];
-        const conj = conjugations[JSON.stringify([subj, obj])] || '-';
-        htmlString += `<td>${conj}</td>`;
-      }
-      htmlString += '</tr>';
+    if (isIntransitive(objectsVals)) {
+      return generateConjugationTableIntransitive({
+        conjugations,
+        subjectsVals,
+        objectsVals,
+        unId,
+        negar,
+      });
     }
 
-    htmlString += '</table>';
-    return htmlString;
+    if (mode === 'gerundio') {
+      return generateConjugationTableObjectOnly({
+        conjugations,
+        subjectsVals,
+        objectsVals,
+        unId,
+        negar,
+      });
+    }
+
+    if (mode === 'imperativo') {
+      return generateConjugationTableImperative({
+        conjugations,
+        subjectsVals,
+        objectsVals,
+        unId,
+        negar,
+      });
+    }
+
+    return generateConjugationTableRanked({
+      mode,
+      conjugations,
+      subjectsVals,
+      objectsVals,
+      unId,
+      negar,
+    });
   }
 
   function populateDropdown(dropdown, options, mode) {
@@ -352,7 +917,7 @@
 
     const storedState = getCookie('conjugationToggle');
     if (storedState === 'enabled') {
-      tempContainer.firstChild.style.display = 'flex';
+      tempContainer.firstChild.style.display = 'block';
     } else {
       tempContainer.firstChild.style.display = 'none';
     }
@@ -1265,8 +1830,9 @@
       const optionsContainers = document.querySelectorAll('.options-container');
 
       optionsContainers.forEach((optionsContainer) => {
+        const showValue = optionsContainer.tagName === 'TABLE' ? 'table' : 'block';
         optionsContainer.style.display =
-          optionsContainer.style.display === 'none' || optionsContainer.style.display === '' ? 'flex' : 'none';
+          optionsContainer.style.display === 'none' || optionsContainer.style.display === '' ? showValue : 'none';
       });
     }
 
