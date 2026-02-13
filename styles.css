@@ -69,6 +69,7 @@ html, body {
 
 }
 
+
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: #22c55e;
   opacity: 1; /* Firefox */
@@ -134,6 +135,16 @@ main > div.content > div.actions > .search:hover {
 	color: #fff;
 	border: 1px solid #ca8a04;
 	cursor: pointer;
+}
+
+main > div.content > div.actions > .search:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+main > div.content > div.search_input > input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 /* Added styles for the toggle label */
 main > div.content > div.actions > .toggle-container > .toggle-label {
@@ -229,6 +240,57 @@ main > div.content > div.actions > .toggle-container.disabled > .toggle-ball {
 	background-color: #7dd3fc;
 }
 
+.sense-number {
+	display: inline-block;
+	font-weight: 700;
+	margin-right: 6px;
+	margin-left: 12px;
+	font-size: 0.9em;
+	color: #0f5132;
+}
+
+.sense-letter {
+	display: inline-block;
+	font-weight: 600;
+	margin-right: 6px;
+	margin-left: 24px;
+	color: #1f2937;
+}
+
+.sense-definition {
+	font-weight: 600;
+}
+
+.sense-quote {
+	display: block;
+	margin-left: 24px;
+	margin-top: 4px;
+	text-align: justify;
+}
+
+.sense-section-title {
+	margin-top: 8px;
+	font-weight: 600;
+	color: #1f2937;
+}
+
+
+.sense-quote .quote-tupi,
+.sense-quote .quote-pt {
+	padding-left: 16px;
+	text-indent: -16px;
+}
+
+.sense-quote .quote-pt {
+	margin-top: 2px;
+	color: #374151;
+}
+
+.sense-quote .quote-citation {
+	font-size: 0.9em;
+	color: #6b7280;
+}
+
 a {
 	color: #14532d;
 	padding: 0px;
@@ -256,7 +318,7 @@ div.preview.expanded {
 	display: block; /* Makes it occupy the full width for consistent alignment */
 	margin-top: 4px; /* Adds subtle spacing from the text */
 	font-size: 0.85em; /* Slightly smaller than the main text */
-	color: #165730e7;; /* A neutral grey color */
+	color: #165730e7; /* A neutral grey color */
 	text-decoration: underline; /* Keep subtle underline for readability */
 	cursor: pointer; /* Change cursor on hover */
 	transition: color 0.2s ease-in-out; /* Smooth transition on hover */
@@ -264,6 +326,14 @@ div.preview.expanded {
   
   .show-more:hover {
 	color: #165730e7; /* Slightly darker grey on hover */
+  }
+
+  .show-more.is-less {
+	color: #b91c1c;
+  }
+
+  .show-more.is-less:hover {
+	color: #991b1b;
   }
   
 
@@ -296,10 +366,6 @@ table {
 	table thead {
 	  display: none;
 	}
-	/* table td {
-	  /* display: flex; */
-	/* } */
-	 */
 	table td::before {
 	  content: attr(label);
 	  font-weight: bold;
