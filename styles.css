@@ -51,27 +51,29 @@ footer, header, hgroup, menu, nav, section {
     --conj-stative: #f1e4c6;
     --conj-equal: #e2eaf3;
     --conj-chip: #2f7d4b;
-    --conj-shadow: 0 18px 30px rgba(31, 24, 16, 0.14);
-    margin: 12px 0 18px;
-    padding: 8px;
+    --conj-shadow: none;
+    --conj-bleed: clamp(0px, 3vw, 12px);
+    margin: 12px auto 18px;
+    padding: 8px calc(8px + var(--conj-bleed));
     border: 1px solid rgba(72, 60, 45, 0.5);
     border-radius: 10px;
     background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.4) 0%, transparent 55%),
         linear-gradient(145deg, #f7ecd8 0%, #f0e3cf 100%);
-    box-shadow: var(--conj-shadow);
-    display: inline-flex;
-    flex-direction: column;
-    align-items: flex-start;
+    box-shadow: none;
+    display: block;
     width: max-content;
     max-width: 100%;
-    overflow: auto;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
 }
 
 .conj-controls-bar {
     grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: 6px;
+    gap: clamp(4px, 1vw, 6px);
     align-items: center;
-    margin-bottom: 4px;
+    margin-bottom: clamp(2px, 0.8vw, 4px);
     font-family: 'Poppins', sans-serif;
     width: 100%;
     max-width: 100%;
@@ -80,8 +82,8 @@ footer, header, hgroup, menu, nav, section {
 
 .conj-controls-bar .option {
     background-color: #efe2c6;
-    padding: 4px 6px;
-    font-size: clamp(10px, 1vw, 12px);
+    padding: clamp(3px, 0.8vw, 4px) clamp(4px, 1vw, 6px);
+    font-size: clamp(10px, 2.4vw, 12px);
 }
 
 .conj-controls {
@@ -127,22 +129,22 @@ footer, header, hgroup, menu, nav, section {
 }
 
 .conj-controls {
-    display: grid;
-    gap: 8px;
+    display: inline-flex;
     align-items: center;
+    gap: 6px;
     justify-items: start;
 }
 
 .conj-controls-label {
     font-weight: 600;
-    font-size: 12px;
+    font-size: clamp(10px, 2.4vw, 12px);
 }
 
 .conj-toggle {
     display: inline-flex;
     gap: 8px;
     align-items: center;
-    font-size: 12px;
+    font-size: clamp(10px, 2.4vw, 12px);
     color: var(--conj-muted);
 }
 
@@ -177,15 +179,70 @@ footer, header, hgroup, menu, nav, section {
 
 .conj-controls-label {
     margin-right: 2px;
-    font-size: clamp(10px, 1vw, 12px);
+    font-size: clamp(10px, 2.4vw, 12px);
 }
 
 .conj-toggle {
     margin-left: 6px;
-    font-size: clamp(10px, 1vw, 12px);
+    font-size: clamp(10px, 2.4vw, 12px);
     white-space: nowrap;
     margin-top: 6px;
     padding-bottom: 0;
+}
+
+@media (max-width: 520px) {
+    .conj-wrap {
+        width: calc(1.2 * max-content);
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .results {
+        width: auto;
+        margin-left: 4px;
+        margin-right: 4px;
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .conj-wrap {
+        --conj-bleed: clamp(0px, 2vw, 8px);
+        padding: 6px calc(6px + var(--conj-bleed));
+        max-width: calc(100% - 6px);
+    }
+
+    .conj-controls-bar {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: start;
+    }
+
+    .conj-controls {
+        width: 100%;
+    }
+
+    .conj-toggle {
+        margin-left: 0;
+        margin-top: 2px;
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .conj-wrap {
+        padding: 6px calc(6px + (var(--conj-bleed) * 0.5));
+    }
+
+    .results {
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+
+    .options-container {
+        margin-left: 1px;
+        margin-right: 1px;
+        padding-left: 2px;
+        padding-right: 2px;
+    }
 }
 
 .conj-toggle input {
@@ -206,6 +263,8 @@ footer, header, hgroup, menu, nav, section {
     color: var(--conj-ink);
     min-width: 0;
     table-layout: auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .conj-simple-table {
@@ -215,6 +274,8 @@ footer, header, hgroup, menu, nav, section {
     color: var(--conj-ink);
     min-width: 0;
     margin-top: 0;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .conj-simple-table th,
@@ -246,7 +307,7 @@ footer, header, hgroup, menu, nav, section {
 
 .conj-rank-table th,
 .conj-rank-table td {
-    padding: 4px 6px;
+    padding: clamp(2px, 0.9vw, 4px) clamp(4px, 1.4vw, 6px);
     vertical-align: top;
     white-space: nowrap;
     line-height: 1.2;
@@ -327,7 +388,7 @@ footer, header, hgroup, menu, nav, section {
 
 .conj-subhead th {
     border-bottom: 1px solid var(--conj-line);
-    font-size: 12px;
+    font-size: clamp(10px, 2.2vw, 12px);
     font-weight: 600;
     text-align: left;
     color: var(--conj-muted);
@@ -343,7 +404,7 @@ footer, header, hgroup, menu, nav, section {
 }
 
 .conj-subhead.is-stative .conj-side-head {
-    background: rgba(255, 255, 255, 0.5);
+    background: rgb(242 242 242);
 }
 
 .conj-divider td {
@@ -353,7 +414,7 @@ footer, header, hgroup, menu, nav, section {
 }
 
 .conj-bucket {
-    padding-top: 6px;
+    padding-top: clamp(3px, 0.9vw, 6px);
 }
 
 .conj-bucket-simple .conj-line {
@@ -369,8 +430,8 @@ footer, header, hgroup, menu, nav, section {
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    gap: 2px;
-    padding: 3px 2px;
+    gap: clamp(1px, 0.6vw, 2px);
+    padding: clamp(2px, 0.8vw, 3px) clamp(1px, 0.8vw, 2px);
     border-bottom: 1px dotted rgba(81, 70, 55, 0.25);
     flex-wrap: nowrap;
     line-height: 1.2;
@@ -399,14 +460,14 @@ footer, header, hgroup, menu, nav, section {
 }
 
 .conj-form {
-    font-size: 13px;
+    font-size: clamp(10px, 2.6vw, 13px);
     font-weight: 600;
     text-align: left;
     white-space: nowrap;
 }
 
 .conj-gloss {
-    font-size: 11px;
+    font-size: clamp(9px, 2.4vw, 11px);
     color: var(--conj-muted);
     text-align: left;
     white-space: nowrap;
@@ -439,7 +500,7 @@ footer, header, hgroup, menu, nav, section {
 }
 
 .conj-rowhead {
-    font-size: 12px;
+    font-size: clamp(10px, 2.2vw, 12px);
     font-weight: 600;
     text-align: left;
     color: var(--conj-muted);
@@ -638,7 +699,7 @@ footer, header, hgroup, menu, nav, section {
 
 @media only screen and (max-width: 720px) {
     .conj-wrap {
-        padding: 12px;
+        padding: 4px;
         border-radius: 12px;
     }
 
@@ -976,7 +1037,8 @@ a:hover {
 
 div.preview {
 	max-height: 70vh;
-	overflow: hidden;
+	overflow-x: visible;
+	overflow-y: hidden;
 	text-overflow: ellipsis;
 	white-space: wrap;
 	transition: max-height 0.3s;
