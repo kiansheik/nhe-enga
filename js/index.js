@@ -5,6 +5,11 @@
   const NEO_PATH = '/nhe-enga/neologisms.csv';
 
   const MODES = ['indicativo', 'permissivo', 'circunstancial', 'gerundio', 'imperativo', 'conjuntivo'];
+  const TUPI_START_RE = /^[A-Za-zÀ-ÿ'’]/;
+  const TUPI_DIALOGUE_RE = /^-[A-Za-zÀ-ÿ'’]/;
+  const TUPI_DIALOGUE_LEAD_RE = /^-[A-Za-zÀ-ÿ'’]?\s*/;
+  const TUPI_LETTER_RE = /[A-Za-zÀ-ÿ'’]/;
+  const TUPI_HEAD_CHAR_RE = /[A-Za-zÀ-ÿ'’\\-]/;
 
   const SUBJ_PREF_MAP = {
     'ø': null,
@@ -146,11 +151,12 @@
   }
 
   function mapCompressedData(data) {
-    return data.map((item) => ({
+    return data.map((item, index) => ({
       first_word: item.f || '',
       optional_number: item.o || '',
       definition: item.d || '',
       con: item.c || '',
+      is_tupi_portuguese: item.t === 1 || item.t === true,
     }));
   }
 
@@ -413,6 +419,34 @@
     return parts;
   }
 
+  function splitByNota(text) {
+    let parenDepth = 0;
+    const upper = text.toUpperCase();
+    for (let i = 0; i < text.length; i += 1) {
+      const char = text[i];
+      if (char === '(') {
+        parenDepth += 1;
+      } else if (char === ')' && parenDepth > 0) {
+        parenDepth -= 1;
+      }
+
+      if (parenDepth === 0 && upper.startsWith('NOTA', i)) {
+        const prev = upper[i - 1] || '';
+        const next = upper[i + 4] || '';
+        const boundaryPrev = !/[A-ZÀ-Ý]/.test(prev);
+        const boundaryNext = !/[A-ZÀ-Ý]/.test(next);
+        if (boundaryPrev && boundaryNext) {
+          return {
+            before: text.slice(0, i).trim(),
+            nota: text.slice(i).trim(),
+          };
+        }
+      }
+    }
+
+    return { before: text, nota: '' };
+  }
+
   function linkRelatedHeadwords(section) {
     let output = '';
     let i = 0;
@@ -420,8 +454,8 @@
     let atEntryStart = true;
     const len = section.length;
 
-    const isLetterStart = (char) => char && /[A-Za-zÀ-ÿ]/.test(char);
-    const isHeadChar = (char) => char && /[A-Za-zÀ-ÿ'’\\-]/.test(char);
+    const isLetterStart = (char) => char && TUPI_LETTER_RE.test(char);
+    const isHeadChar = (char) => char && TUPI_HEAD_CHAR_RE.test(char);
 
     while (i < len) {
       const char = section[i];
@@ -534,6 +568,7 @@
     let expectedLetter = 'a';
     let seenNumber = false;
     let definitionOpen = false;
+    let inDialogueSegment = false;
 
     const isBoundary = (char) => char === undefined || /[\s.;:!?]/.test(char);
     const segments = [];
@@ -543,6 +578,7 @@
 
       if (parenDepth === 0) {
         const prevChar = section[i - 1];
+        const nextChar = section[i + 1];
         const boundaryOk = isBoundary(prevChar);
 
         if (boundaryOk) {
@@ -590,6 +626,22 @@
         }
       }
 
+      if (
+        parenDepth === 0 &&
+        char === '-' &&
+        TUPI_LETTER_RE.test(section[i + 1]) &&
+        /\s/.test(section[i - 1] || '')
+      ) {
+        if (!inDialogueSegment) {
+          inDialogueSegment = true;
+          if (output.trim().length > 0) {
+            segments.push(output);
+            output = '';
+            continue;
+          }
+        }
+      }
+
       if (definitionOpen && parenDepth === 0 && char === ':') {
         output += '</span>';
         definitionOpen = false;
@@ -606,6 +658,7 @@
         output += char;
         segments.push(output);
         output = '';
+        inDialogueSegment = false;
         i += 1;
         continue;
       }
@@ -674,7 +727,80 @@
       };
     };
 
+    const splitDialogueSegments = (text) => {
+      const segments = [];
+      let start = -1;
+      const len = text.length;
+
+      for (let idx = 0; idx < len; idx += 1) {
+        const char = text[idx];
+        const nextChar = text[idx + 1];
+        const prevChar = text[idx - 1];
+        const isDialogueStart = char === '-' && TUPI_LETTER_RE.test(nextChar) && (idx === 0 || /\s/.test(prevChar));
+        if (isDialogueStart) {
+          if (start !== -1) {
+            const slice = text.slice(start, idx).trim();
+            if (slice) segments.push(slice);
+          }
+          start = idx;
+        }
+      }
+
+      if (start !== -1) {
+        const slice = text.slice(start).trim();
+        if (slice) segments.push(slice);
+      }
+
+      return segments.map((segment) => segment.replace(TUPI_DIALOGUE_LEAD_RE, (match) => match.slice(1)).trim()).filter(Boolean);
+    };
+
+    const parseDialogue = (text) => {
+      const normalized = normalizeQuoteText(text);
+      if (!TUPI_DIALOGUE_RE.test(normalized)) {
+        return null;
+      }
+
+      const { body, citation } = extractTrailingCitation(normalized);
+      const segments = splitDialogueSegments(body);
+      if (segments.length < 4 || segments.length % 2 !== 0) {
+        return null;
+      }
+
+      const midpoint = segments.length / 2;
+      return {
+        tupiLines: segments.slice(0, midpoint),
+        ptLines: segments.slice(midpoint),
+        citation,
+      };
+    };
+
+    const buildDialogueBlock = (tupiLines, ptLines, citation) => {
+      const maxLines = Math.max(tupiLines.length, ptLines.length);
+      const rows = [];
+      for (let index = 0; index < maxLines; index += 1) {
+        const tupi = tupiLines[index] || '';
+        const pt = ptLines[index] || '';
+        const icon = index % 2 === 0 ? '💬' : '🗨️';
+        const citationHtml = index === maxLines - 1 && citation
+          ? ` <span class="quote-citation">${citation}</span>`
+          : '';
+        rows.push(`
+          <div class="dialogue-line ${index % 2 === 0 ? 'speaker-a' : 'speaker-b'}">
+            <div class="dialogue-tupi"><span class="dialogue-icon" aria-hidden="true">${icon}</span> ${tupi}</div>
+            <div class="dialogue-pt">${pt}${citationHtml}</div>
+          </div>
+        `);
+      }
+
+      return `<div class="sense-quote dialogue">${rows.join('')}</div>`;
+    };
+
     const buildQuoteBlock = (text) => {
+      const dialogue = parseDialogue(text);
+      if (dialogue) {
+        return buildDialogueBlock(dialogue.tupiLines, dialogue.ptLines, dialogue.citation);
+      }
+
       const { tupi, pt, citation } = splitQuoteLines(text);
       const citationHtml = citation ? ` <span class="quote-citation">${citation}</span>` : '';
       const tupiLine = tupi ? `<div class="quote-tupi">${tupi}${!pt ? citationHtml : ''}</div>` : '';
@@ -724,13 +850,15 @@
       const plainCore = core.replace(/<[^>]*>/g, '');
       const trimmedCore = core.trim();
       const startsWithHeadwordLink = trimmedCore.startsWith('<span class="related-entry-headword">');
+      const startsWithDialogue = TUPI_DIALOGUE_RE.test(trimmedCore);
 
       const colonIndex = findColonOutside(core);
       if (colonIndex !== -1) {
         const left = core.slice(0, colonIndex + 1);
         const right = core.slice(colonIndex + 1).trim();
         const plainRight = right.replace(/<[^>]*>/g, '');
-        if (right && hasDash(plainRight)) {
+        const rightStartsDialogue = TUPI_DIALOGUE_RE.test(plainRight.trim());
+        if (right && (hasDash(plainRight) || rightStartsDialogue)) {
           return {
             segment,
             brPrefix,
@@ -742,9 +870,24 @@
             type: 'colonQuote',
             left,
             quoteText: right,
-            startsWithLetter: /^[A-Za-zÀ-ÿ]/.test(plainCore.trim()),
+            startsWithLetter: TUPI_START_RE.test(plainCore.trim()),
           };
         }
+      }
+
+      if (startsWithDialogue) {
+        return {
+          segment,
+          brPrefix,
+          leadingSpace,
+          core,
+          trailingSpace,
+          plainCore,
+          startsWithHeadwordLink,
+          type: 'dialogue',
+          quoteText: trimmedCore,
+          startsWithLetter: TUPI_START_RE.test(trimmedCore),
+        };
       }
 
       if (hasDash(plainCore)) {
@@ -758,7 +901,7 @@
           startsWithHeadwordLink,
           type: 'quote',
           quoteText: core.trim(),
-          startsWithLetter: /^[A-Za-zÀ-ÿ]/.test(plainCore.trim()),
+          startsWithLetter: TUPI_START_RE.test(plainCore.trim()),
         };
       }
 
@@ -823,7 +966,7 @@
       }
 
       if (inQuoteList) {
-        if (seg.type === 'quote' && !seg.startsWithHeadwordLink) {
+        if ((seg.type === 'quote' || seg.type === 'dialogue') && !seg.startsWithHeadwordLink) {
           const quoteText = ensureCitation(seg.quoteText, idx + 1);
           formattedSegments.push(
             `${seg.brPrefix}${seg.leadingSpace}${buildQuoteBlock(quoteText)}${seg.trailingSpace}`
@@ -831,6 +974,18 @@
           continue;
         }
         inQuoteList = false;
+      }
+
+      if ((seg.type === 'dialogue' || seg.type === 'quote') && !seg.startsWithHeadwordLink) {
+        const trimmedQuote = seg.quoteText.trim();
+        if (TUPI_DIALOGUE_RE.test(trimmedQuote)) {
+          const quoteText = ensureCitation(seg.quoteText, idx + 1);
+          formattedSegments.push(
+            `${seg.brPrefix}${seg.leadingSpace}${buildQuoteBlock(quoteText)}${seg.trailingSpace}`
+          );
+          seenContent = true;
+          continue;
+        }
       }
 
       if (!seenContent && seg.type === 'quote' && seg.startsWithLetter && hasCitation(seg.quoteText) && !seg.startsWithHeadwordLink) {
@@ -852,12 +1007,14 @@
   }
 
   function formatVerbeteDefinition(definition) {
-    const sections = splitByBullet(definition);
+    const { before, nota } = splitByNota(definition);
+    const sections = splitByBullet(before);
     if (sections.length <= 1) {
-      return formatVerbeteSection(definition);
+      const formatted = formatVerbeteSection(before);
+      return nota ? `${formatted}<br>${nota}` : formatted;
     }
 
-    return sections
+    const formattedMain = sections
       .map((section, index) => {
         let sectionWithLinks = index === 0 ? section : linkRelatedHeadwords(section);
         if (index !== 0) {
@@ -867,9 +1024,12 @@
         if (index === 0) {
           return formattedSection;
         }
-        return `<div class="sense-section-title">Verbetes relacionados:</div>${formattedSection}`;
+        const formattedWithBreaks = formattedSection.replace(/;\s*/g, ';<br>');
+        return `<div class="sense-section-title">Verbetes relacionados:</div>${formattedWithBreaks}`;
       })
       .join('');
+
+    return nota ? `${formattedMain}<br>${nota}` : formattedMain;
   }
 
   function toggleContent(event, link) {
@@ -951,7 +1111,10 @@
         preview.classList.add(result.type);
       }
 
-      const linkedDefinition = linkSources(formatVerbeteDefinition(result.definition))
+      const baseDefinition = result.is_tupi_portuguese
+        ? formatVerbeteDefinition(result.definition)
+        : result.definition;
+      const linkedDefinition = linkSources(baseDefinition)
         .replace(highlightRegex, '<span class="highlighted">$1</span>');
 
       const link = document.createElement('a');
@@ -1093,7 +1256,11 @@
     ]);
 
     const compressedData = mapCompressedData(compressedRaw);
-    jsonData = [...compressedData, ...neos];
+    const neoData = neos.map((item) => ({
+      ...item,
+      is_tupi_portuguese: true,
+    }));
+    jsonData = [...compressedData, ...neoData];
     searchIndex = buildSearchIndex(jsonData);
     window.jsonData = jsonData;
     dataReady = true;

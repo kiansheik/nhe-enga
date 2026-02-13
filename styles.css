@@ -266,6 +266,13 @@ main > div.content > div.actions > .toggle-container.disabled > .toggle-ball {
 	margin-left: 24px;
 	margin-top: 4px;
 	text-align: justify;
+	background-color: #f6f4ef;
+	border-radius: 8px;
+	padding: 6px 10px;
+}
+
+.sense-quote:nth-of-type(even) {
+	background-color: #f0f6f2;
 }
 
 .sense-section-title {
@@ -289,6 +296,43 @@ main > div.content > div.actions > .toggle-container.disabled > .toggle-ball {
 .sense-quote .quote-citation {
 	font-size: 0.9em;
 	color: #6b7280;
+}
+
+.sense-quote.dialogue {
+	margin-top: 6px;
+	border: 1px solid #e5e0d8;
+	border-radius: 10px;
+	padding: 8px 12px;
+}
+
+.dialogue-line {
+	margin-top: 4px;
+}
+
+.dialogue-tupi,
+.dialogue-pt {
+	padding-left: 20px;
+	text-indent: -20px;
+}
+
+.dialogue-pt {
+	margin-top: 2px;
+	color: #374151;
+}
+
+.dialogue-icon {
+	display: inline-block;
+	width: 1.2em;
+	text-align: center;
+	padding-left: 9px;
+}
+
+.dialogue-line.speaker-a .dialogue-icon {
+	filter: saturate(1.1);
+}
+
+.dialogue-line.speaker-b .dialogue-icon {
+	filter: saturate(1.1);
 }
 
 a {
