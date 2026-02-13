@@ -55,6 +55,10 @@
     return removePunctuation(str.normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
   }
 
+  function stripDiacritics(str) {
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
   function normalizeExact(str) {
     return removePunctuation(str).toLowerCase();
   }
@@ -1273,6 +1277,109 @@
     setCookie('conjugationToggle', toggleContainer.classList.contains('disabled') ? 'disabled' : 'enabled', 30);
   }
 
+  function highlightMatches(container, query) {
+    if (!query) return;
+    const normalizedQuery = stripDiacritics(query);
+    if (!normalizedQuery) return;
+
+    const buildNormalizedMap = (text) => {
+      let normalized = '';
+      const map = [];
+      for (let idx = 0; idx < text.length; idx += 1) {
+        const stripped = stripDiacritics(text[idx]);
+        if (!stripped) continue;
+        for (let j = 0; j < stripped.length; j += 1) {
+          normalized += stripped[j];
+          map.push(idx);
+        }
+      }
+      return { normalized, map };
+    };
+
+    const rangesForText = (text) => {
+      const { normalized, map } = buildNormalizedMap(text);
+      if (!normalized) return [];
+      const regex = new RegExp(escapeRegExp(normalizedQuery), 'ig');
+      const ranges = [];
+      let match;
+      while ((match = regex.exec(normalized)) !== null) {
+        const startNorm = match.index;
+        const endNorm = startNorm + match[0].length - 1;
+        const start = map[startNorm];
+        const end = map[endNorm] + 1;
+        if (start !== undefined && end !== undefined) {
+          ranges.push([start, end]);
+        }
+        if (match.index === regex.lastIndex) {
+          regex.lastIndex += 1;
+        }
+      }
+      if (!ranges.length) return [];
+
+      ranges.sort((a, b) => a[0] - b[0]);
+      const merged = [ranges[0]];
+      for (let i = 1; i < ranges.length; i += 1) {
+        const last = merged[merged.length - 1];
+        const current = ranges[i];
+        if (current[0] <= last[1]) {
+          last[1] = Math.max(last[1], current[1]);
+        } else {
+          merged.push(current);
+        }
+      }
+      return merged;
+    };
+
+    const walker = document.createTreeWalker(
+      container,
+      NodeFilter.SHOW_TEXT,
+      {
+        acceptNode: (node) => {
+          if (!node.nodeValue || !node.nodeValue.trim()) {
+            return NodeFilter.FILTER_REJECT;
+          }
+          const parent = node.parentElement;
+          if (!parent) return NodeFilter.FILTER_REJECT;
+          if (parent.closest('.highlighted')) return NodeFilter.FILTER_REJECT;
+          if (parent.closest('.quote-citation')) return NodeFilter.FILTER_REJECT;
+          if (parent.closest('script, style')) return NodeFilter.FILTER_REJECT;
+          return NodeFilter.FILTER_ACCEPT;
+        },
+      },
+      false
+    );
+
+    const nodes = [];
+    while (walker.nextNode()) {
+      nodes.push(walker.currentNode);
+    }
+
+    nodes.forEach((node) => {
+      const text = node.nodeValue;
+      const ranges = rangesForText(text);
+      if (!ranges.length) return;
+
+      const fragment = document.createDocumentFragment();
+      let lastIndex = 0;
+      ranges.forEach(([start, end]) => {
+        if (start > lastIndex) {
+          fragment.appendChild(document.createTextNode(text.slice(lastIndex, start)));
+        }
+        const span = document.createElement('span');
+        span.className = 'highlighted';
+        span.textContent = text.slice(start, end);
+        fragment.appendChild(span);
+        lastIndex = end;
+      });
+
+      if (lastIndex < text.length) {
+        fragment.appendChild(document.createTextNode(text.slice(lastIndex)));
+      }
+
+      node.parentNode.replaceChild(fragment, node);
+    });
+  }
+
   function renderResults(results, query) {
     resultsDiv.style.display = 'block';
 
@@ -1282,8 +1389,6 @@
     }
 
     const fragment = document.createDocumentFragment();
-    const escapedQuery = escapeRegExp(query);
-    const highlightRegex = new RegExp(`(?<!=\"[^\"]*)(${escapedQuery})(?![^\"]*\")`, 'ig');
 
     results.forEach((result) => {
       const entry = document.createElement('div');
@@ -1298,8 +1403,7 @@
       const baseDefinition = result.is_tupi_portuguese
         ? formatVerbeteDefinition(result.definition)
         : result.definition;
-      const linkedDefinition = linkSources(baseDefinition)
-        .replace(highlightRegex, '<span class="highlighted">$1</span>');
+      const linkedDefinition = linkSources(baseDefinition);
 
       const link = document.createElement('a');
       link.href = `${window.location.pathname}?query=${encodeURIComponent(result.first_word)}`;
@@ -1312,6 +1416,7 @@
       preview.appendChild(link);
       preview.appendChild(optionalNumberSup);
       preview.innerHTML += ` ${linkedDefinition}`;
+      highlightMatches(preview, query);
 
       if (result.exact_match) {
         preview.classList.add('exact-match');
