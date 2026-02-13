@@ -5,11 +5,11 @@
   const NEO_PATH = '/nhe-enga/neologisms.csv';
 
   const MODES = ['indicativo', 'permissivo', 'circunstancial', 'gerundio', 'imperativo', 'conjuntivo'];
-  const TUPI_START_RE = /^[A-Za-zÀ-ÿ'’]/;
-  const TUPI_DIALOGUE_RE = /^-[A-Za-zÀ-ÿ'’]/;
-  const TUPI_DIALOGUE_LEAD_RE = /^-[A-Za-zÀ-ÿ'’]?\s*/;
-  const TUPI_LETTER_RE = /[A-Za-zÀ-ÿ'’]/;
-  const TUPI_HEAD_CHAR_RE = /[A-Za-zÀ-ÿ'’\\-]/;
+  const TUPI_START_RE = /^[A-Za-zÀ-ÿ\u0176\u0177'’]/;
+  const TUPI_DIALOGUE_RE = /^-[A-Za-zÀ-ÿ\u0176\u0177'’]/;
+  const TUPI_DIALOGUE_LEAD_RE = /^-[A-Za-zÀ-ÿ\u0176\u0177'’]?\s*/;
+  const TUPI_LETTER_RE = /[A-Za-zÀ-ÿ\u0176\u0177'’]/;
+  const TUPI_HEAD_CHAR_RE = /[A-Za-zÀ-ÿ\u0176\u0177'’\\-]/;
 
   const SUBJ_PREF_MAP = {
     'ø': null,
@@ -72,6 +72,16 @@
       definitionNoAccent: normalizeNoAccent(item.definition || ''),
     }));
   }
+
+  const warnOnce = (() => {
+    const seen = new Set();
+    return (label, text) => {
+      const key = `${label}::${text}`;
+      if (seen.has(key)) return;
+      seen.add(key);
+      console.warn(label, text);
+    };
+  })();
 
   async function fetchCompressedJSON(url) {
     const response = await fetch(url);
@@ -571,12 +581,59 @@
     let inDialogueSegment = false;
 
     const isBoundary = (char) => char === undefined || /[\s.;:!?]/.test(char);
+    const sectionLabelMap = {
+      'adj.': 'Adjetivo',
+      'adv.': 'Advérbio',
+    };
+    const extractSectionLabel = () => {
+      const match = output.match(/(\s*\((adj\.|adv\.)\)\s*-\s*)$/i);
+      if (!match) return '';
+      output = output.slice(0, -match[1].length);
+      return match[2].toLowerCase();
+    };
+    const extractSensePrefix = () => {
+      const match = output.match(/(\s*\(([^)]+)\)\s*-\s*)$/);
+      if (!match) return '';
+      output = output.slice(0, -match[1].length);
+      return `(${match[2]}) `;
+    };
     const segments = [];
 
     while (i < section.length) {
       const char = section[i];
 
       if (parenDepth === 0) {
+        const labelMatch = section.slice(i).match(/^\((adj\.|adv\.)\)\s*-\s*/i);
+        if (labelMatch) {
+          let lookahead = i + labelMatch[0].length;
+          while (lookahead < section.length && /\s/.test(section[lookahead])) {
+            lookahead += 1;
+          }
+          const nextChar = section[lookahead];
+          const hasNumberAhead = nextChar && /\d/.test(nextChar);
+
+          if (!hasNumberAhead) {
+            if (definitionOpen) {
+              output += '</span>';
+              definitionOpen = false;
+            }
+            if (output.length && !output.endsWith('<br>')) {
+              output += '<br>';
+            }
+            const labelKey = labelMatch[1].toLowerCase();
+            if (sectionLabelMap[labelKey]) {
+              output += `<div class="sense-section-title">${sectionLabelMap[labelKey]}:</div>`;
+            }
+            output += '<span class="sense-definition">';
+            definitionOpen = true;
+            expectedNumber = 1;
+            expectedLetter = 'a';
+            seenNumber = false;
+            i += labelMatch[0].length;
+            continue;
+          }
+        }
+
         const prevChar = section[i - 1];
         const nextChar = section[i + 1];
         const boundaryOk = isBoundary(prevChar);
@@ -585,7 +642,8 @@
           const numberMatch = section.slice(i).match(/^(\d+)\)/);
           if (numberMatch) {
             const numberValue = Number(numberMatch[1]);
-            if (Number.isFinite(numberValue) && numberValue === expectedNumber) {
+            const sectionKey = extractSectionLabel();
+            if (sectionKey && numberValue === 1 && sectionLabelMap[sectionKey]) {
               if (definitionOpen) {
                 output += '</span>';
                 definitionOpen = false;
@@ -593,8 +651,24 @@
               if (output.length && !output.endsWith('<br>')) {
                 output += '<br>';
               }
+              output += `<div class="sense-section-title">${sectionLabelMap[sectionKey]}:</div>`;
+              expectedNumber = 1;
+              expectedLetter = 'a';
+              seenNumber = true;
+            }
+            if (Number.isFinite(numberValue) && numberValue === expectedNumber) {
+              if (definitionOpen) {
+                output += '</span>';
+                definitionOpen = false;
+              }
+              const trimmedOutput = output.trim();
+              if (output.length && !output.endsWith('<br>') && !trimmedOutput.endsWith(':')) {
+                output += '<br>';
+              }
+              const sensePrefix = extractSensePrefix();
               output += `<span class="sense-number">${numberMatch[0]}</span>`;
               output += '<span class="sense-definition">';
+              output += sensePrefix;
               definitionOpen = true;
               expectedNumber += 1;
               expectedLetter = 'a';
@@ -612,11 +686,14 @@
                 output += '</span>';
                 definitionOpen = false;
               }
-              if (output.length && !output.endsWith('<br>')) {
+              const trimmedOutput = output.trim();
+              if (output.length && !output.endsWith('<br>') && !trimmedOutput.endsWith(':')) {
                 output += '<br>';
               }
+              const sensePrefix = extractSensePrefix();
               output += `<span class="sense-letter">${letterMatch[0]}</span>`;
               output += '<span class="sense-definition">';
+              output += sensePrefix;
               definitionOpen = true;
               expectedLetter = String.fromCharCode(expectedLetter.charCodeAt(0) + 1);
               i += letterMatch[0].length;
@@ -682,9 +759,13 @@
     }
 
     const normalizeQuoteText = (text) => text.trim().replace(/[;]+$/g, '').trim();
+    const quoteStartRe = /^(\"|“|”|'|‘|’|\\.\\.\\.|…)/;
+    const stripTags = (text) => text.replace(/<[^>]*>/g, '');
+    const countDash = (text) => (text.match(/\s-\s/g) || []).length;
 
     const hasDash = (text) => /\s-\s/.test(normalizeQuoteText(text));
     const hasCitation = (text) => /\([^()]*\)/.test(normalizeQuoteText(text));
+    const hasTrailingCitation = (text) => /\([^()]*\d[^()]*\)\s*$/.test(normalizeQuoteText(text));
 
     const extractTrailingCitation = (text) => {
       const trimmed = normalizeQuoteText(text);
@@ -717,6 +798,10 @@
       const { body, citation } = extractTrailingCitation(text);
       const dashIndex = body.indexOf(' - ');
       if (dashIndex === -1) {
+        const trimmedBody = body.trim();
+        if (quoteStartRe.test(trimmedBody)) {
+          return { tupi: '', pt: body, citation };
+        }
         return { tupi: body, pt: '', citation };
       }
 
@@ -795,13 +880,17 @@
       return `<div class="sense-quote dialogue">${rows.join('')}</div>`;
     };
 
+    const stripLeadingDashSpace = (value) => value.replace(/^\s*-\s+/, '');
+
     const buildQuoteBlock = (text) => {
       const dialogue = parseDialogue(text);
       if (dialogue) {
         return buildDialogueBlock(dialogue.tupiLines, dialogue.ptLines, dialogue.citation);
       }
 
-      const { tupi, pt, citation } = splitQuoteLines(text);
+      let { tupi, pt, citation } = splitQuoteLines(text);
+      tupi = stripLeadingDashSpace(tupi);
+      pt = stripLeadingDashSpace(pt);
       const citationHtml = citation ? ` <span class="quote-citation">${citation}</span>` : '';
       const tupiLine = tupi ? `<div class="quote-tupi">${tupi}${!pt ? citationHtml : ''}</div>` : '';
       const ptLine = pt ? `<div class="quote-pt">${pt}${citationHtml}</div>` : '';
@@ -839,6 +928,51 @@
       return -1;
     };
 
+    const mergeQuotedSegments = (items) => {
+      const merged = [];
+      let idx = 0;
+
+      while (idx < items.length) {
+        const segment = items[idx];
+        const trimmed = stripTags(segment).trim();
+
+        if (!hasTrailingCitation(trimmed)) {
+          let combined = segment;
+          let j = idx + 1;
+          let foundCitation = false;
+
+          while (j < items.length) {
+            combined += items[j];
+            const combinedPlain = stripTags(combined).trim();
+            if (hasTrailingCitation(combinedPlain)) {
+              foundCitation = true;
+              break;
+            }
+            j += 1;
+          }
+
+          if (foundCitation) {
+            const combinedPlain = stripTags(combined).trim();
+            const dashCount = countDash(combinedPlain);
+            const startsWithQuote = quoteStartRe.test(trimmed);
+            const hasDash = dashCount > 0;
+            const shouldMerge = (startsWithQuote && dashCount <= 1) || (hasDash && dashCount === 1);
+
+            if (shouldMerge) {
+              merged.push(combined);
+              idx = j + 1;
+              continue;
+            }
+          }
+        }
+
+        merged.push(segment);
+        idx += 1;
+      }
+
+      return merged;
+    };
+
     const parseSegment = (segment) => {
       const brMatch = segment.match(/^((?:<br>)+)(.*)$/i);
       const brPrefix = brMatch ? brMatch[1] : '';
@@ -847,16 +981,39 @@
       const leadingSpace = spacingMatch ? spacingMatch[1] : '';
       const core = spacingMatch ? spacingMatch[2] : remainder;
       const trailingSpace = spacingMatch ? spacingMatch[3] : '';
-      const plainCore = core.replace(/<[^>]*>/g, '');
+      const plainCore = stripTags(core);
       const trimmedCore = core.trim();
       const startsWithHeadwordLink = trimmedCore.startsWith('<span class="related-entry-headword">');
       const startsWithDialogue = TUPI_DIALOGUE_RE.test(trimmedCore);
 
       const colonIndex = findColonOutside(core);
       if (colonIndex !== -1) {
-        const left = core.slice(0, colonIndex + 1);
-        const right = core.slice(colonIndex + 1).trim();
-        const plainRight = right.replace(/<[^>]*>/g, '');
+        let left = core.slice(0, colonIndex + 1);
+        let right = core.slice(colonIndex + 1).trim();
+        let plainRight = stripTags(right);
+
+        const startsWithSenseMarker = (() => {
+          if (plainRight.trim().match(/^(\d+|[a-z])\)/i)) {
+            return true;
+          }
+          return /<span class="sense-(number|letter)">/i.test(right);
+        })();
+
+        if (startsWithSenseMarker) {
+          const secondaryIndex = findColonOutside(right);
+          if (secondaryIndex !== -1) {
+            const newColonPos = colonIndex + 1 + secondaryIndex;
+            const candidateRight = core.slice(newColonPos + 1).trim();
+            const candidatePlainRight = stripTags(candidateRight);
+            const candidateStartsDialogue = TUPI_DIALOGUE_RE.test(candidatePlainRight.trim());
+            if (candidateRight && (hasDash(candidatePlainRight) || candidateStartsDialogue)) {
+              left = core.slice(0, newColonPos + 1);
+              right = candidateRight;
+              plainRight = candidatePlainRight;
+            }
+          }
+        }
+
         const rightStartsDialogue = TUPI_DIALOGUE_RE.test(plainRight.trim());
         if (right && (hasDash(plainRight) || rightStartsDialogue)) {
           return {
@@ -905,6 +1062,21 @@
         };
       }
 
+      if (hasTrailingCitation(plainCore) && quoteStartRe.test(plainCore.trim())) {
+        return {
+          segment,
+          brPrefix,
+          leadingSpace,
+          core,
+          trailingSpace,
+          plainCore,
+          startsWithHeadwordLink,
+          type: 'quote',
+          quoteText: core.trim(),
+          startsWithLetter: TUPI_START_RE.test(plainCore.trim()),
+        };
+      }
+
       return {
         segment,
         brPrefix,
@@ -919,7 +1091,19 @@
       };
     };
 
-    const parsedSegments = segments.map(parseSegment);
+    const mergedSegments = mergeQuotedSegments(segments);
+    const parsedSegments = mergedSegments.map(parseSegment);
+
+    parsedSegments.forEach((seg) => {
+      const plain = (seg.plainCore || '').trim();
+      if (!plain || seg.startsWithHeadwordLink) return;
+      if (seg.type === 'other' && /\s-\s/.test(plain)) {
+        warnOnce('Unparsed quote-like segment', plain);
+      }
+      if (seg.type === 'other' && hasTrailingCitation(plain)) {
+        warnOnce('Unparsed trailing citation segment', plain);
+      }
+    });
 
     const ensureCitation = (text, startIndex) => {
       const normalized = normalizeQuoteText(text);
