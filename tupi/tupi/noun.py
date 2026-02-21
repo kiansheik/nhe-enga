@@ -1,6 +1,6 @@
 from .tupi import TupiAntigo
 from .verb import Verb
-import copy, inspect, re
+import inspect, re
 from .annotated_string import AnnotatedString  # assuming the class is in this module
 
 sara_consoante_map = {
@@ -114,6 +114,18 @@ class Noun(TupiAntigo):
         )
         self.objeto_raw = None
 
+    def _clone(self):
+        new = self.__class__.__new__(self.__class__)
+        new.__dict__ = self.__dict__.copy()
+        new.aglutinantes = list(self.aglutinantes)
+        if isinstance(self.latest_verbete, AnnotatedString):
+            new.latest_verbete = AnnotatedString(
+                self.latest_verbete.get_annotated()
+            )
+        else:
+            new.latest_verbete = AnnotatedString(str(self.latest_verbete))
+        return new
+
     # Fix annotation and whole composition process
     def compose(self, modifier):
         frame = inspect.currentframe()
@@ -122,9 +134,9 @@ class Noun(TupiAntigo):
         args_str = ", ".join(
             f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
         )
-        ret_noun = copy.deepcopy(self)
+        ret_noun = self._clone()
         ret_noun.aglutinantes[-1] = self
-        mod_noun = copy.deepcopy(modifier)
+        mod_noun = modifier._clone()
         vbt = ret_noun.latest_verbete
         mod_vbt = mod_noun.latest_verbete
         # Define some useful groups
@@ -184,7 +196,7 @@ class Noun(TupiAntigo):
         args_str = ", ".join(
             f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
         )
-        ret_noun = copy.deepcopy(self)
+        ret_noun = self._clone()
         ret_noun.aglutinantes[-1] = self
         ret_noun.objeto_raw = objeto_raw
         ret_noun.aglutinantes.append(ret_noun)
@@ -296,7 +308,7 @@ class Noun(TupiAntigo):
         args_str = ", ".join(
             f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
         )
-        ret_noun = copy.deepcopy(self)
+        ret_noun = self._clone()
         ret_noun.aglutinantes[-1] = self
         # ret_noun.latest_verbete.drop_last_tag()
         vbt = AnnotatedString(ret_noun.substantivo(True))
@@ -324,7 +336,7 @@ class Noun(TupiAntigo):
         args_str = ", ".join(
             f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
         )
-        ret_noun = copy.deepcopy(self)
+        ret_noun = self._clone()
         ret_noun.aglutinantes[-1] = self
         annotated = ret_noun.latest_verbete
 
@@ -372,7 +384,7 @@ class Noun(TupiAntigo):
         args_str = ", ".join(
             f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
         )
-        ret_noun = copy.deepcopy(self)
+        ret_noun = self._clone()
         ret_noun.aglutinantes[-1] = self
         annotated = ret_noun.latest_verbete
 
@@ -416,7 +428,7 @@ class Noun(TupiAntigo):
             f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
         )
 
-        ret_noun = copy.deepcopy(self)
+        ret_noun = self._clone()
         ret_noun.aglutinantes[-1] = self
 
         annotated = AnnotatedString(str(self.latest_verbete))  # make copy
@@ -468,7 +480,7 @@ class Noun(TupiAntigo):
                 return tl
             return tl
 
-        ret_noun = copy.deepcopy(self)
+        ret_noun = self._clone()
         ret_noun.aglutinantes[-1] = self
 
         vbt = ret_noun.latest_verbete
@@ -503,7 +515,7 @@ class Noun(TupiAntigo):
         args_str = ", ".join(
             f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
         )
-        ret_noun = copy.deepcopy(self)
+        ret_noun = self._clone()
         ret_noun.aglutinantes[-1] = self
         # TODO: Figure out verbetes como '(a)pé' which have the perntheses and that vowel only if there's no prefix
         vbt = ret_noun.latest_verbete
@@ -523,7 +535,7 @@ class Noun(TupiAntigo):
         args_str = ", ".join(
             f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
         )
-        ret_noun = copy.deepcopy(self)
+        ret_noun = self._clone()
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
         vbt = ret_noun.latest_verbete
@@ -541,7 +553,7 @@ class Noun(TupiAntigo):
         args_str = ", ".join(
             f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
         )
-        ret_noun = copy.deepcopy(self)
+        ret_noun = self._clone()
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
         vbt = ret_noun.latest_verbete
@@ -565,7 +577,7 @@ class Noun(TupiAntigo):
         args_str = ", ".join(
             f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
         )
-        ret_noun = copy.deepcopy(self)
+        ret_noun = self._clone()
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
         vbt = ret_noun.latest_verbete
@@ -599,7 +611,7 @@ class Noun(TupiAntigo):
         args_str = ", ".join(
             f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
         )
-        ret_noun = copy.deepcopy(self)
+        ret_noun = self._clone()
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
         vbt = ret_noun.latest_verbete
@@ -633,7 +645,7 @@ class Noun(TupiAntigo):
         args_str = ", ".join(
             f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
         )
-        ret_noun = copy.deepcopy(self)
+        ret_noun = self._clone()
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
         vbt = ret_noun.latest_verbete
@@ -658,7 +670,7 @@ class Noun(TupiAntigo):
         args_str = ", ".join(
             f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
         )
-        ret_noun = copy.deepcopy(self)
+        ret_noun = self._clone()
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
         suf = "pyr"
@@ -706,7 +718,7 @@ class Noun(TupiAntigo):
         args_str = ", ".join(
             f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
         )
-        ret_noun = copy.deepcopy(self)
+        ret_noun = self._clone()
         ret_noun.aglutinantes[-1] = self
         vbt = ret_noun.latest_verbete
 
@@ -733,7 +745,7 @@ class Noun(TupiAntigo):
         args_str = ", ".join(
             f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
         )
-        ret_noun = copy.deepcopy(self)
+        ret_noun = self._clone()
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
         vbt = ret_noun.latest_verbete
@@ -764,7 +776,7 @@ class Noun(TupiAntigo):
         args_str = ", ".join(
             f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
         )
-        ret_noun = copy.deepcopy(self)
+        ret_noun = self._clone()
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
         vbt = ret_noun.latest_verbete

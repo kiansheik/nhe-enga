@@ -149,6 +149,97 @@ class NavarroDB:
                 )
             return tupi_verbetes if tupi_verbetes else []
 
+    def iter_words_by_classname(self, classname=None):
+        """
+        Iterate over all words in the tupi_only table filtered by the given class.
+        Yields TupiVerbete objects.
+        """
+        def_search = ""
+        if classname:
+            if classname == "noun":
+                def_search = "(s.)"
+            elif classname == "postposition":
+                def_search = "(posp.)"
+            elif classname == "adverb":
+                def_search = ["(adv.)", "(conj.)"]
+            elif "pronoun" in classname:
+                def_search = "pron."
+            elif classname == "verb":
+                def_search = "(v."
+        with closing(sqlite3.connect(self.db_path)) as conn:
+            cursor = conn.cursor()
+            query = (
+                """
+            SELECT
+              vid,
+              first_word,
+              definition,
+              gloss_language,
+              GROUP_CONCAT(gloss, ', ') AS glosses
+            FROM
+              tupi_only
+            """
+                + (
+                    (
+                        "WHERE ("
+                        + (
+                            " OR ".join([f" definition LIKE ? " for _ in def_search])
+                            if type(def_search) is list
+                            else " definition LIKE ?"
+                        )
+                        + ")"
+                    )
+                    if def_search
+                    else ""
+                )
+                + """ GROUP BY
+              vid, first_word, definition, gloss_language
+            ORDER BY
+              first_word, vid
+            """
+            )
+            params = (
+                [f"%{x}%" for x in def_search]
+                if type(def_search) is list
+                else ([f"%{def_search}%"] if def_search else [])
+            )
+            try:
+                cursor.execute(query, params)
+                results = cursor.fetchall()
+            except sqlite3.Error as e:
+                print(f"Error executing query: \n{query}\n with params \n{params}\n")
+                print(f"Error fetching data: {e}")
+                breakpoint()
+
+            if not results:
+                return
+
+            vid_order = []
+            by_vid = {}
+            for row in results:
+                vid = row[0]
+                if vid not in by_vid:
+                    by_vid[vid] = {
+                        "first_word": row[1],
+                        "definition": row[2],
+                        "english_glosses": "",
+                        "portuguese_glosses": "",
+                    }
+                    vid_order.append(vid)
+                if row[3].strip() == "en":
+                    by_vid[vid]["english_glosses"] = row[4]
+                elif row[3].strip() == "pt":
+                    by_vid[vid]["portuguese_glosses"] = row[4]
+
+            for vid in vid_order:
+                data = by_vid[vid]
+                yield TupiVerbete(
+                    data["first_word"],
+                    definition=data["definition"],
+                    english_glosses=data["english_glosses"],
+                    portuguese_glosses=data["portuguese_glosses"],
+                )
+
     def filter_words_by_definition(self, definition):
         """Filter words in the tupi_only table by definition."""
         with closing(sqlite3.connect(self.db_path)) as conn:

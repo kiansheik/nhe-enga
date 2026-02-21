@@ -6,11 +6,14 @@ import unicodedata
 
 
 class TupiAntigo(object):
+    _shared_orthographies = None
+    _shared_ipa_map = None
+    _shared_siliba_map = None
     cv_patterns = ["CVC", "CV", "VC", "V"]
     personal_inflections = {
         "1ps": ["ixé", "xe", "a"],
-        "1ppi": ["îandé", "îande", "îa"],
-        "1ppe": ["oré", "ore", "oro"],
+        "1ppi": ["îandé", "îandé", "îa"],
+        "1ppe": ["oré", "oré", "oro"],
         "2ps": ["endé", "nde", "ere", "oro", "îepé"],
         "2pp": ["peẽ", "pe", "pe", "opo", "peîepé"],
         "3p": ["a'e", "i", "o"],
@@ -180,32 +183,45 @@ class TupiAntigo(object):
     # Combine nasal consonants and vowels
     nasais = vogais_nasais + consoantes_nasais
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.orthographies = {
+    @classmethod
+    def _init_shared_maps(cls):
+        if cls._shared_orthographies is not None:
+            return
+        orthographies = {
             "ipa": dict(
                 sorted(
                     [
-                        (self.sound_graf["navarro"][i], self.sound_graf["ipa"][i])
-                        for i in range(len(self.sound_graf["ipa"]))
+                        (cls.sound_graf["navarro"][i], cls.sound_graf["ipa"][i])
+                        for i in range(len(cls.sound_graf["ipa"]))
                     ],
                     key=lambda x: len(x[0]),
                     reverse=True,
                 )
             )
         }
-        self.ipa_map = self.orthographies["ipa"]
-        self.siliba_map = sorted(
+        ipa_map = orthographies["ipa"]
+        siliba_map = sorted(
             [
                 (
-                    self.sound_graf["navarro"][i],
-                    "V" if self.sound_graf["navarro"][i] in self.vogais else "C",
+                    cls.sound_graf["navarro"][i],
+                    "V" if cls.sound_graf["navarro"][i] in cls.vogais else "C",
                 )
-                for i in range(len(self.sound_graf["navarro"]))
+                for i in range(len(cls.sound_graf["navarro"]))
             ],
             key=lambda x: len(x[0]),
             reverse=True,
         )
+        cls._shared_orthographies = orthographies
+        cls._shared_ipa_map = ipa_map
+        cls._shared_siliba_map = siliba_map
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        cls = self.__class__
+        cls._init_shared_maps()
+        self.orthographies = cls._shared_orthographies
+        self.ipa_map = cls._shared_ipa_map
+        self.siliba_map = cls._shared_siliba_map
 
     def reduplicate(self, s):
         if type(s) is str:

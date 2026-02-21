@@ -3,23 +3,44 @@ from .tupi import TupiAntigo
 from .annotated_string import AnnotatedString
 from .tupi import ALT_ORTS
 import json
-import json
 import unicodedata
 from importlib import resources
+from functools import lru_cache
 
 
-def get_irregular_verb(verbete, id):
-    verbete = unicodedata.normalize("NFC", verbete)
-    target_suffix = f"{verbete}_{id}.json"
+_IRREGULAR_INDEX = None
+
+
+def _build_irregular_index():
+    global _IRREGULAR_INDEX
+    if _IRREGULAR_INDEX is not None:
+        return
     try:
-        for file in resources.files("tupi.irregular").iterdir():
-            normalized_name = unicodedata.normalize("NFC", file.name)
-            if normalized_name.endswith(target_suffix):
-                with file.open("r") as f:
-                    return json.load(f)
+        files = resources.files("tupi.irregular").iterdir()
     except ModuleNotFoundError:
-        pass
-    return None
+        _IRREGULAR_INDEX = {}
+        return
+    index = {}
+    for file in files:
+        normalized_name = unicodedata.normalize("NFC", file.name)
+        index[normalized_name] = file
+    _IRREGULAR_INDEX = index
+
+
+@lru_cache(maxsize=4096)
+def get_irregular_verb(verbete, id):
+    if verbete is None or id is None:
+        return None
+    verbete = unicodedata.normalize("NFC", verbete)
+    target_name = unicodedata.normalize("NFC", f"{verbete}_{id}.json")
+    _build_irregular_index()
+    if not _IRREGULAR_INDEX:
+        return None
+    file = _IRREGULAR_INDEX.get(target_name)
+    if not file:
+        return None
+    with file.open("r") as f:
+        return json.load(f)
 
 
 class Verb(TupiAntigo):

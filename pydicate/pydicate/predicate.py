@@ -84,6 +84,64 @@ class Predicate(Trackable):
                     self.functional_gloss = g
                     break
 
+    @classmethod
+    def _default_category(cls):
+        try:
+            params = inspect.signature(cls.__init__).parameters
+        except (TypeError, ValueError):
+            return None
+        category = params.get("category")
+        if category and category.default is not inspect._empty:
+            return category.default
+        return None
+
+    @classmethod
+    def _filter_init_kwargs(cls, kwargs):
+        try:
+            params = inspect.signature(cls.__init__).parameters
+        except (TypeError, ValueError):
+            return kwargs
+        return {k: v for k, v in kwargs.items() if k in params}
+
+    @classmethod
+    def iter_db_entries(cls, category=None, db=None, **predicate_kwargs):
+        """
+        Iterate over all DB entries of a given category and yield predicate instances.
+        If called on a subclass, that subclass is used for instantiation.
+        """
+        db = db or db_explorer
+        if category is None:
+            category = cls._default_category()
+
+        def _iter():
+            if db is None:
+                return
+            if category is None:
+                raise ValueError("category is required to iterate DB entries.")
+
+            for entry in db.iter_words_by_classname(category):
+                if cls is Predicate:
+                    min_args = predicate_kwargs.get("min_args", 0)
+                    max_args = predicate_kwargs.get("max_args", min_args)
+                    init_kwargs = {
+                        "category": category,
+                        "min_args": min_args,
+                        "max_args": max_args,
+                        "definition": entry.definition,
+                    }
+                    if "tag" in predicate_kwargs:
+                        init_kwargs["tag"] = predicate_kwargs["tag"]
+                    yield cls(entry.verbete, **init_kwargs)
+                else:
+                    init_kwargs = {"definition": entry.definition}
+                    if "category" not in predicate_kwargs:
+                        init_kwargs["category"] = category
+                    init_kwargs.update(predicate_kwargs)
+                    init_kwargs = cls._filter_init_kwargs(init_kwargs)
+                    yield cls(entry.verbete, **init_kwargs)
+
+        return _iter()
+
     def inflection(self):
         """
         Get the inflection of the predicate.
