@@ -131,6 +131,10 @@ class Verb(TupiAntigo):
             subj_key = subject_tense if subject_tense else "ø"
             obj_key = object_tense if object_tense else "ø"
             obj_key = "3p" if obj_key == "none" else obj_key
+            if mode == "gerundio" and self.transitivo:
+                # In transitive gerund, the subject prefix is not realized;
+                # irregular gerund forms are keyed under "ø".
+                subj_key = "ø"
             if obj_key == "absoluta":
                 if self.transitivo:
                     subj_key = "3p"
@@ -142,11 +146,12 @@ class Verb(TupiAntigo):
                 obj_key = "ø"
             if subj_key in ["refl", "mut", "suj"]:
                 subj_key = "3p"
-            if obj_key in ["refl", "mut", "suj"]:
-                obj_key = "3p"
             subj = self.irregular.get(subj_key)
             if subj:
                 obj = subj.get(obj_key)
+                if obj is None and obj_key in ["refl", "mut", "suj"]:
+                    # fall back to 3p object if no irregular refl/mut entry exists
+                    obj = subj.get("3p")
                 if obj:
                     ms = mode[:2]
                     if mode == "permissivo":
@@ -208,7 +213,19 @@ class Verb(TupiAntigo):
                         f"{self.personal_inflections[object_tense][1]}[OBJECT:{object_tense}]"
                         if dir_obj_raw is None
                         else dir_obj_raw + f"[OBJECT:DIRECT]"
-                    ) + " "
+                    )
+                    if dir_obj_raw is not None:
+                        dir_obj += " "
+                    # else:
+                    #     # remove accented ´ from dir_obj if present, as it will be combined without a space
+                    #     dir_obj = (
+                    #         dir_obj.replace("á", "a")
+                    #         .replace("é", "e")
+                    #         .replace("í", "i")
+                    #         .replace("ó", "o")
+                    #         .replace("ú", "u")
+                    #         .replace("ý", "y")
+                    #     )
                     if object_tense == "3p" and dir_obj_raw is None:
                         if pluri_check or self.ero:
                             dir_obj = (
@@ -221,7 +238,7 @@ class Verb(TupiAntigo):
                     else:
                         dir_obj += f'{f"r[PLURIFORM_PREFIX:R]" if pluri_check or self.ero else ""}'
                     pref = dir_obj
-                if suf[0] in self.vogais and vbt[-1] in "i y u".split():
+                if vbt and suf[0] in self.vogais and vbt[-1] in "i y u".split():
                     vbt = vbt[:-1] + self.semi_vogais_map[vbt[-1]]
                 vbt += f"[ROOT]"
                 if redup:
@@ -307,8 +324,9 @@ class Verb(TupiAntigo):
                         subj = ""
                 else:
                     obj += f"r[PLURIFORM_PREFIX:R]"
-            elif pluri_check and self.transitivo and (vadjs_pre == ""):
-                obj += f"r[PLURIFORM_PREFIX:R]"
+            # For transitives, the pluriforme R (if any) is already handled
+            # when building the object prefix above. Adding it again here
+            # yields double R (e.g., "nderrareme").
             vbt = f"{vbt}[ROOT]"
             redup_space = f"{obj}{vbt}"
             if redup:
@@ -587,7 +605,15 @@ class Verb(TupiAntigo):
                     vbt = f"{conj}{obj}{base_verbete}[ROOT]"
                     perm = self.choose_perm(vbt, perm_mode)
                     if overwrite:
-                        vbt = f"{base_verbete[1:]}[ROOT]"
+                        # base_verbete already contains the subject prefix; keep conj/object
+                        # but avoid duplicating the subject prefix from base_verbete.
+                        subj_pref_raw = self.remove_brackets_and_contents(conj)
+                        stem = (
+                            base_verbete[len(subj_pref_raw) :]
+                            if subj_pref_raw and base_verbete.startswith(subj_pref_raw)
+                            else base_verbete
+                        )
+                        vbt = f"{conj}{obj}{stem}[ROOT]"
                     if redup:
                         vbt = self.reduplicate(AnnotatedString(vbt)).get_annotated()
                     vb = f"{perm}{vbt}"

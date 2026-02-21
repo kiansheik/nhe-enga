@@ -9,8 +9,8 @@ class TupiAntigo(object):
     cv_patterns = ["CVC", "CV", "VC", "V"]
     personal_inflections = {
         "1ps": ["ixé", "xe", "a"],
-        "1ppi": ["îandé", "îandé", "îa"],
-        "1ppe": ["oré", "oré", "oro"],
+        "1ppi": ["îandé", "îande", "îa"],
+        "1ppe": ["oré", "ore", "oro"],
         "2ps": ["endé", "nde", "ere", "oro", "îepé"],
         "2pp": ["peẽ", "pe", "pe", "opo", "peîepé"],
         "3p": ["a'e", "i", "o"],

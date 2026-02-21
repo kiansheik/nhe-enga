@@ -65,14 +65,17 @@ with open("docs/tupi_dict_navarro.json", "r") as f:
 
 dicc_dict = {i: v for i, v in enumerate(dicc)}
 tupi_only = []
+tupi_range_ids = set()
 include = False
 adjectives = []
 for i, vbt in dicc_dict.items():
     if vbt["first_word"] == "ã":
         include = True
-    if include and vbt["first_word"] not in ban and "adj.: " not in vbt["definition"]:
-        vbt["id"] = i
-        tupi_only.append(vbt)
+    if include and vbt["first_word"] not in ban:
+        tupi_range_ids.add(i)
+        if "adj.: " not in vbt["definition"]:
+            vbt["id"] = i
+            tupi_only.append(vbt)
     if vbt["first_word"] == "'yura":
         include = False
 
@@ -105,6 +108,10 @@ for first_word, optional_number, definition, vid in {
             "id": vid,
         }
     )
+
+for vid in tupi_range_ids:
+    if vid in dicc_dict:
+        dicc_dict[vid]["tp"] = 1
 
 verb_types = [
     "(s) (v.tr.)",

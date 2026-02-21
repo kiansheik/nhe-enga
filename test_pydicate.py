@@ -1,4 +1,11 @@
+import os
+import sys
 import random
+
+# Ensure local editable packages are on sys.path (repo uses nested package layout)
+ROOT = os.path.dirname(__file__)
+sys.path.insert(0, os.path.join(ROOT, "pydicate"))
+sys.path.insert(0, os.path.join(ROOT, "tupi"))
 from pydicate.lang.tupilang import *
 from pydicate.lang.tupilang.pos import *
 from pydicate import Predicate

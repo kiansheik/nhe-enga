@@ -241,9 +241,9 @@
         "overwrite": true
       },
       "im": {
-        "verbete": "îar",
+        "verbete": "eîá",
         "pluriforme": false,
-        "overwrite": false
+        "overwrite": true
       },
       "co": {
         "verbete": "ar",
@@ -301,9 +301,9 @@
         "overwrite": true
       },
       "im": {
-        "verbete": "îar",
+        "verbete": "peîá",
         "pluriforme": false,
-        "overwrite": false
+        "overwrite": true
       },
       "co": {
         "verbete": "ar",
@@ -414,7 +414,7 @@
     },
     "3p": {
       "in": {
-        "verbete": "oar",
+        "verbete": "ogûar",
         "pluriforme": false,
         "overwrite": true
       },
@@ -439,6 +439,11 @@
         "verbete": "ar",
         "pluriforme": true,
         "overwrite": false
+      },
+      "in": {
+        "verbete": "îar",
+        "pluriforme": false,
+        "overwrite": false
       }
     },
     "mut": {
@@ -450,6 +455,11 @@
       "co": {
         "verbete": "ar",
         "pluriforme": true,
+        "overwrite": false
+      },
+      "in": {
+        "verbete": "îar",
+        "pluriforme": false,
         "overwrite": false
       }
     }
