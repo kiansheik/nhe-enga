@@ -47,8 +47,10 @@ mokõî = Number("mokõî", definition="two, a pair, a couple", tag="[NUMBER:TWO
 mosapyr = Number("mosapyr", definition="three, a trio", tag="[NUMBER:THREE]")
 # oîoirundyk (ou oîeirundyk) (num.) - quatro: ...oîoirundyk îeapyká sykápe - no transcorrer de quatro gerações (Ar., Cat., 129)
 oîoirundyk = Number("oîoirundyk", definition="four", tag="[NUMBER:FOUR]")
+irundyk = Number("irundyk", definition="four", tag="[NUMBER:FOUR]")
 # ambó (etim. - esta mão) (num.) - cinco (Fig., Arte, 4)
 ambó = Number("ambó", definition="five", tag="[NUMBER:FIVE]")
+mbó = Number("mbó", definition="five", tag="[NUMBER:FIVE]")
 # amombokoty (num.) - cinco: -Îarekó bépe tekomonhangaba amõ Santa Madre Igreja remimonhanga? -Îarekó bé. -Mobype? -Amombokoty. -Temos também alguns mandamentos que a Santa Madre Igreja faz? -Temos. -Quantos? -Cinco. (Ar., Cat., 75)
 amombokoty = Number("amombokoty", definition="five", tag="[NUMBER:FIVE]")
 # moîepé1 (num.) - um: Opá kó mbó îabi'õ... moîepé me'enga Tupã potabamo. - A cada dez dar um como quinhão de Deus. (Ar., Cat., 78); 'Aretegûasu îabi'õ ã mundepora moîepé peîmosemukar ixébe îepi... - Eis que a cada Páscoa um prisioneiro fazeis-me libertar sempre. (Ar., Cat., 59v) [o mesmo que oîepé1 (v.)]

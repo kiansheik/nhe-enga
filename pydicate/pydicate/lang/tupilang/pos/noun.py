@@ -166,7 +166,11 @@ class VocativeNoun(Noun, Interjection):
     # the class simply takes a Noun object and returns a deep copy of the noun, plus voctative flag as it currently implements
     def __init__(self, noun: Noun):
         voc_copy = noun.copy()
-        voc_copy.noun = voc_copy.noun.vocativo()
+        voc_copy.noun = (
+            voc_copy.noun.vocativo()
+            if voc_copy.category != "proper_noun"
+            else voc_copy.noun
+        )
         # alter voc_copy to be of new class type
         voc_copy.__class__ = VocativeNoun
         # set all of self's attributes to voc_copy's attributes

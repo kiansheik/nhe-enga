@@ -271,8 +271,8 @@ class TupiAntigo(object):
 
     def fix_phonetics(self, input_str):
         replacements = {
-            # "is": "ix",
-            # "i s": "i x",
+            "is": "ix",
+            "i s": "i x",
             "nn": "n",
             "oer": "ogûer",
             "oen": "ogûen",

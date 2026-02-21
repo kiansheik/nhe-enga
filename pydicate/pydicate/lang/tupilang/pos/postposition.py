@@ -112,6 +112,7 @@ class Dative(Postposition):
     def __init__(self, definition="to, for, in favor of"):
         """Initialize a Dative object."""
         super().__init__("supé", definition=definition, tag="[POSTPOSITION:DATIVE]")
+        self.variation_id = 0
 
     def morphology(self, annotated=False):
         """Evaluate the Postposition object."""
@@ -119,7 +120,7 @@ class Dative(Postposition):
             return f"{self.verbete}{self.tag}"
         tn = (
             TupiNoun(self.arg0.eval(annotated), self.arg0.definition, noroot=True)
-            .supe()
+            .supe(variation_id=self.variation_id)
             .verbete(annotated)
         )
         return tn + (self.tag if annotated else "")
