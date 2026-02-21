@@ -6,7 +6,8 @@ class Trackable:
     _instances = {}
 
     def __init__(self):
-        self._var_name = self.get_var_name_from_stack()
+        # Lazy-evaluate var name to avoid expensive stack inspection on every init.
+        self._var_name = None
         self.__class__.add(self)
 
     @classmethod

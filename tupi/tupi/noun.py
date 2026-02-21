@@ -119,9 +119,7 @@ class Noun(TupiAntigo):
         new.__dict__ = self.__dict__.copy()
         new.aglutinantes = list(self.aglutinantes)
         if isinstance(self.latest_verbete, AnnotatedString):
-            new.latest_verbete = AnnotatedString(
-                self.latest_verbete.get_annotated()
-            )
+            new.latest_verbete = AnnotatedString(self.latest_verbete.get_annotated())
         else:
             new.latest_verbete = AnnotatedString(str(self.latest_verbete))
         return new

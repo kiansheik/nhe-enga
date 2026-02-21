@@ -37,6 +37,7 @@ class NavarroDB:
         self.db_path = db_path
         self.conn = None
         self.cursor = None
+        self._search_cache = {}
 
     def create_table(self):
         with closing(sqlite3.connect(self.db_path)) as conn:
@@ -59,6 +60,9 @@ class NavarroDB:
 
     # search for word in the tupi_only table
     def search_word(self, word, classname=None):
+        cache_key = (word, classname)
+        if cache_key in self._search_cache:
+            return list(self._search_cache[cache_key])
         def_search = ""
         if classname:
             if classname == "noun":
@@ -147,7 +151,9 @@ class NavarroDB:
                         portuguese_glosses=portuguese_glosses,
                     )
                 )
-            return tupi_verbetes if tupi_verbetes else []
+            result = tupi_verbetes if tupi_verbetes else []
+            self._search_cache[cache_key] = tuple(result)
+            return list(result)
 
     def iter_words_by_classname(self, classname=None):
         """

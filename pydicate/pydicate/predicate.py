@@ -1,8 +1,10 @@
 from copy import deepcopy
+import copy
 import re
 import inspect
 from xml.etree.ElementTree import indent
 from tupi import Noun as TupiNoun
+from tupi import Verb as TupiVerb
 from pydicate.trackable import Trackable
 from pydicate.dbexplorer import NavarroDB
 from collections import Counter
@@ -33,6 +35,57 @@ def remove_adjacent_tags(to_remove_from):
 
 
 class Predicate(Trackable):
+    _COPY_LIST_FIELDS = (
+        "arguments",
+        "compositions",
+        "pre_adjuncts",
+        "post_adjuncts",
+        "v_adjuncts",
+        "v_adjuncts_pre",
+        "_arguments",
+    )
+    _COPY_PREDICATE_FIELDS = ("principal", "_augmentee", "_augmentor", "_subject")
+
+    def __deepcopy__(self, memo):
+        cls = self.__class__
+        new_obj = cls.__new__(cls)
+        memo[id(self)] = new_obj
+
+        # Start with a shallow dict copy, then deep-copy only the fields that
+        # actually need isolation. This avoids copying heavy, read-only data.
+        new_obj.__dict__ = self.__dict__.copy()
+
+        for field in self._COPY_LIST_FIELDS:
+            if field in self.__dict__:
+                src = self.__dict__[field]
+                new_obj.__dict__[field] = [copy.deepcopy(x, memo) for x in src]
+
+        for field in self._COPY_PREDICATE_FIELDS:
+            if field in self.__dict__:
+                val = self.__dict__[field]
+                if isinstance(val, Predicate):
+                    new_obj.__dict__[field] = copy.deepcopy(val, memo)
+                else:
+                    new_obj.__dict__[field] = val
+
+        # Clone embedded Tupi objects to avoid cross-copy mutation.
+        if "verb" in self.__dict__ and isinstance(self.__dict__["verb"], TupiVerb):
+            verb = self.__dict__["verb"]
+            verb_copy = verb.__class__.__new__(verb.__class__)
+            verb_copy.__dict__ = verb.__dict__.copy()
+            if isinstance(getattr(verb, "irregular", None), dict):
+                verb_copy.irregular = copy.deepcopy(verb.irregular, memo)
+            new_obj.__dict__["verb"] = verb_copy
+
+        if "noun" in self.__dict__ and isinstance(self.__dict__["noun"], TupiNoun):
+            noun = self.__dict__["noun"]
+            if hasattr(noun, "_clone"):
+                new_obj.__dict__["noun"] = noun._clone()
+            else:
+                new_obj.__dict__["noun"] = copy.deepcopy(noun, memo)
+
+        return new_obj
+
     def __init__(
         self,
         verbete,

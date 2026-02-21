@@ -20,6 +20,13 @@ path = importlib.resources.files("pydicate.lang.tupilang.data").joinpath(
 with path.open("rb") as raw_file:  # Open in binary mode for gzip
     with gzip.open(raw_file, "rt", encoding="utf-8") as f:
         dict_conjugated = [x for x in json.load(f) if "c" in x]
+_DICT_BY_ID = {}
+_DICT_BY_FORM = {}
+for _entry in dict_conjugated:
+    if "i" in _entry and _entry["i"] not in _DICT_BY_ID:
+        _DICT_BY_ID[_entry["i"]] = _entry
+    if "f" in _entry and _entry["f"] not in _DICT_BY_FORM:
+        _DICT_BY_FORM[_entry["f"]] = _entry
 
 
 class Verb(Predicate):
@@ -47,23 +54,21 @@ class Verb(Predicate):
         if not verb_class or not definition:
             found = False
             if vid:
-                for verb in dict_conjugated:
-                    if verb["i"] == vid:
-                        self.verbete = verb["f"]
-                        verb_class = verb["v"]
-                        definition = verb["d"]
-                        found = True
-                        break
+                verb = _DICT_BY_ID.get(vid)
+                if verb:
+                    self.verbete = verb["f"]
+                    verb_class = verb["v"]
+                    definition = verb["d"]
+                    found = True
                 if not found:
                     raise ValueError(f"Verb with ID {vid} not found in the dictionary.")
             else:
-                for verb in dict_conjugated:
-                    if verb["f"] == self.verbete:
-                        verb_class = verb["v"]
-                        definition = verb["d"]
-                        vid = verb["i"]
-                        found = True
-                        break
+                verb = _DICT_BY_FORM.get(self.verbete)
+                if verb:
+                    verb_class = verb["v"]
+                    definition = verb["d"]
+                    vid = verb["i"]
+                    found = True
 
         self.verb = TupiVerb(self.verbete, verb_class, definition, vid=vid)
         self.user_definition = f"{self.definition} ".strip()
@@ -455,9 +460,9 @@ class Verb(Predicate):
     def indicative(self):
         if self.circumstancial is not None:
             return "circunstancial" if self.circumstancial else "indicativo"
-        pre_adj = copy.deepcopy(self.pre_adjuncts)
+        pre_adj = list(self.pre_adjuncts)
         if self.subject() and self.subject().posto != "anteposto":
-            pre_adj += copy.deepcopy(self.v_adjuncts_pre)
+            pre_adj += list(self.v_adjuncts_pre)
         for adj in pre_adj:
             if isinstance(adj, Adverb):
                 return "circunstancial"
@@ -535,8 +540,8 @@ class VerbAugmentor(Verb):
 
     @classmethod
     def from_existing(cls, original: Verb):
-        new_verb = cls.__new__(cls)  # create blank instance
-        new_verb.__dict__ = copy.deepcopy(original.__dict__)
+        new_verb = original.copy()
+        new_verb.__class__ = cls
         return new_verb
 
 
