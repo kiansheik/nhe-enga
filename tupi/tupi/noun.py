@@ -264,6 +264,8 @@ class Noun(TupiAntigo):
             if anotated
             else self.remove_brackets_and_contents(self.base_substantivo())
         )
+        if anotated:
+            return AnnotatedString(bs).ensure_root_tag().get_annotated()
         return bs
 
     def __repr__(self) -> str:
@@ -401,8 +403,9 @@ class Noun(TupiAntigo):
             annotated.replace_clean(-1, 1, "ûar")
         elif annotated[-1] in sara_consoante_map:
             sar_rep = sara_consoante_map[annotated[-1]]
-            annotated.replace_clean(-1, 1, "")
-            annotated.insert_suffix(sar_rep)
+            # Preserve the stem-final segment as part of the root, then add suffix.
+            annotated.replace_clean(-1, 1, sar_rep[0])
+            annotated.insert_suffix(sar_rep[1:])
         elif annotated[-1] not in ret_noun.vogais:
             annotated.insert_suffix("ar")
         else:

@@ -1,4 +1,5 @@
 import unicodedata
+import re
 
 nasal_prefix_map = {
     "p": "mb",
@@ -297,3 +298,35 @@ class AnnotatedString:
             raise TypeError(
                 "Can only concatenate AnnotatedString or str to AnnotatedString"
             )
+
+    def ensure_root_tag(self):
+        """
+        Ensure there is a [ROOT] tag in the annotated string.
+        If missing, insert it after the rightmost non-trivial morph (skipping
+        pure substantive suffix morphs like 'a[SUBSTANTIVE_SUFFIX...]').
+        """
+        if "[ROOT]" in self.original:
+            return self
+
+        morph_tag_re = re.compile(r"([^\[\]\s]+)((?:\[[^\]]+\])+)")
+        tag_re = re.compile(r"\[([^\]]+)\]")
+
+        matches = list(morph_tag_re.finditer(self.original))
+        if not matches:
+            return self
+
+        candidate = None
+        for m in reversed(matches):
+            tags = tag_re.findall(m.group(2))
+            if tags and all(t.startswith("SUBSTANTIVE_SUFFIX") for t in tags):
+                continue
+            candidate = m
+            break
+
+        if candidate is None:
+            candidate = matches[-1]
+
+        insert_at = candidate.start(2)
+        self.original = self.original[:insert_at] + "[ROOT]" + self.original[insert_at:]
+        self._rebuild_maps()
+        return self

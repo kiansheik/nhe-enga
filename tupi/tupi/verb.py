@@ -121,6 +121,8 @@ class Verb(TupiAntigo):
             result = f"{result}[{last_tag}î" + "[NEGATION_SUFFIX:VOWEL_ENDING]"
         else:
             result = f"{result}[{last_tag}i" + "[NEGATION_SUFFIX:CONSONANT_ENDING]"
+        if anotar:
+            result = AnnotatedString(result).ensure_root_tag().get_annotated()
         return result
 
     def conjugate(
