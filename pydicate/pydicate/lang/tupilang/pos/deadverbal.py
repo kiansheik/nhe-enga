@@ -20,6 +20,7 @@ class Deadverbal(Noun):
             definition=definition,
             tag=tag,
             category=category,
+            noroot=True,
         )
         self.min_args = 0
         self.max_args = 1
@@ -106,6 +107,7 @@ def nduara_morphology(self, adverb, annotated=False):
         + self.arguments[0].functional_definition,
         inflection="3p",
         tag=self.tag,
+        noroot=True,
     )
     return res.eval(annotated=annotated)
 

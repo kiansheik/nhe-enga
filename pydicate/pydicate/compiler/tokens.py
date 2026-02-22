@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import re
-from typing import Any, Iterable, List, Optional, Sequence, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
 _MORPH_TAG_RE = re.compile(r"([^\[\]\s]+)((?:\[[^\]]+\])+)", flags=re.UNICODE)
 _TAG_RE = re.compile(r"\[([^\]]+)\]")
@@ -31,6 +31,32 @@ class Token:
                 continue
             kinds.append(tag.split(":", 1)[0])
         return tuple(kinds)
+
+    @property
+    def tag_features(self) -> Dict[str, Tuple[str, ...]]:
+        features: Dict[str, Tuple[str, ...]] = {}
+        for tag in self.tags:
+            if not tag:
+                continue
+            parts = [p for p in tag.split(":") if p]
+            if not parts:
+                continue
+            kind = parts[0]
+            values = tuple(parts[1:])
+            if not values:
+                continue
+            prev = features.get(kind, ())
+            merged = tuple(dict.fromkeys(prev + values))
+            features[kind] = merged
+        return features
+
+    def tag_values(self, kind: str) -> Tuple[str, ...]:
+        return self.tag_features.get(kind, ())
+
+    def has_tag(self, kind: str, value: Optional[str] = None) -> bool:
+        if value is None:
+            return kind in self.tag_kinds
+        return value in self.tag_values(kind)
 
 
 def token_from_raw(raw: Any) -> Token:

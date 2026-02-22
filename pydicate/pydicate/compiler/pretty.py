@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from typing import Dict, Iterable, Optional, Tuple
 
+
 from .ir import IRKind, IRNode
+from .lexicon import LexiconRegistry
 from .normalize import normalize_lexeme
 
 _OP_SYMBOLS: Dict[str, str] = {
@@ -46,6 +48,7 @@ _DEVERBAL_VARS = {
     "saba",
 }
 
+
 _POSTPOSITION_VARS = {
     "esé",
     "suí",
@@ -79,6 +82,26 @@ def _pronoun_inflection_from_token(node: IRNode) -> Optional[str]:
         for part in parts:
             if part in _INFLECTION_CODES:
                 return part
+    return None
+
+
+def _pronoun_tag_from_token(node: IRNode) -> Optional[str]:
+    token = None
+    if node.kind == IRKind.ATOM:
+        token = node.attrs.get("token")
+    if not token:
+        return None
+    for tag in token.tags:
+        kind = tag.split(":", 1)[0]
+        if kind in {
+            "SUBJECT",
+            "OBJECT",
+            "OBJECT_PREFIX",
+            "OBJECT_MARKER",
+            "POSSESSIVE_PRONOUN",
+            "PRONOUN",
+        }:
+            return f"[{tag}]"
     return None
 
 
@@ -133,7 +156,31 @@ def render_ir(node: IRNode) -> str:
     return "<unknown>"
 
 
-def render_pydicate(node: IRNode, allow_seq: bool = False, seq_op: str = "+") -> str:
+def render_pydicate(
+    node: IRNode,
+    allow_seq: bool = False,
+    seq_op: str = "+",
+    lexicon: Optional[LexiconRegistry] = None,
+) -> str:
+    def _lexicon_symbol(
+        pos: str, lexeme: Optional[str], *, node: Optional[IRNode] = None
+    ) -> Optional[str]:
+        if not lexicon or not lexeme:
+            return None
+        info = lexicon.lookup(pos, lexeme)
+        if info:
+            return info.symbol
+        if node:
+            suffixes = tuple(node.attrs.get("suffix_morphs", ()))
+            if suffixes:
+                for suffix in suffixes:
+                    candidate = f"{lexeme}{suffix}"
+                    candidate = normalize_lexeme(pos, candidate)
+                    info = lexicon.lookup(pos, candidate)
+                    if info:
+                        return info.symbol
+        return None
+
     if node.kind == IRKind.ATOM:
         lexeme = node.attrs.get("lexeme")
         if node.name in {"Predicate", "Tok", "Unknown"}:
@@ -141,13 +188,29 @@ def render_pydicate(node: IRNode, allow_seq: bool = False, seq_op: str = "+") ->
             return f"Predicate({lexeme!r}, category='tok', min_args=0, tag='[TOK]')"
         if node.name == "Pronoun":
             lexeme = normalize_lexeme("Pronoun", lexeme)
-            if lexeme in _PRONOUN_VARS:
-                return lexeme
             infl = _pronoun_inflection_from_token(node)
+            tag = _pronoun_tag_from_token(node)
+            if lexeme in _PRONOUN_VARS:
+                if tag and (tag.startswith("[OBJECT") or tag.startswith("[SUBJECT")):
+                    if infl:
+                        return f"Pronoun({lexeme!r}, inflection_override={infl!r}, tag={tag!r})"
+                    return f"Pronoun({lexeme!r}, tag={tag!r})"
+                return lexeme
             if infl:
+                if lexeme:
+                    if tag:
+                        return f"Pronoun({lexeme!r}, inflection_override={infl!r}, tag={tag!r})"
+                    return f"Pronoun({lexeme!r}, inflection_override={infl!r})"
+                if tag:
+                    return f"Pronoun({infl!r}, tag={tag!r})"
                 return f"Pronoun({infl!r})"
+            symbol = _lexicon_symbol("Pronoun", lexeme, node=node)
+            if symbol:
+                return symbol
             if lexeme is None:
                 return "Pronoun()"
+            if tag:
+                return f"Pronoun({lexeme!r}, tag={tag!r})"
             return f"Pronoun({lexeme!r})"
         if node.name == "Postposition":
             lexeme = normalize_lexeme("Postposition", lexeme)
@@ -157,11 +220,23 @@ def render_pydicate(node: IRNode, allow_seq: bool = False, seq_op: str = "+") ->
                 return "Postposition()"
             if _is_pluriform(node):
                 return f"Postposition({lexeme!r}, definition='(t) undef')"
+            symbol = _lexicon_symbol("Postposition", lexeme, node=node)
+            if symbol:
+                return symbol
             return f"Postposition({lexeme!r})"
         if node.name == "Verb":
             lexeme = normalize_lexeme("Verb", lexeme)
             if lexeme is None:
                 return "Verb()"
+            symbol = _lexicon_symbol("Verb", lexeme, node=node)
+            if symbol:
+                return symbol
+            verb_class = node.attrs.get("verb_class")
+            if verb_class:
+                if _is_pluriform(node):
+                    if not str(verb_class).strip().startswith("(t)"):
+                        verb_class = f"(t) {verb_class}"
+                return f"Verb({lexeme!r}, verb_class={verb_class!r})"
             if _is_pluriform(node):
                 return f"Verb({lexeme!r}, verb_class='(t) undef')"
             return f"Verb({lexeme!r})"
@@ -171,6 +246,9 @@ def render_pydicate(node: IRNode, allow_seq: bool = False, seq_op: str = "+") ->
                 return "Noun()"
             if _is_pluriform(node):
                 return f"Noun({lexeme!r}, definition='(t) undef')"
+            symbol = _lexicon_symbol("Noun", lexeme, node=node)
+            if symbol:
+                return symbol
             return f"Noun({lexeme!r})"
         if node.name == "ProperNoun":
             lexeme = normalize_lexeme("ProperNoun", lexeme)
@@ -178,14 +256,23 @@ def render_pydicate(node: IRNode, allow_seq: bool = False, seq_op: str = "+") ->
                 return "ProperNoun()"
             if _is_pluriform(node):
                 return f"ProperNoun({lexeme!r}, definition='(t) undef')"
+            symbol = _lexicon_symbol("ProperNoun", lexeme, node=node)
+            if symbol:
+                return symbol
             return f"ProperNoun({lexeme!r})"
         if node.name == "Deverbal":
             lexeme = normalize_lexeme("Deverbal", lexeme)
             if lexeme in _DEVERBAL_VARS:
                 return lexeme
+            symbol = _lexicon_symbol("Deverbal", lexeme, node=node)
+            if symbol:
+                return symbol
             if lexeme is None:
                 return "Deverbal()"
             return f"Deverbal({lexeme!r})"
+        symbol = _lexicon_symbol(node.name, lexeme, node=node)
+        if symbol:
+            return symbol
         if lexeme is None:
             return f"{node.name}()"
         return f"{node.name}({lexeme!r})"
@@ -193,11 +280,17 @@ def render_pydicate(node: IRNode, allow_seq: bool = False, seq_op: str = "+") ->
     if node.kind == IRKind.MORPH:
         if not node.children:
             return node.name
-        inner = render_pydicate(node.children[0], allow_seq=allow_seq, seq_op=seq_op)
+        inner = render_pydicate(
+            node.children[0], allow_seq=allow_seq, seq_op=seq_op, lexicon=lexicon
+        )
         if node.name == "NEG":
             return f"-({inner})"
         if node.name == "RUA":
             return f"~({inner})"
+        if node.name == "PRO_DROP":
+            if inner and inner[0].isidentifier():
+                return f"+{inner}"
+            return f"+({inner})"
         method = _MORPH_METHODS.get(node.name)
         if method:
             if node.name == "VAR":
@@ -210,7 +303,7 @@ def render_pydicate(node: IRNode, allow_seq: bool = False, seq_op: str = "+") ->
 
     if node.kind == IRKind.SUGAR:
         args = ", ".join(
-            render_pydicate(c, allow_seq=allow_seq, seq_op=seq_op)
+            render_pydicate(c, allow_seq=allow_seq, seq_op=seq_op, lexicon=lexicon)
             for c in node.children
         )
         return f"{node.name}({args})"
@@ -220,19 +313,19 @@ def render_pydicate(node: IRNode, allow_seq: bool = False, seq_op: str = "+") ->
             if not allow_seq:
                 raise ValueError("SEQ is not directly representable in pydicate")
             joined = f" {seq_op} ".join(
-                render_pydicate(c, allow_seq=allow_seq, seq_op=seq_op)
+                render_pydicate(c, allow_seq=allow_seq, seq_op=seq_op, lexicon=lexicon)
                 for c in node.children
             )
             return f"({joined})"
         symbol = "@" if node.name == "EQ" else _OP_SYMBOLS.get(node.name)
         if symbol and node.children:
             joined = f" {symbol} ".join(
-                render_pydicate(c, allow_seq=allow_seq, seq_op=seq_op)
+                render_pydicate(c, allow_seq=allow_seq, seq_op=seq_op, lexicon=lexicon)
                 for c in node.children
             )
             return f"({joined})"
         args = ", ".join(
-            render_pydicate(c, allow_seq=allow_seq, seq_op=seq_op)
+            render_pydicate(c, allow_seq=allow_seq, seq_op=seq_op, lexicon=lexicon)
             for c in node.children
         )
         return f"{node.name}({args})"

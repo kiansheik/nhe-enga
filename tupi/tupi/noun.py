@@ -68,6 +68,7 @@ def tokenize_string(annotated_string):
 class Noun(TupiAntigo):
     def __init__(self, verbete, raw_definition, noroot=False):
         super().__init__()
+        self.noroot = noroot
         vbt = AnnotatedString(verbete)
         if (
             len(vbt.clean) >= 2
@@ -265,7 +266,10 @@ class Noun(TupiAntigo):
             else self.remove_brackets_and_contents(self.base_substantivo())
         )
         if anotated:
-            return AnnotatedString(bs).ensure_root_tag().get_annotated()
+            annotated = AnnotatedString(bs)
+            if self.noroot:
+                return annotated.get_annotated()
+            return annotated.ensure_root_tag().get_annotated()
         return bs
 
     def __repr__(self) -> str:
@@ -460,7 +464,7 @@ class Noun(TupiAntigo):
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
 
-    def possessive(self, person=None, possessor=None):
+    def possessive(self, person=None, possessor=None, fuse: bool = False):
         if possessor is not None and person != "absoluta":
             person = "3p"
         else:

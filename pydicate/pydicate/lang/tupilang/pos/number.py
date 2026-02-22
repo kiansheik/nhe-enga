@@ -14,6 +14,7 @@ class Number(Predicate):
         )
         self.tag = tag
         self.cardinal = False
+        self.posto = "posposto"
 
     def card(self):
         cop = self.copy()

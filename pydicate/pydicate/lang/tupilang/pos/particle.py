@@ -13,6 +13,7 @@ class Particle(Predicate):
             definition=definition,
         )
         self.tag = tag
+        self.clitic = "ADVERSATIVE" in tag if tag else False
 
     def preval(self, annotated=False):
         """Evaluate the Particle object."""

@@ -56,6 +56,7 @@ class Verb(TupiAntigo):
         self.t_type = "(t, t)" in raw_definition[:500]
         self.tr_type = "(t)" in raw_definition[:100]
         self.pluriforme = False  # Whether the verb has a plural form (boolean)
+        self.pluriforme_type = None
         if self.t_type:
             self.pluriforme = True
             self.pluriforme_type = "t, t"
@@ -85,6 +86,8 @@ class Verb(TupiAntigo):
         )
         if self.ero:
             self.pluriforme = True
+            if self.pluriforme_type is None:
+                self.pluriforme_type = "s"
         self.vid = vid
 
     def object_marker(self, pc):

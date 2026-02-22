@@ -71,6 +71,13 @@ class Verb(Predicate):
                     found = True
 
         self.verb = TupiVerb(self.verbete, verb_class, definition, vid=vid)
+        if not self.verb.pluriforme:
+            if "(t, t)" in verb_class:
+                self.verb.pluriforme = True
+                self.verb.pluriforme_type = "t, t"
+            elif "(t)" in verb_class:
+                self.verb.pluriforme = True
+                self.verb.pluriforme_type = "t"
         self.user_definition = f"{self.definition} ".strip()
         self.raw_definition = definition
         self.mood = "indicativo"
@@ -155,8 +162,14 @@ class Verb(Predicate):
                         and val_first not in (TupiVerb.vogais + TupiVerb.semi_vogais)
                     ):
                         val = "y" + ("[CONSONANT_CLASH]" if annotated else "") + val
-            vadj_strs.append(val)
-            vadjs = " ".join(vadj_strs)
+                vadj_strs.append((val, bool(getattr(x, "clitic", False))))
+            for val, is_clitic in vadj_strs:
+                if not vadjs:
+                    vadjs = val
+                elif is_clitic:
+                    vadjs = f"{vadjs}{val}"
+                else:
+                    vadjs = f"{vadjs} {val}"
         if self.v_adjuncts_pre:
             vadjs_pre = " ".join(
                 [x.eval(annotated=annotated) for x in reversed(self.v_adjuncts_pre)]
@@ -357,7 +370,11 @@ class Verb(Predicate):
                 inflection="3p",
                 pro_drop=False,
             )
-            final.noun.pluriforme = self.verb.pluriforme
+            nom_annotated = nom if annotated else AnnotatedString(nom).get_annotated()
+            if "[PLURIFORM_PREFIX:" not in nom_annotated:
+                final.noun.pluriforme = (
+                    self.verb.pluriforme_type if self.verb.pluriforme else None
+                )
             final.pre_adjuncts = [x.copy() for x in self.pre_adjuncts]
             final.post_adjuncts = [x.copy() for x in self.post_adjuncts]
             return final

@@ -15,12 +15,13 @@ class Noun(Predicate):
         pro_drop=False,
         tag="[NOUN]",
         category="noun",
+        noroot: bool = False,
     ):
         """Initialize a Noun object."""
         super().__init__(
             verbete=value, category=category, min_args=0, definition=definition, tag=tag
         )
-        self.noun = TupiNoun(self.verbete, self.functional_definition)
+        self.noun = TupiNoun(self.verbete, self.functional_definition, noroot=noroot)
         self._inflection = inflection
         if inflection:
             self.plural = "pp" in inflection
@@ -91,15 +92,67 @@ class Noun(Predicate):
     def preval(self, annotated=False):
         """Evaluate the Noun object."""
         vbt = self.noun_function(neg=self.negated, annotated=annotated)
-        ret_val = f"{vbt}{self.tag if annotated else ''}"
+        tag = ""
+        if annotated and self.tag:
+            if self.tag == "[NOUN]" and "[NOUN:POSSESSOR]" in vbt:
+                tag = ""
+            else:
+                tag = "" if self.tag in vbt else self.tag
+        ret_val = f"{vbt}{tag}"
         for adj in self.pre_adjuncts:
-            ret_val = f"{adj.eval(annotated=annotated)} {ret_val}"
+            adj_val = adj.eval(annotated=annotated)
+            fuse = False
+            if not annotated and getattr(adj, "category", "") == "pronoun":
+                tag_val = getattr(adj, "tag", "") or ""
+                if any(
+                    key in tag_val
+                    for key in (
+                        "OBJECT",
+                        "OBJECT_PREFIX",
+                        "OBJECT_MARKER",
+                        "PATIENT_PREFIX",
+                        "SUBJECT",
+                        "SUBJECT_PREFIX",
+                    )
+                ):
+                    fuse = True
+            if fuse:
+                ret_val = f"{adj_val}{ret_val}"
+            else:
+                ret_val = f"{adj_val} {ret_val}"
         ret_val = ret_val.strip()
         for adj in self.post_adjuncts:
             ret_val = f"{ret_val} {adj.eval(annotated=annotated)}"
         return ret_val.strip()
 
     def __mul__(self, other):
+        if isinstance(self, Pronoun) and isinstance(other, Noun):
+            tag = getattr(self, "tag", "") or ""
+            if "SUBJECT" in tag and "POSSESSIVE_PRONOUN" not in tag:
+                base = other.copy()
+                adj = self.copy()
+                base.pre_adjuncts.insert(0, adj)
+                return base
+        if isinstance(other, Pronoun):
+            tag = getattr(other, "tag", "") or ""
+            if any(
+                key in tag
+                for key in (
+                    "OBJECT",
+                    "OBJECT_PREFIX",
+                    "OBJECT_MARKER",
+                    "PATIENT_PREFIX",
+                )
+            ):
+                base = self.copy()
+                adj = other.copy()
+                base.pre_adjuncts.insert(0, adj)
+                return base
+            if "SUBJECT" in tag and "POSSESSIVE_PRONOUN" not in tag:
+                base = self.copy()
+                adj = other.copy()
+                base.pre_adjuncts.insert(0, adj)
+                return base
         # When its another Noun, we treat it as a possessive construction
         if other.verbete == "emi":
             deverbal = other.copy()
@@ -115,6 +168,7 @@ class Noun(Predicate):
                 None
                 if possessor.category == "pronoun"
                 else possessor.eval(annotated=True),
+                fuse=False,
             )
             base_noun.noun.pluriforme = possessor.noun.pluriforme
             return base_noun
@@ -128,6 +182,7 @@ class Noun(Predicate):
                 None
                 if possessor.category == "pronoun"
                 else possessor.eval(annotated=True),
+                fuse=False,
             )
             base_noun.noun.pluriforme = possessor.noun.pluriforme
             base_noun.noun.m_pluriforme = possessor.noun.m_pluriforme
@@ -206,7 +261,7 @@ class Conjunction(Noun):
         if self.post_adjuncts:
             # TODO: When evaling adjunct, check if yfix for space or y
             nec += " " + " ".join(
-                [x.eval(annotated=annotated).strip() for x in self.adjuncts]
+                [x.eval(annotated=annotated).strip() for x in self.post_adjuncts]
             )
         if self.pre_adjuncts:
             nec = (
@@ -268,6 +323,7 @@ class Pronoun(Noun):
         definition="",
         tag="[PRONOUN]",
         category="pronoun",
+        inflection_override=None,
     ):
         """Initialize a Pronoun object."""
         if inflection_or_verbete in TupiNoun.personal_inflections.keys():
@@ -285,6 +341,8 @@ class Pronoun(Noun):
             category=category,
         )
         self.category = "pronoun"
+        if inflection_override:
+            self._inflection = inflection_override
 
     def noun_function(self, neg=False, annotated=False):
         """Return the noun in its base form."""

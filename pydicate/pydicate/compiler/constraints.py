@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict, Iterable, List, Optional, Tuple
+from typing import Dict, Iterable, List, Optional, Tuple, Union
+
+from .tokens import Token
 
 
 @dataclass(frozen=True)
@@ -9,6 +11,8 @@ class TagConstraint:
     kind: str
     allowed_pos: Tuple[str, ...] = ()
     implies_morph: Tuple[str, ...] = ()
+    required_values: Tuple[str, ...] = ()
+    disallowed_values: Tuple[str, ...] = ()
 
 
 DEFAULT_CONSTRAINTS: Dict[str, TagConstraint] = {
@@ -50,6 +54,7 @@ DEFAULT_CONSTRAINTS: Dict[str, TagConstraint] = {
     "REDUPLICATION": TagConstraint("REDUPLICATION", implies_morph=("REDUP",)),
     "NEGATION_PARTICLE": TagConstraint("NEGATION_PARTICLE", implies_morph=("NEG",)),
     "NEGATION_SUFFIX": TagConstraint("NEGATION_SUFFIX", implies_morph=("NEG",)),
+    "CAUSATIVE_PREFIX": TagConstraint("CAUSATIVE_PREFIX", allowed_pos=("Verb",)),
     "FACILITY_SUFFIX": TagConstraint("FACILITY_SUFFIX", allowed_pos=("Verb",)),
     "ABSOLUTE_AGENT_SUFFIX": TagConstraint(
         "ABSOLUTE_AGENT_SUFFIX", allowed_pos=("Verb",)
@@ -61,17 +66,62 @@ DEFAULT_CONSTRAINTS: Dict[str, TagConstraint] = {
 }
 
 
+ConstraintMap = Dict[str, Union[TagConstraint, Iterable[TagConstraint]]]
+
+
+def _iter_constraints(
+    constraint: Union[TagConstraint, Iterable[TagConstraint]],
+) -> Iterable[TagConstraint]:
+    if isinstance(constraint, TagConstraint):
+        yield constraint
+    else:
+        for item in constraint:
+            if isinstance(item, TagConstraint):
+                yield item
+
+
+def _constraint_matches(constraint: TagConstraint, *, values: Tuple[str, ...]) -> bool:
+    if constraint.required_values:
+        for value in constraint.required_values:
+            if value not in values:
+                return False
+    if constraint.disallowed_values:
+        for value in constraint.disallowed_values:
+            if value in values:
+                return False
+    return True
+
+
 def resolve_constraints(
     tag_kinds: Iterable[str],
-    constraints: Optional[Dict[str, TagConstraint]] = None,
+    constraints: Optional[ConstraintMap] = None,
+    *,
+    token: Optional[Token] = None,
 ) -> Tuple[Tuple[str, ...], Tuple[str, ...]]:
     constraints = constraints or DEFAULT_CONSTRAINTS
     allowed_pos: List[str] = []
     morph_ops: List[str] = []
+
+    tag_features = token.tag_features if token else {}
+    full_tags = token.tags if token else ()
+
     for kind in tag_kinds:
         constraint = constraints.get(kind)
         if not constraint:
             continue
-        allowed_pos.extend(list(constraint.allowed_pos))
-        morph_ops.extend(list(constraint.implies_morph))
+        values = tag_features.get(kind, ())
+        for rule in _iter_constraints(constraint):
+            if not _constraint_matches(rule, values=values):
+                continue
+            allowed_pos.extend(list(rule.allowed_pos))
+            morph_ops.extend(list(rule.implies_morph))
+
+    for tag in full_tags:
+        constraint = constraints.get(tag)
+        if not constraint:
+            continue
+        for rule in _iter_constraints(constraint):
+            allowed_pos.extend(list(rule.allowed_pos))
+            morph_ops.extend(list(rule.implies_morph))
+
     return tuple(dict.fromkeys(allowed_pos)), tuple(dict.fromkeys(morph_ops))
