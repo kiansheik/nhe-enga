@@ -47,6 +47,7 @@ class Deadverbal(Noun):
         """Return the noun in its vocative form."""
         voc_cop = self.copy()
         voc_cop.vocative = True
+        voc_cop._record_op("VOCATIVE", {"method": "voc"})
         return voc_cop
 
     def morphology(self, sef, verb, annotated=False):

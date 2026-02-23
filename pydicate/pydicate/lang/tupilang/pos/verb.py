@@ -97,6 +97,7 @@ class Verb(Predicate):
     def redup(self):
         cop = self.copy()
         cop.reduplicated = True
+        cop._record_op("REDUP", {"method": "redup"})
         return cop
 
     def subject(self):
@@ -465,16 +466,19 @@ class Verb(Predicate):
     def imp(self):
         imp_copy = self.copy()
         imp_copy.mood = "imperativo"
+        imp_copy._record_op("MOOD", {"method": "imp", "value": "imperativo"})
         return imp_copy
 
     def perm(self):
         perm_copy = self.copy()
         perm_copy.mood = "permissivo"
+        perm_copy._record_op("MOOD", {"method": "perm", "value": "permissivo"})
         return perm_copy
 
     def circ(self, val=True):
         cop = self.copy()
         cop.circumstancial = val
+        cop._record_op("MOOD", {"method": "circ", "value": "circunstancial"})
         return cop
 
     def indicative(self):

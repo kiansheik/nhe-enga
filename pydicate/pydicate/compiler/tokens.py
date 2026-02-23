@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import re
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
+from tupi import Emit, Morpheme
 
 _MORPH_TAG_RE = re.compile(r"([^\[\]\s]+)((?:\[[^\]]+\])+)", flags=re.UNICODE)
 _TAG_RE = re.compile(r"\[([^\]]+)\]")
@@ -63,6 +64,12 @@ class Token:
 def token_from_raw(raw: Any) -> Token:
     if isinstance(raw, Token):
         return raw
+    if isinstance(raw, Morpheme):
+        tags = tuple(raw.tags or ())
+        t = tags[0] if tags else None
+        s = tuple(tags[1:]) if tags else ()
+        surface = raw.text + "".join(f"[{tag}]" for tag in tags)
+        return Token(m=raw.text, t=t, s=s, surface=surface)
     if isinstance(raw, dict):
         m = raw.get("m", raw.get("M", raw.get("morph")))
         t = raw.get("t", raw.get("T", raw.get("tag")))
@@ -91,6 +98,14 @@ def token_from_raw(raw: Any) -> Token:
 
 
 def ensure_tokens(items: Iterable[Any]) -> List[Token]:
+    if isinstance(items, Emit):
+        return [token_from_raw(m) for m in items.morphs] if items.morphs else [
+            Token(m=items.surface, surface=items.surface)
+        ]
+    if isinstance(items, Morpheme):
+        return [token_from_raw(items)]
+    if isinstance(items, (list, tuple)) and items and isinstance(items[0], Morpheme):
+        return [token_from_raw(m) for m in items]
     return [token_from_raw(x) for x in items]
 
 

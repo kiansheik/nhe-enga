@@ -2,6 +2,7 @@ from .tupi import TupiAntigo
 from .verb import Verb
 import inspect, re
 from .annotated_string import AnnotatedString  # assuming the class is in this module
+from .emit import Emit, morphs_from_annotated
 
 sara_consoante_map = {
     "b": "par",
@@ -277,6 +278,14 @@ class Noun(TupiAntigo):
 
     def __str__(self) -> str:
         return repr(self)
+
+    def emit(self) -> Emit:
+        annotated = self.substantivo(True)
+        morphs = morphs_from_annotated(annotated)
+        surface = self.substantivo(False)
+        if morphs:
+            return Emit(surface=surface, morphs=morphs)
+        return Emit.raw(surface)
 
     def pluriform_prefix(self, person="absoluta"):
         plf = self.pluriforme

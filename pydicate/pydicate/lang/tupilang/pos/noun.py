@@ -215,9 +215,19 @@ class Noun(Predicate):
     def __repr__(self):
         return self.eval(annotated=False)
 
+    def emit(self):
+        if self.negated or self.pre_adjuncts or self.post_adjuncts:
+            return super().emit()
+        return self.noun.emit()
+
     def voc(self):
         """Return the noun in its vocative form."""
-        return VocativeNoun(self)
+        voc = VocativeNoun(self)
+        try:
+            voc._record_op("VOCATIVE", {"method": "voc"})
+        except Exception:
+            pass
+        return voc
 
 
 # define VocativeNoun subclass of Noun which implements Interjetion type behavior

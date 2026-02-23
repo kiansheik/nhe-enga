@@ -9,6 +9,8 @@ from pydicate.trackable import Trackable
 from pydicate.dbexplorer import NavarroDB
 from collections import Counter
 from typing import Dict, List, Tuple, Optional
+from tupi import Emit, OpEvent, morphs_from_annotated, interleave_ops_by_origin
+from tupi.emit import Morpheme, op_morpheme
 
 db_explorer = NavarroDB()
 
@@ -35,6 +37,7 @@ def remove_adjacent_tags(to_remove_from):
 
 
 class Predicate(Trackable):
+    _NODE_COUNTER = 0
     _COPY_LIST_FIELDS = (
         "arguments",
         "compositions",
@@ -54,6 +57,12 @@ class Predicate(Trackable):
         # Start with a shallow dict copy, then deep-copy only the fields that
         # actually need isolation. This avoids copying heavy, read-only data.
         new_obj.__dict__ = self.__dict__.copy()
+        if "_op_trace" in self.__dict__:
+            new_obj.__dict__["_op_trace"] = list(self.__dict__["_op_trace"])
+        if "_op_scopes" in self.__dict__:
+            new_obj.__dict__["_op_scopes"] = list(self.__dict__["_op_scopes"])
+        if "_op_tags" in self.__dict__:
+            new_obj.__dict__["_op_tags"] = list(self.__dict__["_op_tags"])
 
         for field in self._COPY_LIST_FIELDS:
             if field in self.__dict__:
@@ -122,6 +131,11 @@ class Predicate(Trackable):
         self.tag = tag  # Tag for the predicate, useful for debugging or annotation
         self.fname = None  # Filename or picture
         self.variation_id = None  # Variation ID for different forms
+        self._op_trace = []
+        self._op_scopes = []
+        self._op_tags = []
+        self._node_id = Predicate._NODE_COUNTER
+        Predicate._NODE_COUNTER += 1
         self.gloss = (
             db_explorer.search_word(self.verbete, self.category)
             if db_explorer
@@ -238,6 +252,13 @@ class Predicate(Trackable):
         mult = self.copy()
         other_copy = other.copy()
         mult.arguments.append(other_copy)
+        arg_index = len(mult.arguments) - 1
+        op_id = mult._record_op(
+            "ARG_ATTACH", {"op": "*"}, scope_id=getattr(other_copy, "_node_id", None)
+        )
+        other_copy._register_parent_tag(
+            f"ARG_{arg_index}:PARENT_ID_{op_id}:PARENT_OP_ARG_ATTACH"
+        )
         return mult
 
     def refresh_verbete(self, new_verbete):
@@ -281,7 +302,9 @@ class Predicate(Trackable):
         return orig
 
     def __truediv__(self, modifier):
-        return self.compose(modifier)
+        composed = self.compose(modifier)
+        composed._record_op("COMPOSE", {"op": "/"}, scope_id=getattr(modifier, "_node_id", None))
+        return composed
 
     def __neg__(self):
         """
@@ -290,6 +313,7 @@ class Predicate(Trackable):
         """
         neg = self.copy()
         neg.negated = not neg.negated
+        neg._record_op("NEGATE", {"op": "-"})
         return neg
 
     def __add__(self, other):
@@ -301,6 +325,13 @@ class Predicate(Trackable):
         mult = self.copy()
         other_copy = other.copy()
         mult.post_adjuncts.append(other_copy)
+        adj_index = len(mult.post_adjuncts) - 1
+        op_id = mult._record_op(
+            "POST_ADJUNCT", {"op": "+"}, scope_id=getattr(other_copy, "_node_id", None)
+        )
+        other_copy._register_parent_tag(
+            f"ARG_{adj_index}:PARENT_ID_{op_id}:PARENT_OP_POST_ADJUNCT"
+        )
         return mult
 
     def __addpre__(self, other):
@@ -312,6 +343,13 @@ class Predicate(Trackable):
         mult = self.copy()
         other_copy = other.copy()
         mult.pre_adjuncts.append(other_copy)
+        adj_index = len(mult.pre_adjuncts) - 1
+        op_id = mult._record_op(
+            "PRE_ADJUNCT", {"op": "+pre"}, scope_id=getattr(other_copy, "_node_id", None)
+        )
+        other_copy._register_parent_tag(
+            f"ARG_{adj_index}:PARENT_ID_{op_id}:PARENT_OP_PRE_ADJUNCT"
+        )
         return mult
 
     def is_valid(self):
@@ -410,10 +448,238 @@ class Predicate(Trackable):
         """
         neg = self.copy()
         neg.pro_drop = True
+        neg._record_op("PRO_DROP", {"op": "unary+"})
         return neg
 
     def __str__(self):
         return self.__repr__()
+
+    def _register_parent_tag(self, tag: str):
+        if not hasattr(self, "_op_tags"):
+            self._op_tags = []
+        self._op_tags.append(tag)
+
+    def _record_op(
+        self,
+        name: str,
+        meta: Optional[Dict[str, str]] = None,
+        scope_id: Optional[int] = None,
+    ) -> int:
+        if not hasattr(self, "_op_trace"):
+            self._op_trace = []
+        if not hasattr(self, "_op_scopes"):
+            self._op_scopes = []
+        op_id = len(self._op_trace)
+        self._op_trace.append(OpEvent(name=name, meta=meta or {}))
+        self._op_scopes.append(self._node_id if scope_id is None else scope_id)
+        return op_id
+
+    def emit(self, prefer_annotated: bool = True) -> Emit:
+        """
+        Shadow structured emission channel.
+        Default behavior: keep old string pipeline and wrap it.
+        If prefer_annotated=True, parse eval(annotated=True) when available.
+        """
+        surface = self.eval(annotated=False)
+        ops = list(getattr(self, "_op_trace", []))
+        op_scopes = list(getattr(self, "_op_scopes", []))
+        if prefer_annotated:
+            annotated = self.eval(annotated=True)
+            morphs = morphs_from_annotated(annotated)
+            if morphs:
+                return Emit(surface=surface, morphs=morphs, ops=ops, op_scopes=op_scopes)
+        em = Emit.raw(surface)
+        if ops:
+            return Emit(surface=em.surface, morphs=em.morphs, ops=ops, op_scopes=op_scopes)
+        return em
+
+    def emit_scoped(self, prefer_annotated: bool = True, max_args: Optional[Dict[int, int]] = None) -> Emit:
+        """
+        Emit with OP_ID_<op_id> tags on morphemes and op-morphemes interleaved
+        before the first morpheme in their scope.
+        """
+        em = self.emit(prefer_annotated=prefer_annotated)
+        if not em.morphs or not em.ops:
+            return em
+        morphs = self._apply_origin_tags(em.morphs, em.op_scopes)
+        morphs = interleave_ops_by_origin(morphs, em.ops, max_args=max_args)
+        return Emit(surface=em.surface, morphs=morphs, ops=em.ops, op_scopes=em.op_scopes)
+
+    def emit_stream_linear(
+        self, prefer_annotated: bool = True, max_args: Optional[Dict[int, int]] = None
+    ) -> List["Morpheme"]:
+        """
+        Linear (surface-order) stream: same order as eval(), with op-morphemes
+        interleaved before the first morpheme in their scope. Uses scoped
+        placement, then strips OP_ID_* from surface morphemes to keep output clean.
+        """
+        em = self.emit(prefer_annotated=prefer_annotated)
+        if not em.morphs or not em.ops:
+            return list(em.morphs or [])
+        morphs = self._apply_origin_tags(em.morphs, em.op_scopes)
+        morphs = interleave_ops_by_origin(morphs, em.ops, max_args=max_args)
+        cleaned: List[Morpheme] = []
+        for m in morphs:
+            if m.tags and m.text != "":
+                tags = tuple(t for t in m.tags if not t.startswith("OP_ID_"))
+                cleaned.append(type(m)(text=m.text, tags=tags))
+            else:
+                cleaned.append(m)
+        return cleaned
+
+    def _iter_nodes(self):
+        seen = set()
+        stack = [self]
+        while stack:
+            node = stack.pop(0)
+            if id(node) in seen:
+                continue
+            seen.add(id(node))
+            yield node
+            children = []
+            for attr in (
+                "arguments",
+                "pre_adjuncts",
+                "post_adjuncts",
+                "v_adjuncts_pre",
+                "v_adjuncts",
+            ):
+                val = getattr(node, attr, None) or []
+                children.extend(list(val))
+            stack = children + stack
+
+    def _tree_children_ordered(self):
+        args = list(self.arguments or [])
+        pre_adjuncts = list(reversed((self.v_adjuncts + self.post_adjuncts) or []))
+        post_adjuncts = (self.v_adjuncts_pre + self.pre_adjuncts) or []
+        return pre_adjuncts, args, post_adjuncts
+
+    def emit_stream_tree(self, prefer_annotated: bool = True) -> List[Morpheme]:
+        """
+        Tree-ordered linear emission. Uses the same child ordering as to_forest_tree.
+        Op morphemes are inserted before the node's first morpheme.
+        Leaves emit their annotated morphemes; non-leaves only emit ops + recurse.
+        """
+        em = self.emit(prefer_annotated=prefer_annotated)
+        node_to_op: Dict[int, int] = {}
+        for op_id, node_id in enumerate(em.op_scopes or []):
+            if node_id not in node_to_op:
+                node_to_op[node_id] = op_id
+
+        def walk(node: "Predicate") -> List[Morpheme]:
+            out: List[Morpheme] = []
+            op_id = node_to_op.get(getattr(node, "_node_id", None))
+            if op_id is not None:
+                out.append(op_morpheme(op_id, em.ops[op_id]))
+            pre_adj, args, post_adj = node._tree_children_ordered()
+            has_children = bool(pre_adj or args or post_adj)
+            if not has_children:
+                annotated = node.eval(annotated=True)
+                leaf_morphs = morphs_from_annotated(annotated)
+                if leaf_morphs:
+                    leaf_morphs = [
+                        type(m)(text=m.text, tags=tuple(m.tags) + ("LEAF",))
+                        for m in leaf_morphs
+                    ]
+                out.extend(leaf_morphs)
+                return out
+            for child in pre_adj:
+                out.extend(walk(child))
+            for child in args:
+                out.extend(walk(child))
+            for child in post_adj:
+                out.extend(walk(child))
+            return out
+
+        return walk(self)
+
+    def _parent_map(self) -> Dict[int, "Predicate"]:
+        parent: Dict[int, Predicate] = {}
+        queue = [self]
+        seen = set()
+        while queue:
+            node = queue.pop(0)
+            if id(node) in seen:
+                continue
+            seen.add(id(node))
+            children = []
+            for attr in (
+                "arguments",
+                "pre_adjuncts",
+                "post_adjuncts",
+                "v_adjuncts_pre",
+                "v_adjuncts",
+            ):
+                val = getattr(node, attr, None) or []
+                children.extend(list(val))
+            for child in children:
+                if isinstance(child, Predicate):
+                    parent[getattr(child, "_node_id", id(child))] = node
+            queue = children + queue
+        return parent
+
+    def _collect_parent_tags(self, node: "Predicate", parent_map: Dict[int, "Predicate"]) -> List[str]:
+        tags: List[str] = []
+        cur = node
+        while cur is not None:
+            if getattr(cur, "_op_tags", None):
+                tags.extend(cur._op_tags)
+            pid = parent_map.get(getattr(cur, "_node_id", None))
+            cur = pid
+        # dedupe preserve order
+        return list(dict.fromkeys(tags))
+
+    def _apply_origin_tags(self, morphs: List["Morpheme"], op_scopes: List[int]) -> List["Morpheme"]:
+        # Map node_id -> first op_id that targets it
+        node_to_op: Dict[int, int] = {}
+        for op_id, node_id in enumerate(op_scopes or []):
+            if node_id not in node_to_op:
+                node_to_op[node_id] = op_id
+
+        used_op_ids: List[set] = [set() for _ in range(len(morphs))]
+        used_tags: List[set] = [set() for _ in range(len(morphs))]
+        parent_map = self._parent_map()
+
+        def match_at(start: int, target: List["Morpheme"]) -> bool:
+            if start + len(target) > len(morphs):
+                return False
+            for j, tm in enumerate(target):
+                m = morphs[start + j]
+                if m.text != tm.text or m.tags != tm.tags:
+                    return False
+            return True
+
+        candidates = []
+        for node in self._iter_nodes():
+            op_id = node_to_op.get(getattr(node, "_node_id", None))
+            if op_id is None:
+                continue
+            annotated = node.eval(annotated=True)
+            target = morphs_from_annotated(annotated)
+            if not target:
+                continue
+            parent_tags = self._collect_parent_tags(node, parent_map)
+            candidates.append((len(target), op_id, target, parent_tags))
+
+        # Prefer smaller spans first so broad nodes don't swallow everything.
+        for _, op_id, target, parent_tags in sorted(candidates, key=lambda x: (x[0], x[1])):
+            for i in range(0, len(morphs) - len(target) + 1):
+                if match_at(i, target):
+                    for j in range(len(target)):
+                        used_op_ids[i + j].add(op_id)
+                        for tag in parent_tags:
+                            used_tags[i + j].add(tag)
+                    break
+
+        out: List["Morpheme"] = []
+        for i, m in enumerate(morphs):
+            if not used_op_ids[i] and not used_tags[i]:
+                out.append(m)
+                continue
+            extra = tuple(f"OP_ID_{op_id}" for op_id in sorted(used_op_ids[i]))
+            extra = extra + tuple(sorted(used_tags[i]))
+            out.append(type(m)(text=m.text, tags=tuple(m.tags) + extra))
+        return out
 
     def eval(self, annotated=False):
         prev = self.copy()
@@ -431,6 +697,7 @@ class Predicate(Trackable):
         """
         neg = self.copy()
         neg.rua = True
+        neg._record_op("NEG_COPULA", {"op": "~"})
         return neg
 
     def preval(self, annotated=False):
@@ -558,15 +825,20 @@ class Predicate(Trackable):
         )
 
     def __lshift__(self, other):
-        return self.subordinate(other, pre=False)
+        res = self.subordinate(other, pre=False)
+        res._record_op("SUBORD_POST", {"op": "<<"}, scope_id=getattr(other, "_node_id", None))
+        return res
 
     def __rshift__(self, other):
         if self.category != "verb" and other.category == "verb":
             self_cop = self.copy()
             other_cop = other.copy()
             other_cop.v_adjuncts_pre.append(self_cop)
+            other_cop._record_op("SUBORD_PRE", {"op": ">>"}, scope_id=getattr(self_cop, "_node_id", None))
             return other_cop
-        return other.subordinate(self, pre=True)
+        res = other.subordinate(self, pre=True)
+        res._record_op("SUBORD_PRE", {"op": ">>"}, scope_id=getattr(self, "_node_id", None))
+        return res
 
     def translation_prompt(self, target_lang="English"):
         """
