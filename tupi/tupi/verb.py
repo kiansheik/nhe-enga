@@ -812,6 +812,18 @@ class Verb(TupiAntigo):
             anotar=True,
         )
         vbt = AnnotatedString(vbt)
+        if (
+            self.pluriforme
+            and self.pluriforme_type in ("t", "t, t")
+            and "undef" in self.verb_class
+        ):
+            raw = vbt.get_annotated().lstrip()
+            if raw.startswith("o[SUBJECT_PREFIX:3p]"):
+                raw = "t[PLURIFORM_PREFIX:T]" + raw[len("o[SUBJECT_PREFIX:3p]") :]
+                vbt = AnnotatedString(raw)
+            elif raw.startswith("a[SUBJECT_PREFIX:3p]"):
+                raw = "t[PLURIFORM_PREFIX:T]" + raw[len("a[SUBJECT_PREFIX:3p]") :]
+                vbt = AnnotatedString(raw)
         if ends_with_any(vbt, ["b", "p"]):
             vbt.replace_clean(-1, 1, "")
             vbt.insert_suffix("ba'e")

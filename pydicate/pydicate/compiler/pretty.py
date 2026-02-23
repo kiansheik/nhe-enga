@@ -71,11 +71,101 @@ _INFLECTION_CODES = {
 }
 
 
+_NOUNISH_POS = {
+    "Noun",
+    "ProperNoun",
+    "Deverbal",
+    "Deadverbal",
+}
+
+
+def _node_contains_verbish(node: IRNode) -> bool:
+    for n in node.walk():
+        if n.kind == IRKind.ATOM and n.name == "Verb":
+            return True
+        if n.kind == IRKind.ATOM:
+            token = n.attrs.get("token")
+            if token and "VERB" in token.tag_kinds:
+                return True
+    return False
+
+
+def _node_has_tag_kind(node: IRNode, kind: str) -> bool:
+    for n in node.walk():
+        if n.kind != IRKind.ATOM:
+            continue
+        token = n.attrs.get("token")
+        if token and kind in token.tag_kinds:
+            return True
+    return False
+
+
+def _node_has_subject_nounish(node: IRNode) -> bool:
+    for n in node.walk():
+        if n.kind != IRKind.ATOM:
+            continue
+        if n.name not in _NOUNISH_POS:
+            continue
+        token = n.attrs.get("token")
+        if token and "SUBJECT" in token.tag_kinds:
+            return True
+    return False
+
+
+def _node_is_pro_drop_subject_prefix(node: IRNode) -> bool:
+    if node.kind != IRKind.MORPH or node.name != "PRO_DROP":
+        return False
+    if not node.children:
+        return False
+    child = node.children[0]
+    token = None
+    if child.kind == IRKind.ATOM:
+        token = child.attrs.get("token")
+    if not token:
+        return False
+    return (
+        "SUBJECT_PREFIX" in token.tag_kinds
+        or "GERUND_SUBJECT_PREFIX" in token.tag_kinds
+    )
+
+
+def _verbish_arg_count(node: IRNode) -> int:
+    count = 0
+    cur = node
+    while cur.kind == IRKind.OP and cur.name == "MUL" and len(cur.children) == 2:
+        left, right = cur.children
+        if _node_contains_verbish(left):
+            count += 1
+            cur = left
+            continue
+        if _node_contains_verbish(right):
+            count += 1
+            cur = right
+            continue
+        break
+    return count
+
+
+def _extract_perm_verb_with_prodrop(node: IRNode) -> Optional[IRNode]:
+    if node.kind != IRKind.OP or node.name != "MUL" or len(node.children) != 2:
+        return None
+    left, right = node.children
+    if left.kind == IRKind.MORPH and left.name == "PRO_DROP":
+        if right.kind == IRKind.MORPH and right.name == "PERM":
+            return right.children[0] if right.children else None
+    if right.kind == IRKind.MORPH and right.name == "PRO_DROP":
+        if left.kind == IRKind.MORPH and left.name == "PERM":
+            return left.children[0] if left.children else None
+    return None
+
+
 def _pronoun_inflection_from_token(node: IRNode) -> Optional[str]:
     token = None
     if node.kind == IRKind.ATOM:
         token = node.attrs.get("token")
     if not token:
+        return None
+    if token.has_tag("OBJECT", "NON_MAIN_CLAUSE_SUBJECT"):
         return None
     for tag in token.tags:
         parts = tag.split(":")
@@ -102,6 +192,34 @@ def _pronoun_tag_from_token(node: IRNode) -> Optional[str]:
             "PRONOUN",
         }:
             return f"[{tag}]"
+    return None
+
+
+def _noun_extra_tag_from_token(node: IRNode) -> Optional[str]:
+    token = None
+    if node.kind == IRKind.ATOM:
+        token = node.attrs.get("token")
+    attrs = node.attrs if node.kind == IRKind.ATOM else {}
+    if attrs.get("noun_extra_tag"):
+        return f"[{attrs['noun_extra_tag']}]"
+    if not token:
+        return None
+    for tag in token.tags:
+        if tag.startswith("NOUN:LOAN_WORD"):
+            return f"[{tag}]"
+    return None
+
+
+def _postposition_lexeme_override(node: IRNode) -> Optional[str]:
+    token = None
+    if node.kind == IRKind.ATOM:
+        token = node.attrs.get("token")
+    if not token:
+        return None
+    if token.has_tag("POSTPOSITION", "TRANSLATIONAL"):
+        return "amo"
+    if token.has_tag("SIMULATIVE_SUFFIX"):
+        return "amo"
     return None
 
 
@@ -190,12 +308,22 @@ def render_pydicate(
             lexeme = normalize_lexeme("Pronoun", lexeme)
             infl = _pronoun_inflection_from_token(node)
             tag = _pronoun_tag_from_token(node)
+            token = node.attrs.get("token") if node.kind == IRKind.ATOM else None
+            if token and token.has_tag("OBJECT", "NON_MAIN_CLAUSE_SUBJECT"):
+                return "Pronoun('i', tag='[OBJECT_PREFIX:3p]')"
             if lexeme in _PRONOUN_VARS:
-                if tag and (tag.startswith("[OBJECT") or tag.startswith("[SUBJECT")):
-                    if infl:
-                        return f"Pronoun({lexeme!r}, inflection_override={infl!r}, tag={tag!r})"
-                    return f"Pronoun({lexeme!r}, tag={tag!r})"
+                if tag and "REFLEXIVE" in tag:
+                    return lexeme
+                if tag and tag.startswith("[SUBJECT:"):
+                    return f"{lexeme}_suj"
+                if tag and tag.startswith("[OBJECT:"):
+                    return f"{lexeme}_obj"
                 return lexeme
+            if token and "SUBJECT_PREFIX" in token.tag_kinds and lexeme == "o":
+                return "o_prefix"
+            symbol = _lexicon_symbol("Pronoun", lexeme, node=node)
+            if symbol:
+                return symbol
             if infl:
                 if lexeme:
                     if tag:
@@ -204,15 +332,15 @@ def render_pydicate(
                 if tag:
                     return f"Pronoun({infl!r}, tag={tag!r})"
                 return f"Pronoun({infl!r})"
-            symbol = _lexicon_symbol("Pronoun", lexeme, node=node)
-            if symbol:
-                return symbol
             if lexeme is None:
                 return "Pronoun()"
             if tag:
                 return f"Pronoun({lexeme!r}, tag={tag!r})"
             return f"Pronoun({lexeme!r})"
         if node.name == "Postposition":
+            override = _postposition_lexeme_override(node)
+            if override:
+                lexeme = override
             lexeme = normalize_lexeme("Postposition", lexeme)
             if lexeme in _POSTPOSITION_VARS:
                 return lexeme
@@ -226,6 +354,13 @@ def render_pydicate(
             return f"Postposition({lexeme!r})"
         if node.name == "Verb":
             lexeme = normalize_lexeme("Verb", lexeme)
+            if node.attrs.get("noun_from_verb"):
+                # v(Noun(...)) verbalizes a noun as a 2nd class verb.
+                noun_node = Atom("Noun", lexeme, token=node.attrs.get("token"))
+                noun_src = render_pydicate(
+                    noun_node, allow_seq=allow_seq, seq_op=seq_op, lexicon=lexicon
+                )
+                return f"v({noun_src})"
             if lexeme is None:
                 return "Verb()"
             symbol = _lexicon_symbol("Verb", lexeme, node=node)
@@ -244,11 +379,18 @@ def render_pydicate(
             lexeme = normalize_lexeme("Noun", lexeme)
             if lexeme is None:
                 return "Noun()"
+            extra_tag = _noun_extra_tag_from_token(node)
             if _is_pluriform(node):
+                if extra_tag:
+                    return (
+                        f"Noun({lexeme!r}, definition='(t) undef', tag={extra_tag!r})"
+                    )
                 return f"Noun({lexeme!r}, definition='(t) undef')"
             symbol = _lexicon_symbol("Noun", lexeme, node=node)
             if symbol:
                 return symbol
+            if extra_tag:
+                return f"Noun({lexeme!r}, tag={extra_tag!r})"
             return f"Noun({lexeme!r})"
         if node.name == "ProperNoun":
             lexeme = normalize_lexeme("ProperNoun", lexeme)
@@ -309,6 +451,48 @@ def render_pydicate(
         return f"{node.name}({args})"
 
     if node.kind == IRKind.OP:
+        if node.name == "MUL" and len(node.children) == 2:
+            left, right = node.children
+            # If we have PRO_DROP + PERM(Verb) and an explicit nounish SUBJECT,
+            # render as (Verb * Noun).perm() to preserve surface + tags.
+            verb = _extract_perm_verb_with_prodrop(left)
+            if verb is not None and _node_has_subject_nounish(right):
+                verb_src = render_pydicate(
+                    verb, allow_seq=allow_seq, seq_op=seq_op, lexicon=lexicon
+                )
+                noun_src = render_pydicate(
+                    right, allow_seq=allow_seq, seq_op=seq_op, lexicon=lexicon
+                )
+                return f"(({verb_src} * {noun_src})).perm()"
+            verb = _extract_perm_verb_with_prodrop(right)
+            if verb is not None and _node_has_subject_nounish(left):
+                verb_src = render_pydicate(
+                    verb, allow_seq=allow_seq, seq_op=seq_op, lexicon=lexicon
+                )
+                noun_src = render_pydicate(
+                    left, allow_seq=allow_seq, seq_op=seq_op, lexicon=lexicon
+                )
+                return f"(({verb_src} * {noun_src})).perm()"
+            if _node_is_pro_drop_subject_prefix(left) and _node_contains_verbish(right):
+                if _verbish_arg_count(right) >= 2:
+                    return render_pydicate(
+                        right, allow_seq=allow_seq, seq_op=seq_op, lexicon=lexicon
+                    )
+            if _node_is_pro_drop_subject_prefix(right) and _node_contains_verbish(left):
+                if _verbish_arg_count(left) >= 2:
+                    return render_pydicate(
+                        left, allow_seq=allow_seq, seq_op=seq_op, lexicon=lexicon
+                    )
+            if (_node_contains_verbish(left) and _node_has_subject_nounish(right)) or (
+                _node_contains_verbish(right) and _node_has_subject_nounish(left)
+            ):
+                joined = f" {seq_op} ".join(
+                    render_pydicate(
+                        c, allow_seq=allow_seq, seq_op=seq_op, lexicon=lexicon
+                    )
+                    for c in node.children
+                )
+                return f"({joined})"
         if node.name == "SEQ":
             if not allow_seq:
                 raise ValueError("SEQ is not directly representable in pydicate")

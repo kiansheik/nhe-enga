@@ -50,25 +50,28 @@ class Verb(Predicate):
         )
         if not self.verbete and not vid:
             raise ValueError("Either value or vid must be provided.")
-        # Try to find the verb in the conjugated dictionary
-        if not verb_class or not definition:
-            found = False
-            if vid:
-                verb = _DICT_BY_ID.get(vid)
-                if verb:
-                    self.verbete = verb["f"]
-                    verb_class = verb["v"]
-                    definition = verb["d"]
+        # Try to find the verb in the conjugated dictionary first; fall back to args.
+        found = False
+        if vid:
+            verb = _DICT_BY_ID.get(vid)
+            if verb:
+                self.verbete = verb["f"]
+                verb_v = verb.get("v")
+                if verb_v:
+                    verb_class = verb_v
+                    definition = verb.get("d", definition)
                     found = True
-                if not found:
-                    raise ValueError(f"Verb with ID {vid} not found in the dictionary.")
-            else:
-                verb = _DICT_BY_FORM.get(self.verbete)
-                if verb:
-                    verb_class = verb["v"]
-                    definition = verb["d"]
-                    vid = verb["i"]
+        else:
+            verb = _DICT_BY_FORM.get(self.verbete)
+            if verb:
+                verb_v = verb.get("v")
+                if verb_v:
+                    verb_class = verb_v
+                    definition = verb.get("d", definition)
+                    vid = verb.get("i", vid)
                     found = True
+        if not found and vid and not (verb_class or definition):
+            raise ValueError(f"Verb with ID {vid} not found in the dictionary.")
 
         self.verb = TupiVerb(self.verbete, verb_class, definition, vid=vid)
         if not self.verb.pluriforme:

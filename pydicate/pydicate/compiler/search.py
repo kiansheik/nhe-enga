@@ -249,6 +249,46 @@ def _is_nounish(node: IRNode) -> bool:
     )
 
 
+def _is_possessor_noun(node: IRNode) -> bool:
+    token = _node_token(node)
+    if not token:
+        return False
+    return token.has_tag("NOUN", "POSSESSOR")
+
+
+def _is_possessed_nounish(node: IRNode) -> bool:
+    if node.kind != IRKind.OP or node.name != "MUL" or len(node.children) != 2:
+        return False
+    left, right = node.children
+    return (_is_possessor_noun(left) or _is_possessive_pronoun(left)) and _is_nounish(
+        right
+    )
+
+
+def _contains_tag_kind(node: IRNode, kind: str) -> bool:
+    return any(kind in _node_tag_kinds(n) for n in node.walk())
+
+
+def _has_object_non_main_clause_subject(node: IRNode) -> bool:
+    for n in node.walk():
+        if n.kind != IRKind.ATOM:
+            continue
+        token = n.attrs.get("token")
+        if token and token.has_tag("OBJECT", "NON_MAIN_CLAUSE_SUBJECT"):
+            return True
+    return False
+
+
+def _has_object_3p(node: IRNode) -> bool:
+    for n in node.walk():
+        if n.kind != IRKind.ATOM:
+            continue
+        token = n.attrs.get("token")
+        if token and token.has_tag("OBJECT", "3p"):
+            return True
+    return False
+
+
 def _is_nominalized(node: IRNode) -> bool:
     kinds = _node_tag_kinds(node)
     return any(
@@ -322,6 +362,13 @@ def _is_clitic_particle(node: IRNode) -> bool:
     return False
 
 
+def _is_clitic_adverb(node: IRNode) -> bool:
+    token = _node_token(node)
+    if not token:
+        return False
+    return bool(getattr(token, "glue_prev", False))
+
+
 def _is_postposed_subject_pronoun(node: IRNode) -> bool:
     token = _node_token(node)
     if not token:
@@ -372,6 +419,16 @@ def _with_suffix_morph(node: IRNode, morph: str) -> IRNode:
     return IRNode(node.kind, node.name, node.children, attrs)
 
 
+def _with_noun_extra_tag(node: IRNode, tag: str) -> IRNode:
+    if not tag:
+        return node
+    attrs = dict(node.attrs)
+    if attrs.get("noun_extra_tag"):
+        return node
+    attrs["noun_extra_tag"] = tag
+    return IRNode(node.kind, node.name, node.children, attrs)
+
+
 def _deverbal_with_vocative(deverbal: IRNode, suffix_node: IRNode) -> IRNode:
     if "VOCATIVE" in _node_tag_kinds(suffix_node):
         return MorphOp("VOC", deverbal)
@@ -407,20 +464,22 @@ def _as_pos(node: IRNode, pos: str) -> IRNode:
 
 
 def _is_subject_marker(node: IRNode) -> bool:
-    if _node_pos(node) in {"Deverbal", "Deadverbal"}:
+    if _node_pos(node) in {"Deverbal", "Deadverbal", "Noun", "ProperNoun"}:
         return False
     token = _node_token(node)
     if token and token.has_tag("SUBJECT_PREFIX", "IMPERATIVE"):
         return False
     kinds = _node_tag_kinds(node)
-    return any(
-        k in kinds for k in ("SUBJECT", "SUBJECT_PREFIX", "GERUND_SUBJECT_PREFIX")
-    )
+    if "SUBJECT_PREFIX" in kinds or "GERUND_SUBJECT_PREFIX" in kinds:
+        return True
+    if "SUBJECT" in kinds:
+        return _is_postposed_subject_pronoun(node)
+    return False
 
 
 def _is_object_marker(node: IRNode) -> bool:
     kinds = _node_tag_kinds(node)
-    if _node_pos(node) in {"Deverbal", "Deadverbal"}:
+    if _node_pos(node) in {"Deverbal", "Deadverbal", "Noun", "ProperNoun"}:
         return False
     token = _node_token(node)
     if token and token.has_tag("OBJECT_MARKER", "IMPERATIVE"):
@@ -435,20 +494,26 @@ def _is_implicit_marker(node: IRNode) -> bool:
     if _node_pos(node) != "Pronoun":
         return False
     token = _node_token(node)
-    if not token or len(token.m) > 1:
+    if not token:
         return False
     kinds = _node_tag_kinds(node)
     if "OBJECT_MARKER" in kinds:
         return False
-    return any(
-        k in kinds
-        for k in (
-            "SUBJECT_PREFIX",
-            "GERUND_SUBJECT_PREFIX",
-            "OBJECT_PREFIX",
-            "PATIENT_PREFIX",
-        )
-    )
+    # Subject prefixes do not surface as standalone pronouns, even when the
+    # prefix is multi-character (e.g., "ere").
+    if "SUBJECT_PREFIX" in kinds or "GERUND_SUBJECT_PREFIX" in kinds:
+        return True
+    if len(token.m) > 1:
+        return False
+    return any(k in kinds for k in ("OBJECT_PREFIX", "PATIENT_PREFIX"))
+
+
+def _is_subject_prefix_marker(node: IRNode) -> bool:
+    token = _node_token(node)
+    if not token:
+        return False
+    kinds = _node_tag_kinds(node)
+    return "SUBJECT_PREFIX" in kinds or "GERUND_SUBJECT_PREFIX" in kinds
 
 
 def _is_explicit_marker(node: IRNode) -> bool:
@@ -462,6 +527,23 @@ def _contains_verbish(node: IRNode) -> bool:
         if n.kind == IRKind.ATOM and n.name in _VERBISH_POS:
             return True
     return False
+
+
+def _verbish_arg_count(node: IRNode) -> int:
+    count = 0
+    cur = node
+    while cur.kind == IRKind.OP and cur.name == "MUL" and len(cur.children) == 2:
+        left, right = cur.children
+        if _contains_verbish(left):
+            count += 1
+            cur = left
+            continue
+        if _contains_verbish(right):
+            count += 1
+            cur = right
+            continue
+        break
+    return count
 
 
 def _strip_verb_args(node: IRNode) -> IRNode:
@@ -503,6 +585,117 @@ def _apply_negation_suffix(nodes: List[IRNode]) -> List[IRNode]:
     return out
 
 
+def _rewrite_verb_lexeme(node: IRNode, fn) -> IRNode:
+    if node.kind == IRKind.ATOM and node.name == "Verb":
+        lexeme = node.attrs.get("lexeme")
+        new_lexeme = fn(lexeme)
+        if new_lexeme == lexeme:
+            return node
+        attrs = dict(node.attrs)
+        attrs["lexeme"] = new_lexeme
+        return IRNode(node.kind, node.name, node.children, attrs)
+    if not node.children:
+        return node
+    new_children = tuple(_rewrite_verb_lexeme(child, fn) for child in node.children)
+    if new_children == node.children:
+        return node
+    return IRNode(node.kind, node.name, new_children, dict(node.attrs))
+
+
+def _force_abs_agent_allomorph(node: IRNode, token: Optional[Token]) -> IRNode:
+    if not token or not token.m or not token.m.startswith("ar"):
+        return node
+
+    def _accent_o(lexeme: Optional[str]) -> Optional[str]:
+        if not lexeme:
+            return lexeme
+        if lexeme.endswith("o"):
+            return f"{lexeme[:-1]}ó"
+        return lexeme
+
+    return _rewrite_verb_lexeme(node, _accent_o)
+
+
+def _force_conjunctive_allomorph(node: IRNode) -> IRNode:
+    def _rewrite(n: IRNode) -> IRNode:
+        if n.kind == IRKind.ATOM and n.name == "Verb":
+            lexeme = n.attrs.get("lexeme")
+            if n.attrs.get("pluriform") and lexeme in {"ú", "u", "û", "îu"}:
+                attrs = dict(n.attrs)
+                attrs["lexeme"] = "îub"
+                return IRNode(n.kind, n.name, n.children, attrs)
+        if not n.children:
+            return n
+        new_children = tuple(_rewrite(child) for child in n.children)
+        if new_children == n.children:
+            return n
+        return IRNode(n.kind, n.name, new_children, dict(n.attrs))
+
+    return _rewrite(node)
+
+
+def _apply_circumstantial_suffix(nodes: List[IRNode]) -> List[IRNode]:
+    out: List[IRNode] = []
+    for node in nodes:
+        if _has_tag_kind(node, "CIRCUMSTANTIAL_SUFFIX"):
+            continue
+        out.append(node)
+    return out
+
+
+def _apply_conjunctive_suffix(nodes: List[IRNode]) -> List[IRNode]:
+    out: List[IRNode] = []
+    i = 0
+    while i < len(nodes):
+        node = nodes[i]
+        if _has_tag_kind(node, "CONJUNCTIVE_SUFFIX"):
+
+            def _is_subject_pronoun(n: IRNode) -> bool:
+                if _node_pos(n) != "Pronoun":
+                    return False
+                token = _node_token(n)
+                return bool(token and "SUBJECT" in token.tag_kinds)
+
+            # Try to attach the nearest verb to the left as a post-adjunct
+            # of the nearest verb to the left of that.
+            j = len(out) - 1
+            while j >= 0 and not _contains_verbish(out[j]):
+                j -= 1
+            if j >= 0:
+                sub = out[j]
+                subj = None
+                if j - 1 >= 0 and _is_subject_pronoun(out[j - 1]):
+                    subj = out[j - 1]
+                    del out[j - 1]
+                    j -= 1
+                if subj is not None:
+                    sub = Op("MUL", sub, subj)
+                sub = _force_conjunctive_allomorph(sub)
+                k = j - 1
+                while k >= 0 and not _contains_verbish(out[k]):
+                    k -= 1
+                if k >= 0 and j == k + 1:
+                    principal = out[k]
+                    out = out[:k]
+                    out.append(Op("SHIFT_L", principal, sub))
+                    i += 1
+                    continue
+                # Fallback: attach to nearest verb on the right as pre-adjunct.
+                r = i + 1
+                while r < len(nodes) and not _contains_verbish(nodes[r]):
+                    r += 1
+                if r < len(nodes):
+                    principal = nodes[r]
+                    out.append(Op("SHIFT_R", sub, principal))
+                    i = r + 1
+                    continue
+            i += 1
+            continue
+        out.append(node)
+        i += 1
+    return out
+
+
 def _apply_ume_negation(nodes: List[IRNode]) -> List[IRNode]:
     out: List[IRNode] = []
     for node in nodes:
@@ -534,6 +727,20 @@ def _attach_particle_adjuncts(nodes: List[IRNode]) -> List[IRNode]:
                 out.append(Op("SHIFT_L", nodes[j], node))
                 i = j + 1
                 continue
+        if _is_adverbish(node) and _is_clitic_adverb(node):
+            if out and _contains_verbish(out[-1]):
+                prev = out[-1]
+                if prev.kind == IRKind.OP and prev.name == "SHIFT_L" and prev.children:
+                    left = prev.children[0]
+                    right = prev.children[1] if len(prev.children) > 1 else None
+                    if right is not None and _contains_verbish(right):
+                        out[-1] = Op("SHIFT_L", left, Op("SHIFT_L", right, node))
+                    else:
+                        out[-1] = Op("SHIFT_L", prev, node)
+                else:
+                    out[-1] = Op("SHIFT_L", prev, node)
+                i += 1
+                continue
         out.append(node)
         i += 1
     return out
@@ -553,6 +760,17 @@ def _apply_pluriform_relations(nodes: List[IRNode]) -> List[IRNode]:
                 continue
             if out and i + 1 < len(nodes):
                 nxt = _mark_pluriform(nodes[i + 1])
+                prev_token = _node_token(out[-1])
+                if (
+                    prev_token
+                    and "SUBJECT" in prev_token.tag_kinds
+                    and "SUBJECT_PREFIX" not in prev_token.tag_kinds
+                    and "GERUND_SUBJECT_PREFIX" not in prev_token.tag_kinds
+                    and _contains_verbish(nxt)
+                ):
+                    out.append(nxt)
+                    i += 2
+                    continue
                 if (
                     nxt.kind == IRKind.ATOM
                     and nxt.name == "Deverbal"
@@ -647,6 +865,7 @@ def _apply_deverbal_suffixes(nodes: List[IRNode]) -> List[IRNode]:
     out: List[IRNode] = []
     for node in nodes:
         kinds = _node_tag_kinds(node)
+        token = _node_token(node)
         suffix_only = "ROOT" not in kinds
         if "FACILITY_SUFFIX" in kinds:
             if suffix_only:
@@ -669,35 +888,72 @@ def _apply_deverbal_suffixes(nodes: List[IRNode]) -> List[IRNode]:
             if suffix_only:
                 if out:
                     head = _deverbal_with_vocative(Atom("Deverbal", "sara"), node)
-                    out[-1] = Op("MUL", head, out[-1])
+                    out[-1] = Op(
+                        "MUL", head, _force_abs_agent_allomorph(out[-1], token)
+                    )
                 else:
                     out.append(_deverbal_with_vocative(Atom("Deverbal", "sara"), node))
                 continue
             if _contains_verbish(node) or "ROOT" in kinds:
                 head = _deverbal_with_vocative(Atom("Deverbal", "sara"), node)
-                out.append(Op("MUL", head, node))
+                out.append(Op("MUL", head, _force_abs_agent_allomorph(node, token)))
             elif out:
                 head = _deverbal_with_vocative(Atom("Deverbal", "sara"), node)
-                out[-1] = Op("MUL", head, out[-1])
+                out[-1] = Op("MUL", head, _force_abs_agent_allomorph(out[-1], token))
             else:
                 out.append(_deverbal_with_vocative(Atom("Deverbal", "sara"), node))
             continue
         if "AGENTLESS_PATIENT_SUFFIX" in kinds:
             if suffix_only:
                 if out:
+                    # Drop the implicit 3p object immediately to the left; pyra supplies it.
+                    if (
+                        out[-1].kind == IRKind.ATOM
+                        and out[-1].name == "Pronoun"
+                        and (
+                            _has_object_non_main_clause_subject(out[-1])
+                            or _has_object_3p(out[-1])
+                        )
+                    ):
+                        out.pop()
+                    if not out:
+                        out.append(
+                            _deverbal_with_vocative(Atom("Deverbal", "pyra"), node)
+                        )
+                        continue
                     head = _deverbal_with_vocative(Atom("Deverbal", "pyra"), node)
-                    out[-1] = Op("MUL", head, _strip_verb_args(out[-1]))
+                    target = out[-1]
+                    out[-1] = Op("MUL", head, _strip_verb_args(target))
                 else:
                     out.append(_deverbal_with_vocative(Atom("Deverbal", "pyra"), node))
                 continue
             if _contains_verbish(node) or "ROOT" in kinds:
                 head = _deverbal_with_vocative(Atom("Deverbal", "pyra"), node)
-                out.append(Op("MUL", head, _strip_verb_args(node)))
+                target = node
+                out.append(Op("MUL", head, _strip_verb_args(target)))
             elif out:
                 head = _deverbal_with_vocative(Atom("Deverbal", "pyra"), node)
-                out[-1] = Op("MUL", head, _strip_verb_args(out[-1]))
+                target = out[-1]
+                out[-1] = Op("MUL", head, _strip_verb_args(target))
             else:
                 out.append(_deverbal_with_vocative(Atom("Deverbal", "pyra"), node))
+            continue
+        if "RELATIVE_AGENT_SUFFIX" in kinds:
+            if suffix_only:
+                if out:
+                    head = _deverbal_with_vocative(Atom("Deverbal", "ba'e"), node)
+                    out[-1] = Op("MUL", head, out[-1])
+                else:
+                    out.append(_deverbal_with_vocative(Atom("Deverbal", "ba'e"), node))
+                continue
+            if _contains_verbish(node) or "ROOT" in kinds:
+                head = _deverbal_with_vocative(Atom("Deverbal", "ba'e"), node)
+                out.append(Op("MUL", head, node))
+            elif out:
+                head = _deverbal_with_vocative(Atom("Deverbal", "ba'e"), node)
+                out[-1] = Op("MUL", head, out[-1])
+            else:
+                out.append(_deverbal_with_vocative(Atom("Deverbal", "ba'e"), node))
             continue
         out.append(node)
     return out
@@ -709,6 +965,7 @@ def _apply_deverbal_suffixes_next(nodes: List[IRNode]) -> List[IRNode]:
     while i < len(nodes):
         node = nodes[i]
         kinds = _node_tag_kinds(node)
+        token = _node_token(node)
         suffix_only = "ROOT" not in kinds
         if "FACILITY_SUFFIX" in kinds:
             if suffix_only and i + 1 < len(nodes):
@@ -741,23 +998,27 @@ def _apply_deverbal_suffixes_next(nodes: List[IRNode]) -> List[IRNode]:
                 target = nodes[i + 1]
                 if _contains_verbish(target) or "ROOT" in _node_tag_kinds(target):
                     head = _deverbal_with_vocative(Atom("Deverbal", "sara"), node)
-                    out.append(Op("MUL", head, target))
+                    out.append(
+                        Op("MUL", head, _force_abs_agent_allomorph(target, token))
+                    )
                     i += 2
                     continue
             if suffix_only:
                 if out:
                     head = _deverbal_with_vocative(Atom("Deverbal", "sara"), node)
-                    out[-1] = Op("MUL", head, out[-1])
+                    out[-1] = Op(
+                        "MUL", head, _force_abs_agent_allomorph(out[-1], token)
+                    )
                 else:
                     out.append(_deverbal_with_vocative(Atom("Deverbal", "sara"), node))
                 i += 1
                 continue
             if _contains_verbish(node) or "ROOT" in kinds:
                 head = _deverbal_with_vocative(Atom("Deverbal", "sara"), node)
-                out.append(Op("MUL", head, node))
+                out.append(Op("MUL", head, _force_abs_agent_allomorph(node, token)))
             elif out:
                 head = _deverbal_with_vocative(Atom("Deverbal", "sara"), node)
-                out[-1] = Op("MUL", head, out[-1])
+                out[-1] = Op("MUL", head, _force_abs_agent_allomorph(out[-1], token))
             else:
                 out.append(_deverbal_with_vocative(Atom("Deverbal", "sara"), node))
             i += 1
@@ -786,10 +1047,51 @@ def _apply_deverbal_suffixes_next(nodes: List[IRNode]) -> List[IRNode]:
                 out[-1] = Op("MUL", head, _strip_verb_args(out[-1]))
             else:
                 out.append(_deverbal_with_vocative(Atom("Deverbal", "pyra"), node))
+                i += 1
+                continue
+        if "RELATIVE_AGENT_SUFFIX" in kinds:
+            if suffix_only and i + 1 < len(nodes):
+                target = nodes[i + 1]
+                if _contains_verbish(target) or "ROOT" in _node_tag_kinds(target):
+                    head = _deverbal_with_vocative(Atom("Deverbal", "ba'e"), node)
+                    out.append(Op("MUL", head, target))
+                    i += 2
+                    continue
+            if out:
+                head = _deverbal_with_vocative(Atom("Deverbal", "ba'e"), node)
+                out[-1] = Op("MUL", head, out[-1])
+                i += 1
+                continue
+            out.append(_deverbal_with_vocative(Atom("Deverbal", "ba'e"), node))
             i += 1
             continue
         out.append(node)
         i += 1
+    return out
+
+
+def _force_deverbal_suffixes(nodes: List[IRNode]) -> List[IRNode]:
+    out: List[IRNode] = []
+    for node in nodes:
+        kinds = _node_tag_kinds(node)
+        suffix_only = "ROOT" not in kinds
+        if suffix_only and (
+            "ABSOLUTE_AGENT_SUFFIX" in kinds or "ACTIVE_AGENT_SUFFIX" in kinds
+        ):
+            if out:
+                for idx in range(len(out) - 1, -1, -1):
+                    if _contains_verbish(out[idx]):
+                        head = _deverbal_with_vocative(Atom("Deverbal", "sara"), node)
+                        out[idx] = Op(
+                            "MUL",
+                            head,
+                            _force_abs_agent_allomorph(out[idx], _node_token(node)),
+                        )
+                        break
+                else:
+                    out.append(node)
+                continue
+        out.append(node)
     return out
 
 
@@ -813,6 +1115,11 @@ def _drop_substantive_suffix_tokens(nodes: List[IRNode]) -> List[IRNode]:
             if morph and len(morph) <= 2 and "ROOT" not in kinds:
                 if out:
                     out[-1] = _with_suffix_morph(out[-1], morph)
+                    if token:
+                        for tag in token.tags:
+                            if tag.startswith("NOUN:LOAN_WORD"):
+                                out[-1] = _with_noun_extra_tag(out[-1], tag)
+                                break
                     carry_tags = [
                         k
                         for k in kinds
@@ -830,16 +1137,24 @@ def _drop_substantive_suffix_tokens(nodes: List[IRNode]) -> List[IRNode]:
                     ]
                     if carry_tags:
                         out[-1] = _with_extra_tags(out[-1], carry_tags)
+                    attrs = out[-1].attrs if out[-1].kind == IRKind.ATOM else {}
+                    prefer_verb_nominal = bool(attrs.get("noun_from_verb"))
                     if "DEVERBAL" in kinds:
                         out[-1] = _as_pos(out[-1], "Deverbal")
                     elif "DEADVERBAL" in kinds:
                         out[-1] = _as_pos(out[-1], "Deadverbal")
                     elif "NOUN" in kinds or "NNOUN" in kinds:
-                        if _node_pos(out[-1]) not in _NOUNISH_POS:
+                        if (
+                            _node_pos(out[-1]) not in _NOUNISH_POS
+                            and not prefer_verb_nominal
+                        ):
                             out[-1] = _as_pos(out[-1], "Noun")
                     else:
                         # Substantive suffix nominalizes by default.
-                        if _node_pos(out[-1]) not in _NOUNISH_POS:
+                        if (
+                            _node_pos(out[-1]) not in _NOUNISH_POS
+                            and not prefer_verb_nominal
+                        ):
                             out[-1] = _as_pos(out[-1], "Noun")
                 continue
         out.append(node)
@@ -941,19 +1256,27 @@ def _merge_possessives_and_postpositions(
                 i = j + 1
                 continue
         if _is_postposition(node):
+            token = _node_token(node)
+            force_left = bool(token and "SIMULATIVE_SUFFIX" in token.tag_kinds)
             if postposition_direction == "right":
-                k = i + 1
-                while k < len(nodes) and _is_prefix(nodes[k]):
-                    k += 1
-                if k < len(nodes) and _is_nounish(nodes[k]):
-                    if _contains_verbish(nodes[k]) and not _is_nominalized(nodes[k]):
-                        # Prefer left attachment when the right candidate is verbish.
-                        pass
-                    else:
-                        node = _apply_postposition_variation(node, nodes[k])
-                        nodes[k] = Op("MUL", node, nodes[k])
-                        i += 1
-                        continue
+                if force_left:
+                    # Simulative postpositions should bind to the left (e.g., pyra * verb)
+                    pass
+                else:
+                    k = i + 1
+                    while k < len(nodes) and _is_prefix(nodes[k]):
+                        k += 1
+                    if k < len(nodes) and _is_nounish(nodes[k]):
+                        if _contains_verbish(nodes[k]) and not _is_nominalized(
+                            nodes[k]
+                        ):
+                            # Prefer left attachment when the right candidate is verbish.
+                            pass
+                        else:
+                            node = _apply_postposition_variation(node, nodes[k])
+                            nodes[k] = Op("MUL", node, nodes[k])
+                            i += 1
+                            continue
             if out:
                 for idx in range(len(out) - 1, -1, -1):
                     if _is_nounish(out[idx]):
@@ -987,7 +1310,8 @@ def _merge_possessives(nodes: List[IRNode]) -> List[IRNode]:
     i = 0
     while i < len(nodes):
         node = nodes[i]
-        if _is_possessive_pronoun(node):
+        token = _node_token(node)
+        if _is_possessor_noun(node):
             j = i + 1
             while j < len(nodes) and _is_prefix(nodes[j]):
                 j += 1
@@ -997,6 +1321,69 @@ def _merge_possessives(nodes: List[IRNode]) -> List[IRNode]:
                 else:
                     target = Op("SEQ", *nodes[i + 1 : j + 1])
                 merged = Op("MUL", node, target)
+                carry = [
+                    k
+                    for k in _node_tag_kinds(target)
+                    if k
+                    in {
+                        "NOUN",
+                        "NNOUN",
+                        "DEVERBAL",
+                        "DEADVERBAL",
+                        "SUBSTANTIVE_SUFFIX",
+                        "SUBJECT",
+                        "OBJECT",
+                        "VOCATIVE",
+                    }
+                ]
+                if carry:
+                    merged = _with_extra_tags(merged, carry)
+                out.append(merged)
+                i = j + 1
+                continue
+        if (
+            _node_pos(node) == "Pronoun"
+            and token
+            and "SUBJECT" in token.tag_kinds
+            and "SUBJECT_PREFIX" not in token.tag_kinds
+            and "GERUND_SUBJECT_PREFIX" not in token.tag_kinds
+            and not _is_postposed_subject_pronoun(node)
+        ):
+            j = i + 1
+            while j < len(nodes) and _is_prefix(nodes[j]):
+                j += 1
+            if (
+                j < len(nodes)
+                and _is_nounish(nodes[j])
+                and not _contains_verbish(nodes[j])
+            ):
+                if j == i + 1:
+                    target = nodes[j]
+                else:
+                    target = Op("SEQ", *nodes[i + 1 : j + 1])
+                out.append(Op("MUL", node, target))
+                i = j + 1
+                continue
+        if _is_possessive_pronoun(node):
+            j = i + 1
+            while j < len(nodes) and _is_prefix(nodes[j]):
+                j += 1
+            if j < len(nodes) and _is_nounish(nodes[j]):
+                if j == i + 1:
+                    target = nodes[j]
+                else:
+                    target = Op("SEQ", *nodes[i + 1 : j + 1])
+                if (
+                    target.kind == IRKind.OP
+                    and target.name == "MUL"
+                    and len(target.children) == 2
+                    and _is_nounish(target.children[0])
+                    and _contains_verbish(target.children[1])
+                ):
+                    possessed = Op("MUL", node, target.children[0])
+                    merged = Op("MUL", possessed, target.children[1])
+                else:
+                    merged = Op("MUL", node, target)
                 carry = [
                     k
                     for k in _node_tag_kinds(target)
@@ -1052,9 +1439,45 @@ def _attach_markers(
                 i += 1
                 continue
             if _is_implicit_marker(node):
-                # Agreement prefixes don't surface as pronouns; drop after use.
-                i += 1
-                continue
+                # Agreement prefixes don't surface as pronouns; attach as pro-drop.
+                if _is_subject_prefix_marker(node):
+                    token = _node_token(node)
+                    if token and token.has_tag("SUBJECT_PREFIX", "3p"):
+                        k = j
+                        saw_object = False
+                        while k < len(nodes) and not _contains_verbish(nodes[k]):
+                            if _is_object_marker(nodes[k]):
+                                saw_object = True
+                            k += 1
+                        if (
+                            saw_object
+                            and k < len(nodes)
+                            and _has_morph(nodes[k], ("PERM",))
+                        ):
+                            i += 1
+                            continue
+                        if k < len(nodes) and _has_morph(nodes[k], ("PERM",)) and out:
+                            found_subject = False
+                            for idx in range(len(out) - 1, -1, -1):
+                                if _is_nounish(out[idx]):
+                                    if _contains_tag_kind(out[idx], "SUBJECT"):
+                                        found_subject = True
+                                    break
+                            if found_subject:
+                                i += 1
+                                continue
+                    if j < len(nodes) and _contains_verbish(nodes[j]):
+                        if _verbish_arg_count(nodes[j]) >= 2:
+                            i += 1
+                            continue
+                    node = MorphOp("PRO_DROP", node)
+                else:
+                    token = _node_token(node)
+                    if token and token.has_tag("OBJECT", "NON_MAIN_CLAUSE_SUBJECT"):
+                        node = MorphOp("PRO_DROP", node)
+                    else:
+                        i += 1
+                        continue
             if j < len(nodes) and _contains_verbish(nodes[j]):
                 target = _with_verb_class(nodes[j], verb_class)
                 if preverb_right:
@@ -1097,6 +1520,51 @@ def _attach_nounish_markers(nodes: List[IRNode]) -> List[IRNode]:
     i = 0
     while i < len(nodes):
         node = nodes[i]
+        if (
+            node.kind == IRKind.OP
+            and node.name == "MUL"
+            and len(node.children) == 2
+            and i + 1 < len(nodes)
+        ):
+            left, right = node.children
+
+            def _is_markerish(n: IRNode) -> bool:
+                if _node_pos(n) != "Pronoun":
+                    return False
+                kinds = _node_tag_kinds(n)
+                return any(
+                    k in kinds
+                    for k in (
+                        "SUBJECT",
+                        "OBJECT",
+                        "OBJECT_PREFIX",
+                        "OBJECT_MARKER",
+                        "PATIENT_PREFIX",
+                    )
+                )
+
+            if _is_markerish(left) and _is_markerish(right):
+                subj = left if "SUBJECT" in _node_tag_kinds(left) else None
+                obj = right if _is_object_marker(right) else None
+                if subj is None and "SUBJECT" in _node_tag_kinds(right):
+                    subj = right
+                if obj is None and _is_object_marker(left):
+                    obj = left
+                if (
+                    subj is not None
+                    and obj is not None
+                    and _is_nounish(nodes[i + 1])
+                    and (
+                        not _contains_verbish(nodes[i + 1])
+                        or _is_nominalized(nodes[i + 1])
+                    )
+                ):
+                    head = nodes[i + 1]
+                    head = Op("MUL", head, obj)
+                    out.append(subj)
+                    out.append(head)
+                    i += 2
+                    continue
         if _is_explicit_marker(node):
             markers: List[IRNode] = []
             j = i
@@ -1201,6 +1669,16 @@ def _apply_copula_pairs(nodes: List[IRNode]) -> List[IRNode]:
         if (
             i + 1 < len(nodes)
             and _is_nounish(nodes[i])
+            and _is_possessed_nounish(nodes[i + 1])
+            and not _is_postposition_head(nodes[i])
+            and not _contains_verbish(nodes[i])
+        ):
+            out.append(Op("AT", nodes[i], nodes[i + 1]))
+            i += 2
+            continue
+        if (
+            i + 1 < len(nodes)
+            and _is_nounish(nodes[i])
             and _is_nounish(nodes[i + 1])
             and _contains_emi(nodes[i])
             and _contains_deverbalish(nodes[i + 1])
@@ -1228,10 +1706,35 @@ def _attach_preverbal_objects(nodes: List[IRNode]) -> List[IRNode]:
     while i < len(nodes):
         node = nodes[i]
         if (
+            out
+            and _is_imperative_verb(out[-1])
+            and _is_nounish(node)
+            and _contains_emi(node)
+            and not _is_postposition_head(node)
+        ):
+            prev = out[-1]
+            if (
+                prev.kind == IRKind.OP
+                and prev.name == "MUL"
+                and len(prev.children) == 2
+                and _is_object_marker(prev.children[1])
+            ):
+                verb_part, obj_marker = prev.children
+                out[-1] = Op("MUL", Op("MUL", verb_part, node), obj_marker)
+            else:
+                out[-1] = Op("MUL", prev, node)
+            i += 1
+            continue
+        allow_possessed = False
+        if _is_imperative_verb(node) and _has_morph(node, ("PERM",)):
+            allow_possessed = True
+        if (
             _is_imperative_verb(node)
             and out
             and _is_nounish(out[-1])
             and not _is_postposition_head(out[-1])
+            and (allow_possessed or not _is_possessed_nounish(out[-1]))
+            and not (out[-1].kind == IRKind.OP and out[-1].name == "AT")
         ):
             obj = out.pop()
             node = _strip_object_marker_args(node)
@@ -1269,6 +1772,24 @@ def _attach_emi_deverbal(nodes: List[IRNode]) -> List[IRNode]:
     return out
 
 
+def _attach_pronoun_deverbal_copula(nodes: List[IRNode]) -> List[IRNode]:
+    out: List[IRNode] = []
+    i = 0
+    while i < len(nodes):
+        node = nodes[i]
+        if _node_pos(node) == "Pronoun" and i + 1 < len(nodes):
+            nxt = nodes[i + 1]
+            if _contains_deverbalish(nxt) and _contains_tag_kind(
+                nxt, "RELATIVE_AGENT_SUFFIX"
+            ):
+                out.append(Op("AT", node, nxt))
+                i += 2
+                continue
+        out.append(node)
+        i += 1
+    return out
+
+
 def _apply_conjunctions(nodes: List[IRNode]) -> List[IRNode]:
     out: List[IRNode] = []
     for node in nodes:
@@ -1294,6 +1815,7 @@ def _rewrite_sequence(node: IRNode) -> IRNode:
     nodes = _apply_causative_prefix(nodes)
     nodes = _apply_ume_negation(nodes)
     nodes = _apply_negation_suffix(nodes)
+    nodes = _apply_circumstantial_suffix(nodes)
     nodes = _drop_substantive_suffix_tokens(nodes)
     nodes = _apply_pluriform_marks(nodes)
     nodes = _apply_conjunctions(nodes)
@@ -1302,9 +1824,12 @@ def _rewrite_sequence(node: IRNode) -> IRNode:
     nodes = _merge_possessives(nodes)
     nodes = _attach_argument_markers(nodes)
     nodes = _attach_nounish_markers(nodes)
+    nodes = _apply_conjunctive_suffix(nodes)
     nodes = _attach_particle_adjuncts(nodes)
-    nodes = _apply_deverbal_suffixes(nodes)
+    nodes = _apply_deverbal_suffixes_next(nodes)
+    nodes = _force_deverbal_suffixes(nodes)
     nodes = _attach_deadverbal_args(nodes)
+    nodes = _attach_pronoun_deverbal_copula(nodes)
     nodes = _merge_possessives_and_postpositions(nodes)
     nodes = _apply_copula_pairs(nodes)
     nodes = _attach_preverbal_objects(nodes)
@@ -1336,6 +1861,7 @@ def _rewrite_sequence_variants(node: IRNode, *, max_variants: int = 4) -> List[I
     nodes = _apply_causative_prefix(nodes)
     nodes = _apply_ume_negation(nodes)
     nodes = _apply_negation_suffix(nodes)
+    nodes = _apply_circumstantial_suffix(nodes)
     nodes = _drop_substantive_suffix_tokens(nodes)
     nodes = _apply_pluriform_marks(nodes)
     nodes = _apply_conjunctions(nodes)
@@ -1348,11 +1874,13 @@ def _rewrite_sequence_variants(node: IRNode, *, max_variants: int = 4) -> List[I
         sequences, _attach_argument_markers_variants, max_variants=max_variants
     )
     sequences = [_attach_nounish_markers(seq) for seq in sequences]
+    sequences = [_apply_conjunctive_suffix(seq) for seq in sequences]
     sequences = [_attach_particle_adjuncts(seq) for seq in sequences]
     sequences = _expand_variants(
         sequences, _apply_deverbal_suffixes_variants, max_variants=max_variants
     )
     sequences = [_attach_deadverbal_args(seq) for seq in sequences]
+    sequences = [_attach_pronoun_deverbal_copula(seq) for seq in sequences]
     sequences = _expand_variants(
         sequences,
         _merge_possessives_and_postpositions_variants,
@@ -1395,6 +1923,14 @@ def _candidate_atoms(
     allowed_pos, morph_ops = resolve_constraints(
         token.tag_kinds, constraints, token=token
     )
+    nounish_kinds = set(token.tag_kinds)
+    prefer_verb_nominal = False
+    if lexicon and "NOUN" in nounish_kinds and "ROOT" in nounish_kinds:
+        pos_hits = lexicon.pos_candidates(token.m)
+        if "Verb" in pos_hits:
+            prefer_verb_nominal = True
+            if "Verb" not in allowed_pos:
+                allowed_pos = tuple(dict.fromkeys(list(allowed_pos) + ["Verb"]))
     if not allowed_pos:
         if lexicon:
             pos_hits = lexicon.pos_candidates(token.m)
@@ -1420,7 +1956,11 @@ def _candidate_atoms(
         lexeme = token.m
         if pos == "Postposition" and token.has_tag("POSTPOSITION", "DATIVE"):
             lexeme = "supé"
-        atom = Atom(pos, lexeme, token=token)
+        attrs = {"token": token}
+        if pos == "Verb" and prefer_verb_nominal:
+            attrs["noun_from_verb"] = True
+            attrs["verb_class"] = "adj."
+        atom = Atom(pos, lexeme, **attrs)
         wrapped = _wrap_morph_ops(atom, morph_ops)
         if "OBJECT_MARKER" in token.tag_kinds:
             wrapped = MorphOp("PRO_DROP", wrapped)
@@ -1438,6 +1978,14 @@ def _tokens_from_rerank_output(value: Any) -> Optional[List[Token]]:
     if isinstance(value, (list, tuple)):
         return ensure_tokens(value)
     return None
+
+
+def _contains_deverbal_lexeme(node: IRNode, lexeme: str) -> bool:
+    for n in node.walk():
+        if n.kind == IRKind.ATOM and n.name == "Deverbal":
+            if n.attrs.get("lexeme") == lexeme:
+                return True
+    return False
 
 
 def _token_distance(
@@ -1612,6 +2160,10 @@ def decompile(
             candidates.extend(
                 _rewrite_candidates(ir, max_variants=max(1, rewrite_max_variants))
             )
+        if any(t.has_tag("ABSOLUTE_AGENT_SUFFIX") for t in stream):
+            with_sara = [c for c in candidates if _contains_deverbal_lexeme(c, "sara")]
+            if with_sara:
+                candidates = with_sara
         best_ir, best_cost = _select_best_by_cost(candidates, scorer)
 
     if emit == "pydicate":

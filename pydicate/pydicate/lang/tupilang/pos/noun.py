@@ -63,6 +63,10 @@ class Noun(Predicate):
             conj.arguments.insert(0, cop)
             return conj
         if isinstance(other, (Noun)):
+            if self.category in {"deverbal_noun", "deadverbal_noun"} or getattr(
+                other, "category", ""
+            ) in {"deverbal_noun", "deadverbal_noun"}:
+                return super().__add__(other)
             cop = self.copy()
             oth = other.copy()
             conj = Conjunction("", tag="[CONJUNCTION:AND]")
@@ -359,6 +363,24 @@ endé = Pronoun("2ps", definition="you")
 nde = Pronoun("2ps", definition="you")
 pee = Pronoun("2pp", definition="y'all'")
 ae = Pronoun("3p", definition="he/she/it/they")
+
+# Role-specific pronouns for explicit subject/object tagging.
+ixé_suj = Pronoun("1ps", definition="I", tag="[SUBJECT:1ps]")
+ixé_obj = Pronoun("1ps", definition="I", tag="[OBJECT:1ps]")
+xe_suj = Pronoun("1ps", definition="I", tag="[SUBJECT:1ps]")
+xe_obj = Pronoun("1ps", definition="I", tag="[OBJECT:1ps]")
+îandé_suj = Pronoun("1ppi", definition="we (inclusive)", tag="[SUBJECT:1ppi]")
+îandé_obj = Pronoun("1ppi", definition="we (inclusive)", tag="[OBJECT:1ppi]")
+oré_suj = Pronoun("1ppe", definition="we (exclusive)", tag="[SUBJECT:1ppe]")
+oré_obj = Pronoun("1ppe", definition="we (exclusive)", tag="[OBJECT:1ppe]")
+endé_suj = Pronoun("2ps", definition="you", tag="[SUBJECT:2ps]")
+endé_obj = Pronoun("2ps", definition="you", tag="[OBJECT:2ps]")
+nde_suj = Pronoun("2ps", definition="you", tag="[SUBJECT:2ps]")
+nde_obj = Pronoun("2ps", definition="you", tag="[OBJECT:2ps]")
+pee_suj = Pronoun("2pp", definition="y'all'", tag="[SUBJECT:2pp]")
+pee_obj = Pronoun("2pp", definition="y'all'", tag="[OBJECT:2pp]")
+ae_suj = Pronoun("3p", definition="he/she/it/they", tag="[SUBJECT:3p]")
+ae_obj = Pronoun("3p", definition="he/she/it/they", tag="[OBJECT:3p]")
 îe = Pronoun(
     "refl", definition="to oneself, one's own", tag="[OBJECT_PREFIX:REFLEXIVE]"
 )
@@ -369,6 +391,9 @@ og = Pronoun(
     tag="[PRONOUN:MAIN_CLAUSE_SUBJECT]",
 )
 og._inflection = "suj"
+
+# Prefix-style subject pronoun (used for explicit subject-prefix markers).
+o_prefix = Pronoun("o", definition="3p subject prefix", tag="[SUBJECT_PREFIX:3p]")
 
 asé = Noun(
     "asé", definition="We, people in general, all of us", tag="[PRONOUN:UNIVERSAL_WE]"

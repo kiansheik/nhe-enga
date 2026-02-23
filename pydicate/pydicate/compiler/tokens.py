@@ -14,6 +14,7 @@ class Token:
     t: Optional[str] = None
     s: Tuple[str, ...] = ()
     surface: Optional[str] = None
+    glue_prev: bool = False
 
     @property
     def tags(self) -> Tuple[str, ...]:
@@ -72,7 +73,11 @@ def token_from_raw(raw: Any) -> Token:
         if isinstance(s, str):
             s = (s,)
         return Token(
-            m=str(m) if m is not None else "", t=t, s=tuple(s), surface=surface
+            m=str(m) if m is not None else "",
+            t=t,
+            s=tuple(s),
+            surface=surface,
+            glue_prev=bool(raw.get("glue_prev", False)),
         )
     if isinstance(raw, (list, tuple)):
         if len(raw) == 0:
@@ -103,9 +108,12 @@ def parse_annotated(text: str) -> List[Token]:
             t = None
             s = ()
         inter = text[last_end : m.start()]
+        glue_prev = (m.start() == last_end and last_end != 0) or (
+            bool(inter) and not inter.isspace()
+        )
         prefix = inter.strip()
         if prefix:
             morph = f"{prefix} {morph}"
-        tokens.append(Token(m=morph, t=t, s=s, surface=m.group(0)))
+        tokens.append(Token(m=morph, t=t, s=s, surface=m.group(0), glue_prev=glue_prev))
         last_end = m.end()
     return tokens

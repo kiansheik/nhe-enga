@@ -57,11 +57,13 @@ DEFAULT_CONSTRAINTS: Dict[str, TagConstraint] = {
     "CAUSATIVE_PREFIX": TagConstraint("CAUSATIVE_PREFIX", allowed_pos=("Verb",)),
     "FACILITY_SUFFIX": TagConstraint("FACILITY_SUFFIX", allowed_pos=("Verb",)),
     "ABSOLUTE_AGENT_SUFFIX": TagConstraint(
-        "ABSOLUTE_AGENT_SUFFIX", allowed_pos=("Verb",)
+        "ABSOLUTE_AGENT_SUFFIX", allowed_pos=("Deverbal",)
     ),
-    "ACTIVE_AGENT_SUFFIX": TagConstraint("ACTIVE_AGENT_SUFFIX", allowed_pos=("Verb",)),
+    "ACTIVE_AGENT_SUFFIX": TagConstraint(
+        "ACTIVE_AGENT_SUFFIX", allowed_pos=("Deverbal",)
+    ),
     "AGENTLESS_PATIENT_SUFFIX": TagConstraint(
-        "AGENTLESS_PATIENT_SUFFIX", allowed_pos=("Verb",)
+        "AGENTLESS_PATIENT_SUFFIX", allowed_pos=("Deverbal",)
     ),
 }
 
@@ -123,5 +125,15 @@ def resolve_constraints(
         for rule in _iter_constraints(constraint):
             allowed_pos.extend(list(rule.allowed_pos))
             morph_ops.extend(list(rule.implies_morph))
+
+    # Suffix-only tags should dominate POS selection.
+    suffix_only_kinds = {
+        "ABSOLUTE_AGENT_SUFFIX",
+        "ACTIVE_AGENT_SUFFIX",
+        "AGENTLESS_PATIENT_SUFFIX",
+    }
+    if any(kind in tag_kinds for kind in suffix_only_kinds):
+        if "Deverbal" in allowed_pos:
+            allowed_pos = ["Deverbal"]
 
     return tuple(dict.fromkeys(allowed_pos)), tuple(dict.fromkeys(morph_ops))
