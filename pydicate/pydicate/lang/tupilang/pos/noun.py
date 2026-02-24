@@ -347,6 +347,9 @@ class Pronoun(Noun):
         self.category = "pronoun"
         if inflection_override:
             self._inflection = inflection_override
+        # add the inflection to the end of the tag with : before the end bracket appended onto the rest if it's not already there
+        if tag and self.inflection() not in tag:
+            self.tag = tag[:-1] + f":{self.inflection()}" + tag[-1:]
 
     def noun_function(self, neg=False, annotated=False):
         """Return the noun in its base form."""

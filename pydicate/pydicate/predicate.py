@@ -2,18 +2,42 @@ from copy import deepcopy
 import copy
 import re
 import inspect
+import itertools
+import re
+from dataclasses import dataclass, field
+from collections import defaultdict
+from typing import Optional, NamedTuple
+import random
+from contextlib import contextmanager
+from dataclasses import dataclass, field
 from xml.etree.ElementTree import indent
 from tupi import Noun as TupiNoun
 from tupi import Verb as TupiVerb
+from tupi.emit import render_annotated
 from pydicate.trackable import Trackable
 from pydicate.dbexplorer import NavarroDB
-from collections import Counter
+from collections import Counter, defaultdict
 from typing import Dict, List, Tuple, Optional
 
 db_explorer = NavarroDB()
 
 REGISTRY = dict()
 FULL_REGISTRY = []
+
+_NID_COUNTER = itertools.count(1)
+_EVAL_CTX = None
+
+
+@dataclass
+class EvalCtx:
+    out_by_nid: Dict[str, str] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class MorphPiece:
+    surface: str
+    tags: Tuple[str, ...]
+
 
 _MORPH_TAG_RE = re.compile(r"([^\[\]\s]+)((?:\[[^\]]+\])+)", flags=re.UNICODE)
 _PEDAGOGICAL_NEWLINE_RE = re.compile(r",n\s*")
@@ -32,6 +56,120 @@ def remove_adjacent_tags(to_remove_from):
     # Remove adjacent duplicate tags from the string.
     pattern = r"(\[.*?\])(?=\1)"
     return re.sub(pattern, "", to_remove_from)
+
+
+@contextmanager
+def pushed_eval_ctx(ctx):
+    global _EVAL_CTX
+    old = _EVAL_CTX
+    _EVAL_CTX = ctx
+    try:
+        yield
+    finally:
+        _EVAL_CTX = old
+
+
+def parse_annotated_morphs(s: str) -> List[MorphPiece]:
+    out: List[MorphPiece] = []
+    i = 0
+    n = len(s)
+    while i < n:
+        while i < n and s[i].isspace():
+            i += 1
+        if i >= n:
+            break
+
+        start = i
+        while i < n and s[i] != "[":
+            i += 1
+        surface = s[start:i].strip()
+        if not surface:
+            continue
+
+        tags = []
+        while i < n and s[i] == "[":
+            j = s.find("]", i)
+            if j == -1:
+                break
+            tags.append(s[i + 1 : j])
+            i = j + 1
+
+        if not tags:
+            tags = ["BARE"]
+        out.append(MorphPiece(surface=surface, tags=tuple(sorted(tags))))
+
+    return out
+
+
+def _as_pairs(emitted):
+    if not emitted:
+        return []
+    first = emitted[0]
+    if hasattr(first, "surface") and hasattr(first, "tags"):
+        return [(t.surface, set(t.tags)) for t in emitted]
+    return [(s, set(tags)) for s, tags in emitted]
+
+
+def _norm_surface(s: str) -> str:
+    # Normalize only for matching, keep original surface for output.
+    return s.lstrip()
+
+
+def _lcs_mapping(A, B):
+    """Return one LCS mapping as list[(i_in_A, j_in_B)]."""
+    m, n = len(A), len(B)
+    dp = [[0] * (n + 1) for _ in range(m + 1)]
+    for i in range(m):
+        ai = A[i]
+        for j in range(n):
+            if ai == B[j]:
+                dp[i + 1][j + 1] = dp[i][j] + 1
+            else:
+                dp[i + 1][j + 1] = (
+                    dp[i][j + 1] if dp[i][j + 1] >= dp[i + 1][j] else dp[i + 1][j]
+                )
+
+    i, j = m, n
+    pairs = []
+    while i > 0 and j > 0:
+        if A[i - 1] == B[j - 1]:
+            pairs.append((i - 1, j - 1))
+            i -= 1
+            j -= 1
+        else:
+            # tie-break left (stable-ish)
+            if dp[i][j - 1] >= dp[i - 1][j]:
+                j -= 1
+            else:
+                i -= 1
+    pairs.reverse()
+    return pairs
+
+
+class _Cand(NamedTuple):
+    score: int  # number of matched tokens
+    span: tuple[int, int]  # (start,end) in GLOBAL indices (window covering matches)
+    mapping: list  # [(local_i, global_i)]
+    matched: frozenset  # set of global indices matched
+
+
+@dataclass
+class _Node:
+    node_id: str
+    nid: int
+    parent_id: Optional[str]
+    depth: int
+    rel_type: str
+    kind: str  # "arg" | "pre" | "post"
+    verbete: str
+    pred_obj: object
+    local_parts: list = field(default_factory=list)
+    local_norm: list = field(default_factory=list)
+    children: list = field(default_factory=list)
+
+    # filled during solving
+    core_mapping: list = field(default_factory=list)  # [(local_i, global_i)]
+    core_span: Optional[tuple[int, int]] = None
 
 
 class Predicate(Trackable):
@@ -104,6 +242,7 @@ class Predicate(Trackable):
         """
         super().__init__()
         self.verbete = combine_symbols(verbete)
+        self.nid = f"node_{next(_NID_COUNTER)}"
         self.category = category
         self.min_args = min_args
         self.max_args = max_args if max_args is not None else min_args
@@ -415,14 +554,22 @@ class Predicate(Trackable):
     def __str__(self):
         return self.__repr__()
 
-    def eval(self, annotated=False):
+    def eval(self, annotated=False, ctx: Optional[EvalCtx] = None):
         prev = self.copy()
-        pre = prev.preval(annotated=annotated).strip()
+        use_ctx = ctx if ctx is not None else _EVAL_CTX
+        if ctx is not None:
+            with pushed_eval_ctx(ctx):
+                pre = prev.preval(annotated=annotated).strip()
+        else:
+            pre = prev.preval(annotated=annotated).strip()
         neg = "" if not annotated else "[NEGATION_PARTICLE:NA]"
         neg_suf = "" if not annotated else "[NEGATION_PARTICLE:RUA]"
         if prev.rua:
             pre = f"na{neg} {pre} ruã{neg_suf}"
-        return remove_adjacent_tags(pre).strip()
+        out = remove_adjacent_tags(pre).strip()
+        if use_ctx is not None:
+            use_ctx.out_by_nid[self.nid] = out
+        return out
 
     def __invert__(self):
         """
@@ -898,6 +1045,103 @@ class Predicate(Trackable):
             "latex_pair_table": latex_pairs,
         }
 
+    def _iter_children(self):
+        return (
+            list(self.arguments)
+            + list(self.pre_adjuncts)
+            + list(self.post_adjuncts)
+            + list(self.v_adjuncts)
+            + list(self.v_adjuncts_pre)
+        )
+
+    def _collect_nodes(self):
+        nodes = []
+        children_map = {}
+        depth = {}
+        dfs_index = {}
+        dfs_counter = [0]
+
+        def dfs(node, d):
+            nodes.append(node)
+            depth[node.nid] = d
+            dfs_counter[0] += 1
+            dfs_index[node.nid] = dfs_counter[0]
+            kids = node._iter_children()
+            children_map[node.nid] = [k.nid for k in kids]
+            for k in kids:
+                dfs(k, d + 1)
+
+        dfs(self, 0)
+        return nodes, children_map, depth, dfs_index
+
+    def provenance_with_gen(self, seed: int = 0):
+        st = random.getstate()
+        random.seed(seed)
+        try:
+            ctx = EvalCtx()
+            root_out = self.eval(annotated=True, ctx=ctx)
+
+            _, children_map, depth, dfs_index = self._collect_nodes()
+            pieces_cache = {}
+
+            def pieces(nid):
+                if nid not in pieces_cache:
+                    pieces_cache[nid] = parse_annotated_morphs(
+                        ctx.out_by_nid.get(nid, "")
+                    )
+                return pieces_cache[nid]
+
+            own_ctr = {}
+            # post-order so children exist; tie-break by DFS index for determinism
+            order = sorted(
+                depth.items(),
+                key=lambda kv: (-kv[1], -dfs_index.get(kv[0], 0)),
+            )
+            for nid, _d in order:
+                node_ctr = Counter(pieces(nid))
+                child_ctr = Counter()
+                for cid in children_map.get(nid, []):
+                    child_ctr += Counter(pieces(cid))
+                own_ctr[nid] = node_ctr - child_ctr
+
+            root_pieces = parse_annotated_morphs(root_out)
+            sorted_nids = [nid for nid, _d in order]
+            pieces_with_gen = []
+            unknown_pieces = []
+            for piece in root_pieces:
+                gen = "UNKNOWN"
+                for nid in sorted_nids:
+                    if own_ctr.get(nid, Counter()).get(piece, 0) > 0:
+                        gen = nid
+                        own_ctr[nid][piece] -= 1
+                        break
+                if gen == "UNKNOWN":
+                    unknown_pieces.append(piece)
+                pieces_with_gen.append((piece, gen))
+
+            leftover_own = {}
+            for nid, ctr in own_ctr.items():
+                for piece, count in ctr.items():
+                    if count > 0:
+                        leftover_own.setdefault(nid, []).append((piece, count))
+
+            return {
+                "root_output": root_out,
+                "pieces_with_gen": pieces_with_gen,
+                "unknown_count": len(unknown_pieces),
+                "unknown_pieces": unknown_pieces,
+                "leftover_own": leftover_own,
+            }
+        finally:
+            random.setstate(st)
+
+    def render_with_gen(self, pieces_with_gen):
+        chunks = []
+        for piece, gen in pieces_with_gen:
+            tags = "".join(f"[{t}]" for t in piece.tags)
+            chunks.append(f"{piece.surface}{tags}[GEN:{gen}]")
+        return " ".join(chunks)
+
     def pedagogical_representation(self):
         """
         Return a string representation suitable for pedagogical purposes,
@@ -968,6 +1212,405 @@ class Predicate(Trackable):
         """
 
         return latex_template
+
+    def emit(self):
+        reprs = self.eval(annotated=True).strip()
+        # split on [] to get "dfsfw[w:dew]dewd[dwe] dewd [dew][dewd][dew]dwe[ROOT]" into ["dfsfw", "[w:dew]", "dewd", "[dwe]", " dewd ", "[dew:dewd:dew]", "dwe", "[ROOT]"
+        parts = [x for x in re.split(r"(\[[^\]]+\])", reprs) if x]
+        assert "".join(parts) == reprs, "Split should preserve all text"
+        all_tags = dict()
+        current_tag = None
+        for part in parts:
+            if part.startswith("[") and part.endswith("]"):
+                content = part[1:-1]
+                tags = content.split(":")
+                all_tags[current_tag].update(tags)
+            else:
+                current_tag = part
+                all_tags[current_tag] = set()
+        # reconstruct into ordered list so we can "".join it back together in the same order but with unique tags
+        recon = []
+        current_tag = None
+        for part in parts:
+            if part.startswith("[") and part.endswith("]"):
+                continue  # skip tags in reconstruction, we'll add them back in with unique sets
+            else:
+                recon.append((part, all_tags[part]))
+        return recon
+
+    def hierarchical_representation(self):
+        """
+        Return a string representation showing the hierarchical structure of the predicate flattened out,
+        with indentation representing depth in the tree. Uses '*' for arguments and '+' for adjuncts.
+        Each node gets a unique incrementing ID, and children reference their parent's ID.
+        LEAF nodes are marked, and the last node is marked as TERMINAL.
+        Each node is .eval'ed as though it had no adjuncts.
+        """
+        node_counter = [0]  # mutable counter
+        parts = self.emit()
+        em = dict(parts)
+        seen = {k: set() for k in em.keys()}
+        seen_tags = {i: set() for k in parts for i in k[1]}
+        node_seen_morpheme = defaultdict(
+            set
+        )  # node_id -> set of morphemes seen in that node
+        node_seen_tags = defaultdict(set)  # node_id -> set of tags seen in that node
+        print(parts)
+
+        def recurse(pred, indent=0, rel_type="-", parent_id=None):
+            node_counter[0] += 1
+            node_id = f"node_{node_counter[0]}"
+            indent_str = "  " * indent
+            children = pred.arguments + pred.pre_adjuncts + pred.post_adjuncts
+            ref = f"parent={parent_id}" if parent_id else "ROOT"
+            if not children:
+                leaf_marker = " LEAF"
+            else:
+                leaf_marker = ""
+            # Evaluate node as though it had no adjuncts
+            stripped = pred.copy()
+            stripped.pre_adjuncts = []
+            stripped.post_adjuncts = []
+            stripped.v_adjuncts = []
+            stripped.v_adjuncts_pre = []
+            eval_str = stripped.eval(annotated=True)
+            lines = [
+                f"{indent_str}{rel_type} {pred.verbete} [{node_id}] - {eval_str} [{ref}]{leaf_marker}"
+            ]
+            for arg in pred.arguments:
+                lines.extend(recurse(arg, indent + 1, "*", node_id))
+            for adj in pred.pre_adjuncts + pred.post_adjuncts:
+                lines.extend(recurse(adj, indent + 1, "+", node_id))
+            em_this_node = stripped.emit()
+            nid = int(node_id.replace("node_", ""))
+            for k, tags in em_this_node:
+                # here we want to iterate over the morphemes present which are also in seen, and add to its set there the node id so we know where it appears in the tree
+                if k in seen:
+                    seen[k].add(nid)
+                for tag in tags:
+                    if tag in seen_tags:
+                        seen_tags[tag].add(nid)
+                node_seen_morpheme[node_id].add(k)
+                node_seen_tags[node_id].update(tags)
+            return lines
+
+        lines = recurse(self, parent_id=None)
+        if lines:
+            lines[-1] += " TERMINAL"
+        # for each of these morphemes, we can get the largest number node in the set and add it to the set of tags for that morpheme in em, so we know the deepest node in the tree where it appears
+        for k, node_ids in seen.items():
+            if node_ids:
+                max_id = max(node_ids)
+                em[k].add(f"DEEPEST_NODE_{max_id}")
+        # replace sets in parts with those in em, and join them back together into a string
+        final_parts = []
+        for part, tags in parts:
+            unique_tags = em.get(part, set())
+            final_parts.append(part + "".join(f"[{t}]" for t in unique_tags))
+        final_str = "".join(final_parts)
+        print("\n".join(lines))
+        print("\n\n")
+        print("SEEN:", seen)
+        print("SEEN_TAGS:", seen_tags)
+        print("NODE_SEEN_MORPHEME:", node_seen_morpheme)
+        print("NODE_SEEN_TAGS:", node_seen_tags)
+        return final_str
+
+    def hierarchical_representation_v4(self):
+        node_counter = [0]
+        lines = []
+        nodes: list[_Node] = []
+
+        global_parts = _as_pairs(self.emit())
+        G_raw = [s for s, _ in global_parts]
+        G = [_norm_surface(s) for s in G_raw]
+        N = len(G)
+
+        # per-occurrence tags (start with global emission tags)
+        tags_by_idx = [set(tags) for _, tags in global_parts]
+        matched_nodes_by_idx = [
+            set() for _ in range(N)
+        ]  # global idx -> set of node nids
+
+        def build_tree(pred, indent=0, rel_type="-", parent_id=None, kind="arg"):
+            node_counter[0] += 1
+            nid = node_counter[0]
+            node_id = f"node_{nid}"
+
+            stripped = pred.copy()
+            stripped.pre_adjuncts = []
+            stripped.post_adjuncts = []
+            stripped.v_adjuncts = []
+            stripped.v_adjuncts_pre = []
+
+            eval_str = stripped.eval(annotated=True)
+            local_parts = _as_pairs(stripped.emit())
+            local_norm = [_norm_surface(s) for s, _ in local_parts]
+
+            node = _Node(
+                node_id=node_id,
+                nid=nid,
+                parent_id=parent_id,
+                depth=indent,
+                rel_type=rel_type,
+                kind=kind,
+                verbete=getattr(pred, "verbete", "?"),
+                pred_obj=pred,
+                local_parts=local_parts,
+                local_norm=local_norm,
+            )
+            nodes.append(node)
+
+            indent_str = "  " * indent
+            ref = f"parent={parent_id}" if parent_id else "ROOT"
+            children_preds = pred.arguments + pred.pre_adjuncts + pred.post_adjuncts
+            leaf_marker = " LEAF" if not children_preds else ""
+            lines.append(
+                f"{indent_str}{rel_type} {node.verbete} [{node_id}] - {eval_str} [{ref}]{leaf_marker}"
+            )
+
+            # children — keep KIND so we can search them in sensible subranges
+            for arg in pred.arguments:
+                child = build_tree(arg, indent + 1, "*", node_id, kind="arg")
+                node.children.append(child)
+            for adj in pred.pre_adjuncts:
+                child = build_tree(adj, indent + 1, "+", node_id, kind="pre")
+                node.children.append(child)
+            for adj in pred.post_adjuncts:
+                child = build_tree(adj, indent + 1, "+", node_id, kind="post")
+                node.children.append(child)
+
+            return node
+
+        root = build_tree(self, 0, "-", None, kind="arg")
+        if lines:
+            lines[-1] += " TERMINAL"
+
+        def exact_candidates(child: _Node, lo: int, hi: int):
+            """All exact substring matches of child.local_norm in G[lo:hi]."""
+            A = child.local_norm
+            L = len(A)
+            if L == 0:
+                return []
+            out = []
+            max_start = hi - L
+            for s in range(lo, max_start + 1):
+                if G[s : s + L] == A:
+                    mapping = [(i, s + i) for i in range(L)]
+                    matched = frozenset(s + i for i in range(L))
+                    out.append(
+                        _Cand(
+                            score=L, span=(s, s + L), mapping=mapping, matched=matched
+                        )
+                    )
+            return out
+
+        def lcs_best_candidate(child: _Node, lo: int, hi: int):
+            """One best LCS candidate inside G[lo:hi] (can be 0-match)."""
+            B = G[lo:hi]
+            pairs = _lcs_mapping(child.local_norm, B)
+            if not pairs:
+                # ε-candidate: no matches, zero-width span at lo
+                return _Cand(score=0, span=(lo, lo), mapping=[], matched=frozenset())
+            mapping = [(li, lo + bj) for (li, bj) in pairs]
+            matched = frozenset(gj for _, gj in mapping)
+            s = min(matched)
+            e = max(matched) + 1
+            return _Cand(
+                score=len(mapping), span=(s, e), mapping=mapping, matched=matched
+            )
+
+        def candidates(child: _Node, lo: int, hi: int):
+            """
+            Candidate generation:
+            - all exact matches (best when available)
+            - else: if single-token, exact positions of that token
+            - else: one LCS-based best candidate (may be ε)
+            """
+            lo = max(0, lo)
+            hi = min(N, hi)
+            if lo > hi:
+                lo = hi
+
+            ex = exact_candidates(child, lo, hi)
+            if ex:
+                return ex
+
+            A = child.local_norm
+            if len(A) == 1:
+                tok = A[0]
+                out = []
+                for i in range(lo, hi):
+                    if G[i] == tok:
+                        out.append(
+                            _Cand(
+                                score=1,
+                                span=(i, i + 1),
+                                mapping=[(0, i)],
+                                matched=frozenset([i]),
+                            )
+                        )
+                if out:
+                    return out
+
+            return [lcs_best_candidate(child, lo, hi)]
+
+        def pick_nonoverlapping(
+            children: list[_Node], cand_map: dict[str, list[_Cand]]
+        ):
+            """
+            Backtracking selection: choose 1 candidate per child maximizing total score,
+            disallowing overlap on matched GLOBAL indices (ε candidates have empty matched set).
+            """
+            # sort children by best possible score (prune)
+            order = sorted(
+                children,
+                key=lambda ch: max(c.score for c in cand_map[ch.node_id]),
+                reverse=True,
+            )
+
+            best = None  # (total_score, assignment_dict)
+            used = set()
+            assignment = {}
+
+            def bt(k, total):
+                nonlocal best
+                if k == len(order):
+                    if best is None or total > best[0]:
+                        best = (total, dict(assignment))
+                    return
+
+                ch = order[k]
+                for c in sorted(
+                    cand_map[ch.node_id],
+                    key=lambda x: (x.score, -(x.span[1] - x.span[0])),
+                    reverse=True,
+                ):
+                    if c.matched and (used & c.matched):
+                        continue
+                    assignment[ch.node_id] = c
+                    if c.matched:
+                        used.update(c.matched)
+                    bt(k + 1, total + c.score)
+                    if c.matched:
+                        used.difference_update(c.matched)
+                    del assignment[ch.node_id]
+
+            bt(0, 0)
+            return best[1] if best else {}
+
+        def solve(node: _Node, lo: int, hi: int):
+            """
+            Solve within CONTAINER [lo,hi]:
+            - align node core (doesn't constrain children)
+            - place children in subranges relative to core anchor
+            - recurse with child container spans (or group range if ε)
+            """
+            # core alignment (can be ε if nothing matches)
+            core = lcs_best_candidate(node, lo, hi)
+            node.core_mapping = core.mapping
+            node.core_span = core.span
+
+            # apply core mapping tags
+            for li, gi in node.core_mapping:
+                _surf, tset = node.local_parts[li]
+                tags_by_idx[gi].update(tset)
+                matched_nodes_by_idx[gi].add(node.nid)
+
+            anchor_s, anchor_e = node.core_span
+            # If ε core, anchor is at lo
+            if anchor_s == anchor_e:
+                anchor_s = anchor_e = lo
+
+            # group children by kind and choose placements independently
+            groups = {
+                "pre": (lo, anchor_s),
+                "post": (anchor_e, hi),
+                "arg": (lo, hi),
+            }
+
+            # Slight preference for args that can match INSIDE core window (helps your oré argument)
+            core_lo, core_hi = node.core_span
+
+            # Build candidates per group, pick non-overlapping per group, recurse
+            for kind in ("pre", "arg", "post"):
+                kids = [ch for ch in node.children if ch.kind == kind]
+                if not kids:
+                    continue
+
+                glo, ghi = groups[kind]
+                cand_map = {}
+                for ch in kids:
+                    cand_list = candidates(ch, glo, ghi)
+
+                    # heuristic: if arg has a candidate inside core span, bump it to front by +1 score
+                    if kind == "arg" and core_lo < core_hi:
+                        bumped = []
+                        for c in cand_list:
+                            if c.matched and all(
+                                core_lo <= i < core_hi for i in c.matched
+                            ):
+                                bumped.append(
+                                    _Cand(
+                                        score=c.score + 1,
+                                        span=c.span,
+                                        mapping=c.mapping,
+                                        matched=c.matched,
+                                    )
+                                )
+                            else:
+                                bumped.append(c)
+                        cand_list = bumped
+
+                    cand_map[ch.node_id] = cand_list
+
+                chosen = pick_nonoverlapping(kids, cand_map)
+
+                for ch in kids:
+                    c = chosen.get(ch.node_id)
+                    if c is None:
+                        # If this happens, we couldn't place without overlap; fall back to best solo candidate.
+                        c = max(cand_map[ch.node_id], key=lambda x: x.score)
+
+                    # apply mapping tags
+                    for li, gi in c.mapping:
+                        _surf, tset = ch.local_parts[li]
+                        tags_by_idx[gi].update(tset)
+                        matched_nodes_by_idx[gi].add(ch.nid)
+
+                    # recurse: if ε, keep container as group range; else use matched window span
+                    child_lo, child_hi = (glo, ghi) if c.score == 0 else c.span
+                    solve(ch, child_lo, child_hi)
+
+        # Solve entire tree within full sentence
+        solve(root, 0, N)
+
+        # deepest per TOKEN OCCURRENCE = max depth among nodes that matched that index
+        nodes_by_nid = {n.nid: n for n in nodes}
+        deepest = []
+        for i in range(N):
+            if not matched_nodes_by_idx[i]:
+                deepest.append(root.nid)
+                continue
+            best_nid = None
+            best_depth = -1
+            for nid in matched_nodes_by_idx[i]:
+                d = nodes_by_nid[nid].depth
+                if d > best_depth:
+                    best_depth = d
+                    best_nid = nid
+            deepest.append(best_nid)
+
+        out_parts = []
+        for i, (surf, _orig) in enumerate(global_parts):
+            t = set(tags_by_idx[i])
+            t.add(f"DEEPEST_NODE_{deepest[i]}")
+            out_parts.append(surf + "[" + ":".join(f"{x}" for x in sorted(t)) + "]")
+
+        final_str = "".join(out_parts)
+
+        # print("\n".join(lines))
+        return final_str
 
 
 def _format_semfit_label(gloss_main, modifiers=None, width_break=3):
