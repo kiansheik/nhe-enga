@@ -24,7 +24,8 @@ temõ = YFix(Adverb("temõ", tag="[WISHFUL_SUFIX]"))  # Make into a irreal parti
 def v(noun):
     pf = noun.noun.pluriforme
     vc = "(adj.)"
-    if pf:
+    # Nominal M-pluriforms do not project onto verbalized adjective stems.
+    if pf and pf != "m":
         vc = f"({pf})" + vc
     return Verb(
         noun.noun.verbete(anotated=True),

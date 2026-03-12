@@ -23,6 +23,14 @@ class Noun(Predicate):
         )
         self.noun = TupiNoun(self.verbete, self.functional_definition, noroot=noroot)
         self._inflection = inflection
+        defn_lower = (definition or "").lower()
+        if "(m)" in defn_lower:
+            self.noun.pluriforme = "m"
+            self.noun.m_pluriforme = True
+        elif "(s)" in defn_lower:
+            self.noun.pluriforme = "s"
+        elif "(t)" in defn_lower:
+            self.noun.pluriforme = "t"
         if inflection:
             self.plural = "pp" in inflection
         self.pro_drop = pro_drop
@@ -347,6 +355,9 @@ class Pronoun(Noun):
         self.category = "pronoun"
         if inflection_override:
             self._inflection = inflection_override
+        # add the inflection to the end of the tag with : before the end bracket appended onto the rest if it's not already there
+        if tag and self.inflection() not in tag:
+            self.tag = tag[:-1] + f":{self.inflection()}" + tag[-1:]
 
     def noun_function(self, neg=False, annotated=False):
         """Return the noun in its base form."""

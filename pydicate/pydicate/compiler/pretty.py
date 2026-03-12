@@ -181,6 +181,17 @@ def _pronoun_tag_from_token(node: IRNode) -> Optional[str]:
         token = node.attrs.get("token")
     if not token:
         return None
+    for kind in (
+        "SUBJECT",
+        "OBJECT",
+        "OBJECT_PREFIX",
+        "OBJECT_MARKER",
+        "POSSESSIVE_PRONOUN",
+        "PRONOUN",
+    ):
+        values = token.tag_features.get(kind, ())
+        if values:
+            return f"[{kind}:{values[0]}]"
     for tag in token.tags:
         kind = tag.split(":", 1)[0]
         if kind in {
@@ -225,6 +236,23 @@ def _postposition_lexeme_override(node: IRNode) -> Optional[str]:
 
 def _is_pluriform(node: IRNode) -> bool:
     return bool(node.attrs.get("pluriform"))
+
+
+def _pluriform_kind(node: IRNode) -> Optional[str]:
+    kind = node.attrs.get("pluriform_kind")
+    if not kind:
+        return None
+    return str(kind)
+
+
+def _pluriform_marker(node: IRNode) -> str:
+    kind = _pluriform_kind(node)
+    if not kind:
+        return "t"
+    key = kind.lower()
+    if key in {"m", "s", "t", "r"}:
+        return key
+    return "t"
 
 
 def canonicalize_ir(node: IRNode) -> IRNode:
@@ -347,7 +375,8 @@ def render_pydicate(
             if lexeme is None:
                 return "Postposition()"
             if _is_pluriform(node):
-                return f"Postposition({lexeme!r}, definition='(t) undef')"
+                marker = _pluriform_marker(node)
+                return f"Postposition({lexeme!r}, definition='({marker}) undef')"
             symbol = _lexicon_symbol("Postposition", lexeme, node=node)
             if symbol:
                 return symbol
@@ -369,11 +398,13 @@ def render_pydicate(
             verb_class = node.attrs.get("verb_class")
             if verb_class:
                 if _is_pluriform(node):
-                    if not str(verb_class).strip().startswith("(t)"):
-                        verb_class = f"(t) {verb_class}"
+                    marker = _pluriform_marker(node)
+                    if not str(verb_class).strip().startswith(f"({marker})"):
+                        verb_class = f"({marker}) {verb_class}"
                 return f"Verb({lexeme!r}, verb_class={verb_class!r})"
             if _is_pluriform(node):
-                return f"Verb({lexeme!r}, verb_class='(t) undef')"
+                marker = _pluriform_marker(node)
+                return f"Verb({lexeme!r}, verb_class='({marker}) undef')"
             return f"Verb({lexeme!r})"
         if node.name == "Noun":
             lexeme = normalize_lexeme("Noun", lexeme)
@@ -381,11 +412,10 @@ def render_pydicate(
                 return "Noun()"
             extra_tag = _noun_extra_tag_from_token(node)
             if _is_pluriform(node):
+                marker = _pluriform_marker(node)
                 if extra_tag:
-                    return (
-                        f"Noun({lexeme!r}, definition='(t) undef', tag={extra_tag!r})"
-                    )
-                return f"Noun({lexeme!r}, definition='(t) undef')"
+                    return f"Noun({lexeme!r}, definition='({marker}) undef', tag={extra_tag!r})"
+                return f"Noun({lexeme!r}, definition='({marker}) undef')"
             symbol = _lexicon_symbol("Noun", lexeme, node=node)
             if symbol:
                 return symbol
@@ -397,7 +427,8 @@ def render_pydicate(
             if lexeme is None:
                 return "ProperNoun()"
             if _is_pluriform(node):
-                return f"ProperNoun({lexeme!r}, definition='(t) undef')"
+                marker = _pluriform_marker(node)
+                return f"ProperNoun({lexeme!r}, definition='({marker}) undef')"
             symbol = _lexicon_symbol("ProperNoun", lexeme, node=node)
             if symbol:
                 return symbol

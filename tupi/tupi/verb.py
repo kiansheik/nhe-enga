@@ -105,7 +105,7 @@ class Verb(TupiAntigo):
             else "î" + f"[OBJECT_MARKER:3p:DEFAULT]"
         )
 
-    def negate_verb(self, result, modo):
+    def negate_verb(self, result, modo, anotar=False):
         if modo in ("permissivo", "imperativo"):
             return f"{result} umẽ[NEGATION_PARTICLE:UME]"
         spleet = result.split("[")
@@ -565,7 +565,7 @@ class Verb(TupiAntigo):
             perm = self.choose_perm(vb, perm_mode)
             result = f"{perm}{vb}"
             if negative:
-                result = self.negate_verb(result, mode)
+                result = self.negate_verb(result, mode, anotar=anotar)
             result += vadjs
             if pos == "anteposto":
                 result = f"{subj} {vadjs_pre}{result}"
@@ -592,7 +592,7 @@ class Verb(TupiAntigo):
             perm = self.choose_perm(vbt, perm_mode)
             vb = f"{perm}{vbt}"
             if negative:
-                vb = self.negate_verb(vb, mode)
+                vb = self.negate_verb(vb, mode, anotar=anotar)
             if pos == "anteposto":
                 result = f"{subj if not pro_drop else ''} {vadjs_pre}{vb}{vadjs}"
             else:
@@ -644,7 +644,7 @@ class Verb(TupiAntigo):
                         vbt = self.reduplicate(AnnotatedString(vbt)).get_annotated()
                     vb = f"{perm}{vbt}"
                     if negative:
-                        vb = self.negate_verb(vb, mode)
+                        vb = self.negate_verb(vb, mode, anotar=anotar)
                     subj = subj if not pro_drop else ""
                     result = f"{vadjs_pre}{vb}{vadjs} {subj}".strip()
                     if pos == "anteposto":
@@ -687,7 +687,7 @@ class Verb(TupiAntigo):
                             trm = self.reduplicate(AnnotatedString(trm)).get_annotated()
                         vb = f"{perm}{trm}"
                         if negative:
-                            vb = self.negate_verb(vb, mode)
+                            vb = self.negate_verb(vb, mode, anotar=anotar)
                         result = f"{subj} {vadjs_pre}{vb}{vadjs} {dir_obj if not pro_drop_obj else ''}".strip()
                     elif pos == "anteposto":
                         perm = self.choose_perm(conj, perm_mode)
@@ -698,7 +698,7 @@ class Verb(TupiAntigo):
                             trm = self.reduplicate(AnnotatedString(trm)).get_annotated()
                         vb = f"{perm}{trm}"
                         if negative:
-                            vb = self.negate_verb(vb, mode)
+                            vb = self.negate_verb(vb, mode, anotar=anotar)
                         result = f"{subj}{' '+ dir_obj if not pro_drop_obj else ''} {vadjs_pre}{vb}{vadjs}".strip()
                     elif pos == "incorporado":
                         perm = self.choose_perm(conj, perm_mode)
@@ -706,7 +706,7 @@ class Verb(TupiAntigo):
                         if redup:
                             vb = self.reduplicate(AnnotatedString(vb)).get_annotated()
                         if negative:
-                            vb = self.negate_verb(vb, mode)
+                            vb = self.negate_verb(vb, mode, anotar=anotar)
                         result = f"{subj} {vadjs_pre}{vb}{vadjs}"
                 if "2p" in object_tense:
                     if "1p" in subject_tense:
@@ -729,7 +729,7 @@ class Verb(TupiAntigo):
                         perm = self.choose_perm(vbt, perm_mode)
                         result = f"{perm}{vbt}"
                         if negative:
-                            result = self.negate_verb(result, mode)
+                            result = self.negate_verb(result, mode, anotar=anotar)
                         # breakpoint()
                         if pos == "posposto":
                             result = f"{vadjs_pre}{result}{vadjs} {subj if not pro_drop else ''}"
@@ -740,7 +740,7 @@ class Verb(TupiAntigo):
                     if "2p" in subject_tense:
                         subj = (
                             self.personal_inflections[subject_tense][4]
-                            + f"[SUBJECT:{subject_tense}:OBJECT_1P]"
+                            + f"[SUBJECT:PRONOUN:{subject_tense}:OBJECT_1P]"
                         )
                         obj = (
                             self.personal_inflections[object_tense][1]
@@ -755,7 +755,7 @@ class Verb(TupiAntigo):
                         perm = self.choose_perm(vbt, perm_mode)
                         vb = f"{perm}{vbt}"
                         if negative:
-                            vb = self.negate_verb(vb, mode)
+                            vb = self.negate_verb(vb, mode, anotar=anotar)
                         result = f"{vadjs_pre}{vb}{vadjs} {subj}"
                 if "2p" in object_tense or "1p" in object_tense:
                     if "3p" in subject_tense:
@@ -780,7 +780,7 @@ class Verb(TupiAntigo):
                         perm = self.choose_perm(vbt, perm_mode)
                         vb = f"{perm}{vbt}"
                         if negative:
-                            vb = self.negate_verb(vb, mode)
+                            vb = self.negate_verb(vb, mode, anotar=anotar)
                         result = (
                             f"{vadjs_pre}{vb}{vadjs} {subj if not pro_drop else ''}"
                             if pos == "posposto"

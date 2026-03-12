@@ -209,25 +209,54 @@ def _pluriform_mode(node: IRNode) -> Optional[str]:
     token = _node_token(node)
     if not token:
         return None
+    values = token.tag_values("PLURIFORM_PREFIX")
+    for part in ("R", "S", "T", "M", "ABSOLUTE"):
+        if part in values:
+            return part
     for tag in token.tags:
         if not tag.startswith("PLURIFORM_PREFIX"):
             continue
         parts = tag.split(":")
         for part in parts[1:]:
-            if part in {"R", "T", "ABSOLUTE"}:
+            if part in {"R", "S", "T", "M", "ABSOLUTE"}:
                 return part
     return None
 
 
-def _mark_pluriform(node: IRNode) -> IRNode:
+def _pluriform_kind(node: IRNode) -> Optional[str]:
+    token = _node_token(node)
+    if not token:
+        return None
+    values = token.tag_values("PLURIFORM_PREFIX")
+    for part in ("M", "S", "T", "R"):
+        if part in values:
+            return part
+    return None
+
+
+def _mark_pluriform(node: IRNode, kind: Optional[str] = None) -> IRNode:
     if node.kind == IRKind.ATOM:
         attrs = dict(node.attrs)
         attrs["pluriform"] = True
+        if kind and "pluriform_kind" not in attrs:
+            attrs["pluriform_kind"] = kind
         return IRNode(node.kind, node.name, node.children, attrs)
     if node.kind == IRKind.MORPH and node.children:
-        child = _mark_pluriform(node.children[0])
+        child = _mark_pluriform(node.children[0], kind)
         return IRNode(node.kind, node.name, (child,), dict(node.attrs))
     return node
+
+
+def _with_pluriform_postposition(node: IRNode) -> IRNode:
+    if node.attrs.get("pluriform_postposition"):
+        return node
+    attrs = dict(node.attrs)
+    attrs["pluriform_postposition"] = True
+    return IRNode(node.kind, node.name, node.children, attrs)
+
+
+def _is_pluriform_postposition(node: IRNode) -> bool:
+    return bool(node.attrs.get("pluriform_postposition"))
 
 
 def _is_nounish(node: IRNode) -> bool:
@@ -394,8 +423,30 @@ def _has_morph(node: IRNode, names: Iterable[str]) -> bool:
     return False
 
 
+def _has_objectish_prefix(node: IRNode) -> bool:
+    for n in node.walk():
+        token = _node_token(n)
+        if token and any(
+            k in token.tag_kinds
+            for k in ("OBJECT_PREFIX", "OBJECT_MARKER", "PATIENT_PREFIX")
+        ):
+            return True
+    return False
+
+
 def _is_possessive_pronoun(node: IRNode) -> bool:
     return "POSSESSIVE_PRONOUN" in _node_tag_kinds(node)
+
+
+def _is_subject_possessive(node: IRNode) -> bool:
+    if _node_pos(node) != "Pronoun":
+        return False
+    kinds = _node_tag_kinds(node)
+    if "SUBJECT" not in kinds:
+        return False
+    if "SUBJECT_PREFIX" in kinds or "GERUND_SUBJECT_PREFIX" in kinds:
+        return False
+    return True
 
 
 def _with_extra_tags(node: IRNode, extra: Iterable[str]) -> IRNode:
@@ -753,13 +804,14 @@ def _apply_pluriform_relations(nodes: List[IRNode]) -> List[IRNode]:
         node = nodes[i]
         if _has_tag_kind(node, "PLURIFORM_PREFIX"):
             mode = _pluriform_mode(node)
-            if mode in {"T", "ABSOLUTE"}:
+            kind = _pluriform_kind(node)
+            if mode in {"T", "ABSOLUTE", "S", "M"}:
                 if i + 1 < len(nodes):
-                    nodes[i + 1] = _mark_pluriform(nodes[i + 1])
+                    nodes[i + 1] = _mark_pluriform(nodes[i + 1], kind)
                 i += 1
                 continue
             if out and i + 1 < len(nodes):
-                nxt = _mark_pluriform(nodes[i + 1])
+                nxt = _mark_pluriform(nodes[i + 1], kind)
                 prev_token = _node_token(out[-1])
                 if (
                     prev_token
@@ -768,7 +820,25 @@ def _apply_pluriform_relations(nodes: List[IRNode]) -> List[IRNode]:
                     and "GERUND_SUBJECT_PREFIX" not in prev_token.tag_kinds
                     and _contains_verbish(nxt)
                 ):
-                    out.append(nxt)
+                    merged = Op("MUL", out[-1], nxt)
+                    carry = [
+                        k
+                        for k in _node_tag_kinds(nxt)
+                        if k
+                        in {
+                            "NOUN",
+                            "NNOUN",
+                            "DEVERBAL",
+                            "DEADVERBAL",
+                            "SUBSTANTIVE_SUFFIX",
+                            "SUBJECT",
+                            "OBJECT",
+                            "VOCATIVE",
+                        }
+                    ]
+                    if carry:
+                        merged = _with_extra_tags(merged, carry)
+                    out[-1] = merged
                     i += 2
                     continue
                 if (
@@ -813,7 +883,7 @@ def _apply_pluriform_relations(nodes: List[IRNode]) -> List[IRNode]:
                         i += 3
                         continue
                 if _is_postposition(nxt):
-                    nodes[i + 1] = nxt
+                    nodes[i + 1] = _with_pluriform_postposition(nxt)
                     i += 1
                     continue
                 merged = Op("MUL", out[-1], nxt)
@@ -851,9 +921,10 @@ def _apply_pluriform_marks(nodes: List[IRNode]) -> List[IRNode]:
         node = nodes[i]
         if _has_tag_kind(node, "PLURIFORM_PREFIX"):
             mode = _pluriform_mode(node)
-            if mode in {"T", "ABSOLUTE"}:
+            kind = _pluriform_kind(node)
+            if mode in {"T", "ABSOLUTE", "S", "M"}:
                 if i + 1 < len(nodes):
-                    nodes[i + 1] = _mark_pluriform(nodes[i + 1])
+                    nodes[i + 1] = _mark_pluriform(nodes[i + 1], kind)
                 i += 1
                 continue
         out.append(node)
@@ -1187,10 +1258,22 @@ def _apply_prefix_morph(nodes: List[IRNode]) -> List[IRNode]:
             # Skip the prefix token itself and apply .imp() to the next verbish node,
             # even if pronoun markers intervene.
             j = i + 1
-            while j < len(nodes) and not _is_verbish(nodes[j]):
-                j += 1
+            base_node = None
             if j < len(nodes):
-                base_node = nodes[j]
+                candidate = nodes[j]
+                candidate_kinds = _node_tag_kinds(candidate)
+                if (
+                    "ROOT" in candidate_kinds
+                    and _is_nounish(candidate)
+                    and not _contains_verbish(candidate)
+                ):
+                    base_node = _as_pos(candidate, "Verb")
+            if base_node is None:
+                while j < len(nodes) and not _is_verbish(nodes[j]):
+                    j += 1
+                if j < len(nodes):
+                    base_node = nodes[j]
+            if j < len(nodes) and base_node is not None:
                 base_node = _with_verb_class(
                     base_node, _subject_prefix_verb_class(token)
                 )
@@ -1243,11 +1326,39 @@ def _merge_possessives_and_postpositions(
     i = 0
     while i < len(nodes):
         node = nodes[i]
-        if _is_possessive_pronoun(node):
+        if _is_possessive_pronoun(node) or _is_subject_possessive(node):
             j = i + 1
+            saw_object_prefix = False
             while j < len(nodes) and _is_prefix(nodes[j]):
+                if _is_object_marker(nodes[j]):
+                    saw_object_prefix = True
                 j += 1
-            if j < len(nodes) and _is_nounish(nodes[j]):
+            if (
+                j < len(nodes)
+                and _is_nounish(nodes[j])
+                and (not _contains_verbish(nodes[j]) or _is_nominalized(nodes[j]))
+            ):
+                if saw_object_prefix and _is_subject_possessive(node):
+                    out.append(node)
+                    i += 1
+                    continue
+                if _is_subject_possessive(node):
+                    if (
+                        j + 1 < len(nodes)
+                        and _is_postposition(nodes[j + 1])
+                        and _is_pluriform_postposition(nodes[j + 1])
+                    ):
+                        out.append(node)
+                        i += 1
+                        continue
+                    if (
+                        j + 2 < len(nodes)
+                        and _is_prefix(nodes[j + 1])
+                        and _is_postposition(nodes[j + 2])
+                    ):
+                        out.append(node)
+                        i += 1
+                        continue
                 if j == i + 1:
                     target = nodes[j]
                 else:
@@ -1350,13 +1461,40 @@ def _merge_possessives(nodes: List[IRNode]) -> List[IRNode]:
             and not _is_postposed_subject_pronoun(node)
         ):
             j = i + 1
+            saw_object_prefix = False
             while j < len(nodes) and _is_prefix(nodes[j]):
+                if _is_object_marker(nodes[j]):
+                    saw_object_prefix = True
                 j += 1
             if (
                 j < len(nodes)
                 and _is_nounish(nodes[j])
                 and not _contains_verbish(nodes[j])
             ):
+                if saw_object_prefix:
+                    out.append(node)
+                    i += 1
+                    continue
+                if _has_objectish_prefix(nodes[j]):
+                    out.append(node)
+                    i += 1
+                    continue
+                if (
+                    j + 1 < len(nodes)
+                    and _is_postposition(nodes[j + 1])
+                    and _is_pluriform_postposition(nodes[j + 1])
+                ):
+                    out.append(node)
+                    i += 1
+                    continue
+                if (
+                    j + 2 < len(nodes)
+                    and _is_prefix(nodes[j + 1])
+                    and _is_postposition(nodes[j + 2])
+                ):
+                    out.append(node)
+                    i += 1
+                    continue
                 if j == i + 1:
                     target = nodes[j]
                 else:
@@ -1432,7 +1570,10 @@ def _attach_markers(
                     if attached:
                         continue
             j = i + 1
+            skipped_markers: List[IRNode] = []
             while j < len(nodes) and _is_prefix(nodes[j]):
+                if marker_fn is _is_subject_marker and _is_object_marker(nodes[j]):
+                    skipped_markers.append(nodes[j])
                 j += 1
             if j < len(nodes) and _is_postposition(nodes[j]):
                 out.append(node)
@@ -1481,8 +1622,12 @@ def _attach_markers(
             if j < len(nodes) and _contains_verbish(nodes[j]):
                 target = _with_verb_class(nodes[j], verb_class)
                 if preverb_right:
+                    if skipped_markers:
+                        out.extend(skipped_markers)
                     out.append(Op("MUL", target, node))
                 else:
+                    if skipped_markers:
+                        out.extend(skipped_markers)
                     out.append(Op("MUL", node, target))
                 i = j + 1
                 continue
