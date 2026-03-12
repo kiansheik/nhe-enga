@@ -7,6 +7,77 @@ from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 _MORPH_TAG_RE = re.compile(r"([^\[\]\s]+)((?:\[[^\]]+\])+)", flags=re.UNICODE)
 _TAG_RE = re.compile(r"\[([^\]]+)\]")
 
+_INFLECTION_VALUES = {
+    "1p",
+    "1ps",
+    "1ppi",
+    "1ppe",
+    "2p",
+    "2ps",
+    "2pp",
+    "3p",
+    "refl",
+    "mut",
+    "suj",
+}
+
+_INFLECTION_KINDS = {
+    "POSSESSIVE_PRONOUN",
+    "SUBJECT",
+    "SUBJECT_PREFIX",
+    "OBJECT",
+    "OBJECT_PREFIX",
+    "OBJECT_MARKER",
+    "PATIENT_PREFIX",
+    "GERUND_SUBJECT_PREFIX",
+    "PRONOUN",
+}
+
+_VALUE_MAP = {
+    "NOUN": {"POSSESSOR"},
+    "POSTPOSITION": {"DATIVE", "TRANSLATIONAL", "LOCATIVE", "BEYOND", "EVERY"},
+    "PARTICLE": {"ADVERSATIVE"},
+    "NEGATION_PARTICLE": {"UME"},
+    "SUBJECT_PREFIX": {"IMPERATIVE"},
+    "OBJECT_MARKER": {"IMPERATIVE"},
+    "PLURIFORM_PREFIX": {"R", "S", "T", "ABSOLUTE", "M"},
+    "CAUSATIVE_PREFIX": {"MO"},
+    "OBJECT": {"NON_MAIN_CLAUSE_SUBJECT"},
+}
+
+
+def _expand_tag(tag: str) -> Tuple[str, ...]:
+    parts = [p for p in tag.split(":") if p]
+    if len(parts) <= 1:
+        return (tag,)
+
+    tags = list(parts)
+    parts_set = set(parts)
+
+    for kind in _INFLECTION_KINDS:
+        if kind in parts_set:
+            for value in _INFLECTION_VALUES:
+                if value in parts_set:
+                    tags.append(f"{kind}:{value}")
+
+    for kind, values in _VALUE_MAP.items():
+        if kind in parts_set:
+            for value in values:
+                if value in parts_set:
+                    tags.append(f"{kind}:{value}")
+
+    # Preserve order and dedupe.
+    return tuple(dict.fromkeys(tags))
+
+
+def _normalize_tags(tags: Iterable[str]) -> Tuple[str, ...]:
+    expanded: List[str] = []
+    for tag in tags:
+        if not tag:
+            continue
+        expanded.extend(_expand_tag(tag))
+    return tuple(dict.fromkeys(expanded))
+
 
 @dataclass(frozen=True)
 class Token:
@@ -22,7 +93,7 @@ class Token:
         if self.t:
             tags.append(self.t)
         tags.extend(list(self.s))
-        return tuple(tags)
+        return _normalize_tags(tags)
 
     @property
     def tag_kinds(self) -> Tuple[str, ...]:

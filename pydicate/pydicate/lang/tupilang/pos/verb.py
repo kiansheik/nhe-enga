@@ -81,6 +81,11 @@ class Verb(Predicate):
             elif "(t)" in verb_class:
                 self.verb.pluriforme = True
                 self.verb.pluriforme_type = "t"
+            elif "(s)" in verb_class:
+                self.verb.pluriforme = True
+                self.verb.pluriforme_type = "s"
+            # M-pluriform is nominal-only; treating it as verbal adds spurious R- prefixes
+            # to 1st/2nd-person forms like `orérpoasem`.
         self.user_definition = f"{self.definition} ".strip()
         self.raw_definition = definition
         self.mood = "indicativo"

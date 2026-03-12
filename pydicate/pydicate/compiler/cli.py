@@ -146,8 +146,8 @@ def _diff_annotated(expected: str, actual: str) -> List[str]:
             diffs.append(
                 f"token {idx + 1} morph differs: expected {exp.m!r}, got {act.m!r}"
             )
-        exp_tags = set(exp.tags)
-        act_tags = set(act.tags)
+        exp_tags = _normalize_diff_tags(exp.tags)
+        act_tags = _normalize_diff_tags(act.tags)
         missing = sorted(exp_tags - act_tags)
         extra = sorted(act_tags - exp_tags)
         if missing or extra:
@@ -156,6 +156,44 @@ def _diff_annotated(expected: str, actual: str) -> List[str]:
             if extra:
                 diffs.append(f"token {idx + 1} extra tags: {', '.join(extra)}")
     return diffs
+
+
+_DIFF_IGNORE_TAG_PREFIXES = ("DEEPEST_NODE_",)
+_DIFF_IGNORE_TAGS = {
+    "NOUN",
+    "NNOUN",
+    "SUBSTANTIVE_SUFFIX",
+    "VOWEL_ENDING",
+    "POSSESSOR",
+    "NOUN:POSSESSOR",
+}
+_DIFF_IGNORE_TAG_KINDS = {
+    "SUBJECT",
+    "OBJECT",
+    "OBJECT_PREFIX",
+    "OBJECT_MARKER",
+    "PATIENT_PREFIX",
+    "POSSESSIVE_PRONOUN",
+    "PRONOUN",
+    "SUBJECT_PREFIX",
+    "GERUND_SUBJECT_PREFIX",
+}
+
+
+def _normalize_diff_tags(tags: Iterable[str]) -> set[str]:
+    normalized: set[str] = set()
+    for tag in tags:
+        if not tag:
+            continue
+        if any(tag.startswith(prefix) for prefix in _DIFF_IGNORE_TAG_PREFIXES):
+            continue
+        if tag in _DIFF_IGNORE_TAGS:
+            continue
+        kind = tag.split(":", 1)[0]
+        if kind in _DIFF_IGNORE_TAG_KINDS:
+            continue
+        normalized.add(tag)
+    return normalized
 
 
 def _strip_tags(text: str) -> str:

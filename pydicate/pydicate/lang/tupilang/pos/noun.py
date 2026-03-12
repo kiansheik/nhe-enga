@@ -23,6 +23,14 @@ class Noun(Predicate):
         )
         self.noun = TupiNoun(self.verbete, self.functional_definition, noroot=noroot)
         self._inflection = inflection
+        defn_lower = (definition or "").lower()
+        if "(m)" in defn_lower:
+            self.noun.pluriforme = "m"
+            self.noun.m_pluriforme = True
+        elif "(s)" in defn_lower:
+            self.noun.pluriforme = "s"
+        elif "(t)" in defn_lower:
+            self.noun.pluriforme = "t"
         if inflection:
             self.plural = "pp" in inflection
         self.pro_drop = pro_drop

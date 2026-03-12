@@ -740,7 +740,7 @@ class Predicate(Trackable):
         return result_string
 
     def to_forest_tree(self, indent=0, ctype="result", parent=None, links=None):
-        """
+        r"""
         Returns a tuple: (forest_body_str, tikz_overlay_str_list).
         - forest_body_str: Forest node string (with children) for inclusion inside \begin{forest}...\end{forest}
         - tikz_overlay_str_list: list of strings with TikZ \path[...] ...; to draw AFTER the forest
@@ -1614,7 +1614,7 @@ class Predicate(Trackable):
 
 
 def _format_semfit_label(gloss_main, modifiers=None, width_break=3):
-    """
+    r"""
     Return a single LaTeX label wrapped in \semfit{...}, with optional '\\'
     inserted every `width_break` items to encourage vertical wrapping.
     All strings are assumed already escaped for forest via escape_latex_forest_node.
