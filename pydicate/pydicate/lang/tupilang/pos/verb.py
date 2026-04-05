@@ -590,8 +590,25 @@ class VerbAugmentor(Verb):
         :return: A new Transitivizer with the added argument.
         """
         if self._augmentee is None:
-            new_verb = VerbAugmentor.from_existing(other)
-            new_verb.verb.verbete = f"{self.verbete}{self.tag}{other.verbete}"
+            fin = other
+            if not isinstance(fin, Verb):
+                # Prefer the v() helper for noun-like predicates so we inherit
+                # 2ª classe behavior and definitions consistently.
+                try:
+                    from pydicate.lang.tupilang.pos import v as verb_from_noun
+
+                    if hasattr(fin, "noun"):
+                        fin = verb_from_noun(fin)
+                    else:
+                        raise TypeError("non-noun augmentee")
+                except Exception:
+                    fin = Verb(
+                        value=getattr(other, "verbete", None) or str(other),
+                        verb_class="2ª classe",
+                        definition=getattr(other, "definition", ""),
+                    )
+            new_verb = VerbAugmentor.from_existing(fin)
+            new_verb.verb.verbete = f"{self.verbete}{self.tag}{fin.verbete}"
             new_verb.verb.transitivo = True
             new_verb.verbete = new_verb.verb.verbete
             new_verb.verb.pluriforme = False
@@ -603,8 +620,8 @@ class VerbAugmentor(Verb):
             if self.ero_switch:
                 new_verb.verb.ero = True
                 new_verb.verb.pluriforme = True
-            new_verb.tag = f"{other.tag}"
-            new_verb._augmentee = other
+            new_verb.tag = f"{fin.tag}"
+            new_verb._augmentee = fin
             new_verb._augmentor = self.copy()
             if hasattr(new_verb._augmentor, "_augmentee"):
                 new_verb._augmentor._augmentee = None

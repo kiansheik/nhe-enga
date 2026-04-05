@@ -169,9 +169,21 @@ class Classifier(Noun):
         if self._augment_noun:
             return self._augment_noun
         if self.arguments and isinstance(self.arguments[0], Noun):
+            arg = self.arguments[0]
+            # Preserve stacked classifier surfaces when chaining classifiers.
+            if getattr(arg, "category", "") == "classifier_noun":
+                try:
+                    arg_eval = arg.eval(annotated=True)
+                    arg_eval_clean = re.sub(r"\[[^\]]+\]", "", arg_eval).strip()
+                    if arg_eval_clean and " " not in arg_eval_clean:
+                        return TupiNoun(
+                            arg_eval, arg.functional_definition, noroot=True
+                        )
+                except Exception:
+                    pass
             # Morphology should operate on the argument's noun base, not its
             # fully rendered surface (adjuncts are reapplied in preval).
-            arg_noun = self.arguments[0].noun
+            arg_noun = arg.noun
             if hasattr(arg_noun, "_clone"):
                 return arg_noun._clone()
             return deepcopy(arg_noun)

@@ -39,3 +39,30 @@ All tests OK.
 ## Files Touched
 - `pydicate/pydicate/predicate.py`
 - `pydicate/pydicate/lang/tupilang/pos/deverbal.py`
+
+## Follow-up Fix (classifier stacking)
+User reported stacked classifiers with `/` still wrong:
+Expected `mba'ererokûakatuoryparametépûerama`, got `...parambûerameté`.
+
+### Root Cause
+Classifier stacking dropped inner classifier surfaces because `Classifier.noun` used the argument’s *noun base* instead of its realized surface when the argument itself was a classifier. `/` applied to the outer classifier, so the modifier landed after the outermost suffix rather than before the remaining classifier chain.
+
+### Changes
+1) **Classifier.noun** now preserves stacked classifier surfaces:
+- If argument category is `classifier_noun`, build a `TupiNoun` from `arg.eval(annotated=True)` (single-token only) so suffixes are retained.
+- Otherwise keep the previous behavior (operate on noun base).
+File: `pydicate/pydicate/lang/tupilang/pos/deverbal.py`
+
+2) **Predicate.compose** now descends into classifier chains:
+- If `self.category == classifier_noun` and `self.arguments[0]` is also a classifier, then apply `compose` to the innermost classifier and reattach, preserving temporal ordering.
+- This yields `/` attaching to the innermost classifier in a chain while outer classifiers stay outside.
+File: `pydicate/pydicate/predicate.py`
+
+### Result
+Expression:
+`rama * (pûera * (rama * (sara * (...) ))) / eté`
+Now returns:
+`mba'ererokûakatuoryparametépûerama`.
+
+### Tests
+`make test` in `../oldtupicorpus` passed after the change.

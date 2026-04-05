@@ -387,6 +387,24 @@ class Predicate(Trackable):
         use the / operator to compose predicates
         :return: Self (to enable chaining).
         """
+        # For chained classifiers, apply composition to the innermost classifier
+        # to preserve temporal ordering (e.g., rama(pûera(rama(X))) / adj).
+        try:
+            from pydicate.lang.tupilang.pos.noun import Noun as PydicateNoun
+        except Exception:
+            PydicateNoun = None
+        if (
+            getattr(self, "category", "") == "classifier_noun"
+            and PydicateNoun
+            and isinstance(modifier, PydicateNoun)
+            and self.arguments
+            and getattr(self.arguments[0], "category", "") == "classifier_noun"
+        ):
+            outer = self.copy()
+            inner = self.arguments[0].compose(modifier)
+            outer.arguments[0] = inner
+            return outer
+
         orig = self.copy()
 
         # Prefer composing on the realized surface for select noun-like
