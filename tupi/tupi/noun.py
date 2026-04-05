@@ -66,12 +66,15 @@ def tokenize_string(annotated_string):
 
 
 class Noun(TupiAntigo):
-    def __init__(self, verbete, raw_definition, noroot=False):
+    def __init__(
+        self, verbete, raw_definition, noroot=False, preserve_terminal_a=False
+    ):
         super().__init__()
         self.noroot = noroot
         vbt = AnnotatedString(verbete)
         if (
-            len(vbt.clean) >= 2
+            not preserve_terminal_a
+            and len(vbt.clean) >= 2
             and (vbt[-1] == "a" and vbt[-2] != "'")
             and vbt[-2] not in self.vogais
         ):
@@ -381,7 +384,7 @@ class Noun(TupiAntigo):
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
 
-    def sara(self):
+    def sara(self, variation_id=0):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name
         args, _, _, values = inspect.getargvalues(frame)
@@ -410,6 +413,9 @@ class Noun(TupiAntigo):
             # Preserve the stem-final segment as part of the root, then add suffix.
             annotated.replace_clean(-1, 1, sar_rep[0])
             annotated.insert_suffix(sar_rep[1:])
+        elif ends_with_any(annotated, ret_noun.vogais_nasais):
+            # Nasal-vowel stems admit both -sara (default) and -ana (alternate).
+            annotated.insert_suffix("an" if variation_id == 1 else "sar")
         elif annotated[-1] not in ret_noun.vogais:
             annotated.insert_suffix("ar")
         else:
@@ -458,6 +464,14 @@ class Noun(TupiAntigo):
         annotated.insert_suffix("[FACILITY_SUFFIX]")
 
         ret_noun.latest_verbete = annotated
+        # Only preserve the pre-saba stem for the `-r -> -s` alternation,
+        # so later classifiers can recover `îebyragûama` from `îebysaba`
+        # without affecting the other `saba` allomorphs.
+        ret_noun._classifier_base_annotated = None
+        ret_noun._saba_recovers_final_r = False
+        if vbt[-1] in ["r", "b", "m"]:
+            ret_noun._classifier_base_annotated = self.latest_verbete.get_annotated()
+            ret_noun._saba_recovers_final_r = True
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.segunda_classe = True
         ret_noun.transitivo = False
@@ -585,23 +599,32 @@ class Noun(TupiAntigo):
         ret_noun = self._clone()
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
-        vbt = ret_noun.latest_verbete
-        if vbt[-1] in self.vogais:
-            if vbt[-1] in self.vogais_nasais:
-                vbt.insert_suffix("mbûer")
-            else:
-                vbt.insert_suffix("pûer")
-        elif vbt[-1] in ["b"]:
-            vbt.replace_clean(-1, 1, "")
-            vbt.insert_suffix("gûer")
-        elif vbt[-1] in ["n"]:
-            vbt.insert_suffix("der")
-        elif vbt[-1] in ["r"]:
-            vbt.insert_suffix("ûer")
-        elif vbt[-1] in ["m"]:
-            vbt.insert_suffix("bûer")
+        if getattr(self, "_saba_recovers_final_r", False) and getattr(
+            self, "_classifier_base_annotated", None
+        ):
+            vbt = AnnotatedString(self._classifier_base_annotated)
+            vbt.insert_suffix("agûer")
+            ret_noun.latest_verbete = vbt
+            ret_noun._classifier_base_annotated = None
+            ret_noun._saba_recovers_final_r = False
         else:
-            vbt.insert_suffix("ûer")
+            vbt = ret_noun.latest_verbete
+            if vbt[-1] in self.vogais:
+                if vbt[-1] in self.vogais_nasais:
+                    vbt.insert_suffix("mbûer")
+                else:
+                    vbt.insert_suffix("pûer")
+            elif vbt[-1] in ["b"]:
+                vbt.replace_clean(-1, 1, "")
+                vbt.insert_suffix("gûer")
+            elif vbt[-1] in ["n"]:
+                vbt.insert_suffix("der")
+            elif vbt[-1] in ["r"]:
+                vbt.insert_suffix("ûer")
+            elif vbt[-1] in ["m"]:
+                vbt.insert_suffix("bûer")
+            else:
+                vbt.insert_suffix("ûer")
         vbt.insert_suffix("[PRETERITE_SUFFIX]")
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.segunda_classe = True
@@ -619,23 +642,36 @@ class Noun(TupiAntigo):
         ret_noun = self._clone()
         ret_noun.aglutinantes[-1] = self
         # --------------------------------
-        vbt = ret_noun.latest_verbete
-        if vbt[-1] in self.vogais:
-            if vbt[-1] in self.vogais_nasais:
-                vbt.insert_suffix("nam")
-            else:
-                vbt.insert_suffix("ram")
-        elif vbt[-1] in ["b"]:
-            vbt.replace_clean(-1, 1, "")
-            vbt.insert_suffix("gûam")
-        elif ends_with_any(vbt, ["n", "r", "nh"]):
-            vbt.insert_suffix("am")
-        elif vbt[-1] in ["m"]:
-            vbt.replace_clean(-1, 1, "")
-            vbt.nasaliza_final()
-            vbt.insert_suffix("gûam")
+        if getattr(self, "_saba_recovers_final_r", False) and getattr(
+            self, "_classifier_base_annotated", None
+        ):
+            vbt = AnnotatedString(self._classifier_base_annotated)
+            vbt.insert_suffix("agûam")
+            ret_noun.latest_verbete = vbt
+            ret_noun._classifier_base_annotated = None
+            ret_noun._saba_recovers_final_r = False
         else:
-            vbt.insert_suffix("ûam")
+            vbt = ret_noun.latest_verbete
+            clean_vbt = vbt.get_clean()
+            # One-off lexical irregularity: te'õab(a) + -ram -> tegûama.
+            if clean_vbt in {"te'õab", "te'õaba"}:
+                vbt.replace_clean(0, len(clean_vbt), "tegûam")
+            elif vbt[-1] in self.vogais:
+                if vbt[-1] in self.vogais_nasais:
+                    vbt.insert_suffix("nam")
+                else:
+                    vbt.insert_suffix("ram")
+            elif vbt[-1] in ["b"]:
+                vbt.replace_clean(-1, 1, "")
+                vbt.insert_suffix("gûam")
+            elif ends_with_any(vbt, ["n", "r", "nh"]):
+                vbt.insert_suffix("am")
+            elif vbt[-1] in ["m"]:
+                vbt.replace_clean(-1, 1, "")
+                vbt.nasaliza_final()
+                vbt.insert_suffix("gûam")
+            else:
+                vbt.insert_suffix("ûam")
         vbt.insert_suffix("[FUTURE_SUFFIX]")
         ret_noun.aglutinantes.append(ret_noun)
         ret_noun.segunda_classe = True

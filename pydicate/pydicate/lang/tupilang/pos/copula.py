@@ -61,5 +61,11 @@ class Copula(Predicate):
             return other * self
         return super().__mul__(other)
 
+    def __add__(self, other):
+        # `cop() + verb` should behave like a preverbal adjunct attachment.
+        if isinstance(other, Predicate) and hasattr(other, "verb"):
+            return other.__addpre__(self)
+        return super().__add__(other)
+
 
 cop = Copula

@@ -24,6 +24,7 @@ class Deverbal(Noun):
         self.min_args = 0
         self.max_args = 1
         self._augment_noun = None
+        self.noun_morphology = None
         self.vocative = False
 
     @property
@@ -32,10 +33,13 @@ class Deverbal(Noun):
         if self._augment_noun:
             ret_noun = self._augment_noun
         elif self.arguments and isinstance(self.arguments[0], Verb):
-            ret_noun = TupiNoun(
-                self.eval(True), self.functional_definition, noroot=True
-            )
-            ret_noun.pluriforme = self.arguments[0].verb.pluriforme
+            if callable(self.noun_morphology):
+                ret_noun = self.noun_morphology(self, self.arguments[0])
+            else:
+                ret_noun = TupiNoun(
+                    self.eval(True), self.functional_definition, noroot=True
+                )
+                ret_noun.pluriforme = self.arguments[0].verb.pluriforme
             # verb = self.arguments[0]
             # vbt = verb.copy()
             # if vbt.arguments:
@@ -60,11 +64,23 @@ class Deverbal(Noun):
     def morphology(self, sef, verb, annotated=False):
         return verb.eval(annotated=annotated)
 
+    def _apply_compositions(self, surface, annotated=False):
+        if not self.compositions:
+            return surface
+        composed = TupiNoun(surface, self.functional_definition, noroot=True)
+        for modifier in self.compositions:
+            mod_n = TupiNoun(
+                modifier.verbete, modifier.functional_definition, noroot=True
+            )
+            composed = composed.compose(mod_n)
+        return composed.verbete(annotated)
+
     def preval(self, annotated=False):
         retval = ""
         if self.arguments:
             verb = self.arguments[0]
             mf = self.morphology(self, verb, annotated=annotated)
+            mf = self._apply_compositions(mf, annotated=annotated)
             retval = ""
             for adj in verb.v_adjuncts_pre + verb.pre_adjuncts:
                 retval = adj.eval(annotated=annotated) + " " + retval.strip()
@@ -73,9 +89,10 @@ class Deverbal(Noun):
                 retval = retval.strip() + " " + adj.eval(annotated=annotated)
             retval = retval.strip()
         else:
-            retval = AnnotatedString(f"{self.verbete}{self.tag}").verbete(
+            bare = AnnotatedString(f"{self.verbete}{self.tag}").verbete(
                 annotated=annotated
             )
+            retval = self._apply_compositions(bare, annotated=annotated)
         return retval
 
     def __mul__(self, other):
@@ -128,18 +145,12 @@ class Classifier(Noun):
         if self._augment_noun:
             return self._augment_noun
         if self.arguments and isinstance(self.arguments[0], Noun):
-            ret = TupiNoun(
-                self.arguments[0].eval(True), self.functional_definition, noroot=True
-            )
-            ret.pluriforme = self.arguments[0].noun.pluriforme
-            return ret
-            # verb = self.arguments[0]
-            # vbt = verb.copy()
-            # if vbt.arguments:
-            #     vbt.arguments[0].pro_drop = True
-            # # return TupiNoun(self.eval(True), self.functional_definition)
-            # print(self.eval(True))
-            # return vbt.base_nominal(True).noun
+            # Morphology should operate on the argument's noun base, not its
+            # fully rendered surface (adjuncts are reapplied in preval).
+            arg_noun = self.arguments[0].noun
+            if hasattr(arg_noun, "_clone"):
+                return arg_noun._clone()
+            return deepcopy(arg_noun)
         return TupiNoun(self.verbete, self.functional_definition, noroot=True)
 
     @noun.setter
@@ -158,18 +169,32 @@ class Classifier(Noun):
     def preval(self, annotated=False):
         retval = ""
         if self.arguments:
-            verb = self.arguments[0]
-            mf = self.morphology(self, verb, annotated=annotated)
-            retval = ""
-            for adj in verb.pre_adjuncts:
-                retval = adj.eval(annotated=annotated) + " " + retval
-            for adj in verb.post_adjuncts:
-                retval = retval.strip() + " " + adj.eval(annotated=annotated)
-            retval = f"{retval.strip()} {mf}".strip()
+            arg = self.arguments[0]
+            retval = self.morphology(self, arg, annotated=annotated).strip()
+            # Classifiers over deverbals should preserve verbal adjunct context
+            # carried by the argument chain.
+            arg_pre = list(arg.pre_adjuncts)
+            arg_post = list(arg.post_adjuncts)
+            if arg.arguments and isinstance(arg.arguments[0], Verb):
+                verb = arg.arguments[0]
+                arg_pre = list(verb.v_adjuncts_pre) + list(verb.pre_adjuncts) + arg_pre
+                arg_post = arg_post + list(verb.v_adjuncts) + list(verb.post_adjuncts)
+            for adj in reversed(arg_pre):
+                adj_txt = adj.eval(annotated=annotated).strip()
+                if adj_txt and adj_txt not in retval:
+                    retval = f"{adj_txt} {retval}".strip()
+            for adj in arg_post:
+                adj_txt = adj.eval(annotated=annotated).strip()
+                if adj_txt and adj_txt not in retval:
+                    retval = f"{retval} {adj_txt}".strip()
         else:
             retval = AnnotatedString(f"{self.verbete}{self.tag}").verbete(
                 annotated=annotated
             )
+        for adj in self.pre_adjuncts:
+            retval = f"{adj.eval(annotated=annotated)} {retval}".strip()
+        for adj in self.post_adjuncts:
+            retval = f"{retval} {adj.eval(annotated=annotated)}".strip()
         return retval
 
     def __mul__(self, other):
@@ -255,7 +280,8 @@ def sara_morphology(self, verbin, annotated=False):
     nom.latest_verbete.drop_until_last_tag()
     if verb.negated:
         nom = nom.eym()
-    nom = nom.sara()
+    variation_id = 0 if self.variation_id is None else self.variation_id
+    nom = nom.sara(variation_id=variation_id)
     if self.vocative:
         nom = nom.vocativo()
     return nom.substantivo(annotated)
@@ -315,6 +341,7 @@ saba.morphology = (
     .substantivo(annotated)
     .strip()
 )
+saba.noun_morphology = lambda self, verb: verb.base_nominal(True).noun.saba()
 
 # -sab(a) (suf. nominalizador) - 1) nominalizador de complemento circunstancial. Traduz-se por tempo, lugar, companhia, modo, causa, instrumento, finalidade, etc. Tem os alomorfes -ab(a), -b(a), -á, -ndab(a), etc.: îukasaba - tempo, lugar, instrumento, causa, modo, companhia, etc. de matar (Anch., Arte, 19); ...N'i papasabi. - Não há modo de contá-los. (Ar., Cat., 38); ...i 'ekatûaba kotysaba é... - o que estava à sua direita (isto é, a companhia do lado da sua mão direita) (Anch., Diál. da Fé, 190); Xe 'angorypaba. - A causa da alegria de minha alma. (Anch., Poemas, 106); 2) Forma substantivos abstratos: angaipaba - maldade (lit. - qualidade da alma ruim) (Anch., Teatro, 34)
 rama = Classifier(
@@ -322,9 +349,20 @@ rama = Classifier(
     definition="Nominal future, what will be",
     tag="[CLASSIFIER:FUTURE]",
 )
-rama.morphology = (
-    lambda sef, verb, annotated=False: sef.noun.ram().substantivo(annotated).strip()
-)
+
+
+def rama_morphology(self, verb, annotated=False):
+    """
+    Morphology for the 'rama' classifier.
+    Returns the nominal future form, applying negation if needed.
+    """
+    noun = self.noun.ram()
+    if getattr(self, "negated", False):
+        noun = noun.eym()
+    return noun.substantivo(annotated).strip()
+
+
+rama.morphology = rama_morphology
 # -sab(a) (suf. nominalizador) - 1) nominalizador de complemento circunstancial. Traduz-se por tempo, lugar, companhia, modo, causa, instrumento, finalidade, etc. Tem os alomorfes -ab(a), -b(a), -á, -ndab(a), etc.: îukasaba - tempo, lugar, instrumento, causa, modo, companhia, etc. de matar (Anch., Arte, 19); ...N'i papasabi. - Não há modo de contá-los. (Ar., Cat., 38); ...i 'ekatûaba kotysaba é... - o que estava à sua direita (isto é, a companhia do lado da sua mão direita) (Anch., Diál. da Fé, 190); Xe 'angorypaba. - A causa da alegria de minha alma. (Anch., Poemas, 106); 2) Forma substantivos abstratos: angaipaba - maldade (lit. - qualidade da alma ruim) (Anch., Teatro, 34)
 pûera = Classifier(
     "pûer",
@@ -334,3 +372,16 @@ pûera = Classifier(
 pûera.morphology = (
     lambda sef, verb, annotated=False: sef.noun.puer().substantivo(annotated).strip()
 )
+
+
+def pûer_morphology(self, verb, annotated=False):
+    """
+    Morphology for the 'pûera' classifier.
+    """
+    noun = self.noun.puer()
+    if getattr(self, "negated", False):
+        noun = noun.eym()
+    return noun.substantivo(annotated).strip()
+
+
+pûera.morphology = pûer_morphology

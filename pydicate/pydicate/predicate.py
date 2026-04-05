@@ -389,7 +389,33 @@ class Predicate(Trackable):
         """
         orig = self.copy()
         orig_n = TupiNoun(orig.verbete, orig.definition, noroot=True)
-        mod_n = TupiNoun(modifier.verbete, modifier.definition, noroot=True)
+        mod_surface = modifier.verbete
+        use_resolved_surface = getattr(modifier, "category", "") in {
+            "deverbal_noun",
+            "classifier_noun",
+            "deadverbal_noun",
+        }
+        # Compose from the realized lexical surface when the modifier is a
+        # single-word derived form (e.g., `saba * v(x)` -> `...aba`), while
+        # preserving legacy behavior for multiword predicates.
+        if use_resolved_surface:
+            try:
+                mod_eval = modifier.eval(annotated=True)
+                mod_eval_clean = re.sub(r"\[[^\]]+\]", "", mod_eval).strip()
+                if mod_eval_clean and " " not in mod_eval_clean:
+                    mod_surface = mod_eval
+            except Exception:
+                pass
+        preserve_terminal_a = "[SUBSTANTIVE_SUFFIX:" in mod_surface and (
+            getattr(modifier, "category", "")
+            in {"deverbal_noun", "classifier_noun", "deadverbal_noun"}
+        )
+        mod_n = TupiNoun(
+            mod_surface,
+            modifier.definition,
+            noroot=True,
+            preserve_terminal_a=preserve_terminal_a,
+        )
         new_n = orig_n.compose(mod_n).verbete(True)
         # Modify the copy of self
         orig.compositions += [modifier]
@@ -703,6 +729,11 @@ class Predicate(Trackable):
             + self.v_adjuncts
             + self.v_adjuncts_pre
         )
+
+    def __iter__(self):
+        # Backward compatibility: allow `list += predicate` idiom used in
+        # corpus source files by treating a predicate as a single-item iterable.
+        yield self
 
     def __lshift__(self, other):
         return self.subordinate(other, pre=False)

@@ -20,6 +20,10 @@ class TupiAntigo(object):
         "refl": ["îe", "oîo"],
         "suj": ["og", "og"],
         "mut": ["îo", "oîo"],
+        "gen": [
+            "moro",
+            "moro",
+        ],
     }
     dative_inflections = {
         "1ps": [
@@ -48,6 +52,16 @@ class TupiAntigo(object):
         ],
         "3p": [
             "i[PATIENT_PREFIX:3p]xupé",
+        ],
+        "gen": [
+            "moro[PATIENT_PREFIX:GENERIC:PEOPLE_IN_GENERAL]upé",
+        ],
+        "refl": [
+            "oîo[PATIENT_PREFIX:REFLEXIVE]upé",
+            "oîe[PATIENT_PREFIX:REFLEXIVE]upé",
+        ],
+        "mut": [
+            "oîo[PATIENT_PREFIX:MUTUAL]upé",
         ],
     }
 

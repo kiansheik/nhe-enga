@@ -4,6 +4,7 @@ from pydicate.lang.tupilang.pos.copula import *
 from tupi import AnnotatedString
 from pydicate.lang.tupilang.pos.interjection import *
 from pydicate.lang.tupilang.pos.adverb import *
+import re
 
 
 class Noun(Predicate):
@@ -24,12 +25,16 @@ class Noun(Predicate):
         self.noun = TupiNoun(self.verbete, self.functional_definition, noroot=noroot)
         self._inflection = inflection
         defn_lower = (definition or "").lower()
-        if "(m)" in defn_lower:
+        # Grammatical markers like "(t)" / "(s)" / "(m)" are expected in
+        # the leading parenthetical header, not arbitrary gloss text.
+        marker_block_match = re.match(r"^\s*(?:\([^)]*\)\s*)+", defn_lower)
+        marker_block = marker_block_match.group(0) if marker_block_match else ""
+        if "(m)" in marker_block:
             self.noun.pluriforme = "m"
             self.noun.m_pluriforme = True
-        elif "(s)" in defn_lower:
+        elif "(s)" in marker_block:
             self.noun.pluriforme = "s"
-        elif "(t)" in defn_lower:
+        elif "(t)" in marker_block:
             self.noun.pluriforme = "t"
         if inflection:
             self.plural = "pp" in inflection
@@ -267,9 +272,21 @@ class Conjunction(Noun):
 
     def preval(self, annotated=False):
         """Evaluate the Conjunction object."""
-        nec = " ".join([x.eval(annotated=annotated) for x in self.arguments]) + (
-            f" {self.verbete}{self.tag}" if self.verbete else f"{self.tag}"
-        )
+        lexeme = self.verbete
+        if self.verbete == "abé":
+            var_id = 0 if self.variation_id is None else self.variation_id
+            if var_id == 1:
+                lexeme = "bé"
+            if var_id == 2:
+                lexeme = "pabẽ"
+        suppress_lexeme = bool(getattr(self, "_suppress_lexeme", False))
+        if lexeme and not suppress_lexeme:
+            suffix = f" {lexeme}{self.tag}"
+        elif lexeme and suppress_lexeme:
+            suffix = ""
+        else:
+            suffix = f"{self.tag}"
+        nec = " ".join([x.eval(annotated=annotated) for x in self.arguments]) + suffix
         if self.post_adjuncts:
             # TODO: When evaling adjunct, check if yfix for space or y
             nec += " " + " ".join(
@@ -305,6 +322,24 @@ class Conjunction(Noun):
             return cop
         else:
             return super().__add__(other)
+
+    def __mul__(self, other):
+        # Lexical conjunctions used with `*` coordinate phrases as a noun-like
+        # container, while still rendering the conjunction surface at the end.
+        if self.verbete:
+            cop = self.copy()
+            if other.category == "verb":
+                cop.posto = "anteposto"
+                return other * cop
+            if isinstance(other, Predicate):
+                cop.arguments.append(other.copy())
+                # Treat as a noun phrase for downstream verbal-object handling.
+                cop.category = "classifier_noun"
+                return cop
+        return super().__mul__(other)
+
+    def base_nominal(self, annotated=False):
+        return self.copy()
 
 
 class ProperNoun(Noun):
@@ -392,6 +427,10 @@ pee_suj = Pronoun("2pp", definition="y'all'", tag="[SUBJECT:2pp]")
 pee_obj = Pronoun("2pp", definition="y'all'", tag="[OBJECT:2pp]")
 ae_suj = Pronoun("3p", definition="he/she/it/they", tag="[SUBJECT:3p]")
 ae_obj = Pronoun("3p", definition="he/she/it/they", tag="[OBJECT:3p]")
+moro = Pronoun(
+    "gen", definition="generic, people", tag="[PRONOUN:GENERIC:PEOPLE_IN_GENERAL]"
+)
+moro.noun = TupiNoun("moro", moro.functional_definition, noroot=True)
 îe = Pronoun(
     "refl", definition="to oneself, one's own", tag="[OBJECT_PREFIX:REFLEXIVE]"
 )
