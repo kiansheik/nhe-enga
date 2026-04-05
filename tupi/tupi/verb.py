@@ -708,6 +708,32 @@ class Verb(TupiAntigo):
                         if negative:
                             vb = self.negate_verb(vb, mode, anotar=anotar)
                         result = f"{subj} {vadjs_pre}{vb}{vadjs}"
+                elif object_tense == "gen":
+                    subj = (
+                        self.personal_inflections[subject_tense][0]
+                        + f"[SUBJECT:{subject_tense}]"
+                        if dir_subj_raw is None
+                        else dir_subj_raw + f"[SUBJECT:{subject_tense}:DIRECT]"
+                    )
+                    obj = (
+                        self.personal_inflections[object_tense][1]
+                        + f"[OBJECT:{object_tense}]"
+                    )
+                    pluriforme = (
+                        f"r[PLURIFORM_PREFIX:R]" if pluri_check or self.ero else ""
+                    )
+                    vbt = f"{obj}{pluriforme}{base_verbete}[ROOT]"
+                    if redup:
+                        vbt = self.reduplicate(AnnotatedString(vbt)).get_annotated()
+                    perm = self.choose_perm(vbt, perm_mode)
+                    vb = f"{perm}{vbt}"
+                    if negative:
+                        vb = self.negate_verb(vb, mode, anotar=anotar)
+                    result = (
+                        f"{vadjs_pre}{vb}{vadjs} {subj if not pro_drop else ''}"
+                        if pos == "posposto"
+                        else f"{subj if not pro_drop else ''} {vadjs_pre}{vb}{vadjs}"
+                    )
                 if "2p" in object_tense:
                     if "1p" in subject_tense:
                         subj = (

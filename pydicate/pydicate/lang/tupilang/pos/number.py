@@ -1,5 +1,6 @@
 from pydicate import Predicate
 from tupi import Noun as TupiNoun
+from pydicate.lang.tupilang.pos.copula import *
 
 
 class Number(Predicate):
@@ -15,6 +16,12 @@ class Number(Predicate):
         self.tag = tag
         self.cardinal = False
         self.posto = "posposto"
+
+    def __matmul__(self, other):
+        # Copulas take noun-like operands; verbal operands are nominalized first.
+        left = self.copy()
+        right = other.copy()
+        return cop() * left * right
 
     def card(self):
         cop = self.copy()
@@ -37,7 +44,12 @@ class Number(Predicate):
         return f"{self.verbete}{tag}"
 
     def __add__(self, other):
-        return other.__addpre__(self)
+        if hasattr(other, "__addpre__"):
+            return other.__addpre__(self)
+        raise TypeError(
+            "Number adjuncts can only be added to Predicate-like objects. "
+            "If calling .translation_prompt(...), parenthesize the full expression first."
+        )
 
 
 oîepé = Number("oîepé", definition="one, a single one", tag="[NUMBER:ONE]")

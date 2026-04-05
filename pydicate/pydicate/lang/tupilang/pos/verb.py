@@ -22,11 +22,53 @@ with path.open("rb") as raw_file:  # Open in binary mode for gzip
         dict_conjugated = [x for x in json.load(f) if "c" in x]
 _DICT_BY_ID = {}
 _DICT_BY_FORM = {}
+_DICT_BY_FORM_MULTI = {}
 for _entry in dict_conjugated:
     if "i" in _entry and _entry["i"] not in _DICT_BY_ID:
         _DICT_BY_ID[_entry["i"]] = _entry
+    if "f" in _entry:
+        _DICT_BY_FORM_MULTI.setdefault(_entry["f"], []).append(_entry)
     if "f" in _entry and _entry["f"] not in _DICT_BY_FORM:
         _DICT_BY_FORM[_entry["f"]] = _entry
+
+
+def _norm_lookup_text(text):
+    return " ".join((text or "").lower().split())
+
+
+def _pick_verb_entry_by_form(form, verb_class="", definition=""):
+    candidates = _DICT_BY_FORM_MULTI.get(form, [])
+    if not candidates:
+        return None
+    cls_q = _norm_lookup_text(verb_class)
+    def_q = _norm_lookup_text(definition)
+    if not cls_q and not def_q:
+        return candidates[0]
+
+    best = candidates[0]
+    best_score = -1
+    for entry in candidates:
+        score = 0
+        cls_e = _norm_lookup_text(entry.get("v", ""))
+        def_e = _norm_lookup_text(entry.get("d", ""))
+        if cls_q:
+            if cls_q == cls_e:
+                score += 100
+            elif cls_q in cls_e:
+                score += 60
+            elif cls_e in cls_q:
+                score += 40
+        if def_q:
+            if def_q == def_e:
+                score += 120
+            elif def_q in def_e:
+                score += 100
+            elif def_e in def_q:
+                score += 50
+        if score > best_score:
+            best = entry
+            best_score = score
+    return best if best_score > 0 else candidates[0]
 
 
 class Verb(Predicate):
@@ -62,7 +104,9 @@ class Verb(Predicate):
                     definition = verb.get("d", definition)
                     found = True
         else:
-            verb = _DICT_BY_FORM.get(self.verbete)
+            verb = _pick_verb_entry_by_form(
+                self.verbete, verb_class=verb_class, definition=definition
+            )
             if verb:
                 verb_v = verb.get("v")
                 if verb_v:
@@ -164,7 +208,8 @@ class Verb(Predicate):
                     val_first = val[0] if val else ""
                     # If both are consonants, insert 'y'
                     if (
-                        prev_last
+                        getattr(x, "clitic", False)
+                        and prev_last
                         and val_first
                         and prev_last not in (TupiVerb.vogais + TupiVerb.semi_vogais)
                         and val_first not in (TupiVerb.vogais + TupiVerb.semi_vogais)
@@ -173,7 +218,7 @@ class Verb(Predicate):
                 vadj_strs.append((val, bool(getattr(x, "clitic", False))))
             for val, is_clitic in vadj_strs:
                 if not vadjs:
-                    vadjs = val
+                    vadjs = val if is_clitic else f" {val}"
                 elif is_clitic:
                     vadjs = f"{vadjs}{val}"
                 else:
@@ -276,19 +321,21 @@ class Verb(Predicate):
         elif arglen == 2:  # transitive
             suj = base_verb.subject()
             obj = base_verb.object()
+            obj_pro_drop = getattr(obj, "pro_drop", False)
+            obj_posto = getattr(obj, "posto", suj.posto)
             arg0 = (
                 suj.eval(annotated=annotated) if not suj.category == "pronoun" else None
             )
             infl0 = suj.inflection()
             arg1 = (
                 None
-                if (obj.pro_drop or obj.eval(annotated=annotated) in pronoun_verbetes)
+                if (obj_pro_drop or obj.eval(annotated=annotated) in pronoun_verbetes)
                 else obj.eval(annotated=annotated)
             )
             infl1 = obj.inflection()
             if obj.category == "conjunction":
                 arg1 = None
-                obj_delocated = None if obj.pro_drop else obj.eval(annotated=annotated)
+                obj_delocated = None if obj_pro_drop else obj.eval(annotated=annotated)
             use_obj_posto = infl1 in ["refl", "mut", "suj"] and (
                 infl1 == "3p" or infl0 != "3p"
             )
@@ -308,8 +355,8 @@ class Verb(Predicate):
                 mode=base_verb.mood,
                 negative=base_verb.negated,
                 pro_drop=suj.pro_drop,
-                pro_drop_obj=obj.pro_drop,
-                pos=obj.posto if use_obj_posto else suj.posto,
+                pro_drop_obj=obj_pro_drop,
+                pos=obj_posto if use_obj_posto else suj.posto,
                 vadjs=vadjs,
                 vadjs_pre=vadjs_pre,
                 redup=base_verb.reduplicated,
@@ -338,8 +385,10 @@ class Verb(Predicate):
             sepchar = " "
             # remove [*] from end of retval and get last character
             lastchar = self.verb.remove_brackets_and_contents(retval).strip()[-1]
-            if type(adj) == YFix and (
-                lastchar not in (TupiVerb.vogais + TupiVerb.semi_vogais)
+            if (
+                type(adj) == YFix
+                and getattr(adj, "clitic", False)
+                and (lastchar not in (TupiVerb.vogais + TupiVerb.semi_vogais))
             ):
                 sepchar = "y" + ("[CONSONANT_CLASH]" if annotated else "")
             # elif type(adj) == YFix: #TODO: fix this for any predicate, not just verbs
@@ -503,13 +552,21 @@ class Verb(Predicate):
         fin = other.copy()
         vbt = self.copy()
         if isinstance(fin, Verb):
-            if len(vbt.arguments) > len(fin.arguments):
-                vbt = vbt.base_nominal(annotated=True)
-                return vbt * fin
-            fin = fin.base_nominal(annotated=True)
+            # if len(vbt.arguments) > len(fin.arguments):
+            return vbt * fin.base_nominal(annotated=True)
         # elif isinstance(fin, Deverbal):
         #     return fin * vbt
         return super().__mul__(fin)
+
+    def __matmul__(self, other):
+        # Copulas take noun-like operands; verbal operands are nominalized first.
+        left = self.base_nominal(annotated=True)
+        right = (
+            other.base_nominal(annotated=True)
+            if isinstance(other, Verb)
+            else other.copy()
+        )
+        return left @ right
 
 
 class VerbAugmentor(Verb):
