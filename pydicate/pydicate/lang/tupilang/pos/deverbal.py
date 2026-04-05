@@ -6,6 +6,7 @@ from pydicate.lang.tupilang.pos.noun import Noun
 from pydicate.lang.tupilang.pos.y_fix import YFix
 from tupi import Noun as TupiNoun, AnnotatedString
 from copy import deepcopy
+import re
 
 
 class Deverbal(Noun):
@@ -65,12 +66,35 @@ class Deverbal(Noun):
         return verb.eval(annotated=annotated)
 
     def _apply_compositions(self, surface, annotated=False):
+        if getattr(self, "_compositions_frozen", False):
+            return surface
         if not self.compositions:
             return surface
         composed = TupiNoun(surface, self.functional_definition, noroot=True)
         for modifier in self.compositions:
+            mod_surface = modifier.verbete
+            use_resolved_surface = getattr(modifier, "category", "") in {
+                "deverbal_noun",
+                "classifier_noun",
+                "deadverbal_noun",
+            }
+            if use_resolved_surface:
+                try:
+                    mod_eval = modifier.eval(annotated=True)
+                    mod_eval_clean = re.sub(r"\[[^\]]+\]", "", mod_eval).strip()
+                    if mod_eval_clean and " " not in mod_eval_clean:
+                        mod_surface = mod_eval
+                except Exception:
+                    pass
+            preserve_terminal_a = "[SUBSTANTIVE_SUFFIX:" in mod_surface and (
+                getattr(modifier, "category", "")
+                in {"deverbal_noun", "classifier_noun", "deadverbal_noun"}
+            )
             mod_n = TupiNoun(
-                modifier.verbete, modifier.functional_definition, noroot=True
+                mod_surface,
+                modifier.functional_definition,
+                noroot=True,
+                preserve_terminal_a=preserve_terminal_a,
             )
             composed = composed.compose(mod_n)
         return composed.verbete(annotated)

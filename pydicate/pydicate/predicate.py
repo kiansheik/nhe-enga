@@ -388,7 +388,36 @@ class Predicate(Trackable):
         :return: Self (to enable chaining).
         """
         orig = self.copy()
-        orig_n = TupiNoun(orig.verbete, orig.definition, noroot=True)
+
+        # Prefer composing on the realized surface for select noun-like
+        # predicates (e.g., classifiers, deadverbals) when it is a single token.
+        def _resolve_compose_surface(pred, fallback, respect_apply_compositions=True):
+            try:
+                from pydicate.lang.tupilang.pos.noun import Noun as PydicateNoun
+            except Exception:
+                return fallback, False
+            if not isinstance(pred, PydicateNoun):
+                return fallback, False
+            allow_eval_categories = {"classifier_noun", "deadverbal_noun"}
+            if getattr(pred, "category", "") not in allow_eval_categories:
+                return fallback, False
+            # Predicates that already apply compositions to their realized
+            # surface should keep their internal structure intact.
+            if respect_apply_compositions and hasattr(pred, "_apply_compositions"):
+                return fallback, False
+            try:
+                pred_eval = pred.eval(annotated=True)
+                pred_eval_clean = re.sub(r"\[[^\]]+\]", "", pred_eval).strip()
+                if pred_eval_clean and " " not in pred_eval_clean:
+                    return pred_eval, True
+            except Exception:
+                pass
+            return fallback, False
+
+        orig_surface, orig_used_eval = _resolve_compose_surface(
+            orig, orig.verbete, respect_apply_compositions=True
+        )
+        orig_n = TupiNoun(orig_surface, orig.definition, noroot=True)
         mod_surface = modifier.verbete
         use_resolved_surface = getattr(modifier, "category", "") in {
             "deverbal_noun",
@@ -399,13 +428,9 @@ class Predicate(Trackable):
         # single-word derived form (e.g., `saba * v(x)` -> `...aba`), while
         # preserving legacy behavior for multiword predicates.
         if use_resolved_surface:
-            try:
-                mod_eval = modifier.eval(annotated=True)
-                mod_eval_clean = re.sub(r"\[[^\]]+\]", "", mod_eval).strip()
-                if mod_eval_clean and " " not in mod_eval_clean:
-                    mod_surface = mod_eval
-            except Exception:
-                pass
+            mod_surface, _ = _resolve_compose_surface(
+                modifier, mod_surface, respect_apply_compositions=False
+            )
         preserve_terminal_a = "[SUBSTANTIVE_SUFFIX:" in mod_surface and (
             getattr(modifier, "category", "")
             in {"deverbal_noun", "classifier_noun", "deadverbal_noun"}
@@ -420,6 +445,15 @@ class Predicate(Trackable):
         # Modify the copy of self
         orig.compositions += [modifier]
         orig.refresh_verbete(new_n)
+        if orig_used_eval:
+            # Freeze the composed surface for noun-like predicates to avoid
+            # re-applying their internal morphology/adjuncts.
+            orig.arguments = []
+            orig.pre_adjuncts = []
+            orig.post_adjuncts = []
+            orig.v_adjuncts_pre = []
+            orig.v_adjuncts = []
+            orig._compositions_frozen = True
 
         # Compose irregular forms if present
         if (
