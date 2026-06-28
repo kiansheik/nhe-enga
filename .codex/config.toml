@@ -1,0 +1,4 @@
+[mcp_servers.oldtupi_authoring]
+command = "python3"
+args = ["-m", "authoring.mcp_server"]
+cwd = "../oldtupicorpus"
