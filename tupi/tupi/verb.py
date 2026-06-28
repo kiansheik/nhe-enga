@@ -94,15 +94,23 @@ class Verb(TupiAntigo):
         return (
             ""
             if self.ero
-            else "îos" + f"[OBJECT_MARKER:3p:PLURIFORM_PREFIX:MONOSYLLABIC]"
-            if self.ios
-            else (f"s[PLURIFORM_PREFIX:S]")
-            if (pc and not self.t_type)
-            else "t[PLURIFORM_PREFIX:T]"
-            if (pc and self.t_type)
-            else "îo" + f"[OBJECT_MARKER:3p:MONOSYLLABIC]"
-            if self.monosilibica()
-            else "î" + f"[OBJECT_MARKER:3p:DEFAULT]"
+            else (
+                "îos" + f"[OBJECT_MARKER:3p:PLURIFORM_PREFIX:MONOSYLLABIC]"
+                if self.ios
+                else (
+                    (f"s[PLURIFORM_PREFIX:S]")
+                    if (pc and not self.t_type)
+                    else (
+                        "t[PLURIFORM_PREFIX:T]"
+                        if (pc and self.t_type)
+                        else (
+                            "îo" + f"[OBJECT_MARKER:3p:MONOSYLLABIC]"
+                            if self.monosilibica()
+                            else "î" + f"[OBJECT_MARKER:3p:DEFAULT]"
+                        )
+                    )
+                )
+            )
         )
 
     def negate_verb(self, result, modo, anotar=False):
@@ -427,11 +435,15 @@ class Verb(TupiAntigo):
                     obj = (
                         ""
                         if object_tense == "none"
-                        else f"t[PLURIFORM_PREFIX:T]"
-                        if object_tense == "absoluta"
-                        else f"s[PLURIFORM_PREFIX:S]"
-                        if not self.t_type
-                        else "t[PLURIFORM_PREFIX:T]"
+                        else (
+                            f"t[PLURIFORM_PREFIX:T]"
+                            if object_tense == "absoluta"
+                            else (
+                                f"s[PLURIFORM_PREFIX:S]"
+                                if not self.t_type
+                                else "t[PLURIFORM_PREFIX:T]"
+                            )
+                        )
                     )
                     if vadjs_pre == "":
                         subj = ""
@@ -494,9 +506,11 @@ class Verb(TupiAntigo):
             circ = (
                 f"[CIRCUMSTANTIAL_SUFFIX:NULL_ENDING]"
                 if base_verbete[-1] in "û u ũ î".split()
-                else "û" + f"[CIRCUMSTANTIAL_SUFFIX:VOWEL_ENDING]"
-                if base_verbete[-1] in self.vogais
-                else "i" + f"[CIRCUMSTANTIAL_SUFFIX:CONSONANT_ENDING]"
+                else (
+                    "û" + f"[CIRCUMSTANTIAL_SUFFIX:VOWEL_ENDING]"
+                    if base_verbete[-1] in self.vogais
+                    else "i" + f"[CIRCUMSTANTIAL_SUFFIX:CONSONANT_ENDING]"
+                )
             )
             if pluri_check and not self.transitivo:
                 if "3p" in subject_tense and dir_subj_raw is None:
@@ -715,14 +729,20 @@ class Verb(TupiAntigo):
                         if dir_subj_raw is None
                         else dir_subj_raw + f"[SUBJECT:{subject_tense}:DIRECT]"
                     )
-                    obj = (
-                        self.personal_inflections[object_tense][1]
-                        + f"[OBJECT:{object_tense}]"
+                    conj = (
+                        self.imperativo[subject_tense][0]
+                        + f"[IMPERATIVE_PREFIX:{subject_tense}]"
+                        if (mode == "imperativo" and "2p" in subject_tense)
+                        else self.personal_inflections[subject_tense][2]
+                        + f"[SUBJECT_PREFIX:{subject_tense}]"
                     )
+                    if mode == "nominal" or (pro_drop and subject_tense == "3p"):
+                        conj = ""
+                    obj = "poro[OBJECT:gen]"
                     pluriforme = (
                         f"r[PLURIFORM_PREFIX:R]" if pluri_check or self.ero else ""
                     )
-                    vbt = f"{obj}{pluriforme}{base_verbete}[ROOT]"
+                    vbt = f"{conj}{obj}{pluriforme}{base_verbete}[ROOT]"
                     if redup:
                         vbt = self.reduplicate(AnnotatedString(vbt)).get_annotated()
                     perm = self.choose_perm(vbt, perm_mode)

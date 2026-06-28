@@ -182,9 +182,11 @@ class Noun(Predicate):
             base_noun.arguments.append(possessor)
             base_noun.noun = base_noun.noun.possessive(
                 possessor.inflection(),
-                None
-                if possessor.category == "pronoun"
-                else possessor.eval(annotated=True),
+                (
+                    None
+                    if possessor.category == "pronoun"
+                    else possessor.eval(annotated=True)
+                ),
                 fuse=False,
             )
             base_noun.noun.pluriforme = possessor.noun.pluriforme
@@ -196,9 +198,11 @@ class Noun(Predicate):
             base_noun.arguments.append(possessor)
             base_noun.noun = base_noun.noun.possessive(
                 possessor.inflection(),
-                None
-                if possessor.category == "pronoun"
-                else possessor.eval(annotated=True),
+                (
+                    None
+                    if possessor.category == "pronoun"
+                    else possessor.eval(annotated=True)
+                ),
                 fuse=False,
             )
             base_noun.noun.pluriforme = possessor.noun.pluriforme

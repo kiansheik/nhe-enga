@@ -669,12 +669,16 @@ for modo, test_cases in tqdm([(x[0], x[1]) for x in test_cases_map.items()]):
                                                 pro_drop=pro_drop,
                                                 pos=pos,
                                                 negative=neg,
-                                                dir_subj_raw=f"{random.choice(baby_names)}"
-                                                if dir_subj_raw and "3p" in subj
-                                                else None,
-                                                dir_obj_raw=f"{random.choice(baby_names)}"
-                                                if dir_obj_raw and "3p" in obj
-                                                else None,
+                                                dir_subj_raw=(
+                                                    f"{random.choice(baby_names)}"
+                                                    if dir_subj_raw and "3p" in subj
+                                                    else None
+                                                ),
+                                                dir_obj_raw=(
+                                                    f"{random.choice(baby_names)}"
+                                                    if dir_obj_raw and "3p" in obj
+                                                    else None
+                                                ),
                                                 anotar=True,
                                             )
                                             # print(f"{res}")
@@ -703,9 +707,11 @@ for modo, test_cases in tqdm([(x[0], x[1]) for x in test_cases_map.items()]):
                                         subject_tense=subj,
                                         pro_drop=pro_drop,
                                         mode=modo,
-                                        dir_subj_raw=f"{random.choice(baby_names)}"
-                                        if dir_subj_raw and "3p" in subj
-                                        else None,
+                                        dir_subj_raw=(
+                                            f"{random.choice(baby_names)}"
+                                            if dir_subj_raw and "3p" in subj
+                                            else None
+                                        ),
                                         negative=neg,
                                         anotar=True,
                                     )

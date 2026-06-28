@@ -187,13 +187,11 @@ class Verb(TupiAntigo):
         return (
             ""
             if self.ero
-            else "îos"
-            if self.ios
-            else "s"
-            if self.pluriforme
-            else "îo"
-            if self.monosilibica()
-            else "î"
+            else (
+                "îos"
+                if self.ios
+                else "s" if self.pluriforme else "îo" if self.monosilibica() else "î"
+            )
         )
 
     def accent_last_vowel(self, input_string):
@@ -335,9 +333,7 @@ class Verb(TupiAntigo):
             circ = (
                 ""
                 if self.verbete[-1] in "ûuũî"
-                else "û"
-                if self.verbete[-1] in self.vogais
-                else "i"
+                else "û" if self.verbete[-1] in self.vogais else "i"
             )
             if self.pluriforme and not self.transitivo:
                 if "3p" in subject_tense:
@@ -382,9 +378,7 @@ class Verb(TupiAntigo):
                     subj = (
                         self.personal_inflections[subject_tense][1]
                         if not "3p" == subject_tense
-                        else "a'e"
-                        if not pro_drop
-                        else ""
+                        else "a'e" if not pro_drop else ""
                     )
                     conj = (
                         self.imperativo[subject_tense][0]

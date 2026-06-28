@@ -178,9 +178,11 @@ class Verb(Predicate):
         return (
             self.arguments[1]
             if len(self.arguments) >= 2
-            else self.arguments[0]
-            if (len(self.arguments) == 1 and self.verb.transitivo)
-            else None
+            else (
+                self.arguments[0]
+                if (len(self.arguments) == 1 and self.verb.transitivo)
+                else None
+            )
         )
 
     def refresh_verbete(self, new_verbete):

@@ -371,13 +371,26 @@ saba = Deverbal(
     definition="Adverbial complement nominalizer, the who/what/where/when/how or why a verb happened",
     tag="[DEVERBAL:CIRCUMSTANTIAL]",
 )
-saba.morphology = (
-    lambda self, verb, annotated=False: verb.base_nominal(annotated)
-    .noun.saba()
-    .substantivo(annotated)
-    .strip()
-)
-saba.noun_morphology = lambda self, verb: verb.base_nominal(True).noun.saba()
+
+
+def saba_noun_morphology(self, verb):
+    """Resolve the noun object for the -saba deverbal."""
+    noun = verb.base_nominal(True).noun.saba()
+    if getattr(self, "negated", False) or getattr(verb, "negated", False):
+        noun = noun.eym()
+    return noun
+
+
+def saba_morphology(self, verb, annotated=False):
+    """Resolve the morphology of the -saba deverbal."""
+    noun = saba_noun_morphology(self, verb)
+    if self.vocative:
+        noun = noun.vocativo()
+    return noun.substantivo(annotated).strip()
+
+
+saba.morphology = saba_morphology
+saba.noun_morphology = saba_noun_morphology
 
 # -sab(a) (suf. nominalizador) - 1) nominalizador de complemento circunstancial. Traduz-se por tempo, lugar, companhia, modo, causa, instrumento, finalidade, etc. Tem os alomorfes -ab(a), -b(a), -á, -ndab(a), etc.: îukasaba - tempo, lugar, instrumento, causa, modo, companhia, etc. de matar (Anch., Arte, 19); ...N'i papasabi. - Não há modo de contá-los. (Ar., Cat., 38); ...i 'ekatûaba kotysaba é... - o que estava à sua direita (isto é, a companhia do lado da sua mão direita) (Anch., Diál. da Fé, 190); Xe 'angorypaba. - A causa da alegria de minha alma. (Anch., Poemas, 106); 2) Forma substantivos abstratos: angaipaba - maldade (lit. - qualidade da alma ruim) (Anch., Teatro, 34)
 rama = Classifier(

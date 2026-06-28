@@ -607,9 +607,7 @@ class Predicate(Trackable):
             tl = (
                 ", ".join([y for x in self.gloss for y in x.english_glosses])
                 if self.gloss
-                else self.definition
-                if self.definition
-                else self.tag
+                else self.definition if self.definition else self.tag
             )
             # add comp_glosses in as adjectives
             if comp_glosses:
@@ -1254,9 +1252,11 @@ class Predicate(Trackable):
         derfn = (
             self.fname.strip()
             if self.fname
-            else self.definition.strip()
-            if not self.ped_label
-            else self.ped_label.strip()
+            else (
+                self.definition.strip()
+                if not self.ped_label
+                else self.ped_label.strip()
+            )
         )
         capdfn = format_variant_text(escape_latex(derf))
 
