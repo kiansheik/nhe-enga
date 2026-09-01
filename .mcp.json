@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "oldtupi-authoring": {
+      "command": "python3",
+      "args": ["-m", "authoring.mcp_server"],
+      "cwd": "../oldtupicorpus"
+    }
+  }
+}

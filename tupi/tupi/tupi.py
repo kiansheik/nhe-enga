@@ -277,6 +277,34 @@ class TupiAntigo(object):
     def remove_brackets_and_contents(self, s):
         return re.sub(r"\[.*?\]", "", s)
 
+    def fix_phonetics_preserving_tags(self, input_str, protected_tags):
+        spans = []
+        tag_markers = {f"[{tag}]" for tag in protected_tags}
+        for match in re.finditer(r"\[[^\]]+\]", input_str):
+            if match.group(0) not in tag_markers:
+                continue
+            start = input_str.rfind("]", 0, match.start())
+            start = 0 if start == -1 else start + 1
+            while start < match.start() and input_str[start].isspace():
+                start += 1
+            if start < match.start():
+                spans.append((start, match.start()))
+
+        if not spans:
+            return self.fix_phonetics(self.remove_brackets_and_contents(input_str))
+
+        protected = input_str
+        replacements = []
+        for idx, (start, end) in reversed(list(enumerate(spans))):
+            placeholder = f"__PROTECTED_PHONETICS_{idx}__"
+            replacements.append((placeholder, input_str[start:end]))
+            protected = protected[:start] + placeholder + protected[end:]
+
+        fixed = self.fix_phonetics(self.remove_brackets_and_contents(protected))
+        for placeholder, value in replacements:
+            fixed = fixed.replace(placeholder, value)
+        return fixed
+
     def keep_brackets_contents(self, s):
         return "".join(re.findall(r"(\[.*?\])", s))
 
