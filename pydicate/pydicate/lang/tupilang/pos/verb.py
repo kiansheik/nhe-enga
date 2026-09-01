@@ -260,7 +260,13 @@ class Verb(Predicate):
             retval = base_verb.verb.verbete
         elif arglen == 1:
             arg0_obj = base_verb.arguments[0]
-            arg0 = None if arg0_obj.pro_drop else arg0_obj.eval(annotated=annotated)
+            arg0 = (
+                None
+                if arg0_obj.pro_drop
+                else arg0_obj.eval(
+                    annotated=annotated or arg0_obj.category == "proper_noun"
+                )
+            )
             infl0 = arg0_obj.inflection()
             if base_verb.verb.transitivo:
                 # TODO: render "nominal form"
@@ -326,13 +332,15 @@ class Verb(Predicate):
             obj_pro_drop = getattr(obj, "pro_drop", False)
             obj_posto = getattr(obj, "posto", suj.posto)
             arg0 = (
-                suj.eval(annotated=annotated) if not suj.category == "pronoun" else None
+                suj.eval(annotated=annotated or suj.category == "proper_noun")
+                if not suj.category == "pronoun"
+                else None
             )
             infl0 = suj.inflection()
             arg1 = (
                 None
                 if (obj_pro_drop or obj.eval(annotated=annotated) in pronoun_verbetes)
-                else obj.eval(annotated=annotated)
+                else obj.eval(annotated=annotated or obj.category == "proper_noun")
             )
             infl1 = obj.inflection()
             if obj.category == "conjunction":
@@ -421,6 +429,7 @@ class Verb(Predicate):
                 redup=self.reduplicated,
                 vadjs=vadjs,
                 vadjs_pre=vadjs_pre,
+                variation_id=self.variation_id,
             )
             tn = TupiNoun(nom, self.raw_definition)
             final = Noun(
@@ -440,10 +449,17 @@ class Verb(Predicate):
         if len(self.arguments) == 1:
             if self.verb.transitivo:
                 obj_tense = self.object().inflection()
-                obj_obj = self.object() if self.object().category != "pronoun" else None
+                obj_dropped = getattr(self.object(), "pro_drop", False)
+                obj_obj = (
+                    self.object()
+                    if self.object().category != "pronoun" and not obj_dropped
+                    else None
+                )
                 obj = (
-                    obj_obj.eval(annotated=annotated)
-                    if self.object().category != "pronoun"
+                    obj_obj.eval(
+                        annotated=annotated or obj_obj.category == "proper_noun"
+                    )
+                    if self.object().category != "pronoun" and not obj_dropped
                     else None
                 )
                 subj_tense = None
@@ -457,25 +473,36 @@ class Verb(Predicate):
                     self.subject() if self.subject().category != "pronoun" else None
                 )
                 subj = (
-                    subj_obj.eval(annotated=annotated)
+                    subj_obj.eval(
+                        annotated=annotated or subj_obj.category == "proper_noun"
+                    )
                     if self.subject().category != "pronoun"
                     else None
                 )
         else:
             obj_tense = self.object().inflection()
-            obj_obj = self.object() if self.object().category != "pronoun" else None
+            obj_dropped = getattr(self.object(), "pro_drop", False)
+            obj_obj = (
+                self.object()
+                if self.object().category != "pronoun" and not obj_dropped
+                else None
+            )
             obj = (
-                obj_obj.eval(annotated=annotated)
-                if self.object().category != "pronoun"
+                obj_obj.eval(annotated=annotated or obj_obj.category == "proper_noun")
+                if self.object().category != "pronoun" and not obj_dropped
                 else None
             )
             subj_tense = self.subject().inflection()
             subj_obj = self.subject() if self.subject().category != "pronoun" else None
             subj = (
-                subj_obj.eval(annotated=annotated)
+                subj_obj.eval(annotated=annotated or subj_obj.category == "proper_noun")
                 if self.subject().category != "pronoun"
                 else None
             )
+        pro_drop = subj_obj.pro_drop if subj_obj else False
+        if pro_drop and subj_tense == "3p":
+            subj = None
+            pro_drop = False
         nom = self.verb.conjugate(
             subject_tense=subj_tense if subj_tense else "3p",
             object_tense=obj_tense,
@@ -483,12 +510,13 @@ class Verb(Predicate):
             dir_subj_raw=subj,
             mode="nominal",
             pos="anteposto",
-            pro_drop=(subj_obj.pro_drop if subj_obj else False) or not subj_tense,
+            pro_drop=pro_drop or not subj_tense,
             negative=self.negated,
             anotar=annotated,
             vadjs=vadjs,
             vadjs_pre=vadjs_pre,
             redup=self.reduplicated,
+            variation_id=self.variation_id,
         )
         tn = TupiNoun(nom, self.raw_definition)
         final = Noun(

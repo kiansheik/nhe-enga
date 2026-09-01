@@ -151,6 +151,7 @@ class Verb(TupiAntigo):
         vadjs="",
         vadjs_pre="",
         redup=False,
+        variation_id=None,
     ):
         result = ""
         perm_mode = False
@@ -370,6 +371,15 @@ class Verb(TupiAntigo):
             result = f"{subj if not pro_drop else ''}{' ' if not self.segunda_classe else ''}{vadjs_pre}{redup_space}{eme}{vadjs}".strip()
         elif mode == "nominal":
             subj = self.personal_inflections[subject_tense][1]
+            fuse_subj = False
+            if (
+                variation_id == 1
+                and not self.transitivo
+                and subject_tense in {"refl", "mut"}
+                and dir_subj_raw is None
+            ):
+                subj = self.personal_inflections[subject_tense][0]
+                fuse_subj = True
             tag = (
                 f"[SUBJECT:{subject_tense}]"
                 if subject_tense != "suj"
@@ -389,8 +399,13 @@ class Verb(TupiAntigo):
                 if (subject_tense == "3p" and dir_subj_raw is None) and (
                     object_tense == "refl" or object_tense == "mut"
                 ):
-                    subj = "i" + f"[SUBJECT:{subject_tense}]"
-                if (
+                    subj = ""
+                    obj = (
+                        "o[SUBJECT_PREFIX:3p:CORRELATIONAL]îe[OBJECT:REFLEXIVE]"
+                        if object_tense == "refl"
+                        else "o[SUBJECT_PREFIX:3p:CORRELATIONAL]îo[OBJECT:MUTUAL]"
+                    )
+                elif (
                     subject_tense == object_tense and subject_tense != "3p"
                 ) or object_tense == "refl":
                     obj = "îe" + f"[OBJECT:REFLEXIVE]"
@@ -462,8 +477,9 @@ class Verb(TupiAntigo):
                 redup_space = self.reduplicate(
                     AnnotatedString(redup_space)
                 ).get_annotated()
+            joiner = "" if fuse_subj or self.segunda_classe else " "
             result = (
-                f"{subj if not pro_drop else ''}{' ' if not self.segunda_classe else ''}{vadjs_pre}{redup_space}{vadjs}"
+                f"{subj if not pro_drop else ''}{joiner}{vadjs_pre}{redup_space}{vadjs}"
             ).strip()
         elif "2p" not in subject_tense and mode == "circunstancial":
             subj = (
@@ -835,7 +851,7 @@ class Verb(TupiAntigo):
         return (
             result
             if anotar
-            else self.fix_phonetics(self.remove_brackets_and_contents(result))
+            else self.fix_phonetics_preserving_tags(result, {"PROPER_NOUN"})
         )
 
     def bae(self, obj=None, anotar=False):
