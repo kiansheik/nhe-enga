@@ -134,16 +134,28 @@ Suggested setup:
 python3.11 -m venv .venv
 source .venv/bin/activate
 pip install --upgrade pip
-pip install -r requirements.txt          # only python-docx is pinned, install extras as needed:
-pip install tqdm pdfminer.six pdfplumber anthropic requests ratelimit graphviz pdf2image
+pip install -r requirements.txt          # core data-generation dependencies
+pip install pdfminer.six pdfplumber anthropic requests ratelimit graphviz pdf2image
 
 cd gramatica/docs
 npm install
 ```
 
-When building Pyodide wheels, the Makefile assumes `python3.11` and a working `npm` plus `curl` on macOS/Linux.
+When building Pyodide wheels, the Makefile assumes `python3.11` and a working `npm` plus `curl` on macOS/Linux. `make gen_data` bootstraps `.venv` from `requirements.txt` before running the DOCX and conjugation generators.
 
 ## Common workflows
+
+### Build and deploy from start to finish
+
+```bash
+make help
+make setup
+make gen_data
+make pages-build
+make deploy-gh-pages
+```
+
+`make pages-build` builds the Pyodide wheels, builds the VuePress grammar site, and assembles the GitHub Pages artifact in `.pages-build`. `make deploy-gh-pages` rebuilds that artifact and pushes it to the `gh-pages` branch.
 
 ### Preview the static dictionary
 
