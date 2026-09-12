@@ -7,7 +7,7 @@
 - `make gen_data` bootstraps `.venv` from `requirements.txt` and then runs `gen_data.py` plus `verbs.py`.
 - `make help` prints the current start-to-finish build/deploy sequence: `make setup`, `make gen_data`, `make pages-build`, then `make deploy-gh-pages`.
 - Source of truth remains code, package configs, datasets, and checked-in source docs. Runtime data under `docs/` is still tracked because current static apps read it directly.
-- The remote still did not have a `gh-pages` branch after `git fetch --prune` on 2026-09-12.
+- GitHub Pages now publishes `gh-pages` from `/`. The first optimized deployment is root commit `ff3b1f5b`; the live build completed on 2026-09-12.
 
 ## Current Cautions
 
@@ -18,6 +18,6 @@
 - `make pages-build` optimizes copied primary-source images inside `.pages-build` only. Source scans are left untouched; generated `image-formats.json` lets the citation viewer load optimized `.jpg` files.
 - `bettvulg` is excluded from the Pages artifact for now because no runtime references were found and it dominates artifact size.
 - Latest measured optimized `.pages-build` size is about 477 MB with primary-source images at about 432 MB.
-- This checkout's local `gh-pages` worktree still points at the failed 4.1 GB root commit. Recreate the unpublished branch as a fresh orphan snapshot before deploying; adding a child commit would keep the oversized history reachable.
+- The failed 4.1 GB deployment history is preserved locally as `gh-pages-oversized-backup-20260912`; it is not reachable from the published `gh-pages` branch and must not be pushed.
 - `make gen_data` is noisy and can take over a minute; it updates generated dictionary/conjugation data. Keep those outputs separate from source-only cleanup changes unless intentionally refreshing data.
 - `make deploy-gh-pages` pushes to the configured remote branch; do not run it unless publishing the current Pages artifact is intended.

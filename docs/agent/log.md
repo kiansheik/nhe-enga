@@ -38,3 +38,8 @@
 - Rebuilt the optimized Pages artifact successfully and reran lint, shell syntax, Python compilation, and whitespace checks.
 - Confirmed the remote still has no `gh-pages` branch, while the local Pages worktree retains the failed 4.1 GB root commit.
 - Kept site publication separate from the source-branch push because the unpublished local Pages branch must first be recreated without its oversized history.
+- A subsequent `make deploy-gh-pages` committed the 477 MB artifact on top of the failed 4.1 GB root, so GitHub rejected the 3,287-object pack at its 2 GiB limit.
+- Preserved the failed local history as `gh-pages-oversized-backup-20260912` and recreated `gh-pages` as parentless commit `ff3b1f5b` with the same optimized 474 MiB tree.
+- Pushed the resulting 1,582-object, 449 MiB pack successfully and set `gh-pages` to track `origin/gh-pages`.
+- Changed the GitHub Pages source from `main:/` to `gh-pages:/`, explicitly queued the build, and verified GitHub built `ff3b1f5b` without error.
+- Verified the live root, grammar route, and generated image manifest; the manifest reports 1,407 optimized images and 449,476,728 bytes after optimization.
