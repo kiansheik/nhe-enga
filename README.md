@@ -155,7 +155,7 @@ make pages-build
 make deploy-gh-pages
 ```
 
-`make pages-build` builds the Pyodide wheels, builds the VuePress grammar site, and assembles the GitHub Pages artifact in `.pages-build`. `make deploy-gh-pages` rebuilds that artifact and pushes it to the `gh-pages` branch.
+`make pages-build` builds the Pyodide wheels, builds the VuePress grammar site, and assembles the GitHub Pages artifact in `.pages-build`. Primary-source PDFs and extraction sources stay out of the Pages artifact; only the derived page images used by the citation viewer are copied, and those copied images are optimized for web delivery during the Pages build. Tune the optimizer with `PAGES_IMAGE_QUALITY`, `PAGES_IMAGE_MAX_WIDTH`, and `PAGES_IMAGE_MAX_HEIGHT`. `make deploy-gh-pages` rebuilds that artifact and pushes it to the `gh-pages` branch.
 
 ### Preview the static dictionary
 

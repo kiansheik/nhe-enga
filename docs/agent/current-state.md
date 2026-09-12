@@ -7,12 +7,17 @@
 - `make gen_data` bootstraps `.venv` from `requirements.txt` and then runs `gen_data.py` plus `verbs.py`.
 - `make help` prints the current start-to-finish build/deploy sequence: `make setup`, `make gen_data`, `make pages-build`, then `make deploy-gh-pages`.
 - Source of truth remains code, package configs, datasets, and checked-in source docs. Runtime data under `docs/` is still tracked because current static apps read it directly.
-- The remote did not have a `gh-pages` branch when checked on 2026-09-02.
+- The remote still did not have a `gh-pages` branch after `git fetch --prune` on 2026-09-12.
 
 ## Current Cautions
 
 - Do not delete `docs/dict-conjugated.json`, `docs/dict-conjugated.json.gz`, `docs/extracted_entries_nheengatu.tar.gz`, `docs/dooley_2006_mbya_dic.json.gz`, `docs/primary_sources/index.html`, or the cited primary-source page images unless the deployment flow is changed to preserve or regenerate them.
 - `sentence-builder.html` still reads `docs/dict-conjugated.json` and now installs the generated Pages wheel at `/nhe-enga/gramatica/pylibs/tupi-0.1.2-py3-none-any.whl`.
 - The Pages artifact intentionally copies only `translate/index.html`, not local translate scripts, key files, or logs.
+- The Pages artifact intentionally copies only derived primary-source page images from citation folders, not raw PDFs, EPUBs, MOBIs, OPFs, TXT files, or extraction scripts.
+- `make pages-build` optimizes copied primary-source images inside `.pages-build` only. Source scans are left untouched; generated `image-formats.json` lets the citation viewer load optimized `.jpg` files.
+- `bettvulg` is excluded from the Pages artifact for now because no runtime references were found and it dominates artifact size.
+- Latest measured optimized `.pages-build` size is about 477 MB with primary-source images at about 432 MB.
+- This checkout's local `gh-pages` worktree still points at the failed 4.1 GB root commit. Recreate the unpublished branch as a fresh orphan snapshot before deploying; adding a child commit would keep the oversized history reachable.
 - `make gen_data` is noisy and can take over a minute; it updates generated dictionary/conjugation data. Keep those outputs separate from source-only cleanup changes unless intentionally refreshing data.
 - `make deploy-gh-pages` pushes to the configured remote branch; do not run it unless publishing the current Pages artifact is intended.

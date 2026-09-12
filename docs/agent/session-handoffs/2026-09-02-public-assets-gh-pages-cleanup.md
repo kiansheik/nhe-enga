@@ -39,6 +39,7 @@ Identify every asset the repository expects GitHub Pages to serve, then separate
 - `gramatica/docs/src/.vuepress/public/icon.png`
 - `scripts/build_pages.sh`
 - `scripts/deploy_gh_pages.sh`
+- `scripts/optimize_pages_images.py`
 - `docs/agent/index.md`
 - `docs/agent/current-state.md`
 - `docs/agent/repo-map.md`
@@ -61,6 +62,12 @@ Identify every asset the repository expects GitHub Pages to serve, then separate
 - `make lint`
 - Follow-up on 2026-09-04: `make gen_data`
 - Follow-up on 2026-09-04: `make help`, `make setup`, `make node-deps`
+- Follow-up on 2026-09-04: `find .pages-build -iname '*.pdf' -o -iname '*.epub' -o -iname '*.mobi' -o -iname '*.opf' -o -iname '*.txt' -o -iname '*.py'`
+- Follow-up on 2026-09-04: `find .pages-build -type f -size +100M -print`
+- Follow-up on 2026-09-04: `bash -n scripts/build_pages.sh scripts/deploy_gh_pages.sh`
+- Follow-up on 2026-09-04: `find .pages-build/docs/primary_sources -mindepth 1 -maxdepth 1 -type d -exec du -sk {} +`
+- Follow-up on 2026-09-04: `make pages-build`
+- Follow-up on 2026-09-04: `make lint`
 
 ## What Worked
 
@@ -77,12 +84,19 @@ Identify every asset the repository expects GitHub Pages to serve, then separate
 - Verified `make pages-build` and `make lint` pass.
 - Follow-up on 2026-09-04: `make gen_data` now bootstraps `.venv` from `requirements.txt` and completed successfully after adding the missing `tqdm` dependency.
 - Follow-up on 2026-09-04: `make help` now prints the start-to-finish flow: `make setup`, `make gen_data`, `make pages-build`, then `make deploy-gh-pages`.
+- Follow-up on 2026-09-04: `make pages-build` now excludes raw primary-source PDFs and extraction/source files from `.pages-build`; only derived page images are copied for citation folders.
+- Follow-up on 2026-09-04: deploy preflight now catches any file over 100 MB before commit/push, and existing worktrees with `.git` files are accepted.
+- Follow-up on 2026-09-04: Pages builds now optimize copied primary-source images with Pillow and write `docs/primary_sources/image-formats.json` so the citation viewer can load optimized `.jpg` files.
+- Follow-up on 2026-09-04: `bettvulg` is excluded from the Pages artifact for now because no runtime links were found and it dominated the artifact size.
+- Follow-up on 2026-09-04: optimized build reduced copied primary-source images from about 2366.5 MB to 428.7 MB; full `.pages-build` measured about 477 MB.
 
 ## What Failed
 
 - The first broad `git rm` attempt failed because one named build path was not tracked; reran with the tracked/removable paths and `--ignore-unmatch`.
 - `make pages-build` still emits packaging deprecation/package-discovery warnings and VuePress plugin/update-check warnings, but exits 0.
 - Follow-up on 2026-09-04: initial `make gen_data` failed because bare `python3.11` lacked `python-docx`; the first venv target used `.venv/bin/python` directly, which could appear complete after a failed install. It was replaced with a `.venv/.requirements-installed` stamp written only after pip succeeds.
+- Follow-up on 2026-09-04: `make deploy-gh-pages` failed because the Pages artifact copied `docs/primary_sources/bettvulg/ms.1089.vulgar.bettendorf.pdf`, which exceeds GitHub's 100 MB limit.
+- Follow-up on 2026-09-04: after PDFs were excluded, `make deploy-gh-pages` still failed because the total pack exceeded GitHub's 2 GiB limit; remaining size was dominated by primary-source images.
 
 ## Remaining Questions
 

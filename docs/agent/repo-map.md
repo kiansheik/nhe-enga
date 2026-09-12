@@ -7,7 +7,7 @@
 - Neologisms: `neologisms.csv` and `neologisms/index.html`.
 - Quiz: `quiz/index.html`, `quiz/quiz.js`, `quiz/styles.css`; loads `../docs/dict-conjugated.json.gz`.
 - Nheengatu and Mbya pages: `katu/index.html`, `mbya/index.html`; load `docs/extracted_entries_nheengatu.tar.gz` and `docs/dooley_2006_mbya_dic.json.gz`.
-- Citation viewer: `docs/primary_sources/index.html`; opens page images under `docs/primary_sources/{vlb,ancharte,arcat1618,betcomp,lerhist}`. Existing sibling source folders `bettvulg` and `cartas_portiguara` are also preserved in the Pages artifact.
+- Citation viewer: `docs/primary_sources/index.html`; opens page images under `docs/primary_sources/{vlb,ancharte,arcat1618,betcomp,lerhist}`. The `cartas_portiguara` image folder is preserved in the Pages artifact for now; `bettvulg` is excluded because no runtime references were found.
 - Grammar site: source is `gramatica/docs/src`; built output belongs in the Pages artifact under `gramatica/`, not tracked on the source branch.
 
 ## Generated Or Reproducible Outputs
@@ -24,6 +24,6 @@
 - `make setup`: install Python dependencies and ensure VuePress Node dependencies exist.
 - `make build-wheels`: build `tupi` and `pydicate` wheels and copy them into VuePress public assets.
 - `make grammar-build`: build the VuePress grammar.
-- `make pages-build`: assemble `.pages-build` from a static allowlist, then add the built grammar site under `gramatica/`.
+- `make pages-build`: assemble `.pages-build` from a static allowlist, copy only derived primary-source images, optimize those copied images for web delivery, then add the built grammar site under `gramatica/`.
 - `make deploy-gh-pages`: publish `.pages-build` to `gh-pages`.
 - `make gen_data`: create/update `.venv`, install `requirements.txt`, regenerate Navarro-derived dictionary data, regenerate conjugation data, and copy the bundled gzip into `pydicate`.

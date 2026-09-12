@@ -4,6 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BUILD_DIR="${PAGES_BUILD_DIR:-$ROOT_DIR/.pages-build}"
 GRAMMAR_DIST="$ROOT_DIR/gramatica/docs/src/.vuepress/dist"
+PYTHON_BIN="${VENV_PYTHON:-$ROOT_DIR/.venv/bin/python}"
 
 require_path() {
   local path="$1"
@@ -26,6 +27,24 @@ copy_optional_path() {
     mkdir -p "$(dirname "$BUILD_DIR/$path")"
     cp -R "$ROOT_DIR/$path" "$BUILD_DIR/$path"
   fi
+}
+
+copy_primary_source_images() {
+  local path="$1"
+  local file rel
+
+  require_path "$path"
+  mkdir -p "$BUILD_DIR/$path"
+
+  while IFS= read -r -d '' file; do
+    rel="${file#$ROOT_DIR/}"
+    mkdir -p "$(dirname "$BUILD_DIR/$rel")"
+    cp "$file" "$BUILD_DIR/$rel"
+  done < <(
+    find "$ROOT_DIR/$path" -maxdepth 1 -type f \
+      \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' -o -iname '*.gif' \) \
+      -print0
+  )
 }
 
 rm -rf "$BUILD_DIR"
@@ -68,16 +87,20 @@ for path in \
   docs/extracted_entries_nheengatu.tar.gz \
   docs/tupi_dict_navarro.js \
   docs/tupi_dict_navarro.json \
-  docs/primary_sources/index.html \
+  docs/primary_sources/index.html
+do
+  copy_path "$path"
+done
+
+for path in \
   docs/primary_sources/ancharte \
   docs/primary_sources/arcat1618 \
   docs/primary_sources/betcomp \
-  docs/primary_sources/bettvulg \
   docs/primary_sources/cartas_portiguara \
   docs/primary_sources/lerhist \
   docs/primary_sources/vlb
 do
-  copy_path "$path"
+  copy_primary_source_images "$path"
 done
 
 for path in \
@@ -87,6 +110,8 @@ for path in \
 do
   copy_optional_path "$path"
 done
+
+"$PYTHON_BIN" "$ROOT_DIR/scripts/optimize_pages_images.py" "$BUILD_DIR/docs/primary_sources"
 
 make -C "$ROOT_DIR" grammar-build
 mkdir -p "$BUILD_DIR/gramatica"

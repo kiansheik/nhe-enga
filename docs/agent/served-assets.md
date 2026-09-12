@@ -42,5 +42,6 @@ These paths are referenced by source code or documented as public static pages. 
 - `/nhe-enga/docs/primary_sources/arcat1618/*.png`
 - `/nhe-enga/docs/primary_sources/betcomp/*.jpg`
 - `/nhe-enga/docs/primary_sources/lerhist/*.jpg`
-- `/nhe-enga/docs/primary_sources/bettvulg/**`
-- `/nhe-enga/docs/primary_sources/cartas_portiguara/**`
+- `/nhe-enga/docs/primary_sources/cartas_portiguara/*.{png,jpg}`
+
+Raw primary-source PDFs, EPUBs, MOBIs, OPFs, TXT files, and extraction scripts are source/input material. They are not required by the static citation viewer and should not be copied into the `gh-pages` artifact.

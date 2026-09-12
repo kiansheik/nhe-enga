@@ -24,3 +24,17 @@
 - Added `make help`, `make setup`, and `make node-deps` so the build/deploy path is discoverable from the Makefile.
 - Documented the full flow as `make setup`, `make gen_data`, `make pages-build`, then `make deploy-gh-pages`.
 - Verified `make help`, `make setup`, `make node-deps`, and `make lint`.
+- Fixed `scripts/build_pages.sh` to copy only derived image files from primary-source folders, excluding raw PDFs and extraction/source files from `.pages-build`.
+- Added a `scripts/deploy_gh_pages.sh` preflight that fails before commit/push if any Pages artifact file exceeds 100 MB.
+- Fixed `scripts/deploy_gh_pages.sh` worktree detection so an existing Git worktree with a `.git` file is accepted.
+- Verified `make pages-build` creates an artifact with no PDFs/source formats and no files over 100 MB.
+- Added build-only primary-source image optimization with Pillow and generated `image-formats.json` support in the citation viewer.
+- Excluded `bettvulg` from the Pages artifact because no runtime references were found and it was about 1.7 GB of page images.
+- Verified the optimized Pages artifact is about 477 MB, with primary-source images reduced to about 432 MB.
+
+## 2026-09-12
+
+- Refreshed `origin` and confirmed the large source cleanup commit was already published on `cleanup-public-assets-kian`.
+- Rebuilt the optimized Pages artifact successfully and reran lint, shell syntax, Python compilation, and whitespace checks.
+- Confirmed the remote still has no `gh-pages` branch, while the local Pages worktree retains the failed 4.1 GB root commit.
+- Kept site publication separate from the source-branch push because the unpublished local Pages branch must first be recreated without its oversized history.

@@ -35,6 +35,7 @@ help:
 	@printf '%s\n' 'Deploy knobs:'
 	@printf '%s\n' '  REMOTE=origin GH_PAGES_BRANCH=gh-pages make deploy-gh-pages'
 	@printf '%s\n' '  SITE_CNAME=kiansheik.io make pages-build'
+	@printf '%s\n' '  PAGES_IMAGE_QUALITY=82 PAGES_IMAGE_MAX_WIDTH=1800 PAGES_IMAGE_MAX_HEIGHT=2400 make pages-build'
 
 setup: python-deps node-deps
 
@@ -68,10 +69,10 @@ build-wheels:
 grammar-build: node-deps build-wheels
 	zsh -c 'cd $(GRAMMAR_DIR); export NODE_OPTIONS=--openssl-legacy-provider; npm run build;'
 
-pages-build:
+pages-build: python-deps
 	scripts/build_pages.sh
 
-deploy-gh-pages:
+deploy-gh-pages: python-deps
 	scripts/deploy_gh_pages.sh
 # 	curl -L -o neologisms.csv "https://docs.google.com/spreadsheets/d/1NH_SgkBYY-vAITMtxrZogzihZGsbhIXCaes6HJrcJww/export?format=csv&sheet=AdminWords"
 
