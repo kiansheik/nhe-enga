@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Orthography Mapper — Alignment Learner</title>
+  <style>
+    body{
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;
+      background:#0b1220;color:#e7eef7;margin:0;line-height:1.45;
+    }
+    .wrap{max-width:900px;margin:0 auto;padding:20px}
+    .grid{display:grid;gap:12px}
+    @media(min-width:900px){.grid{grid-template-columns:1fr 1fr}}
+    textarea{
+      width:100%;min-height:210px;padding:12px;
+      border-radius:12px;border:1px solid #23314f;
+      background:#0f172a;color:#e7eef7;font-size:14px;
+    }
+    .card{
+      background:#0f172a;border:1px solid #23314f;
+      border-radius:14px;padding:14px;
+    }
+    table{border-collapse:collapse;width:100%;font-size:14px}
+    th,td{border-bottom:1px solid #23314f;padding:8px 10px;text-align:left}
+    th{color:#9fb3c8;font-weight:600}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .btn{
+      background:#2563eb;border:0;color:white;
+      border-radius:10px;padding:8px 12px;font-weight:600;cursor:pointer;
+    }
+    .muted{color:#9aa4b2}
+    code{font-family:ui-monospace,Menlo,Consolas,monospace}
+    .pill{
+      display:inline-block;border:1px solid #23314f;border-radius:999px;
+      padding:2px 8px;background:#0b142a;font-size:12px;
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Orthography Mapper — Alignment Learner</h1>
+  <p class="muted">
+    Paste the <strong>old orthography</strong> left and the aligned
+    <strong>Navarro</strong> version right. Click <em>Learn rules</em> to
+    extract cluster mappings. Rules are learned via token+character
+    alignment and frequency counts.
+  </p>
+
+  <div class="grid">
+    <div class="card">
+      <strong>Source (old orthography)</strong>
+      <textarea id="src"></textarea>
+    </div>
+    <div class="card">
+      <strong>Target (Navarro orthography)</strong>
+      <textarea id="tgt"></textarea>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <div class="row">
+      <button id="learn" class="btn">Learn rules</button>
+      <button id="dlCsv" class="btn">Export CSV</button>
+      <span id="stats" class="pill">—</span>
+    </div>
+    <p class="muted" style="margin-top:8px">
+      Internally: global align tokens, then global align chars inside
+      aligned tokens; extract difference spans as clusters. Single-character
+      substitutions are only kept if they’re diacritic-only (e.g. <code>â→a</code>).
+    </p>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <strong>Learned mappings (longest source first)</strong>
+    <div style="max-height:320px;overflow:auto">
+      <table id="tbl">
+        <thead>
+          <tr><th>#</th><th>source</th><th>→</th><th>target</th><th>count</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="muted">Click a row to delete that rule manually.</p>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <strong>CSV</strong>
+    <textarea id="csv" readonly></textarea>
+    <div class="muted">Format: <code>source_cluster,target_cluster</code> (empty cell = ε).</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const $ = s => document.querySelector(s);
+  const srcEl  = $('#src');
+  const tgtEl  = $('#tgt');
+  const learnBtn = $('#learn');
+  const dlBtn = $('#dlCsv');
+  const tblBody = document.querySelector('#tbl tbody');
+  const csvEl = $('#csv');
+  const statsEl = $('#stats');
+
+  const WORD_RE   = /[A-Za-zÀ-ÖØ-öø-ÿ']+/g;
+  const LETTER_RE = /^[A-Za-zÀ-ÖØ-öø-ÿ']+$/;
+
+  let currentRules = [];
+
+  function tokenize(text){
+    const lower = text.toLowerCase();
+    const out = [];
+    let m;
+    while((m = WORD_RE.exec(lower)) !== null){
+      out.push(m[0]);
+    }
+    return out;
+  }
+
+  function stripDiacritics(str){
+    return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  function isLettersApos(s){
+    return LETTER_RE.test(s);
+  }
+
+  function isDiacriticOnly(a,b){
+    return stripDiacritics(a) === stripDiacritics(b);
+  }
+
+  // Global alignment for token sequences
+  function alignTokens(srcTokens, tgtTokens){
+    const n = srcTokens.length;
+    const m = tgtTokens.length;
+    const gapCost = 1;
+    const subCost = 2; // mismatching tokens more expensive
+
+    const dp = Array.from({length:n+1}, () => Array(m+1).fill(0));
+    const bt = Array.from({length:n+1}, () => Array(m+1).fill(null));
+
+    for(let i=1;i<=n;i++){
+      dp[i][0] = i * gapCost;
+      bt[i][0] = 'U'; // up
+    }
+    for(let j=1;j<=m;j++){
+      dp[0][j] = j * gapCost;
+      bt[0][j] = 'L'; // left
+    }
+
+    for(let i=1;i<=n;i++){
+      for(let j=1;j<=m;j++){
+        const match = (srcTokens[i-1] === tgtTokens[j-1]) ? 0 : subCost;
+        let best = dp[i-1][j-1] + match;
+        let dir  = 'D'; // diag
+        const up = dp[i-1][j] + gapCost;
+        if(up < best){ best = up; dir = 'U'; }
+        const left = dp[i][j-1] + gapCost;
+        if(left < best){ best = left; dir = 'L'; }
+        dp[i][j] = best;
+        bt[i][j] = dir;
+      }
+    }
+
+    // Backtrack to build alignment
+    const pairs = [];
+    let i = n, j = m;
+    while(i > 0 || j > 0){
+      const dir = bt[i][j] || (i>0 && j>0 ? 'D' : (i>0 ? 'U' : 'L'));
+      if(dir === 'D'){
+        pairs.push({src: srcTokens[i-1], tgt: tgtTokens[j-1]});
+        i--; j--;
+      } else if(dir === 'U'){
+        pairs.push({src: srcTokens[i-1], tgt: null});
+        i--;
+      } else {
+        pairs.push({src: null, tgt: tgtTokens[j-1]});
+        j--;
+      }
+    }
+    pairs.reverse();
+    return pairs;
+  }
+
+  // Global alignment for characters inside a token pair
+  function alignChars(a, b){
+    const n = a.length;
+    const m = b.length;
+    const gapCost = 1;
+    const subCost = 1;
+
+    const dp = Array.from({length:n+1}, () => Array(m+1).fill(0));
+    const bt = Array.from({length:n+1}, () => Array(m+1).fill(null));
+
+    for(let i=1;i<=n;i++){
+      dp[i][0] = i * gapCost;
+      bt[i][0] = 'U';
+    }
+    for(let j=1;j<=m;j++){
+      dp[0][j] = j * gapCost;
+      bt[0][j] = 'L';
+    }
+
+    for(let i=1;i<=n;i++){
+      for(let j=1;j<=m;j++){
+        const match = (a[i-1] === b[j-1]) ? 0 : subCost;
+        let best = dp[i-1][j-1] + match;
+        let dir  = 'D';
+        const up = dp[i-1][j] + gapCost;
+        if(up < best){ best = up; dir = 'U'; }
+        const left = dp[i][j-1] + gapCost;
+        if(left < best){ best = left; dir = 'L'; }
+        dp[i][j] = best;
+        bt[i][j] = dir;
+      }
+    }
+
+    const alignedA = [];
+    const alignedB = [];
+    let i = n, j = m;
+    while(i > 0 || j > 0){
+      const dir = bt[i][j] || (i>0 && j>0 ? 'D' : (i>0 ? 'U' : 'L'));
+      if(dir === 'D'){
+        alignedA.push(a[i-1]);
+        alignedB.push(b[j-1]);
+        i--; j--;
+      } else if(dir === 'U'){
+        alignedA.push(a[i-1]);
+        alignedB.push('-');
+        i--;
+      } else {
+        alignedA.push('-');
+        alignedB.push(b[j-1]);
+        j--;
+      }
+    }
+    alignedA.reverse();
+    alignedB.reverse();
+    return {a: alignedA, b: alignedB};
+  }
+
+  function isValidPair(srcChunk, tgtChunk){
+    const lenS = srcChunk.length;
+    const lenT = tgtChunk.length;
+    if(!lenS && !lenT) return false;
+
+    if(lenS && !isLettersApos(srcChunk)) return false;
+    if(lenT && !isLettersApos(tgtChunk)) return false;
+
+    // Substitution (both sides present)
+    if(lenS && lenT){
+      if(srcChunk === tgtChunk) return false;
+      if(lenS === 1 || lenT === 1){
+        // only keep 1-char substitutions if they're diacritic-only
+        return isDiacriticOnly(srcChunk, tgtChunk);
+      }
+      return true; // multi-char cluster substitution
+    }
+
+    // Pure insertion or deletion
+    const len = lenS || lenT;
+    return len >= 1;
+  }
+
+  function extractChunksFromAligned(alignedA, alignedB){
+    const chunks = [];
+    let curS = '';
+    let curT = '';
+    let inDiff = false;
+    const L = alignedA.length;
+
+    for(let k=0;k<=L;k++){
+      const a = k < L ? alignedA[k] : null;
+      const b = k < L ? alignedB[k] : null;
+      const bothGaps = (a === '-' && b === '-');
+      const equal = (a === b) && a !== '-' && b !== '-';
+
+      if(k < L && !bothGaps && !equal){
+        inDiff = true;
+        if(a && a !== '-') curS += a;
+        if(b && b !== '-') curT += b;
+      } else {
+        if(inDiff){
+          if(isValidPair(curS, curT)){
+            chunks.push({src: curS, tgt: curT});
+          }
+          curS = ''; curT = ''; inDiff = false;
+        }
+      }
+    }
+    return chunks;
+  }
+
+  function learnRulesFromTexts(srcText, tgtText, minFreq = 2){
+    const srcTokens = tokenize(srcText);
+    const tgtTokens = tokenize(tgtText);
+    const pairs = alignTokens(srcTokens, tgtTokens);
+
+    const counts = new Map(); // key "src\tgt" -> count
+
+    for(const p of pairs){
+      if(!p.src || !p.tgt) continue; // skip pure token insert/delete for now
+      const a = p.src;
+      const b = p.tgt;
+      const {a:alignedA, b:alignedB} = alignChars(a, b);
+      const chunks = extractChunksFromAligned(alignedA, alignedB);
+      for(const ch of chunks){
+        const key = ch.src + '\t' + ch.tgt;
+        counts.set(key, (counts.get(key) || 0) + 1);
+      }
+    }
+
+    const rules = [];
+    for(const [key, count] of counts.entries()){
+      if(count < minFreq) continue;
+      const [s, t] = key.split('\t');
+      rules.push({src: s, tgt: t, count});
+    }
+
+    rules.sort((x,y) =>
+      y.src.length - x.src.length ||
+      y.count - x.count ||
+      x.src.localeCompare(y.src)
+    );
+    return rules;
+  }
+
+  function escapeHtml(s){
+    return s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  }
+
+  function csvEscape(s){
+    // allow empty string (ε) as blank field
+    return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+  }
+
+  function render(){
+    tblBody.innerHTML = '';
+    currentRules.forEach((r, idx) => {
+      const src = r.src || '∅';
+      const tgt = r.tgt || '∅';
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td class="muted">'+(idx+1)+'</td>'+
+        '<td><code>'+escapeHtml(src)+'</code></td>'+
+        '<td>→</td>'+
+        '<td><code>'+escapeHtml(tgt)+'</code></td>'+
+        '<td class="muted">'+r.count+'</td>';
+      tr.title = 'Click to delete this rule';
+      tr.addEventListener('click', () => {
+        currentRules.splice(idx, 1);
+        render();
+      });
+      tblBody.appendChild(tr);
+    });
+
+    csvEl.value = currentRules
+      .map(r => (csvEscape(r.src || '') + ',' + csvEscape(r.tgt || '')))
+      .join('\n');
+
+    statsEl.textContent = currentRules.length + ' rules';
+  }
+
+  learnBtn.addEventListener('click', () => {
+    currentRules = learnRulesFromTexts(srcEl.value, tgtEl.value, 2);
+    render();
+  });
+
+  dlBtn.addEventListener('click', () => {
+    const blob = new Blob([csvEl.value], {type:'text/csv;charset=utf-8;'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'orthography_mapping.csv';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+
+  // Pre-fill with your example so you can hit "Learn rules" immediately
+  srcEl.value =
+    "Tecó catú eté rerecoara, teco catú recé mbäé poraráçára. âébae ombäéramo ybâca rerecóune.";
+  tgtEl.value =
+    "Tekokatueté rerekoara, tekokatu resé mba'e porarasara. a'eba'e omba'eramo ybaka rerekóû ne.";
+})();
+</script>
+</body>
+</html>

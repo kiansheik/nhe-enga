@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Tupi Verb Translator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+        }
+        .row {
+            margin-bottom: 10px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+        }
+        .result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .spinner {
+            display: none;
+            margin-top: 10px;
+        }
+        .spinner div {
+            width: 24px;
+            height: 24px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid #3498db;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.3/pako.min.js"></script>
+    
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <label for="phrase">Phrase:</label>
+            <input type="text" id="phrase" placeholder="Enter phrase">
+        </div>
+        <div class="row">
+            <label for="targetLanguage">Target Language:</label>
+            <input type="text" id="targetLanguage" placeholder="Enter target language">
+        </div>
+        <button id="translateButton">Translate</button>
+        <div class="spinner" id="spinner"><div></div></div>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+async function getAnnotatedData(inputString) {
+  try {
+    // First POST request to get the EVENT_ID
+    const response = await fetch('http://127.0.0.1:7860/gradio_api/call/predict', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ data: [inputString] })
+    });
+    
+    // Check if the response is okay
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    
+    // Extract the JSON from the response
+    const responseData = await response.json();
+    const eventId = responseData.event_id;
+    // Second GET request to fetch the annotated data
+    const resultResponse = await fetch(`http://127.0.0.1:7860/gradio_api/call/predict/${eventId}`);
+    
+    // Check if the response is okay
+    if (!resultResponse.ok) {
+      throw new Error('Network response was not ok');
+    }
+    // console.log(2, resultResponse);
+    // Extract the JSON from the response
+    const resultData = await resultResponse.text();
+    const completeEventMatch = resultData.match(/(?<=event: complete\s*[\s\S]*?)data:\s*\["(.*?)"\]/s);
+    // Return the result data
+    return completeEventMatch[1].trim();
+    
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+}
+
+function parseParts(input) {
+    const regex = /([^\[]*)\s*(\[[^\]]+\])/g;
+    let result = [];
+    let match;
+
+    while ((match = regex.exec(input)) !== null) {
+        let part1 = match[1].trim();  // Text before the bracket, can be empty
+        let part2 = match[2];         // Text within the bracket
+
+        // Handle the case where part1 is empty
+        if (!part1) {
+            part1 = "";  // Ensure part1 is an empty string if nothing was found
+        }
+        
+        // Add both parts (including empty part1) to the result
+        result.push([part1.replace(/\s/g, ''), part2.replace(/\s/g, '')]);
+    }
+
+    return result;
+}
+
+function classifyParts(parts) {
+    var baseVerbData = {
+        subject: "",
+        subject_tense: "",
+        object: "",
+        object_tense: "",
+        negative: false,
+        permissive: false,
+        imperative: false,
+        gerund: false,
+        root: "",
+    };
+    // deep clone the verb data 
+    var verbData = JSON.parse(JSON.stringify(baseVerbData));
+    var verbOn = false;
+    var mainVerbOn = false;
+    let verbObjs = [];
+    for (let i = 0; i < parts.length; i++) {
+        const [part, tag] = parts[i];
+        // Check for the [MAIN_VERB] tags which open and close the main verb
+        if (tag.includes("[MAIN_VERB]") || tag.includes("[SUB_VERB]")) {
+            verbOn = !verbOn;
+            if (verbOn) {
+                verbData = JSON.parse(JSON.stringify(baseVerbData));
+            } else {
+                // Prepend verbData to verbObjs
+                if (tag.includes("[MAIN_VERB]")) {
+                    verbObjs.unshift(verbData);
+                } else {
+                    verbObjs.push(verbData);
+                }
+            }
+            // Keep going to next i in the loop, skipping the rest
+            continue;
+        }
+
+        // Explain subject tense
+        if (tag.includes("[SUBJECT:1ps]") || tag.includes("[SUBJECT_PREFIX:1ps]")) {
+            verbData.subject_tense += "1st person singular - I";
+        } else if (tag.includes("[SUBJECT:1ppe]") || tag.includes("[SUBJECT_PREFIX:1ppe]")) {
+            verbData.subject_tense += "1st person plural (excluding 2nd person) - we, not you";
+        } else if (tag.includes("[SUBJECT:1ppi]") || tag.includes("[SUBJECT_PREFIX:1ppi]")) {
+            verbData.subject_tense += "1st person plural (including 2nd person) - we all";
+        } else if (tag.includes("[SUBJECT:2ps]") || tag.includes("[SUBJECT_PREFIX:2ps]") || tag.includes("[IMPERATIVE_PREFIX:2ps]")) {
+            verbData.subject_tense += "2nd person singular - you";
+        } else if (tag.includes("[SUBJECT:2pp]") || tag.includes("[SUBJECT_PREFIX:2pp]") || tag.includes("[IMPERATIVE_PREFIX:2pp]")) {
+            verbData.subject_tense += "2nd person plural - y'all";
+        } else if (tag.includes("[SUBJECT:3p]") || tag.includes("[SUBJECT_PREFIX:3p]")) {
+            verbData.subject_tense += "3rd person (singular or plural, must decide based on context) - He/She/It/They";
+        } else if (tag.includes("[SUBJECT:2ps:OBJECT_1P]")) {
+            verbData.subject_tense += "2nd person singular - you";
+            verbData.object_tense += " 1st person - me/us";
+        }  else if (tag.includes("[SUBJECT:2pp:OBJECT_1P]")) {
+            verbData.subject_tense += "2nd person plural - y'all";
+            verbData.object_tense += " 1st person - me/us";
+        } 
+        // Get direct subject if any
+        if (tag.includes("[SUBJECT:")) {
+            verbData.subject = part;
+        }
+
+        // Explain object tense
+        if (tag.includes("[OBJECT:2ps:SUBJECT_1P]")) {
+            verbData.subject_tense += " 1st person - I/we";
+            verbData.object_tense += "2nd person singular - you";
+        } else if (tag.includes("[OBJECT:2pp:SUBJECT_1P]")) {
+            verbData.subject_tense += " 1st person - I/we";
+            verbData.object_tense += "2nd person plural - y'all";
+        } else if (tag.includes("[OBJECT:1ppi]")) {
+            verbData.object_tense += "1st person plural (including 2nd person) - we all";
+        } else if (tag.includes("[OBJECT:1ppe]")) {
+            verbData.object_tense += "1st person plural (excluding 2nd person) - we, not you";
+        } else if (tag.includes("[OBJECT:2ps]")) {
+            verbData.object_tense += "2nd person singular - you";
+        } else if (tag.includes("[OBJECT:2pp]")) {
+            verbData.object_tense += "2nd person plural - y'all";
+        } else if (tag.includes("[OBJECT:3p]")) {
+            verbData.object_tense += "3rd person (singular or plural, must decide based on context) - Him/Her/It/Them";
+        } else if (tag.includes("[OBJECT:1ps]")) {
+            verbData.object_tense += "1st person singular - me";
+        } else if (tag.includes("[PLURIFORM_PREFIX:S]")) {
+            verbData.object_tense += "3rd person (singular or plural, must decide based on context) - Him/Her/It/Them";
+        } else if (tag.includes("OBJECT_MARKER:3p")) {
+            verbData.object_tense += "3rd person (singular or plural, must decide based on context) - Him/Her/It/Them";
+        }
+        if (tag.includes("[OBJECT:DIRECT]") || tag.includes("[OBJECT:3p]")) {
+            verbData.object = part;
+        }
+        // Get negation status
+        if (tag.includes("NEGATION")) {
+            verbData.negative = true;
+        }
+        // Get negation status
+        if (tag.includes("PERMISSIVE")) {
+            verbData.permissive = true;
+        }
+        if (tag.includes("IMPERATIVE")) {
+            verbData.imperative = true;
+        }
+        if (tag.includes("GERUND")) {
+            verbData.gerund = true;
+        }
+        if (tag.includes("[ROOT]")) {
+            verbData.root = part;
+        }
+    }
+    var formattedDescription = "";
+    // for vd in verbObjs in JS
+    for (let i = 0; i < verbObjs.length; i++) {
+        let vd = verbObjs[i];
+        if (i == 0) {
+            formattedDescription += "Main Verb: (present or past tense)";
+        } else {
+            formattedDescription += "Auxiliary Verb: ";
+        }
+        // Root info
+        formattedDescription += ` ${vd.root}\n`;
+        // Subject and object info
+        if (vd.gerund) {
+            vd.subject_tense = "Same tense as main verb";
+            vd.subject = "Same subject as Main Verb";
+        }
+        formattedDescription += `Subject Noun: ${vd.subject? vd.subject : ""} (${vd.subject_tense? vd.subject_tense : "3rd person (singular or plural, must decide based on context) - He/She/It/Them"})\nObject Noun: ${vd.object? vd.object :vd.object_tense? "": "(No object)"} (${vd.object_tense? vd.object_tense : "intransitive verb"})`;
+        if (vd.negative) {
+            formattedDescription += `\nThe verb "${vd.root}" is negated.`;
+        }
+        if (vd.permissive) {
+            let mainUse = "Used to show wishes/hopes 'I hope that [VERB]'" 
+            let subUse = "Used to show finality when used as a subordinate clause '[MAIN_VERB] in order to ... [SUB_VERB]', '[MAIN_VERB] so that [SUB_VERB:SUBJECT] may...[SUB_VERB]'"
+            formattedDescription += `\nThe verb "${vd.root}" is in a subjunctive mood. ${i==0? mainUse : subUse}`;
+        }
+        if (vd.imperative) {
+            formattedDescription += `\nThe verb "${vd.root}" is in an imperative mood, used to give commands 'DO [MAIN_VERB]'.`;
+        }
+        if (vd.gerund) {
+            formattedDescription += `\nThe verb "${vd.root}" is in a gerund form, always augmenting the main verb. Used to show continuous and/or simultaneous actions '[MAIN_VERB] while [SUB_VERB]ing'. It can also represent finality '[MAIN_VERB] in order to [SUB_VERB]' or cause '[SUB_VERB] happened, causing [MAIN_VERB]', depending on the context.`;
+        }
+        formattedDescription += "\n\n";
+    }
+    return "\n" + formattedDescription;
+}
+
+
+function findRootWords(partsList) {
+  // Filter and extract words associated with [ROOT] tags
+  const rootWords = partsList  
+      .filter(([part, tag]) => tag === '[ROOT]' || (tag.includes('DIRECT') && (tag.includes('SUBJECT') || tag.includes('OBJECT'))) || (tag.includes('OBJECT:3p') && part != "a'e" && part != 'i' && part != 'î') )
+      .map(([part]) => part);
+
+  return rootWords;
+}
+
+// Function to load JSON from a file synchronously
+function loadJSONSync(url) {
+  var xhr = new XMLHttpRequest();
+  // xhr.overrideMimeType("application/json");
+  xhr.open('GET', url, false); // Make the request synchronous
+  xhr.send(null);
+  if (xhr.readyState == 4 && xhr.status == 200) {
+      return JSON.parse(xhr.responseText);
+  }
+  return null;
+}
+
+// Function to remove diacritics from a string
+function removeDiacritics(str) {
+  return removePunctuation(str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
+}
+function removePunctuation(str) {
+  return str
+  .replace(/[.,\/#!$%?^&*;:{}=\-_`~()]/g, "")
+  .trim();
+}
+
+function searchByFirstWordNoAccent(data, query) {
+    const queryNormalized = removeDiacritics(query.toLowerCase());
+    return data.filter(item => removeDiacritics(item.first_word.toLowerCase()) === queryNormalized);
+}
+function searchByFirstWordNoAccentNoA(data, query) {
+    const queryNormalized = removeDiacritics(query.toLowerCase());
+    return data.filter(item => removeDiacritics(item.first_word.toLowerCase().slice(0, -1)) === queryNormalized);
+}
+
+function loadCompressedJSONSync(url) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', url, false); // Make the request synchronous
+  xhr.overrideMimeType('text/plain; charset=x-user-defined'); // Treat the response as binary
+  xhr.send(null);
+  if (xhr.readyState === 4 && xhr.status === 200) {
+      var binaryString = xhr.responseText;
+      var len = binaryString.length;
+      var bytes = new Uint8Array(len);
+      for (var i = 0; i < len; i++) {
+          bytes[i] = binaryString.charCodeAt(i) & 0xFF;
+      }
+      var decompressedData = pako.inflate(bytes, { to: 'string' });
+      return JSON.parse(decompressedData);
+  }
+  return null;
+}
+
+window.jsonData = loadCompressedJSONSync('../docs/dict-conjugated.json.gz').map(item => ({
+  "first_word": item.f || "",
+  "optional_number": item.o || "",
+  "definition": item.d || "",
+  "con": item.c || ""
+}));
+
+const tupi_only = [];
+let include = false;
+const ban = [
+    "NOTA",
+    "Daí",
+    "De",
+    "OBSERVAÇÃO",
+    "Daí,",
+    "aba",
+    "-ab",
+    "abatiputá",
+    "-agûama",
+    "a'ebé",
+    "agûaîxima",
+    "agûaragûasu",
+    "agûy",
+    "ambûer",
+    "apyrĩ",
+    "ambype",
+    "gûaîá",
+    "eno-",
+    "îabotimirĩ",
+    "îapĩ",
+    "Maíra",
+    "memetipó",
+    "moro-",
+    "muresi",
+    "pyru'ã",
+    "POROROCA",
+    "sybyamumbyaré",
+    "Muitos",
+    "Há",
+    "O",
+    "Cardim,",
+]
+
+// Filter window.jsonData using the same logic
+window.jsonData = window.jsonData.filter(item => {
+    if (item.first_word === "ã") {
+        include = true;
+    }
+    if (item.first_word === "'yura") {
+        include = false;
+    }
+    if (include && !ban.includes(item.first_word)) {
+        return true;
+    }
+    return false;
+});
+
+function generateGPTPrompt(originalSentence, annotatedSentence, verbetes, targetLanguage) {
+  // Create the prompt with the provided information
+  const prompt = `The following sentence is in Tupi Antigo: ${originalSentence}\n` +
+
+        `Here is syntactic breakdown of the sentence in general linguistics terms: ${annotatedSentence}\n` +
+        // `The grammatical annotations provided are to be strictly followed and should be regarded as absolute for this translation.\n` +
+        // `Do not infer subject-object relationships from sentence structure alone; follow the grammatical roles indicated exactly as they are marked.\n` +
+        // `Prioritize the marked grammatical roles (e.g., subject, object, etc.) over any assumptions based on sentence structure or word order in other languages.\n` +
+        // `Make a distinction between 'you' (2ps) and 'y'all' (2pp), and 'we (not you)' (1ppe) 1st person plural excluding 2p, and 'we all (including you)' (1ppi) which is 1st person plural which includes the 2p in your translations.\n` +
+
+
+        `The roots, direct objects, and direct subjects which appear in the sentence have the following dictionary entries (there may be superfluou entries, decide which one applies most given the context):\n` +
+        `${verbetes.map(entry => `* ${entry}`).join('\n')}\n\n` +
+        // `Using all of this syntactic and semantic information provided, please do your best to provide a translation of this sentence into ${targetLanguage}.\n` +
+        // `Do not give an explanation, just the translation of the target phrase in ${targetLanguage}.\n` +
+        // `If there are multiple different entries shown for the semantic match, try to choose the one which makes most sense for the context of the sentence and syntax.\n\n`+
+        `I am looking for the most natural translation which would get the meaning across in the target language ${targetLanguage}, not a word-for-word translation.`+
+        `Without describing your rationale, give me 5 potential solutions in separate lines\n`;
+
+  return prompt;
+}
+
+function formatVerbetes(verbetes) {
+    // go through each verbete and format it like "optional_number. first word - definition"
+    return verbetes.map((verbete, index) => `${verbete.optional_number} ${verbete.first_word} - ${verbete.definition.slice(0, 100)}`.trim());
+}
+
+const greenlit = 'redacted';
+async function getAIResponse(prompt) {
+  const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key='+greenlit;
+  
+  const requestBody = {
+    contents: [
+      {
+        parts: [
+          { text: prompt }
+        ]
+      }
+    ],
+    safetySettings: [
+        {'category': "HARM_CATEGORY_SEXUALLY_EXPLICIT", 'threshold': "BLOCK_NONE"},
+        {'category': "HARM_CATEGORY_HATE_SPEECH", 'threshold': "BLOCK_NONE"},
+        {'category': "HARM_CATEGORY_HARASSMENT", 'threshold': "BLOCK_NONE"},
+        {'category': "HARM_CATEGORY_DANGEROUS_CONTENT", 'threshold': "BLOCK_NONE"},
+    ]
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(requestBody)
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    // Extracting the text from the response
+    console.log('respo gemeni:', data);
+    const resultText = data.candidates[0].content.parts[0].text;
+    return resultText;
+
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+}
+
+async function getCompletion(prompt) {
+  const url = 'https://api.openai.com/v1/chat/completions';
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${openaiApiKey}`,
+  };
+  const body = JSON.stringify({
+    model: 'gpt-4o-mini',
+    messages: [
+      {
+        role: 'system',
+        content: prompt,
+      },
+    ],
+  });
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: headers,
+      body: body,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Request failed', error);
+    throw error;
+  }
+}
+
+async function fetchTranslation(inp, lang) {
+    try {
+        const result = await getAnnotatedData(inp);
+        let parsedResult = JSON.parse('"'+result+'"')
+        console.log("Model output: ", parsedResult)
+        let parts = parseParts(parsedResult);
+        let resultString = "";
+        for (let i = 0; i < parts.length; i++) {
+            const [part, tag] = parts[i];
+            resultString += `${part}->${tag} `;
+        }
+        console.log(resultString.trim());
+        console.log(parts)
+
+        let promptString = classifyParts(parts);
+        // promptString = parsedResult + "\n\n" + promptString;
+
+        let rootWords = findRootWords(parts);
+        // remove all whitespace from rootWords[0]
+        const verbete_results_diacritic = [];
+        for (let i = 0; i < rootWords.length; i++) {
+            const coreRoot = rootWords[i].replace(/\s/g, '');
+            console.log("CORE:", coreRoot);
+            const verbete_results = [...searchByFirstWordNoAccent(window.jsonData, coreRoot), ...searchByFirstWordNoAccentNoA(window.jsonData, coreRoot)];
+            verbete_results_diacritic.push(...verbete_results);
+        }
+        console.log("VOCAB:", verbete_results_diacritic);
+        console.log("WINDOW:", window.jsonData);
+        const prompt = generateGPTPrompt(inp, promptString, formatVerbetes(verbete_results_diacritic), lang);
+        console.log(prompt);
+        const data = await getAIResponse(prompt);
+        console.log(data);
+        return data;
+    } catch (error) {
+        console.error('Error fetching translation:', error);
+        throw error;
+    }
+}
+    </script>
+
+
+    <script>
+        // Ensure the translate function is defined in the global scope
+        window.translate = async function() {
+            // Get input values
+            const phrase = document.getElementById('phrase').value;
+            const targetLanguage = document.getElementById('targetLanguage').value;
+
+            // Show the spinner and hide result
+            document.getElementById('spinner').style.display = 'block';
+            document.getElementById('result').textContent = '';
+
+            try {
+                // Simulate a translation process with a delay
+                const resultText = await fetchTranslation(phrase, targetLanguage);
+
+                // Display the result
+                document.getElementById('result').innerText = resultText;
+            } catch (error) {
+                document.getElementById('result').textContent = 'An error occurred during translation.\n'+error;
+                console.error(error);
+            } finally {
+                // Hide the spinner
+                document.getElementById('spinner').style.display = 'none';
+            }
+        };
+
+        // Simulated async function to mimic translation process
+        async function simulateTranslation(phrase, targetLanguage) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(`Translated '${phrase}' to ${targetLanguage}: [translation result]`);
+                }, 2000); // Simulate a delay
+            });
+        }
+
+        // Attach the translate function to the button's click event
+        document.getElementById('translateButton').addEventListener('click', translate);
+    </script>
+</body>
+</html>

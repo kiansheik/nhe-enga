@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dicionário de Neologismos Tupis</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+</head>
+<body>
+    <h1>Dicionário de Neologismos Tupis</h1>
+    
+    <p><a href="https://forms.gle/dujJoMrh6FXQARJfA">Submit Neologisms</a></p>
+    
+    <table id="csvTable">
+        <thead></thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        doc_id = "1NH_SgkBYY-vAITMtxrZogzihZGsbhIXCaes6HJrcJww";
+        const sheetCsvUrl = 'https://docs.google.com/spreadsheets/d/'+doc_id+'/gviz/tq?tqx=out:csv&sheet=AdminWords';
+
+        fetch(sheetCsvUrl)
+        .then(response => response.text())
+        .then(csvText => {
+            Papa.parse(csvText, {
+                complete: function(results) {
+                    // The first row contains the headers
+                    const headers = results.data[0];
+                    const jsonData = [];
+
+                    // Loop through the rows starting from the second one (index 1)
+                    for (let i = 1; i < results.data.length; i++) {
+                        const row = results.data[i];
+                        const obj = {};
+                        const obj_dict = {};
+
+                        // Map each column to the corresponding header
+                        headers.forEach((header, index) => {
+                            obj[header] = row[index];
+                        });
+                        first_word = obj['Verbete'];
+                        optional_number = "";
+                        con = "";
+                        // Render Pluriformity
+                        if (obj["Pluriforme"] == "Nenhuma") {
+                            obj['Pluriforme'] = "";
+                        }
+                        obj['Categoria Gramatical'] = obj['Categoria Gramatical'].toLowerCase()
+                        // Render transitivity 
+                        if (obj['Transitividade'] == "intr.-estativo (adjetivos, substantivos)"){
+                            if (obj['Categoria Gramatical'].includes("subs") || obj['Categoria Gramatical'].includes("noun")) {
+                                obj['Transitividade'] = "(s.)";
+                            } else if (obj['Categoria Gramatical'].includes("adv")) {
+                                obj['Transitividade'] = "(adv.)";
+                            } else {
+                                obj['Transitividade'] = "(v. da 2ª classe)";
+                            }
+                        } else if (obj['Transitividade'] == "tr.-activo"){
+                            obj['Transitividade'] = "(v.tr.)";
+                        } else if (obj['Transitividade'] == "intr.-activo"){
+                            obj['Transitividade'] = "(v. intr.)";
+                        } else {
+                            obj['Transitividade'] = "";
+                        }
+                        // Render etymology
+                        if (obj['Verbete(s) Base(s)'] !== "") {
+                            obj['Verbete(s) Base(s)'] = `(etim. - ${obj['Verbete(s) Base(s)']})`;
+                        }
+                        // Render categoria gramatical
+                        
+                        // if (obj['Categoria Gramatical'].toLowerCase().contains("substantivo")) {
+                        //     obj['Verbete(s) Base(s)'] = `(etim. - ${obj['Verbete(s) Base(s)']})`;
+                        // }
+                        definition = `${obj['Pluriforme']} ${obj['Verbete(s) Base(s)']} ${obj['Transitividade']} - PT: ${obj['Definição Portuguesa']} ENG: ${obj['English Definition']} "${obj['Atestação']}": ${obj['Tradução Portuguesa']}/${obj['Tradução Inglesa']} (${obj['Fonte']}, ${obj['Data da Fonte']}, ${obj['Pagina(s) na Fonte']}) (registrado ${obj['Timestamp']} by ${obj['Email Address']})`;
+
+                        obj_dict['first_word'] = first_word;
+                        obj_dict['optional_number'] = optional_number;
+                        obj_dict['con'] = con;
+                        obj_dict['definition'] = definition;
+
+                        // Add the row object to the jsonData array
+                        jsonData.push(obj_dict);
+                    }
+                    //sort jsonData on key first_word like a dictionary
+                    jsonData.sort(function(a, b){
+                        if(a.first_word < b.first_word) { return -1; }
+                        if(a.first_word > b.first_word) { return 1; }
+                        return 0;
+                    });
+                },
+                skipEmptyLines: true,
+                header: false // We manually handle the header generation
+            });
+        });
+    </script>
+</body>
+</html>

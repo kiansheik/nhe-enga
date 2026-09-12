@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.3/pako.min.js"></script>
+    <title>Sentence Quiz</title>
+    <style>
+        .mood-button {
+            background-color: lightgray;
+            border: none;
+            color: black;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        .mood-button-active {
+            background-color: rgb(76, 175, 80);
+            color: white;
+        }
+    </style>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DZYY8Y9076"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-DZYY8Y9076');
+    </script>
+</head>
+<body>
+    <div id="quiz-container">
+        <!-- Add this element where you want to display the progress feedback -->
+        <button class="mood-button mood-button-active" id="indicativo">Indicativo</button>
+        <button class="mood-button" id="permissivo">Permissivo</button>
+        <button class="mood-button" id="circunstancial">Circunstancial</button>
+        <button class="mood-button" id="gerundio">Gerúndio</button>
+        <button class="mood-button" id="imperativo">Imperativo</button>
+        <br>
+        <h2 id="progress-feedback"></h2>
+        <div class="answer-container">
+            <a target="_blank" id="definition" href="'#"></a><p id="definition-text"></p></p>
+            <strong><p id="response"></p></strong>
+        </div>
+        <div id="question-container">
+            <b><p id="question"></p></b>
+        </div>
+        <div id="options-container">
+            <label for="mode">Modo:</label>
+            <select id="mode" class="option">
+                <!-- Add options dynamically using JavaScript -->
+            </select>
+
+            <label for="subject">Sujeito:</label>
+            <select id="subject" class="option">
+                <!-- Add options dynamically using JavaScript -->
+            </select>
+
+            <label for="object">Objeto:</label>
+            <select id="object" class="option">
+                <!-- Add options dynamically using JavaScript -->
+            </select>
+
+            <button  id="enviar" onclick="submitAnswer()">Enviar</button>
+            <div class="answer-container">
+                <!-- The container for displaying the answer -->
+                <button onclick="showQuestion()">Próximo</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="result-container" style="display: none;">
+        <p id="score"></p>
+        <button onclick="restartQuiz()">Refazer Quiz</button>
+    </div>
+
+    <script src="quiz.js"></script>
+</body>
+</html>

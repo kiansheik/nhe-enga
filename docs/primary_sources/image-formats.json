@@ -1,0 +1,17 @@
+{
+  "books": {
+    "ancharte": ".jpg",
+    "arcat1618": ".jpg",
+    "betcomp": ".jpg",
+    "cartas_portiguara": ".jpg",
+    "lerhist": ".jpg",
+    "vlb": ".jpg"
+  },
+  "bytes_after": 449476728,
+  "bytes_before": 2481418431,
+  "format": "jpg",
+  "max_height": 2400,
+  "max_width": 1800,
+  "optimized_count": 1407,
+  "quality": 82
+}
