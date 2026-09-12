@@ -4,7 +4,6 @@ from collections import Counter
 from itertools import product
 import random
 from tqdm import tqdm
-import matplotlib.pyplot as plt
 import sys
 
 sys.path.append("tupi")

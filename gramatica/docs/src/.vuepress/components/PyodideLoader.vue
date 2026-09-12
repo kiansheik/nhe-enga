@@ -106,7 +106,9 @@ export default {
         },
     },
     created() {
-        this.loadJson();
+        if (typeof window !== 'undefined') {
+            this.loadJson();
+        }
     },
     mounted () {
         this.evBus.$on("pyReadyRender", (element, idx) => {
