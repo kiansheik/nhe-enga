@@ -59,6 +59,7 @@ for path in \
   manifest.json \
   favicon.ico \
   icon.png \
+  ical.png \
   pyodide.min.js \
   neologisms.csv \
   js \
@@ -73,6 +74,17 @@ do
 done
 
 copy_path "translate/index.html"
+
+# Preserve public URLs that were served directly when Pages published the
+# repository root. Keep these explicit so source-only directories do not become
+# part of the artifact by accident.
+for path in \
+  docs/primary_sources/emerson_arte_anchieta.html \
+  gramatica/docs/src/.vuepress/public/iframe_pyodide.html \
+  tupi/editirreg.html
+do
+  copy_path "$path"
+done
 
 for path in \
   docs/README.md \
@@ -105,6 +117,7 @@ done
 
 for path in \
   docs/primary_sources/*.css \
+  docs/primary_sources/*.html \
   docs/primary_sources/*.js \
   docs/primary_sources/*.json
 do

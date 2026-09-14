@@ -43,3 +43,17 @@
 - Pushed the resulting 1,582-object, 449 MiB pack successfully and set `gh-pages` to track `origin/gh-pages`.
 - Changed the GitHub Pages source from `main:/` to `gh-pages:/`, explicitly queued the build, and verified GitHub built `ff3b1f5b` without error.
 - Verified the live root, grammar route, and generated image manifest; the manifest reports 1,407 optimized images and 449,476,728 bytes after optimization.
+- After pull request 18 was merged, moved six maintained data pipelines into `scripts/data/`, two optional media helpers into `scripts/media/`, and ten historical scratchpads into `misc/experiments/`.
+- Removed four generated PDFs, one generated DOCX, and four Graphviz source/render pairs from the source tree, reducing the checked-out root by about 124 MB; the artifacts were unreferenced and remain recoverable from Git history.
+- Updated the Makefile, README, and script references for the new paths; added concise ownership READMEs under `scripts/data/`, `scripts/media/`, and `misc/`.
+- Preserved `ical.png` as a public asset, added it to the Pages allowlist, and fixed the `katu/` and `mbya/` relative references.
+- Verified Black, shell/JavaScript/Python syntax, `git diff --check`, the moved Navarro generator, and a full 477 MB Pages build.
+
+## 2026-09-14
+
+- Confirmed the optimized Pages allowlist had regressed the tracked `/docs/primary_sources/emerson_arte_anchieta.html` route to HTTP 404.
+- Audited every tracked HTML file against `.pages-build` and found three missing legacy paths: the Anchieta transcription, `tupi/editirreg.html`, and the old source-path alias for the Pyodide iframe.
+- Updated the Pages builder to preserve those explicit routes and all top-level primary-source HTML sidecars without reopening raw primary-source formats.
+- Rebuilt the full 478 MB artifact, confirmed all tracked HTML paths are present, found no raw primary-source formats or files over 100 MB, and reran check-only lint successfully.
+- Published only the three missing files to `gh-pages` as commit `8fbaf447`, leaving the unrelated source cleanup undeployed.
+- Confirmed GitHub Pages built that exact commit and all three restored URLs return HTTP 200; the Anchieta page serves the expected title and 203,056-byte document.

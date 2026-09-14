@@ -9,6 +9,10 @@ __pycache__/
 anotated_results_nouns.json
 anotated_results.json
 anotated_tokens.json
+
+# Local outputs from retained research experiments
+/and_predicate*
+/temp.docx
 # Distribution / packaging
 .Python
 build/
@@ -33,7 +37,6 @@ translate/google_api_keys.json
 translate/api_usage_log.json
 
 nhe-enga/
-node_modles/
 node_modules/
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -81,6 +84,7 @@ instance/
 docs/_build/
 
 # Local GitHub Pages build/deploy workspaces
+/.nojekyll
 .pages-build/
 .gh-pages-worktree/
 

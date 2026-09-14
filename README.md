@@ -35,26 +35,29 @@ Digital field notes, datasets, and tooling focused on Tupi Antigo (Old Tupi) and
 | `quiz/` | Interactive conjugation quiz that reads the same conjugation dataset and drills moods/arguments. |
 | `katu/`, `mbya/` | Parallel dictionary viewers for Nheengatu and Mbyá Guarani built from the extracted datasets under `docs/`. |
 | `translate/` | Prompt templates, batching scripts, and a tiny UI for LLM-assisted translation. Requires API keys (`google_api_keys.json`) and logs usage in `api_usage_log.json`. |
-| `tests/`, `test_pydicate.py` | Manual/interactive harnesses for validating noun transformations and predicate composition logic. |
-| `docs/primary_sources/` | OCR inputs (PDFs, bibliography, output pngs) used by the extraction scripts (`mbya_dooley_miner.py`, `nheengatu_dict_miner.py`, `source_extraction.py`). |
+| `scripts/data/` | Maintained dictionary, conjugation, and primary-source extraction pipelines. Run them from the repository root. |
+| `scripts/media/` | Small PDF and audio utilities that are useful to the project but are not part of the build. |
+| `misc/experiments/` | Historical research scratchpads and manual Pydicate/model experiments; not production entrypoints. |
+| `tests/` | Manual/interactive harnesses for validating noun transformations. |
+| `docs/primary_sources/` | OCR inputs (PDFs, bibliography, output PNGs) used by the extraction scripts under `scripts/data/`. |
 | `Makefile` | Helper targets for rebuilding wheels, copying them into the docs site, building VuePress, and refreshing the Google Sheets driven neologism CSV. |
 
-The root also keeps scratch scripts (`gen_data.py`, `verbs.py`, `gen_tokenizer.py`, `nheengatu_pluriforme_fix.py`, etc.), charts in `imgs/`, and prototype notebooks under `models/`.
+The repository root is reserved for public static-site entrypoints and project configuration. Historical scratchpads live under `misc/`, while maintained automation lives under `scripts/`.
 
 ## Datasets and generated artifacts
 
 Most front ends read straight from the JSON blobs inside `docs/`. Key files:
 
-- `docs/tupi_dict_navarro.json` / `docs/tupi_dict_navarro.js`: dictionary entries parsed from Navarro’s DOCX via `gen_data.py`. The JS exports `window.jsonData` for the static site.
-- `docs/dict-conjugated.json.gz`: main dataset produced by `verbs.py`. Each record has the lemma (`f`), optional numeric suffix (`o`), definition (`d`), verb metadata (`v`, `i`), and—when applicable—`c`, a list of conjugated forms annotated with subject/object prefixes, moods, and negative stems.
+- `docs/tupi_dict_navarro.json` / `docs/tupi_dict_navarro.js`: dictionary entries parsed from Navarro’s DOCX via `scripts/data/gen_data.py`. The JS exports `window.jsonData` for the static site.
+- `docs/dict-conjugated.json.gz`: main dataset produced by `scripts/data/verbs.py`. Each record has the lemma (`f`), optional numeric suffix (`o`), definition (`d`), verb metadata (`v`, `i`), and—when applicable—`c`, a list of conjugated forms annotated with subject/object prefixes, moods, and negative stems.
 - `docs/extracted_entries_nheengatu.json` / `.tar.gz`, `docs/dooley_2006_mbya_dic.json(.gz)`: parsed outputs from the mining scripts for other Tupian dictionaries.
 - `docs/primary_sources/*`: bibliography, PDFs, and derived page images to trace every citation back to Anchieta (Arte/Teatro), Bettendorff, VLB, etc.
 
 Rebuild the Navarro data and conjugation tables when the source DOCX changes:
 
 ```bash
-python3.11 gen_data.py              # updates docs/tupi_dict_navarro.{json,js}
-python3.11 verbs.py                 # recomputes conjugations and dict-conjugated.json(.gz)
+python3.11 scripts/data/gen_data.py > docs/tupi_dict_navarro.js
+python3.11 scripts/data/verbs.py
 cp docs/dict-conjugated.json.gz pydicate/pydicate/lang/tupilang/data/
 ```
 
@@ -108,12 +111,12 @@ print(clause.eval())           # koritei ixé asó
 print(clause.eval(True))       # koritei[ADVERB] ixé[SUBJECT:1ps] asó[MAIN_VERB]
 ```
 
-`test_pydicate.py` also shows how to render syntax trees with Graphviz via the `build_graphviz` helper.
+`misc/experiments/test_pydicate.py` also shows how to render syntax trees with Graphviz via the `build_graphviz` helper.
 
 ## Web experiences
 
 - **Dictionary + conjugation UI (`index.html` / `sentence-builder.html`)**: vanilla JS app that reads `docs/dict-conjugated.json(.gz)` and optionally spins up Pyodide to call the `tupi` wheel in-browser for on-the-fly conjugations and noun derivations.
-- **Grammar site (`gramatica/`)**: VuePress 1.x site that mirrors the research write-up. It embeds a Pyodide `<iframe>` (`gramatica/iframe_pyodide.html`) so code fences tagged as exercises can be executed with the real `tupi` package. Build output lives in `gramatica/docs/src/.vuepress/dist/` and is copied into `gramatica/` for GitHub Pages.
+- **Grammar site (`gramatica/`)**: VuePress 1.x site that mirrors the research write-up. It embeds a Pyodide `<iframe>` so code fences tagged as exercises can be executed with the real `tupi` package. Build output lives temporarily in `gramatica/docs/src/.vuepress/dist/`; `make pages-build` copies it into `.pages-build/gramatica/`.
 - **Quiz (`quiz/`)**: replicates conjugation drills by randomly sampling the conjugation dataset and asking for mood, subject, and object. Good regression test for dataset sanity.
 - **Other dictionaries (`katu/`, `mbya/`)**: share the same UI shell but load Nheengatu and Mbyá datasets generated by their respective mining scripts.
 - **Playground (`gramatica/guide/tools/playground.md`)**: uses Vue components to ask morphology questions and checks answers through Pyodide.
@@ -125,7 +128,7 @@ Core tooling:
 
 - Python 3.11 (some scripts rely on pattern matching and standard-library behavior added after 3.9).
 - Node 16+ (VuePress 1.5.3 and legacy plugins expect CommonJS/webpack 4 behavior).
-- Yarn or npm (VuePress build), `black` (optional formatting), and `graphviz` (if you want to render trees from `test_pydicate.py`).
+- Yarn or npm (VuePress build), `black` (optional formatting), and `graphviz` (if you want to render trees from `misc/experiments/test_pydicate.py`).
 - System libs for PDF/OCR tooling if you plan to rerun extraction scripts (`poppler`, `tesseract`, `pdfminer.six`, `pdfplumber`, `pdf2image`).
 
 Suggested setup:
@@ -169,14 +172,11 @@ The same server will expose `/quiz`, `/katu`, `/mbya`, `/sentence-builder.html`,
 ### Build the VuePress grammar
 
 ```bash
-cd gramatica/docs
-NODE_OPTIONS=--openssl-legacy-provider npm run dev     # hot reload
-NODE_OPTIONS=--openssl-legacy-provider npm run build   # emits dist/
-cd ../..
-cp -r gramatica/docs/src/.vuepress/dist/* gramatica/
+make grammar-build  # emits gramatica/docs/src/.vuepress/dist/
+make pages-build    # assembles the complete site under .pages-build/
 ```
 
-The `Makefile lint` target automates wheel builds, copies them to `gramatica/docs/src/.vuepress/public/pylibs/`, builds the docs, publishes to `gramatica/`, and refreshes the neologism CSV from Google Sheets.
+`make lint` is check-only. Use `make grammar-build` to build wheels and the VuePress site, and `make pages-build` to assemble the complete static artifact.
 
 ### Package the Python libs
 
@@ -198,13 +198,13 @@ These wheels are the ones copied into `gramatica/` and `tupi-annotation-suite`, 
 
 ### Mining new dictionaries
 
-- Nheengatu: adjust `docs/primary_sources/2021_MarcelTwardowskyAvila_VCorr_dic.pdf` and run `python nheengatu_dict_miner.py`, then `python nheengatu_pluriforme_fix.py`.
-- Mbyá: drop the Dooley PDF in `docs/primary_sources/GNDicLex.pdf` and run `python mbya_dooley_miner.py`.
-- Citations: use `python source_extraction.py` to rebuild the author reference counters and per-page PNGs.
+- Nheengatu: adjust `docs/primary_sources/2021_MarcelTwardowskyAvila_VCorr_dic.pdf` and run `python scripts/data/nheengatu_dict_miner.py`, then `python scripts/data/nheengatu_pluriforme_fix.py`.
+- Mbyá: drop the Dooley PDF in `docs/primary_sources/GNDicLex.pdf` and run `python scripts/data/mbya_dooley_miner.py`.
+- Citations: use `python scripts/data/source_extraction.py` to rebuild the author reference counters and per-page PNGs.
 
 ## Testing and QA
 
-- `python test_pydicate.py`: exercises sentence construction, negation, adjacency, and Graphviz rendering of predicate trees. Requires `graphviz` installed on the system.
+- `python misc/experiments/test_pydicate.py`: exercises sentence construction, negation, adjacency, and Graphviz rendering of predicate trees. Requires `graphviz` installed on the system.
 - `python tests/build_tests_cases.py`: REPL that walks noun entries (`tests/cases.csv`) and lets you codify transformations into `tests/new_cases.csv`.
 - Manual smoke tests: load `/index.html`, `/quiz/`, and `/gramatica/guide/` via `python -m http.server`, toggle “Mostrar Conjugações,” and try a few irregular verbs.
 
@@ -225,7 +225,7 @@ If you publish derivatives, cite the original authors and this toolkit.
 
 This codebase has grown organically; expect rough edges. Ideas that would add immediate value:
 
-1. Automate a leaner build pipeline (`make lint` currently does many unrelated tasks).
+1. Turn the retained data-extraction scripts into small argument-driven CLIs with focused tests.
 2. Replace the ad-hoc HTTP calls in the static UIs with a small build step that precomputes search indexes and conjugation tables.
 3. Expand the test coverage around `tupi.noun` transformations (the REPL only writes CSVs today).
 4. Document the translation prompts and APIs inside `translate/` so others can reproduce the experiments safely.

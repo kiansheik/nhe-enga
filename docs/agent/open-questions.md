@@ -4,3 +4,5 @@
 - Should primary-source page images move out of the source branch after adding a reliable regeneration or artifact-preservation step?
 - Is `sentence-builder.html` still a supported public page? Its wheel path now targets the generated Pages grammar artifact, but its UX and Pyodide behavior were not browser-tested in this cleanup.
 - Are `gramatica/package.json` and `gramatica/package-lock.json` still useful, or are they leftovers from before `gramatica/docs/package.json` became the active VuePress package?
+- Should the tracked root research outputs (`anotated_token_pairs.json`, `anotated_tokens*.json`, `token_instructions_eng.json`, `replacements.txt`, and `y_i_tupi.txt`) move under a documented data directory after their consumers and regeneration paths are confirmed?
+- Is the stale root `AGENT_NOTES.md` still useful, or should its historical composition notes move into `docs/agent/session-handoffs/`?

@@ -16,6 +16,13 @@
 - Python packaging output: `tupi/build/`, `tupi/dist/`, `tupi/tupi.egg-info/`, `pydicate/build/`, `pydicate/dist/`, `pydicate/pydicate.egg-info/`.
 - Transcrypt output: `__target__/`, `tupi/**/__target__/`, `pydicate/**/__target__/`.
 
+## Script Layout
+
+- `scripts/data/`: maintained Navarro, conjugation, Nheengatu, Mbyá, and primary-source data pipelines. Run from the repository root because their data paths are checkout-relative.
+- `scripts/media/`: optional PDF-bookmark and WAV-to-Opus utilities; generated outputs are not versioned.
+- `scripts/build_pages.sh`, `scripts/deploy_gh_pages.sh`, `scripts/optimize_pages_images.py`: maintained Pages build and deployment tooling.
+- `misc/experiments/`: retained historical research scratchpads, machine-local model experiments, and the manual Pydicate/Graphviz story harness. Nothing under `misc/` is a build or deployment dependency.
+
 ## Build Entrypoints
 
 - `make lint`: check formatting only.
@@ -26,4 +33,4 @@
 - `make grammar-build`: build the VuePress grammar.
 - `make pages-build`: assemble `.pages-build` from a static allowlist, copy only derived primary-source images, optimize those copied images for web delivery, then add the built grammar site under `gramatica/`.
 - `make deploy-gh-pages`: publish `.pages-build` to `gh-pages`.
-- `make gen_data`: create/update `.venv`, install `requirements.txt`, regenerate Navarro-derived dictionary data, regenerate conjugation data, and copy the bundled gzip into `pydicate`.
+- `make gen_data`: create/update `.venv`, install `requirements.txt`, run `scripts/data/gen_data.py` and `scripts/data/verbs.py`, and copy the bundled conjugation gzip into `pydicate`.

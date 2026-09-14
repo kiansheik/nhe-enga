@@ -83,6 +83,6 @@ push:
 	git push origin HEAD
 
 gen_data: python-deps
-	$(VENV_PYTHON) gen_data.py > docs/tupi_dict_navarro.js
-	$(VENV_PYTHON) verbs.py
+	$(VENV_PYTHON) scripts/data/gen_data.py > docs/tupi_dict_navarro.js
+	$(VENV_PYTHON) scripts/data/verbs.py
 	cp docs/dict-conjugated.json.gz pydicate/pydicate/lang/tupilang/data/
