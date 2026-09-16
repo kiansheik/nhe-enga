@@ -119,17 +119,20 @@ class Noun(Predicate):
         for adj in self.pre_adjuncts:
             adj_val = adj.eval(annotated=annotated)
             fuse = False
-            if not annotated and getattr(adj, "category", "") == "pronoun":
+            if getattr(adj, "category", "") == "pronoun":
                 tag_val = getattr(adj, "tag", "") or ""
-                if any(
-                    key in tag_val
-                    for key in (
-                        "OBJECT",
-                        "OBJECT_PREFIX",
-                        "OBJECT_MARKER",
-                        "PATIENT_PREFIX",
-                        "SUBJECT",
-                        "SUBJECT_PREFIX",
+                if "MAIN_CLAUSE_SUBJECT" in tag_val or (
+                    not annotated
+                    and any(
+                        key in tag_val
+                        for key in (
+                            "OBJECT",
+                            "OBJECT_PREFIX",
+                            "OBJECT_MARKER",
+                            "PATIENT_PREFIX",
+                            "SUBJECT",
+                            "SUBJECT_PREFIX",
+                        )
                     )
                 ):
                     fuse = True
@@ -145,6 +148,12 @@ class Noun(Predicate):
     def __mul__(self, other):
         if isinstance(self, Pronoun) and isinstance(other, Noun):
             tag = getattr(self, "tag", "") or ""
+            if "MAIN_CLAUSE_SUBJECT" in tag:
+                base = other.copy()
+                base.noun.pluriforme = None
+                base.noun.m_pluriforme = False
+                base.pre_adjuncts.insert(0, self.copy())
+                return base
             if "SUBJECT" in tag and "POSSESSIVE_PRONOUN" not in tag:
                 base = other.copy()
                 adj = self.copy()

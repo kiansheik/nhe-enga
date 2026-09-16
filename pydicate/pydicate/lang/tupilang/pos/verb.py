@@ -407,6 +407,19 @@ class Verb(Predicate):
         return retval if annotated else self.verb.remove_brackets_and_contents(retval)
 
     def base_nominal(self, annotated=False):
+        # A transitive verb with only a reflexive/reciprocal object has no
+        # overt subject. Variation 1 realizes that single argument as the
+        # intransitive-style short nominal prefix, without changing the verb.
+        if (
+            self.variation_id == 1
+            and len(self.arguments) == 1
+            and self.verb.transitivo
+            and self.arguments[0].inflection() in {"refl", "mut"}
+        ):
+            nominal = self.copy()
+            nominal.verb.transitivo = False
+            return nominal.base_nominal(annotated=annotated)
+
         vadjs = ""
         vadjs_pre = ""
         if self.v_adjuncts:

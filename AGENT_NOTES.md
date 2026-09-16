@@ -66,3 +66,28 @@ Now returns:
 
 ### Tests
 `make test` in `../oldtupicorpus` passed after the change.
+
+# 2026-09-16: Referential `og` and pluriform nouns
+
+Historic attestation: `oldtupicorpus/historic/araujo_catecismo_1686.tu.py`,
+record `araujo_catecismo_1686:0074` (source line 223). Its unchanged
+expression contains `og * apixara`; the editor-approved target is
+`oîeaûsuba îabé asé oapixararaûsuba no`. This is a rule proposed by the
+human editor; a matching render does not independently prove the historical
+analysis.
+
+`og` has tag `[PRONOUN:MAIN_CLAUSE_SUBJECT:3p]`. In Pydicate
+`Noun.__mul__`, the broad `"SUBJECT" in tag` branch had treated it as an
+ordinary subject adjunct. The pluriform noun then underwent `absoluta()`
+during `Noun.preval`, adding `t[PLURIFORM_PREFIX:T:ABSOLUTE]` despite the
+referential pronoun already occupying that prefix position. The annotated
+space between `og` and the noun also led the enclosing nominal verb form
+to keep them as separate words.
+
+The dedicated `MAIN_CLAUSE_SUBJECT` branch now suppresses the absolute
+pluriform prefix on the copied noun. `Noun.preval` joins this pronoun to
+the stem in both plain and annotated renderings. The contrast
+`nde * apixara -> nde rapixara` remains unchanged; standalone `apixara`
+remains `tapixara`. The pluriform verb nominal `(og * aûsub).base_nominal()`
+already renders `ogaûsuba` and is unchanged. Regression:
+`oldtupicorpus/tests/og_pluriform_prefix_test.py`.

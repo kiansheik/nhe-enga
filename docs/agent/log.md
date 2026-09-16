@@ -1,5 +1,10 @@
 # Agent Log
 
+## 2026-09-16
+
+- Added `docs/agent/grammar-navigation.md`: a living map from grammatical phenomenon to where it's implemented in `pydicate`/`tupi`, meant to be read before searching for an engine bug and updated after every fix. Seeded from the existing `/`-composition fix in `AGENT_NOTES.md`, plus an "Open items" entry for a reflexive/absolute-`t-`-prefix bug reproduced against `oldtupicorpus` record `araujo_catecismo_1686:0074` (not yet localized).
+- Registered it in `docs/agent/index.md` and added "check it before / update it after an engine edit" rules to `AGENTS.md`, plus an explicit rule against fixing a corpus-line mismatch by fabricating a new inline lexicon entry in the `oldtupicorpus` expression just to force a render match — driven by the `vscodetupy` "Correct ground truth" workflow, which now treats this repo as the required fix location for linguist-reported grammar corrections rather than an expression-level workaround.
+
 ## 2026-09-02
 
 - Created branch `cleanup-public-assets-kian`.
