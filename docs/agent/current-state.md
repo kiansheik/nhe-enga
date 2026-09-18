@@ -26,3 +26,8 @@
 - Root-level PDFs, DOCX output, and Graphviz renderings removed in the 2026-09-12 cleanup were generated and unreferenced. They remain recoverable from Git history and are now covered by ignore rules where needed.
 - `make gen_data` is noisy and can take over a minute; it updates generated dictionary/conjugation data. Keep those outputs separate from source-only cleanup changes unless intentionally refreshing data.
 - `make deploy-gh-pages` pushes to the configured remote branch; do not run it unless publishing the current Pages artifact is intended.
+
+## 2026-09-17 — Compound modifier annotations
+
+- Pydicate composition preserves a simple lexical noun modifier's existing `[ROOT]` metadata in both `Predicate.compose` and `Deverbal._apply_compositions`. Araújo 81 now retains `ypy[ROOT]`; spelling and analysis are unchanged.
+- Five focused engine tests and six existing corpus contrasts pass; all 122 historical surfaces remain identical. The strict source/JSONL audit still finds pre-existing missing location metadata at Araújo 74, and 81–82 remain unsaved. See [handoff](session-handoffs/2026-09-17-compound-annotations.md).

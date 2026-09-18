@@ -185,6 +185,16 @@ class Verb(Predicate):
             )
         )
 
+    def _pronominal_variant(self):
+        for argument in self.arguments:
+            if (
+                getattr(argument, "category", None) == "pronoun"
+                and argument.inflection() in {"refl", "mut"}
+                and getattr(argument, "variation_id", None) == 1
+            ):
+                return 1
+        return None
+
     def refresh_verbete(self, new_verbete):
         self.verbete = new_verbete
         self.verb = TupiVerb(self.verbete, self.verb.verb_class, self.definition)
@@ -283,6 +293,7 @@ class Verb(Predicate):
                         vadjs=vadjs,
                         vadjs_pre=vadjs_pre,
                         redup=base_verb.reduplicated,
+                        pronominal_variant=base_verb._pronominal_variant(),
                         pos=arg0_obj.posto,
                     )
                 else:  # otherwise it's a direct object
@@ -297,6 +308,7 @@ class Verb(Predicate):
                         vadjs=vadjs,
                         vadjs_pre=vadjs_pre,
                         redup=base_verb.reduplicated,
+                        pronominal_variant=base_verb._pronominal_variant(),
                         pos=arg0_obj.posto,
                     )
             else:  # intransitive
@@ -312,6 +324,7 @@ class Verb(Predicate):
                         vadjs=vadjs,
                         vadjs_pre=vadjs_pre,
                         redup=base_verb.reduplicated,
+                        pronominal_variant=base_verb._pronominal_variant(),
                     )
                 else:
                     retval = base_verb.verb.conjugate(
@@ -325,6 +338,7 @@ class Verb(Predicate):
                         vadjs=vadjs,
                         vadjs_pre=vadjs_pre,
                         redup=base_verb.reduplicated,
+                        pronominal_variant=base_verb._pronominal_variant(),
                     )
         elif arglen == 2:  # transitive
             suj = base_verb.subject()
@@ -370,6 +384,7 @@ class Verb(Predicate):
                 vadjs=vadjs,
                 vadjs_pre=vadjs_pre,
                 redup=base_verb.reduplicated,
+                pronominal_variant=base_verb._pronominal_variant(),
             )
         if obj_delocated:
             retval = retval + " " + obj_delocated
@@ -440,6 +455,7 @@ class Verb(Predicate):
                 negative=False,
                 anotar=annotated,
                 redup=self.reduplicated,
+                pronominal_variant=self._pronominal_variant(),
                 vadjs=vadjs,
                 vadjs_pre=vadjs_pre,
                 variation_id=self.variation_id,
@@ -529,6 +545,7 @@ class Verb(Predicate):
             vadjs=vadjs,
             vadjs_pre=vadjs_pre,
             redup=self.reduplicated,
+            pronominal_variant=self._pronominal_variant(),
             variation_id=self.variation_id,
         )
         tn = TupiNoun(nom, self.raw_definition)
@@ -612,6 +629,138 @@ class Verb(Predicate):
         return left @ right
 
 
+class IncorporatedVerbNominal(Noun):
+    def preval(self, annotated=False):
+        nominal = self.copy()
+        # Noun.preval prepends each adjunct in list order. Keep the verbal
+        # argument adjacent to the stem when the whole nominal receives an
+        # earlier phrase through `+`.
+        nominal.pre_adjuncts.sort(
+            key=lambda adj: 0 if getattr(adj, "_incorporated_argument", False) else 1
+        )
+        # A subject pronoun before an overt possessor is a separate phrase;
+        # Noun.preval's ordinary pronoun fusion applies only next to the stem.
+        internal = [
+            adj
+            for adj in nominal.pre_adjuncts
+            if getattr(adj, "_incorporated_argument", False)
+        ]
+        if len(internal) > 1:
+            for adj in internal:
+                if adj is not internal[0] and adj.category == "pronoun":
+                    adj.category = "incorporated_subject_pronoun"
+        return super(IncorporatedVerbNominal, nominal).preval(annotated=annotated)
+
+
+class IncorporatedObjectVerb(Verb):
+    """A transitive verb with its noun object incorporated into the stem.
+
+    The default is intransitive (an unspecified instance of the noun). Variation
+    1 is transitive: its external object is the incorporated noun's possessor.
+    """
+
+    def __init__(self, noun, verb):
+        if noun.arguments or verb.arguments:
+            raise ValueError(
+                "Incorporation requires a bare noun and verb; attach possessor "
+                "or other arguments to the derived verb"
+            )
+        composed = TupiNoun(
+            noun.noun.base_verbete, noun.definition, noroot=True
+        ).compose(TupiNoun(f"{verb.verbete}[ROOT]", verb.definition, noroot=True))
+        stem = composed.verbete(True).replace("[ROOT]", "[INCORPORATED_OBJECT]", 1)
+        nominal_stem = TupiNoun(stem, noun.definition, noroot=True)
+        self._absolute_stem = (
+            nominal_stem.absoluta()
+            .verbete(True)
+            .replace(
+                "[INCORPORATED_OBJECT]",
+                "[INCORPORATED_OBJECT][OBJECT:INCORPORATED:GENERIC]",
+                1,
+            )
+        )
+        # An overt external object in variation 1 is an explicit possessor.
+        # Use the same noun inflection as ordinary possession, then remove the
+        # temporary possessor from the stem passed to verbal conjugation.
+        self._possessed_stem = (
+            nominal_stem.possessive("3p", "INCORPORATED_POSSESSOR")
+            .verbete(True)
+            .split(" ", 1)[1]
+            .replace(
+                "[INCORPORATED_OBJECT]",
+                "[INCORPORATED_OBJECT][OBJECT:INCORPORATED:POSSESSED]",
+                1,
+            )
+        )
+        self.incorporated_object = noun.copy()
+        self.source_verb = verb.copy()
+        super().__init__(
+            value=AnnotatedString(self._absolute_stem).clean,
+            verb_class="",
+            definition=f"{noun.definition}; {verb.definition}",
+            category="incorporated_object_verb",
+        )
+        self.compositions = [verb.copy()]
+
+    def var(self, setter):
+        varied = super().var(setter)
+        if setter not in (None, 0, 1):
+            raise ValueError("Incorporated-object verbs support variations 0 and 1")
+        possessed = setter == 1
+        stem = self._possessed_stem if possessed else self._absolute_stem
+        varied.verbete = AnnotatedString(stem).clean
+        varied.verb.verbete = varied.verbete
+        varied.verb.transitivo = possessed
+        return varied
+
+    def __mul__(self, other):
+        if not self.verb.transitivo and self.arguments:
+            raise ValueError("The default incorporated-object verb has one subject")
+        return super().__mul__(other)
+
+    def _mark_incorporation(self, surface):
+        stem = self._possessed_stem if self.verb.transitivo else self._absolute_stem
+        surface = surface.replace(f"{self.verbete}[ROOT]", stem, 1)
+        if self.verb.transitivo:
+            surface = surface.replace(
+                "[OBJECT:DIRECT]", "[OBJECT:DIRECT:INCORPORATED_NOUN_POSSESSOR]", 1
+            )
+        return surface
+
+    def preval(self, annotated=False):
+        rendered = self._mark_incorporation(super().preval(annotated=True))
+        return (
+            rendered if annotated else self.verb.remove_brackets_and_contents(rendered)
+        )
+
+    def base_nominal(self, annotated=False):
+        stem = self._possessed_stem if self.verb.transitivo else self._absolute_stem
+        nominal = IncorporatedVerbNominal(
+            stem,
+            definition="",
+            noroot=True,
+            tag="[NOUN:INCORPORATED_VERB_NOMINAL]",
+        )
+        if self.verb.transitivo:
+            if self.object() is not None:
+                possessor = self.object().copy()
+                possessor.tag += "[OBJECT:DIRECT:INCORPORATED_NOUN_POSSESSOR]"
+                possessor._incorporated_argument = True
+                nominal.pre_adjuncts.append(possessor)
+            if self.subject() is not None:
+                subject = self.subject().copy()
+                subject.tag += "[SUBJECT:DIRECT]"
+                subject._incorporated_argument = True
+                nominal.pre_adjuncts.append(subject)
+        elif self.subject() is not None:
+            subject = self.subject().copy()
+            subject.tag += "[SUBJECT:DIRECT]"
+            subject._incorporated_argument = True
+            nominal.pre_adjuncts.append(subject)
+        nominal.arguments = [arg.copy() for arg in self.arguments]
+        return nominal
+
+
 class VerbAugmentor(Verb):
     def __init__(
         self,
@@ -625,6 +774,11 @@ class VerbAugmentor(Verb):
         self._arguments = []
         self.ero_switch = ero_switch
         self._augmentee = None
+
+    def _prefix_form(self):
+        if self.verbete == "mo" and self.variation_id == 1:
+            return "mbo", "[CAUSATIVE_PREFIX:MBO]"
+        return self.verbete, self.tag
 
     def __mul__(self, other):
         """
@@ -651,7 +805,8 @@ class VerbAugmentor(Verb):
                         definition=getattr(other, "definition", ""),
                     )
             new_verb = VerbAugmentor.from_existing(fin)
-            new_verb.verb.verbete = f"{self.verbete}{self.tag}{fin.verbete}"
+            prefix, prefix_tag = self._prefix_form()
+            new_verb.verb.verbete = f"{prefix}{prefix_tag}{fin.verbete}"
             new_verb.verb.transitivo = True
             new_verb.verbete = new_verb.verb.verbete
             new_verb.verb.pluriforme = False
@@ -673,9 +828,8 @@ class VerbAugmentor(Verb):
 
     def preval(self, annotated=False):
         if not self._augmentee or len(self._augmentee) == 0:
-            return AnnotatedString(f"{self.verbete}{self.tag}").verbete(
-                annotated=annotated
-            )
+            prefix, prefix_tag = self._prefix_form()
+            return AnnotatedString(f"{prefix}{prefix_tag}").verbete(annotated=annotated)
         cop = self.copy()
         # return super function of preval for cop
         return super(VerbAugmentor, cop).preval(annotated=annotated)
@@ -695,6 +849,7 @@ mo = VerbAugmentor(
     tag="[CAUSATIVE_PREFIX:MO]",
     category="verb_transitivizer",
 )  # TODO: Fix the phonetic rules for this
+mbo = mo.var(1)
 ero = VerbAugmentor(
     value="ero",
     definition="to do an action with something/someone else (object of verb as company or instrument in modified)",

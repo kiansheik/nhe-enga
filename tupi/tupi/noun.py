@@ -282,6 +282,10 @@ class Noun(TupiAntigo):
         return repr(self)
 
     def pluriform_prefix(self, person="absoluta"):
+        if self.m_pluriforme:
+            if person == "absoluta":
+                return "m[PLURIFORM_PREFIX:M:ABSOLUTE]"
+            return "p[PLURIFORM_PREFIX:P]"
         plf = self.pluriforme
         if plf:
             if "3p" in person:
@@ -301,11 +305,6 @@ class Noun(TupiAntigo):
                     return prefix + "[AGENT_PREFIX:GENERIC:PEOPLE:ABSOLUTE]"
             if "1p" in person or "2p" in person:
                 return "r[PLURIFORM_PREFIX:R]"
-        if self.m_pluriforme:
-            if person == "absoluta":
-                return "m[PLURIFORM_PREFIX:M:ABSOLUTE]"
-            else:
-                return "p[PLURIFORM_PREFIX:P]"
         return ""
 
     def supe(self, variation_id=0):
@@ -505,7 +504,7 @@ class Noun(TupiAntigo):
         vbt = ret_noun.latest_verbete
 
         # Determine prefix (e.g., r[PLURIFORM_PREFIX:R]) for plural forms
-        if possessor and self.pluriforme:
+        if possessor and self.pluriforme and not self.m_pluriforme:
             prefix = "r[PLURIFORM_PREFIX:R]"
         else:
             prefix = ret_noun.pluriform_prefix(person)
@@ -799,6 +798,8 @@ class Noun(TupiAntigo):
                     suf = "embi"
                 vbt.replace_clean(0, 1, self.nasal_prefix_map_emi[vbt[0]])
                 vbt.insert_prefix(f"{suf}{token}")
+            else:
+                vbt.insert_prefix(f"emi{token}")
         elif self.monosilibica() and not any(nasal in vbt for nasal in self.nasais):
             vbt.insert_prefix(f"embi{token}")
         else:

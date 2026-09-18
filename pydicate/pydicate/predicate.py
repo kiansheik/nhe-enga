@@ -382,11 +382,39 @@ class Predicate(Trackable):
     def refresh_verbete(self, new_verbete):
         self.verbete = new_verbete
 
+    @staticmethod
+    def _compose_modifier_base(modifier):
+        """Keep existing root metadata on a simple lexical composition stem.
+
+        Use the lexical noun base, never its inflected evaluation. Explicitly
+        untagged, already annotated, composite and multiword forms retain the
+        prior path; this does not infer morpheme boundaries for those forms.
+        """
+        surface = modifier.verbete
+        if (
+            not isinstance(surface, str)
+            or not surface
+            or re.search(r"[\s\[\]]", surface)
+            or getattr(modifier, "category", "") != "noun"
+            or getattr(modifier, "compositions", None)
+        ):
+            return surface
+        noun = vars(modifier).get("noun")
+        lexical_base = getattr(noun, "base_verbete", None)
+        if not isinstance(lexical_base, str) or lexical_base.count("[ROOT]") != 1:
+            return surface
+        bare = TupiNoun(surface, modifier.definition, noroot=True).verbete(False)
+        if lexical_base == f"{bare}[ROOT]":
+            return lexical_base
+        return surface
+
     def compose(self, modifier):
         """
         use the / operator to compose predicates
         :return: Self (to enable chaining).
         """
+        if getattr(modifier, "category", "") == "size_suffix":
+            return modifier.attach(self)
         # For chained classifiers, apply composition to the innermost classifier
         # to preserve temporal ordering (e.g., rama(pûera(rama(X))) / adj).
         try:
@@ -436,7 +464,7 @@ class Predicate(Trackable):
             orig, orig.verbete, respect_apply_compositions=True
         )
         orig_n = TupiNoun(orig_surface, orig.definition, noroot=True)
-        mod_surface = modifier.verbete
+        mod_surface = self._compose_modifier_base(modifier)
         use_resolved_surface = getattr(modifier, "category", "") in {
             "deverbal_noun",
             "classifier_noun",

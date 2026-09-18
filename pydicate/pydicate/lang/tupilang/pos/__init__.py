@@ -10,6 +10,7 @@ from .particle import *
 from .interjection import *
 from .number import *
 from .deadverbal import *
+from .suffix import *
 
 abé = Conjunction("abé", tag="[CONJUNCTION:AND]")  # Tupi for "and"
 paben = Conjunction("pab˜e", tag="[CONJUNCTION:ALL]")  # Tupi for "and"

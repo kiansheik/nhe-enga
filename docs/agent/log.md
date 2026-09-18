@@ -62,3 +62,7 @@
 - Rebuilt the full 478 MB artifact, confirmed all tracked HTML paths are present, found no raw primary-source formats or files over 100 MB, and reran check-only lint successfully.
 - Published only the three missing files to `gh-pages` as commit `8fbaf447`, leaving the unrelated source cleanup undeployed.
 - Confirmed GitHub Pages built that exact commit and all three restored URLs return HTTP 200; the Anchieta page serves the expected title and 203,056-byte document.
+
+## 2026-09-17 — Compound modifier annotations
+
+Restored existing lexical root metadata lost by `noroot=True` when a compound modifier was rebuilt from its bare verbete. The guard reads stored lexical state without evaluating inflection and leaves ambiguous/already annotated/composite forms alone. Added a standalone five-test regression. Verified six existing contrasts, all 122 historic surfaces, and unchanged corpus/reference hashes. No source analysis, ground truth, commit or push was changed.

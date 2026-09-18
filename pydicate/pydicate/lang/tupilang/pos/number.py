@@ -1,6 +1,7 @@
 from pydicate import Predicate
 from tupi import Noun as TupiNoun
 from pydicate.lang.tupilang.pos.copula import *
+from pydicate.lang.tupilang.pos.noun import Noun
 
 
 class Number(Predicate):
@@ -31,6 +32,16 @@ class Number(Predicate):
             cop.verbete += "a"
         return cop
 
+    def base_nominal(self, annotated=False):
+        """Use a raw number as a noun without altering its surface form."""
+        if self.arguments:
+            raise ValueError("Only a raw number can be nominalized")
+        return Noun(
+            self.verbete,
+            definition=self.definition,
+            tag=f"{self.tag}[NOUN]",
+        )
+
     def preval(self, annotated=False):
         """Evaluate the Number object."""
         tag = ""
@@ -38,10 +49,16 @@ class Number(Predicate):
             tag = self.tag
         if self.arguments:
             if self.arguments[0].posto == "posposto":
-                return f"{self.verbete}{tag} {self.arguments[0].eval(annotated)}"
+                rendered = f"{self.verbete}{tag} {self.arguments[0].eval(annotated)}"
             else:
-                return f"{self.arguments[0].eval(annotated)} {self.verbete}{tag}"
-        return f"{self.verbete}{tag}"
+                rendered = f"{self.arguments[0].eval(annotated)} {self.verbete}{tag}"
+        else:
+            rendered = f"{self.verbete}{tag}"
+        for adjunct in self.pre_adjuncts:
+            rendered = f"{adjunct.eval(annotated=annotated)} {rendered}"
+        for adjunct in self.post_adjuncts:
+            rendered = f"{rendered} {adjunct.eval(annotated=annotated)}"
+        return rendered.strip()
 
     def __add__(self, other):
         if hasattr(other, "__addpre__"):

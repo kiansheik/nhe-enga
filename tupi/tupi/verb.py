@@ -152,6 +152,7 @@ class Verb(TupiAntigo):
         vadjs_pre="",
         redup=False,
         variation_id=None,
+        pronominal_variant=None,
     ):
         result = ""
         perm_mode = False
@@ -411,6 +412,11 @@ class Verb(TupiAntigo):
                     obj = "îe" + f"[OBJECT:REFLEXIVE]"
                 elif object_tense == "mut":
                     obj = "îo" + f"[OBJECT:MUTUAL]"
+                elif object_tense == "gen_compound":
+                    # Explicit moro.var(1) is mor- in direct composition.
+                    # It is not an ordinary possessed object and does not
+                    # license a pluriform prefix on the following verb.
+                    obj = "mor[OBJECT:GENERIC:COMPOUND]"
                 elif object_tense == "absoluta" and dir_obj_raw is None:
                     if self.pluriforme:
                         obj = f""
@@ -468,7 +474,7 @@ class Verb(TupiAntigo):
                 pluri_check
                 and self.transitivo
                 and (object_tense not in ["3p", "absoluta"] or dir_obj_raw is not None)
-                and (object_tense not in ["refl", "mut", "suj"])
+                and (object_tense not in ["refl", "mut", "suj", "gen_compound"])
             ):
                 obj += f"r[PLURIFORM_PREFIX:R]"
             vbt = f"{vbt}[ROOT]"
@@ -630,7 +636,10 @@ class Verb(TupiAntigo):
         elif self.transitivo:
             if pos not in ["posposto", "incorporado", "anteposto"]:
                 raise Exception("Position Not Valid")
-            if object_tense in self.personal_inflections.keys():
+            if (
+                object_tense in self.personal_inflections.keys()
+                or object_tense == "gen_compound"
+            ):
                 if (subject_tense != "3p" and object_tense == subject_tense) or (
                     object_tense in ("refl", "mut")
                 ):
@@ -738,7 +747,7 @@ class Verb(TupiAntigo):
                         if negative:
                             vb = self.negate_verb(vb, mode, anotar=anotar)
                         result = f"{subj} {vadjs_pre}{vb}{vadjs}"
-                elif object_tense == "gen":
+                elif object_tense in {"gen", "gen_compound"}:
                     subj = (
                         self.personal_inflections[subject_tense][0]
                         + f"[SUBJECT:{subject_tense}]"
@@ -754,9 +763,18 @@ class Verb(TupiAntigo):
                     )
                     if mode == "nominal" or (pro_drop and subject_tense == "3p"):
                         conj = ""
-                    obj = "poro[OBJECT:gen]"
+                    compound_generic = object_tense == "gen_compound"
+                    obj = (
+                        "mor[OBJECT:GENERIC:COMPOUND]"
+                        if compound_generic
+                        else "poro[OBJECT:gen]"
+                    )
                     pluriforme = (
-                        f"r[PLURIFORM_PREFIX:R]" if pluri_check or self.ero else ""
+                        ""
+                        if compound_generic
+                        else (
+                            f"r[PLURIFORM_PREFIX:R]" if pluri_check or self.ero else ""
+                        )
                     )
                     vbt = f"{conj}{obj}{pluriforme}{base_verbete}[ROOT]"
                     if redup:
@@ -848,6 +866,14 @@ class Verb(TupiAntigo):
                             if pos == "posposto"
                             else f"{subj if not pro_drop else ''} {vadjs_pre}{vb}{vadjs}"
                         )
+        if pronominal_variant == 1:
+            for old, new in (
+                ("îe[OBJECT:REFLEXIVE]", "nhe[OBJECT:REFLEXIVE]"),
+                ("îo[OBJECT:MUTUAL]", "nho[OBJECT:MUTUAL]"),
+                ("îe[SUBJECT:refl]", "nhe[SUBJECT:refl]"),
+                ("îo[SUBJECT:mut]", "nho[SUBJECT:mut]"),
+            ):
+                result = result.replace(old, new)
         return (
             result
             if anotar

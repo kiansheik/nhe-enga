@@ -72,7 +72,7 @@ class Deverbal(Noun):
             return surface
         composed = TupiNoun(surface, self.functional_definition, noroot=True)
         for modifier in self.compositions:
-            mod_surface = modifier.verbete
+            mod_surface = self._compose_modifier_base(modifier)
             use_resolved_surface = getattr(modifier, "category", "") in {
                 "deverbal_noun",
                 "classifier_noun",
@@ -288,6 +288,17 @@ def emi_morphology(self, verb, annotated=False):
         subj = verb.arguments[0]
     else:
         subj = None
+    referential = None
+    if subj is None:
+        referential = next(
+            (
+                adjunct
+                for adjunct in self.pre_adjuncts
+                if getattr(adjunct, "category", "") == "pronoun"
+                and "MAIN_CLAUSE_SUBJECT" in (getattr(adjunct, "tag", "") or "")
+            ),
+            None,
+        )
     verb_base = verb.copy()
     verb_base.arguments = []
     nom = verb_base.base_nominal(True).noun.emi()
@@ -299,12 +310,16 @@ def emi_morphology(self, verb, annotated=False):
             None if subj.category == "pronoun" else subj.eval(annotated=True),
         )
     elif not subj:
-        nom = nom.possessive("absoluta", self.pro_drop)
+        if referential is None:
+            nom = nom.possessive("absoluta", self.pro_drop)
     else:
         nom = nom.possessive(subj.inflection(), None)
     if self.vocative:
         nom = nom.vocativo()
-    return nom.substantivo(annotated)
+    surface = nom.substantivo(annotated)
+    if referential is not None:
+        surface = f"{referential.eval(annotated=annotated)}{surface}"
+    return surface
 
 
 def sara_morphology(self, verbin, annotated=False):

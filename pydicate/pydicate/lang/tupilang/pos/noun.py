@@ -245,8 +245,17 @@ class Noun(Predicate):
         """Return the noun in its vocative form."""
         return VocativeNoun(self)
 
+    # define VocativeNoun subclass of Noun which implements Interjetion type behavior
+    def __truediv__(self, modifier):
+        # A noun incorporated into a transitive verb changes the verb's
+        # valency. Other noun compositions retain Predicate.compose's rules.
+        from pydicate.lang.tupilang.pos.verb import Verb, IncorporatedObjectVerb
 
-# define VocativeNoun subclass of Noun which implements Interjetion type behavior
+        if isinstance(modifier, Verb) and modifier.verb.transitivo:
+            return IncorporatedObjectVerb(self, modifier)
+        return super().__truediv__(modifier)
+
+
 class VocativeNoun(Noun, Interjection):
     # the class simply takes a Noun object and returns a deep copy of the noun, plus voctative flag as it currently implements
     def __init__(self, noun: Noun):
@@ -411,7 +420,20 @@ class Pronoun(Noun):
         """Return the noun in its base form."""
         if neg:
             return AnnotatedString(self.noun.eym().verbete()).verbete(annotated)
-        return AnnotatedString(self.noun.verbete()).verbete(annotated)
+        variant = {"refl": "nhe", "mut": "nho", "gen": "mor"}.get(self.inflection())
+        surface = variant if self.variation_id == 1 and variant else self.noun.verbete()
+        return AnnotatedString(surface).verbete(annotated)
+
+    def inflection(self, setter=None):
+        if setter:
+            self._inflection = setter
+        if (
+            self.verbete == "moro"
+            and self._inflection == "gen"
+            and self.variation_id == 1
+        ):
+            return "gen_compound"
+        return super().inflection()
 
 
 ixé = Pronoun("1ps", definition="I")
@@ -448,6 +470,8 @@ moro.noun = TupiNoun("moro", moro.functional_definition, noroot=True)
     "refl", definition="to oneself, one's own", tag="[OBJECT_PREFIX:REFLEXIVE]"
 )
 îo = Pronoun("mut", definition="to one another", tag="[OBJECT_PREFIX:RECIPROCAL]")
+nhe = îe.var(1)
+nho = îo.var(1)
 og = Pronoun(
     "o",
     definition="refers to the subject of the main clause",
