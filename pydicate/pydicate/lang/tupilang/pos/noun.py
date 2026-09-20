@@ -214,8 +214,18 @@ class Noun(Predicate):
                 ),
                 fuse=False,
             )
-            base_noun.noun.pluriforme = possessor.noun.pluriforme
-            base_noun.noun.m_pluriforme = possessor.noun.m_pluriforme
+            # A non-pluriform adjectival nominal acts as a modifier here;
+            # it keeps its own null class while the possessor retains its prefix.
+            if (
+                "adj." in base_noun.noun.raw_definition.lower()
+                and base_noun.noun.pluriforme is None
+            ):
+                return base_noun
+            # Possession has already selected the relational form of the
+            # possessed root. Suppress its later absolute realization: it
+            # would prefix the complete possessor–possessed phrase a second time.
+            base_noun.noun.pluriforme = None
+            base_noun.noun.m_pluriforme = False
             return base_noun
         # Otherwise, treat itself as the argument to the other predicate
         self_cop = self.copy()
@@ -346,6 +356,14 @@ class Conjunction(Noun):
             return super().__add__(other)
 
     def __mul__(self, other):
+        # A null conjunction can scope over a lexical coordinator without
+        # introducing its exponent: preserve the coordinated arguments, but
+        # render the coordinator as null and retain the null-conjunction tag.
+        if not self.verbete.strip() and isinstance(other, Conjunction):
+            cop = other.copy()
+            cop._suppress_lexeme = True
+            cop.tag = self.tag
+            return cop
         # Lexical conjunctions used with `*` coordinate phrases as a noun-like
         # container, while still rendering the conjunction surface at the end.
         if self.verbete:
