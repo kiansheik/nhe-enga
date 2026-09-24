@@ -318,7 +318,16 @@ class Conjunction(Noun):
             suffix = ""
         else:
             suffix = f"{self.tag}"
-        nec = " ".join([x.eval(annotated=annotated) for x in self.arguments]) + suffix
+        argument_values = [x.eval(annotated=annotated) for x in self.arguments]
+        # memẽ is attested between its two coordinated members; other lexical
+        # conjunctions (notably abé/bé) remain postposed.
+        if lexeme == "memẽ" and len(argument_values) >= 2:
+            nec = (
+                " ".join(argument_values[:-1])
+                + f" {lexeme}{self.tag} {argument_values[-1]}"
+            )
+        else:
+            nec = " ".join(argument_values) + suffix
         if self.post_adjuncts:
             # TODO: When evaling adjunct, check if yfix for space or y
             nec += " " + " ".join(
@@ -356,6 +365,11 @@ class Conjunction(Noun):
             return super().__add__(other)
 
     def __mul__(self, other):
+        # Once explicitly nominalized, a coordinated phrase can be the
+        # possessor of a following noun.  Without this marker, lexical
+        # conjunctions retain their ordinary argument-adding behavior.
+        if getattr(self, "_nominalized_conjunction", False) and isinstance(other, Noun):
+            return Noun.__mul__(self, other)
         # A null conjunction can scope over a lexical coordinator without
         # introducing its exponent: preserve the coordinated arguments, but
         # render the coordinator as null and retain the null-conjunction tag.
@@ -379,7 +393,11 @@ class Conjunction(Noun):
         return super().__mul__(other)
 
     def base_nominal(self, annotated=False):
-        return self.copy()
+        nominal = self.copy()
+        # Preserve the coordinator's ordinary behavior until this explicit
+        # nominalization is requested by the expression.
+        nominal._nominalized_conjunction = True
+        return nominal
 
 
 class ProperNoun(Noun):

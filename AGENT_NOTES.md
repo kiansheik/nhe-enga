@@ -278,3 +278,28 @@ size senses from the homographic lusivo `-'ĩ` and quantifying `-usu` senses.
 Tests: `pydicate/tests/test_size_suffix.py` and
 `pydicate-studio/python/tests/test_dictionary_authoring.py`. This covers the
 cited examples, not every historical stem or a decision about their analysis.
+
+## 2026-09-20 — Negation carried into the short reflexive nominal
+
+For a transitive verb with only `îe`/`îo` and `.var(1)`,
+`Verb.base_nominal` derives a short intransitive-style nominal. It previously
+retained `negated=True` while changing the valency; that path discarded the
+verbal negation, yielding affirmative `nhemoeté`. The short result is a noun,
+so the implementation first derives an affirmative short nominal and applies
+noun negation to it. Thus negated `(moeté * nhe).var(1).base_nominal()`
+realizes `nhemoetee'yma`, while its affirmative counterpart remains
+`nhemoeté`. This establishes an engine rule for the selected composition; it
+does not independently settle the historical analysis.
+
+## 2026-09-21 — Medial `memẽ` in coordination
+
+The pending Araujo expression preserves `memẽ * mba'e'u * ka'u`, but the
+shared conjunction renderer uniformly appended every lexical conjunction,
+producing `mba'e'u ka'u memẽ`. Araujo record 94 supplies an internal contrast
+with `mba'e'u memẽ ka'ueteeté`, while ordinary `abé`/`bé` remains postposed.
+`Conjunction.preval` now treats lexical `memẽ` as medial, inserting it before
+the final coordinated argument; all other conjunctions retain the old suffix
+order. The exact submitted expression now renders
+`mba'e'ueté ka'ueté bé robaîxûara oîá nhote mba'e'u memẽ ka'u`; the candidate
+contrast is `mba'e memẽ ka'u` versus `mba'e ka'u abé`. The match implements
+the requested analysis and does not independently prove it historically.

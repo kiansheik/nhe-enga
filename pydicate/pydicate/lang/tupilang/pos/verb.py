@@ -433,6 +433,11 @@ class Verb(Predicate):
         ):
             nominal = self.copy()
             nominal.verb.transitivo = False
+            if nominal.negated:
+                # The short form is a noun: realize negation with the
+                # nominal suffix, not the finite verbal negation.
+                nominal.negated = False
+                return -nominal.base_nominal(annotated=annotated)
             return nominal.base_nominal(annotated=annotated)
 
         vadjs = ""
