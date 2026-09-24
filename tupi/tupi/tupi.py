@@ -473,6 +473,12 @@ class TupiAntigo(object):
     def ipa(self, inp=None):
         return self.transliterate("ipa", inp=inp)
 
+    # @grammar[orthography] The orthography mapper chooses an IPA mapping or a named
+    # @grammar+ alternative mapping, preserves complete bracketed
+    # @grammar+ annotation segments, and consumes the longest matching
+    # @grammar+ input cluster where possible. Its result is a generated
+    # @grammar+ representation under the chosen mapping, not an
+    # @grammar+ automatic reading of a historical printed spelling.
     def map_orthography(self, text, orth="anchieta_1"):
         if orth.lower() == "ipa":
             orthography_map = self.ipa_map

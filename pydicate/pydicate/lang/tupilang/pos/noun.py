@@ -100,6 +100,11 @@ class Noun(Predicate):
         mult.pre_adjuncts.insert(0, other_copy)
         return mult
 
+    # @grammar[nominal-base] The ordinary branch calls the Tupi noun object's
+    # @grammar+ absolute and substantive operations; the negative
+    # @grammar+ branch first applies the negative operation. This is
+    # @grammar+ the base-form path of this class, not a rule that every
+    # @grammar+ historical noun independently bears an overt ending.
     def noun_function(self, neg=False, annotated=False):
         """Return the noun in its base form."""
         if neg:
