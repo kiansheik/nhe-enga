@@ -364,6 +364,12 @@ class Predicate(Trackable):
         """
         return deepcopy(self)
 
+    # @grammar[composition] The base operator copies both operands and appends the
+    # @grammar+ second to the first operand's argument list. It checks
+    # @grammar+ an optional maximum argument count. Language-specific
+    # @grammar+ subclasses can override this dispatch, so the operator
+    # @grammar+ alone does not establish a universal syntactic relation
+    # @grammar+ or a surface order.
     def __mul__(self, other):
         """
         Add an argument using the * operator.
