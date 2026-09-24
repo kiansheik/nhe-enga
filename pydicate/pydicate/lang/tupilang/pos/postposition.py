@@ -96,6 +96,12 @@ class Locative(Postposition):
         """Initialize a Locative object."""
         super().__init__("pe", definition=definition, tag="[POSTPOSITION:LOCATIVE]")
 
+    # @grammar[locative] With an argument, the locative evaluates that argument as a
+    # @grammar+ Tupi noun, applies the noun's pe operation and adds the
+    # @grammar+ postposition tag only in annotated mode. Without an
+    # @grammar+ argument it returns the stored form. Allomorphy belongs to
+    # @grammar+ the called Tupi noun operation, not to a string
+    # @grammar+ concatenation asserted here.
     def morphology(self, annotated=False):
         """Evaluate the Postposition object."""
         if len(self.arguments) == 0:
@@ -114,6 +120,12 @@ class Dative(Postposition):
         super().__init__("supé", definition=definition, tag="[POSTPOSITION:DATIVE]")
         self.variation_id = 0
 
+    # @grammar[dative] With an argument, the dative evaluates the argument, applies
+    # @grammar+ TupiNoun.supe with the object's selected variation
+    # @grammar+ identifier, then adds an annotation tag in annotated mode.
+    # @grammar+ The available variation is a specified implementation choice;
+    # @grammar+ the method alone does not decide which spelling a particular
+    # @grammar+ witness used.
     def morphology(self, annotated=False):
         """Evaluate the Postposition object."""
         if len(self.arguments) == 0:

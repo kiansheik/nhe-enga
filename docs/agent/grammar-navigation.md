@@ -23,6 +23,15 @@ and gets faster over time as this file accumulates entries.
 
 ## Phenomenon map
 
+The initial qualification grammar notes are now mirrored as `# @grammar[id]`
+comments immediately above five implemented methods: general argument insertion
+(`Predicate.__mul__`), nominal base realization (`Noun.noun_function`), locative
+and dative realization (`Locative.morphology`, `Dative.morphology`), and named
+orthographic mapping (`TupiAntigo.map_orthography`). The qualification generator
+checks each comment against its reviewed explanation and method-body SHA. These
+comments document existing behavior; they do not claim that every construction
+or every lexical declaration has an approved grammatical analysis.
+
 | Phenomenon | Where it lives | Gotcha | Detail |
 |---|---|---|---|
 | Pluriform possessor of a pluriform noun | `pydicate/pydicate/lang/tupilang/pos/noun.py` (`Noun.__mul__`) | After `possessive(...)`, suppress the possessed noun’s later absolute class; otherwise it prefixes the entire phrase a second time (`tt-`). | Studio correction 2026-09-20 |
