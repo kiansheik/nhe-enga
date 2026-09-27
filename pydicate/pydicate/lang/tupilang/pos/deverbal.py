@@ -441,7 +441,31 @@ pûera.morphology = (
 def pûer_morphology(self, verb, annotated=False):
     """
     Morphology for the 'pûera' classifier.
+
+    A past classifier over a circumstantial deverbal is nominal.  With an
+    overt third-person subject and reflexive object, use the short nominal
+    base and its third-person possessor rather than retaining verbal o-.
     """
+    source = self.arguments[0] if self.arguments else None
+    source_verb = (
+        source.arguments[0]
+        if getattr(source, "verbete", None) == "saba" and source.arguments
+        else None
+    )
+    if (
+        isinstance(source_verb, Verb)
+        and source_verb.subject()
+        and source_verb.subject().inflection() == "3p"
+        and source_verb.object()
+        and source_verb.object().inflection() == "refl"
+    ):
+        nominal_verb = source_verb.copy()
+        nominal_verb.arguments = [source_verb.object().copy()]
+        nominal_verb.variation_id = 1
+        noun = nominal_verb.base_nominal(True).noun.saba().puer().possessive("3p")
+        surface = noun.substantivo(annotated).strip()
+        return surface
+
     noun = self.noun.puer()
     if getattr(self, "negated", False):
         noun = noun.eym()

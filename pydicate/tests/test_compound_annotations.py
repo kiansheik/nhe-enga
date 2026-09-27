@@ -55,6 +55,27 @@ class CompoundAnnotationTest(unittest.TestCase):
         self.assertEqual(e.verbete(True), "tym[ROOT]bûer[PRETERITE_SUFFIX]ypy[ROOT]")
         self.assertEqual(e.verbete(), "tymbûerypy")
 
+    def test_plain_noun_compound_keeps_both_declared_roots(self):
+        # Araújo and Bettendorff record 22 explicitly encode
+        # nde * (esá / poraûsubara). Composition must preserve that boundary.
+        compound = Noun("esá") / Noun("poraûsubara")
+        possessed = nde * compound
+        self.assertEqual(possessed.eval(), "nde resaporaûsubara")
+        self.assertEqual(
+            possessed.eval(True),
+            "nde[POSSESSIVE_PRONOUN:2ps] "
+            "r[PLURIFORM_PREFIX:R]"
+            "esa[ROOT]poraûsubar[ROOT]"
+            "a[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING][NOUN]",
+        )
+
+    def test_plain_noun_compound_does_not_invent_an_opted_out_left_root(self):
+        compound = Noun("esá", noroot=True) / Noun("poraûsubara")
+        possessed = nde * compound
+        self.assertEqual(possessed.eval(), "nde resaporaûsubara")
+        self.assertNotIn("esa[ROOT]", possessed.eval(True))
+        self.assertIn("poraûsubar[ROOT]", possessed.eval(True))
+
     def test_uncertain_or_already_tagged_modifiers_are_not_reannotated(self):
         values = [
             Noun("ypy", noroot=True),

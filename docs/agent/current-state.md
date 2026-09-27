@@ -1,5 +1,50 @@
 # Current State
 
+## 2026-09-25 — Historic ordinary and annotated surfaces agree
+
+- Finite `Verb.preval` applies the same named phonetic rewrites to annotated
+  output while retaining its tags. Araújo and Bettendorff 0020 now give
+  `oroîasegûabo` in both rendering modes.
+- Direct-argument evaluation preserves annotations when a stored subtree
+  contains a proper noun. The outer verb can therefore exempt nested
+  `JesusChristoabé` from the general `is` to `ix` rewrite; a common
+  `Christo` contrast still renders `Chrixto`.
+- `pûer_morphology` retains the real word boundary between third-person
+  possessive `i` and reflexive `îe-` in Araújo 0055 and 0060. It no longer
+  removes every space following an annotation group.
+- All 65 engine tests and all 145 annotation audits pass. Ordinary and
+  tag-stripped annotated surfaces now agree for all 145 current historic
+  expressions. The engine intentionally
+  changes the ordinary surfaces of Araújo and Bettendorff 0028 from
+  `JesusChrixtoabé` to source-authored `JesusChristoabé`; those two saved
+  ground-truth rows require editorial regeneration. The pre-existing Araújo
+  record-2 metadata drift also remains. See the
+  [handoff](session-handoffs/2026-09-25-historic-surface-consistency.md).
+  Nothing was committed or published.
+
+## 2026-09-25 — Both roots retained in plain noun composition
+
+- `Predicate.compose` now preserves the already stored lexical root metadata of
+  both simple noun operands. The approved Araújo and Bettendorff record 22
+  expression `nde * (esá / poraûsubara)` therefore emits separate
+  `esa[ROOT]` and `poraûsubar[ROOT]` pieces while retaining the ordinary surface
+  `nde resaporaûsubara`.
+- The guard still declines explicit `noroot`, annotated, multiword and already
+  composed forms. Exactly 15 of 145 current historic records gain component
+  boundaries; all 145 ordinary outputs remain identical to ground truth and all
+  annotation audits pass. Seven focused composition tests, the 62-test engine
+  suite and the 112-test corpus suite pass. Nothing was committed or published.
+
+## 2026-09-24 — Annotation accountability applied locally
+
+- The reviewed 12-file repair is applied to the active Nhe'enga checkout. The author's existing dirty `deverbal.py` is unchanged by hash; source expressions, targets, saved records and ordinary outputs are preserved. See [handoff](session-handoffs/2026-09-24-annotation-accountability.md). Nothing was committed or published.
+- Nominalization retains its internal annotations and source expression; `emit` preserves separate occurrences, hierarchy display uses actual sentence tags, and null coordination has construction scope. Legacy numeric hierarchy IDs remain compatible with dictionary consumers.
+- The generation gate checks live reports and saved schema-3 LaTeX snapshots, including occurrence integrity, complete stored Predicate paths and evaluation-event references. Witnesses indicate possible origins, not linguistic correctness: 654 tags have only root-output evidence and 1,962 have ambiguous child-event witnesses.
+- Validation: 60 engine tests and 179 LaTeX pipeline tests pass; all 144 ordinary corpus outputs are unchanged. Original and repaired engines each run 102 corpus tests with the same existing Araújo 55 failure. Strict source/JSONL verification has the same pre-existing Araújo record-2 metadata difference; Bettendorff passes all 40 records.
+- Final local PDFs build at 400/98/79 pages (doctoral/historical qualification/master's). Two independent bounded round22 rechecks found no blocking defect in the repair scope: Araújo73 remains segmented, the unrelated Araújo79 crop is excluded with an explicit gap, and dictionary headings/label guidance are repaired. The doctoral SHA256 is `109e465ed9985cc2f5fe654fe72dd87280fa7285202107a7ffd0494a097c3b08`. The 25 exact and six whitespace-normalized ordinary/annotated differences remain visible and unchanged. This unscored review is not linguistic adjudication or a whole-document verdict.
+
+## Repository and publication state
+
 - Active branch: `main`; the public-assets cleanup was merged in pull request 18.
 - The source branch now separates VuePress build output from source files. The generated GitHub Pages artifact is assembled in `.pages-build` from a runtime allowlist.
 - Maintained extraction/generation programs live under `scripts/data/`; optional PDF/audio helpers live under `scripts/media/`; historical scratchpads live under `misc/experiments/`.

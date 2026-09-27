@@ -322,7 +322,10 @@ class Conjunction(Noun):
         elif lexeme and suppress_lexeme:
             suffix = ""
         else:
-            suffix = f"{self.tag}"
+            # A zero-surface coordinator scopes over the construction. Appending
+            # its tags here would falsely attach AND to the last child's suffix.
+            # The node and its tag remain in the structured annotation audit.
+            suffix = ""
         argument_values = [x.eval(annotated=annotated) for x in self.arguments]
         # memẽ is attested between its two coordinated members; other lexical
         # conjunctions (notably abé/bé) remain postposed.

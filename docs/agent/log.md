@@ -1,5 +1,46 @@
 # Agent Log
 
+## 2026-09-25 — Historic surface consistency
+
+Repaired three rendering paths exposed by the qualification appendix. Finite
+annotated verbs now receive tag-preserving phonetic normalization; composite
+direct arguments retain the tags needed to protect nested proper nouns; and the
+past-classifier special case keeps the space between possessive `i` and
+reflexive `îe-`. Three focused historic regressions and all 65 engine tests
+pass, all 145 annotation audits pass, and ordinary/annotated surfaces agree for
+145/145 current expressions.
+The only saved-target changes are Araújo and Bettendorff 0028
+`JesusChrixtoabé` to `JesusChristoabé`; their JSONL rows were not edited here.
+The 112-test corpus suite consequently has those two expected failures, and
+strict ground-truth verification still also reports the pre-existing Araújo
+record-2 metadata drift. Work remains local.
+
+## 2026-09-25 — Plain noun composition keeps both component roots
+
+`Predicate.compose` now sends its simple left noun through the same guarded
+lexical-base preservation already used for the right modifier. In Araújo and
+Bettendorff record 22, `esá / poraûsubara` therefore yields
+`esa[ROOT]poraûsubar[ROOT]` instead of one flattened root, without changing
+`nde resaporaûsubara`. An explicit-`noroot` contrast prevents inferred tags.
+Seven focused tests, all 62 engine tests and all 112 corpus tests pass; 145/145
+ordinary outputs match ground truth and 145/145 annotation audits pass. Fifteen
+records gain only the stored component boundaries. Work remains local.
+
+## 2026-09-24 — Annotation accountability applied locally
+
+Final coordinating verification built400/98/79-page PDFs and froze doctoral
+SHA256 `109e465ed9985cc2f5fe654fe72dd87280fa7285202107a7ffd0494a097c3b08`.
+Two bounded unscored round22 rechecks found no blocking repair defect. They confirm
+Araújo73's occurrence segmentation; an unrelated Araújo79 crop was excluded from
+the LaTeX export after source-page/pixel verification, without changing this
+engine, the corpus or Studio data. Structural witnesses remain evidence candidates,
+not linguistic adjudication. Nothing was committed or published.
+
+- Repaired Araújo 73's flattened `asé saûsub[ROOT]`, cross-occurrence tag contamination and conjunction labels on nominal suffixes. Applied the reviewed 12-file engine/test/documentation patch with hash guards; the author's dirty `deverbal.py` and all corpus source/target records remain unchanged.
+- Added a complete stored-Predicate graph and evaluation-event ledger alongside the existing numeric hierarchy. The LaTeX generator now enforces occurrence/tree integrity during live generation and offline schema-3 snapshot checks; no unique linguistic origin is claimed for 654 root-only or 1,962 ambiguous tag witnesses.
+- Passed 60 engine and 179 LaTeX pipeline tests; preserved all 144 ordinary outputs. The 102-test original/repaired corpus runs have the same Araújo 55 failure, and strict verification has the same pre-existing record-2 metadata difference. Local PDFs build at 398/98/79 pages; independent doctoral PDF review is pending.
+- Kept all 25 exact/six normalized ordinary-versus-annotated differences visible. No source interpretation was rewritten to make the gate pass, and nothing was committed or published. Evidence and next steps: [handoff](session-handoffs/2026-09-24-annotation-accountability.md).
+
 ## 2026-09-16
 
 - Added `docs/agent/grammar-navigation.md`: a living map from grammatical phenomenon to where it's implemented in `pydicate`/`tupi`, meant to be read before searching for an engine bug and updated after every fix. Seeded from the existing `/`-composition fix in `AGENT_NOTES.md`, plus an "Open items" entry for a reflexive/absolute-`t-`-prefix bug reproduced against `oldtupicorpus` record `araujo_catecismo_1686:0074` (not yet localized).

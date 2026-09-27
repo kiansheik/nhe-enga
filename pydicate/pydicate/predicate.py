@@ -30,7 +30,11 @@ _EVAL_CTX = None
 
 @dataclass
 class EvalCtx:
+    # Compatibility cache; copies retain nid and may have different outputs.
+    # The event ledger is authoritative for individual evaluation occurrences.
     out_by_nid: Dict[str, str] = field(default_factory=dict)
+    events: List[dict] = field(default_factory=list)
+    _event_stack: List[int] = field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -182,7 +186,13 @@ class Predicate(Trackable):
         "v_adjuncts_pre",
         "_arguments",
     )
-    _COPY_PREDICATE_FIELDS = ("principal", "_augmentee", "_augmentor", "_subject")
+    _COPY_PREDICATE_FIELDS = (
+        "principal",
+        "_augmentee",
+        "_augmentor",
+        "_subject",
+        "_nominalization_source",
+    )
 
     def __deepcopy__(self, memo):
         cls = self.__class__
@@ -467,7 +477,7 @@ class Predicate(Trackable):
             return fallback, False
 
         orig_surface, orig_used_eval = _resolve_compose_surface(
-            orig, orig.verbete, respect_apply_compositions=True
+            orig, self._compose_modifier_base(orig), respect_apply_compositions=True
         )
         orig_n = TupiNoun(orig_surface, orig.definition, noroot=True)
         mod_surface = self._compose_modifier_base(modifier)
@@ -665,21 +675,51 @@ class Predicate(Trackable):
         return self.__repr__()
 
     def eval(self, annotated=False, ctx: Optional[EvalCtx] = None):
-        prev = self.copy()
         use_ctx = ctx if ctx is not None else _EVAL_CTX
-        if ctx is not None:
-            with pushed_eval_ctx(ctx):
-                pre = prev.preval(annotated=annotated).strip()
-        else:
-            pre = prev.preval(annotated=annotated).strip()
-        neg = "" if not annotated else "[NEGATION_PARTICLE:NA]"
-        neg_suf = "" if not annotated else "[NEGATION_PARTICLE:RUA]"
-        if prev.rua:
-            pre = f"na{neg} {pre} ruã{neg_suf}"
-        out = remove_adjacent_tags(pre).strip()
+        event = None
         if use_ctx is not None:
-            use_ctx.out_by_nid[self.nid] = out
-        return out
+            event = {
+                "event_id": len(use_ctx.events) + 1,
+                "parent_event_id": (
+                    use_ctx._event_stack[-1] if use_ctx._event_stack else None
+                ),
+                "nid": self.nid,
+                "type": type(self).__name__,
+                "category": self.category,
+                "verbete": self.verbete,
+                "annotated": annotated,
+            }
+            use_ctx.events.append(event)
+            use_ctx._event_stack.append(event["event_id"])
+        try:
+            prev = self.copy()
+            if ctx is not None:
+                with pushed_eval_ctx(ctx):
+                    pre = prev.preval(annotated=annotated).strip()
+            else:
+                pre = prev.preval(annotated=annotated).strip()
+            neg = "" if not annotated else "[NEGATION_PARTICLE:NA]"
+            neg_suf = "" if not annotated else "[NEGATION_PARTICLE:RUA]"
+            if prev.rua:
+                pre = f"na{neg} {pre} ruã{neg_suf}"
+            out = remove_adjacent_tags(pre).strip()
+            if use_ctx is not None:
+                use_ctx.out_by_nid[self.nid] = out
+                event["output"] = out
+            return out
+        except Exception as error:
+            if event is not None:
+                event["error"] = type(error).__name__ + ": " + str(error)
+            raise
+        finally:
+            if use_ctx is not None:
+                use_ctx._event_stack.pop()
+
+    def annotation_audit(self):
+        """Return occurrence, construction and tree accountability evidence."""
+        from pydicate.annotation_audit import audit_annotation
+
+        return audit_annotation(self)
 
     def __invert__(self):
         """
@@ -1331,109 +1371,38 @@ class Predicate(Trackable):
         return latex_template
 
     def emit(self):
-        reprs = self.eval(annotated=True).strip()
-        # split on [] to get "dfsfw[w:dew]dewd[dwe] dewd [dew][dewd][dew]dwe[ROOT]" into ["dfsfw", "[w:dew]", "dewd", "[dwe]", " dewd ", "[dew:dewd:dew]", "dwe", "[ROOT]"
-        parts = [x for x in re.split(r"(\[[^\]]+\])", reprs) if x]
-        assert "".join(parts) == reprs, "Split should preserve all text"
-        all_tags = dict()
-        current_tag = None
+        """Keep each emitted occurrence's tags, including repeated spellings.
+
+        A dictionary keyed by surface text conflates distinct occurrences (for
+        example subject a- and substantive -a). Adjacent bracket groups belong
+        only to their immediately preceding piece, never to all equal strings.
+        """
+        annotated = self.eval(annotated=True).strip()
+        parts = [x for x in re.split(r"(\[[^\[\]]*\])", annotated) if x]
+        result = []
         for part in parts:
             if part.startswith("[") and part.endswith("]"):
-                content = part[1:-1]
-                tags = content.split(":")
-                all_tags[current_tag].update(tags)
+                if not result or not result[-1][0].strip():
+                    raise ValueError("Annotation has no preceding surface occurrence")
+                result[-1][1].update(tag for tag in part[1:-1].split(":") if tag)
             else:
-                current_tag = part
-                all_tags[current_tag] = set()
-        # reconstruct into ordered list so we can "".join it back together in the same order but with unique tags
-        recon = []
-        current_tag = None
-        for part in parts:
-            if part.startswith("[") and part.endswith("]"):
-                continue  # skip tags in reconstruction, we'll add them back in with unique sets
-            else:
-                recon.append((part, all_tags[part]))
-        return recon
+                if "[" in part or "]" in part:
+                    raise ValueError("Malformed annotation brackets")
+                result.append((part, set()))
+        return result
 
     def hierarchical_representation(self):
-        """
-        Return a string representation showing the hierarchical structure of the predicate flattened out,
-        with indentation representing depth in the tree. Uses '*' for arguments and '+' for adjuncts.
-        Each node gets a unique incrementing ID, and children reference their parent's ID.
-        LEAF nodes are marked, and the last node is marked as TERMINAL.
-        Each node is .eval'ed as though it had no adjuncts.
-        """
-        node_counter = [0]  # mutable counter
-        parts = self.emit()
-        em = dict(parts)
-        seen = {k: set() for k in em.keys()}
-        seen_tags = {i: set() for k in parts for i in k[1]}
-        node_seen_morpheme = defaultdict(
-            set
-        )  # node_id -> set of morphemes seen in that node
-        node_seen_tags = defaultdict(set)  # node_id -> set of tags seen in that node
-        print(parts)
-
-        def recurse(pred, indent=0, rel_type="-", parent_id=None):
-            node_counter[0] += 1
-            node_id = f"node_{node_counter[0]}"
-            indent_str = "  " * indent
-            children = pred.arguments + pred.pre_adjuncts + pred.post_adjuncts
-            ref = f"parent={parent_id}" if parent_id else "ROOT"
-            if not children:
-                leaf_marker = " LEAF"
-            else:
-                leaf_marker = ""
-            # Evaluate node as though it had no adjuncts
-            stripped = pred.copy()
-            stripped.pre_adjuncts = []
-            stripped.post_adjuncts = []
-            stripped.v_adjuncts = []
-            stripped.v_adjuncts_pre = []
-            eval_str = stripped.eval(annotated=True)
-            lines = [
-                f"{indent_str}{rel_type} {pred.verbete} [{node_id}] - {eval_str} [{ref}]{leaf_marker}"
-            ]
-            for arg in pred.arguments:
-                lines.extend(recurse(arg, indent + 1, "*", node_id))
-            for adj in pred.pre_adjuncts + pred.post_adjuncts:
-                lines.extend(recurse(adj, indent + 1, "+", node_id))
-            em_this_node = stripped.emit()
-            nid = int(node_id.replace("node_", ""))
-            for k, tags in em_this_node:
-                # here we want to iterate over the morphemes present which are also in seen, and add to its set there the node id so we know where it appears in the tree
-                if k in seen:
-                    seen[k].add(nid)
-                for tag in tags:
-                    if tag in seen_tags:
-                        seen_tags[tag].add(nid)
-                node_seen_morpheme[node_id].add(k)
-                node_seen_tags[node_id].update(tags)
-            return lines
-
-        lines = recurse(self, parent_id=None)
-        if lines:
-            lines[-1] += " TERMINAL"
-        # for each of these morphemes, we can get the largest number node in the set and add it to the set of tags for that morpheme in em, so we know the deepest node in the tree where it appears
-        for k, node_ids in seen.items():
-            if node_ids:
-                max_id = max(node_ids)
-                em[k].add(f"DEEPEST_NODE_{max_id}")
-        # replace sets in parts with those in em, and join them back together into a string
-        final_parts = []
-        for part, tags in parts:
-            unique_tags = em.get(part, set())
-            final_parts.append(part + "".join(f"[{t}]" for t in unique_tags))
-        final_str = "".join(final_parts)
-        print("\n".join(lines))
-        print("\n\n")
-        print("SEEN:", seen)
-        print("SEEN_TAGS:", seen_tags)
-        print("NODE_SEEN_MORPHEME:", node_seen_morpheme)
-        print("NODE_SEEN_TAGS:", node_seen_tags)
-        return final_str
+        """Compatibility alias for the occurrence-preserving hierarchy view."""
+        return self.hierarchical_representation_v4()
 
     def hierarchical_representation_v4(self):
+        """Add legacy heuristic node locators without changing emitted features.
+
+        Independent child realizations can differ from their contextual output.
+        Their tags must never be merged into the sentence. DEEPEST_NODE remains
+        a partial-tree alignment hint; annotation_audit carries the complete
+        tree and actual evaluation events with explicit attribution limits.
+        """
         node_counter = [0]
         lines = []
         nodes: list[_Node] = []
@@ -1631,7 +1600,6 @@ class Predicate(Trackable):
             # apply core mapping tags
             for li, gi in node.core_mapping:
                 _surf, tset = node.local_parts[li]
-                tags_by_idx[gi].update(tset)
                 matched_nodes_by_idx[gi].add(node.nid)
 
             anchor_s, anchor_e = node.core_span
@@ -1692,7 +1660,6 @@ class Predicate(Trackable):
                     # apply mapping tags
                     for li, gi in c.mapping:
                         _surf, tset = ch.local_parts[li]
-                        tags_by_idx[gi].update(tset)
                         matched_nodes_by_idx[gi].add(ch.nid)
 
                     # recurse: if ε, keep container as group range; else use matched window span

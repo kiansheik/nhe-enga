@@ -5,6 +5,21 @@ import re, random
 import unicodedata
 
 
+# Existing spelling rewrites, with input-to-output annotation boundary maps.
+_PHONETIC_REWRITES = (
+    ("is", "ix", (0, 1, 2)),
+    ("i s", "i x", (0, 1, 2, 3)),
+    ("nn", "n", (0, 1, 1)),
+    ("oer", "ogûer", (0, 1, 4, 5)),
+    ("oen", "ogûen", (0, 1, 4, 5)),
+    ("îeer", "îer", (0, 1, 2, 2, 3)),
+    ("îî", "î", (0, 1, 1)),
+    ("  ", " ", (0, 1, 1)),
+    ("-", "", (0, 0)),
+    ("'û", "gû", (0, 1, 2)),
+)
+
+
 class TupiAntigo(object):
     _shared_orthographies = None
     _shared_ipa_map = None
@@ -305,6 +320,70 @@ class TupiAntigo(object):
             fixed = fixed.replace(placeholder, value)
         return fixed
 
+    def fix_phonetics_annotated(self, input_str, protected_tags=frozenset()):
+        """Apply the existing spelling rules while retaining annotation boundaries.
+
+        The boundary maps explicitly describe each existing rewrite: they do
+        not infer morphemes by aligning two independently rendered strings.
+        Contracted characters retain their tags at the resulting boundary;
+        inserted ``gû`` belongs to the rewritten ``e`` side of ``o-er/o-en``.
+        Proper-name spans can be protected exactly as in the plain renderer.
+        """
+        text = ""
+        boundaries = {}
+        protected = []
+        piece_start = 0
+        for part in re.split(r"(\[[^\]]+\])", input_str.strip()):
+            if part.startswith("[") and part.endswith("]"):
+                boundaries.setdefault(len(text), []).append(part)
+                if protected_tags.intersection(part[1:-1].split(":")):
+                    start = piece_start
+                    while start < len(text) and text[start].isspace():
+                        start += 1
+                    protected[start : len(text)] = [True] * (len(text) - start)
+            elif part:
+                # Adjacent annotation groups describe the same emitted piece.
+                # Start a new scope only when another surface segment appears.
+                piece_start = len(text)
+                text += part
+                protected.extend([False] * len(part))
+
+        for old, new, offsets in _PHONETIC_REWRITES:
+            cursor = 0
+            while (start := text.find(old, cursor)) >= 0:
+                end = start + len(old)
+                if any(protected[start:end]):
+                    cursor = end
+                    continue
+                shift = len(new) - len(old)
+                moved = {}
+                for boundary, tags in boundaries.items():
+                    if boundary < start:
+                        destination = boundary
+                    elif boundary <= end:
+                        destination = start + offsets[boundary - start]
+                    else:
+                        destination = boundary + shift
+                    moved.setdefault(destination, []).extend(tags)
+                boundaries = moved
+                text = text[:start] + new + text[end:]
+                protected[start:end] = [False] * len(new)
+                cursor = start + len(new)
+        # The plain renderer trims clean leading/trailing whitespace. Retain
+        # any tags on that whitespace at the nearest surviving boundary.
+        left = len(text) - len(text.lstrip())
+        right = max(left, len(text.rstrip()))
+        trimmed = {}
+        for boundary, tags in boundaries.items():
+            destination = min(max(boundary - left, 0), right - left)
+            trimmed.setdefault(destination, []).extend(tags)
+        text = text[left:right]
+        boundaries = trimmed
+        return "".join(
+            "".join(boundaries.get(index, ())) + character
+            for index, character in enumerate(text)
+        ) + "".join(boundaries.get(len(text), ()))
+
     def keep_brackets_contents(self, s):
         return "".join(re.findall(r"(\[.*?\])", s))
 
@@ -328,27 +407,13 @@ class TupiAntigo(object):
         return any(nasal in c for nasal in self.nasais)
 
     def fix_phonetics(self, input_str):
-        replacements = {
-            "is": "ix",
-            "i s": "i x",
-            "nn": "n",
-            "oer": "ogûer",
-            "oen": "ogûen",
-            "îeer": "îer",
-            "îî": "î",
-            # "ee": "e",
-            "  ": " ",
-            "-": "",
-            "'û": "gû",
-        }
-
         # Split the string into parts inside and outside of brackets
         parts = re.split(r"(\[.*?\])", input_str.strip())
 
         # Apply replacements only to parts outside of brackets
         for i in range(len(parts)):
             if not parts[i].startswith("["):
-                for b4, aft in replacements.items():
+                for b4, aft, _ in _PHONETIC_REWRITES:
                     parts[i] = parts[i].replace(b4, aft)
 
         # Reassemble the string

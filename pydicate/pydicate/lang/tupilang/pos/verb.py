@@ -195,6 +195,32 @@ class Verb(Predicate):
                 return 1
         return None
 
+    @staticmethod
+    def _contains_proper_noun(predicate):
+        """Return whether a stored predicate subtree contains a proper noun."""
+        pending = [predicate]
+        seen = set()
+        while pending:
+            node = pending.pop()
+            marker = id(node)
+            if marker in seen:
+                continue
+            seen.add(marker)
+            if getattr(node, "category", None) == "proper_noun":
+                return True
+            if hasattr(node, "_iter_children"):
+                pending.extend(node._iter_children())
+            pending.extend(getattr(node, "compositions", ()))
+        return False
+
+    def _eval_argument(self, argument, annotated=False):
+        # The low-level ordinary renderer uses PROPER_NOUN tags to exempt a
+        # span from general phonetic rewrites. Keep those tags when the proper
+        # noun is nested inside a copular or coordinated direct argument.
+        return argument.eval(
+            annotated=annotated or self._contains_proper_noun(argument)
+        )
+
     def refresh_verbete(self, new_verbete):
         self.verbete = new_verbete
         self.verb = TupiVerb(self.verbete, self.verb.verb_class, self.definition)
@@ -273,9 +299,7 @@ class Verb(Predicate):
             arg0 = (
                 None
                 if arg0_obj.pro_drop
-                else arg0_obj.eval(
-                    annotated=annotated or arg0_obj.category == "proper_noun"
-                )
+                else self._eval_argument(arg0_obj, annotated=annotated)
             )
             infl0 = arg0_obj.inflection()
             if base_verb.verb.transitivo:
@@ -346,7 +370,7 @@ class Verb(Predicate):
             obj_pro_drop = getattr(obj, "pro_drop", False)
             obj_posto = getattr(obj, "posto", suj.posto)
             arg0 = (
-                suj.eval(annotated=annotated or suj.category == "proper_noun")
+                self._eval_argument(suj, annotated=annotated)
                 if not suj.category == "pronoun"
                 else None
             )
@@ -354,7 +378,7 @@ class Verb(Predicate):
             arg1 = (
                 None
                 if (obj_pro_drop or obj.eval(annotated=annotated) in pronoun_verbetes)
-                else obj.eval(annotated=annotated or obj.category == "proper_noun")
+                else self._eval_argument(obj, annotated=annotated)
             )
             infl1 = obj.inflection()
             if obj.category == "conjunction":
@@ -386,6 +410,12 @@ class Verb(Predicate):
                 redup=base_verb.reduplicated,
                 pronominal_variant=base_verb._pronominal_variant(),
             )
+        if annotated and arglen:
+            # Finite annotated forms must undergo the same named phonetic
+            # rewrites as their ordinary counterparts while retaining tags.
+            # Nominal conjugation uses base_nominal() and keeps its separate,
+            # historically explicit normalization choice.
+            retval = base_verb.verb.fix_phonetics_annotated(retval, {"PROPER_NOUN"})
         if obj_delocated:
             retval = retval + " " + obj_delocated
         # deal with adverbs
@@ -422,6 +452,22 @@ class Verb(Predicate):
         return retval if annotated else self.verb.remove_brackets_and_contents(retval)
 
     def base_nominal(self, annotated=False):
+        """Return a nominal retaining the annotations and verb that produced it.
+
+        ``annotated`` never discards structure from the returned predicate;
+        its ``eval`` selects plain or annotated output. For spelling
+        compatibility, False/default still applies the plain path's phonetic
+        rules; explicit True retains the earlier unnormalized nominal stem.
+        Unifying those spellings is a separate grammatical change.
+        """
+        final = self._base_nominal_annotated(normalize_phonetics=not annotated)
+        final._nominalization_source = self.copy()
+        final._nominalization_operation = "base_nominal"
+        final._nominalization_annotated_argument = bool(annotated)
+        return final
+
+    def _base_nominal_annotated(self, normalize_phonetics):
+        annotated = True
         # A transitive verb with only a reflexive/reciprocal object has no
         # overt subject. Variation 1 realizes that single argument as the
         # intransitive-style short nominal prefix, without changing the verb.
@@ -437,8 +483,8 @@ class Verb(Predicate):
                 # The short form is a noun: realize negation with the
                 # nominal suffix, not the finite verbal negation.
                 nominal.negated = False
-                return -nominal.base_nominal(annotated=annotated)
-            return nominal.base_nominal(annotated=annotated)
+                return -nominal._base_nominal_annotated(normalize_phonetics)
+            return nominal._base_nominal_annotated(normalize_phonetics)
 
         vadjs = ""
         vadjs_pre = ""
@@ -465,6 +511,8 @@ class Verb(Predicate):
                 vadjs_pre=vadjs_pre,
                 variation_id=self.variation_id,
             )
+            if normalize_phonetics:
+                nom = self.verb.fix_phonetics_annotated(nom, {"PROPER_NOUN"})
             tn = TupiNoun(nom, self.raw_definition)
             final = Noun(
                 tn.verbete(True),
@@ -490,9 +538,7 @@ class Verb(Predicate):
                     else None
                 )
                 obj = (
-                    obj_obj.eval(
-                        annotated=annotated or obj_obj.category == "proper_noun"
-                    )
+                    self._eval_argument(obj_obj, annotated=annotated)
                     if self.object().category != "pronoun" and not obj_dropped
                     else None
                 )
@@ -507,9 +553,7 @@ class Verb(Predicate):
                     self.subject() if self.subject().category != "pronoun" else None
                 )
                 subj = (
-                    subj_obj.eval(
-                        annotated=annotated or subj_obj.category == "proper_noun"
-                    )
+                    self._eval_argument(subj_obj, annotated=annotated)
                     if self.subject().category != "pronoun"
                     else None
                 )
@@ -522,14 +566,14 @@ class Verb(Predicate):
                 else None
             )
             obj = (
-                obj_obj.eval(annotated=annotated or obj_obj.category == "proper_noun")
+                self._eval_argument(obj_obj, annotated=annotated)
                 if self.object().category != "pronoun" and not obj_dropped
                 else None
             )
             subj_tense = self.subject().inflection()
             subj_obj = self.subject() if self.subject().category != "pronoun" else None
             subj = (
-                subj_obj.eval(annotated=annotated or subj_obj.category == "proper_noun")
+                self._eval_argument(subj_obj, annotated=annotated)
                 if self.subject().category != "pronoun"
                 else None
             )
@@ -553,6 +597,8 @@ class Verb(Predicate):
             pronominal_variant=self._pronominal_variant(),
             variation_id=self.variation_id,
         )
+        if normalize_phonetics:
+            nom = self.verb.fix_phonetics_annotated(nom, {"PROPER_NOUN"})
         tn = TupiNoun(nom, self.raw_definition)
         final = Noun(
             tn.verbete(True),
