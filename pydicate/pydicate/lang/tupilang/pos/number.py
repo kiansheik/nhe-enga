@@ -18,6 +18,23 @@ class Number(Predicate):
         self.cardinal = False
         self.posto = "posposto"
 
+    def __mul__(self, other):
+        # A number with a nominal complement is a complete noun phrase.
+        # Pass the whole structured phrase to a verb, rather than trying
+        # to add the verb as a second complement of the number.
+        from pydicate.lang.tupilang.pos.verb import Verb
+
+        if (
+            len(self.arguments) == 1
+            and isinstance(self.arguments[0], Noun)
+            and isinstance(other, Verb)
+        ):
+            nominal = self.copy()
+            nominal.posto = "anteposto"
+            nominal.pro_drop = False
+            return other.copy() * nominal
+        return super().__mul__(other)
+
     def __matmul__(self, other):
         # Copulas take noun-like operands; verbal operands are nominalized first.
         left = self.copy()

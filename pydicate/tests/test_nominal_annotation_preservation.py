@@ -247,5 +247,42 @@ class NominalAnnotationPreservationTest(unittest.TestCase):
             self.assertNotIn("asé saûsub[ROOT]", expression.eval(True))
 
 
+class QuantifiedNominalArgumentTest(unittest.TestCase):
+    def test_deadverbal_phrase_is_a_third_person_subject(self):
+        # Pending Araújo draft: implementation of the contributor's analysis,
+        # not an independently approved historical reference.
+        from pydicate.lang.tupilang.pos import Number, Particle, nduara, esé
+
+        number = Number("sete")
+        derived = nduara * (esé * (Noun("abá") * Noun("eté", definition="(t) (s.) corpo")))
+        phrase = number * derived
+        say = Verb("'i")
+        result = Particle("nã") >> (phrase * say)
+        self.assertEqual(result.eval(), "sete abá reté reséndûara nã e'i")
+        self.assertEqual(AnnotatedString(result.eval(True)).get_clean(), result.eval())
+        self.assertEqual(result.subject().inflection(), "3p")
+        self.assertEqual(result.subject().arguments[0].category, "deadverbal_noun")
+        self.assertEqual(phrase.eval(), "sete abá reté reséndûara")
+        self.assertEqual(len(phrase.arguments), 1)
+        self.assertEqual(len(number.arguments), 0)
+        self.assertEqual(len(say.arguments), 0)
+        self.assertEqual((Particle("nã") >> (derived * say)).eval(),
+                         "abá reté reséndûara nã e'i")
+
+    def test_ordinary_nominal_and_transitive_object_contrast(self):
+        from pydicate.lang.tupilang.pos import Number
+
+        number = Number("sete")
+        phrase = number * Noun("abá")
+        self.assertEqual((phrase * Verb("'i")).eval(), "sete abá e'i")
+        result = phrase * Verb("aûsub")
+        self.assertEqual(result.eval(), "sete abá osaûsub")
+        self.assertEqual(result.object().eval(), "sete abá")
+        self.assertIsNone(result.subject())
+        self.assertEqual(number.eval(), "sete")
+        with self.assertRaises(ValueError):
+            phrase * Noun("kunhã")
+
+
 if __name__ == "__main__":
     unittest.main()
