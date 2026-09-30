@@ -284,5 +284,50 @@ class QuantifiedNominalArgumentTest(unittest.TestCase):
             phrase * Noun("kunhã")
 
 
+class IrregularAgentNominalTest(unittest.TestCase):
+    def test_sara_attachment_explicit_atara_and_nominal_object(self):
+        # Pending Araújo "Atâra mombytá.": requested analysis, not approval.
+        from pydicate.lang.tupilang.pos import sara, mo
+
+        verb = Verb("gûatá", verb_class="(v. intr.)", definition="andar")
+        regular = sara * verb
+        varied = regular.var(1)
+        self.assertEqual(regular.eval(), "gûatasara")
+        self.assertEqual(varied.eval(), "atara")
+        self.assertEqual(varied.eval(True),
+                         "at[ROOT]ar[ABSOLUTE_AGENT_SUFFIX]"
+                         "a[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING]")
+        self.assertEqual(varied.var(0).eval(), "gûatasara")
+        self.assertEqual(verb.eval(), "gûatá")
+        self.assertEqual(varied.arguments[0].definition, "andar")
+        self.assertEqual((sara * Verb("îeruré", verb_class="(v. intr.)"))
+                         .var(1).eval(), "îeruresara")
+        result = (varied * (mo.var(2) * Verb("pytá", verb_class="(v. intr.)"))).base_nominal()
+        self.assertEqual(result.eval(), "ataramombytá")
+        self.assertIn("at[ROOT]ar[ABSOLUTE_AGENT_SUFFIX]", result.eval(True))
+
+
+    def test_explicit_atara_variant_and_contrasts(self):
+        # Studio pending Araújo draft, 2026-09-30: contributor's proposal,
+        # not an independently established historical attestation.
+        from pydicate.lang.tupilang.pos import sara
+
+        verb = Verb("gûatá", verb_class="(v. intr.)", definition="andar")
+        nominal = (verb / sara).base_nominal()
+        varied = nominal.var(1)
+        self.assertEqual(nominal.eval(), "gûatasara")
+        self.assertEqual(varied.eval(), "atara")
+        self.assertEqual(AnnotatedString(varied.eval(True)).get_clean(), "atara")
+        self.assertEqual(varied.var(0).eval(), "gûatasara")
+        self.assertEqual(varied.definition, nominal.definition)
+        self.assertEqual(varied._nominalization_source.eval(),
+                         nominal._nominalization_source.eval())
+        self.assertEqual(verb.base_nominal().var(1).eval(), "gûatá")
+        self.assertEqual(
+            (Verb("îeruré", verb_class="(v. intr.)") / sara)
+            .base_nominal().var(1).eval(), "îeruresara")
+        self.assertEqual(Noun("gûatasara").var(1).eval(), "gûatasara")
+
+
 if __name__ == "__main__":
     unittest.main()

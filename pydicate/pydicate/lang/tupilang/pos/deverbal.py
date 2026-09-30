@@ -332,6 +332,16 @@ def sara_morphology(self, verbin, annotated=False):
     if verb.negated:
         nom = nom.eym()
     variation_id = 0 if self.variation_id is None else self.variation_id
+    # Explicit irregular agent at- + -ar + nominal -a (Studio proposal).
+    # Do not rewrite the source verb, negative bases or larger compounds.
+    if (
+        variation_id == 1
+        and verbin.verbete == "gûatá"
+        and not verbin.compositions
+        and not verb.negated
+        and nom.latest_verbete.get_clean() == "gûatá"
+    ):
+        nom.latest_verbete = AnnotatedString("at[ROOT]")
     nom = nom.sara(variation_id=variation_id)
     if self.vocative:
         nom = nom.vocativo()

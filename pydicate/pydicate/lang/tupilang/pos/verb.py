@@ -213,12 +213,48 @@ class Verb(Predicate):
             pending.extend(getattr(node, "compositions", ()))
         return False
 
-    def _eval_argument(self, argument, annotated=False):
-        # The low-level ordinary renderer uses PROPER_NOUN tags to exempt a
-        # span from general phonetic rewrites. Keep those tags when the proper
-        # noun is nested inside a copular or coordinated direct argument.
-        return argument.eval(
-            annotated=annotated or self._contains_proper_noun(argument)
+    def _eval_argument(self, argument, annotated=False, nominal=False):
+        # Preserve proper names and resolve only an initial nominal possessor.
+        subject = self.subject()
+        person = subject.inflection() if subject is not None else None
+        nominal = nominal or (
+            (self.mood == "circunstancial" or (
+                self.mood == "indicativo" and not self.is_subordinated()
+                and self.indicative() == "circunstancial"
+            ))
+            and person is not None and "2p" not in person
+        )
+        rendered = argument.eval(annotated=True)
+        if (
+            nominal and argument is self.object()
+            and subject is not None and subject.category == "pronoun"
+            and person in {"1ps", "1ppi", "1ppe", "2ps", "2pp"}
+        ):
+            possessor = argument
+            while (
+                getattr(possessor, "category", None) == "noun"
+                and len(possessor.arguments) == 1
+            ):
+                possessor = possessor.arguments[0]
+            if (
+                possessor is not argument
+                and getattr(possessor, "category", None) == "pronoun"
+                and possessor.inflection() == person
+            ):
+                prefix = (
+                    TupiNoun.personal_inflections[person][1].strip()
+                    + f"[POSSESSIVE_PRONOUN:{person}] "
+                )
+                # No text-wide substitution: require the initial tagged
+                # possessor, and remove only its adjacent relational r-.
+                if rendered.startswith(prefix):
+                    tail = rendered[len(prefix):]
+                    relational = "r[PLURIFORM_PREFIX:R]"
+                    if tail.startswith(relational):
+                        tail = tail[len(relational):]
+                    rendered = "îe[POSSESSIVE_PRONOUN:REFLEXIVE]" + tail
+        return rendered if annotated or self._contains_proper_noun(argument) else (
+            self.verb.remove_brackets_and_contents(rendered)
         )
 
     def refresh_verbete(self, new_verbete):
@@ -378,7 +414,7 @@ class Verb(Predicate):
             arg1 = (
                 None
                 if (obj_pro_drop or obj.eval(annotated=annotated) in pronoun_verbetes)
-                else self._eval_argument(obj, annotated=annotated)
+                else base_verb._eval_argument(obj, annotated=annotated)
             )
             infl1 = obj.inflection()
             if obj.category == "conjunction":
@@ -538,7 +574,7 @@ class Verb(Predicate):
                     else None
                 )
                 obj = (
-                    self._eval_argument(obj_obj, annotated=annotated)
+                    self._eval_argument(obj_obj, annotated=annotated, nominal=True)
                     if self.object().category != "pronoun" and not obj_dropped
                     else None
                 )
@@ -566,7 +602,7 @@ class Verb(Predicate):
                 else None
             )
             obj = (
-                self._eval_argument(obj_obj, annotated=annotated)
+                self._eval_argument(obj_obj, annotated=annotated, nominal=True)
                 if self.object().category != "pronoun" and not obj_dropped
                 else None
             )
@@ -833,8 +869,8 @@ class VerbAugmentor(Verb):
 
     def __mul__(self, other):
         """
-        Divide a Transitivizer with another object.
-        :param other: The object to divide with.
+        Attach a causative prefix to a verb or apply its next argument.
+        :param other: The verb or argument to attach.
         :return: A new Transitivizer with the added argument.
         """
         if self._augmentee is None:
@@ -857,7 +893,13 @@ class VerbAugmentor(Verb):
                     )
             new_verb = VerbAugmentor.from_existing(fin)
             prefix, prefix_tag = self._prefix_form()
-            new_verb.verb.verbete = f"{prefix}{prefix_tag}{fin.verbete}"
+            stem = AnnotatedString(fin.verbete)
+            # Explicit nasal causative: reuse composition's onset table while
+            # retaining mo's spelling, argument structure and prefix annotation.
+            if self.verbete == "mo" and self.variation_id == 2 and len(stem):
+                if not self.verb.is_nasal(stem):
+                    stem.nasaliza_prefixo()
+            new_verb.verb.verbete = f"{prefix}{prefix_tag}{stem.get_annotated()}"
             new_verb.verb.transitivo = True
             new_verb.verbete = new_verb.verb.verbete
             new_verb.verb.pluriforme = False

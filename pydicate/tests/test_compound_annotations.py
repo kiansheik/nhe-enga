@@ -22,6 +22,56 @@ apixara = Noun("apixara", "(t)")
 
 
 class CompoundAnnotationTest(unittest.TestCase):
+    def test_explicit_nasal_mo_causative(self):
+        from pydicate.lang.tupilang.pos.verb import mo
+        root = Verb("pytá")
+        before = root.eval(annotated=True)
+        result = mo.var(2) * root
+        self.assertEqual(result.eval(), "mombytá")
+        self.assertEqual(result.eval(annotated=True), "mo[CAUSATIVE_PREFIX:MO]mbytá")
+        self.assertTrue(result.verb.transitivo)
+        self.assertIsNotNone(result._augmentee)
+        self.assertEqual(result._augmentee.eval(), "pytá")
+        self.assertEqual(result._augmentor.variation_id, 2)
+        self.assertEqual(root.eval(annotated=True), before)
+        self.assertEqual((mo * root).eval(), "mopytá")
+        self.assertEqual((mo.var(1) * root).eval(), "mbopytá")
+        self.assertEqual(mo.var(2).eval(), "mo")
+        self.assertEqual((mo.var(2) / root).eval(), "mopytá")
+
+    def test_nasal_causative_onsets_and_annotation(self):
+        from pydicate.lang.tupilang.pos.verb import mo
+        for stem, expected in (("só", "mondó"), ("katú", "mongatú"),
+                               ("tá", "mondá"), ("tym", "motym"),
+                               ("abá", "moabá"), ("pytá[ROOT]", "mombytá")):
+            with self.subTest(stem=stem):
+                root = Verb(stem)
+                self.assertEqual((mo.var(2) * root).eval(), expected)
+                self.assertEqual(root.verbete, stem)
+        self.assertIn("mbytá[ROOT]", (mo.var(2) * Verb("pytá[ROOT]")).eval(True))
+        # The next * fills a verbal argument; it must not apply sandhi again.
+        nasal = mo.var(2) * Verb("pytá")
+        ordinary = mo * Verb("pytá")
+        self.assertEqual((nasal * nde).eval(), (ordinary * nde).eval().replace("pytá", "mbytá"))
+        self.assertEqual((mo * nasal).eval(), "momombytá")
+
+    def test_compound_preserves_semivowels_before_consonants(self):
+        # Pending Araujo 110: Uceibôra moyú; requested îb, not b.
+        # Synthetic stems below test the rule, not historic attestations.
+        for glide in ("î", "û", "ŷ", "gû"):
+            stem = "ka" + glide
+            with self.subTest(glide=glide):
+                compound = Noun(stem) / Noun("bor")
+                self.assertEqual(compound.eval(), stem + "bora")
+                self.assertIn(stem + "[ROOT]", compound.eval(True))
+        compound = (Verb("'u") / Verb("seî")).base_nominal() / Noun("bor")
+        self.assertEqual(compound.eval(), "'useîbora")
+
+    def test_compound_non_semivowel_contrasts(self):
+        self.assertEqual((Noun("pak") / Noun("bor")).eval(), "pabora")
+        self.assertEqual((Noun("pã") / Noun("bor")).eval(), "pãbora")
+        self.assertEqual((Noun("kaî") / Noun("eté")).eval(), "kaîeté")
+
     def test_classifier_compound_keeps_modifier_root(self):
         e = (pûera * (og * (emi * tym))) / ypy
         self.assertEqual(e.eval(), "oemitymbûerypy")
