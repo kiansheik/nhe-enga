@@ -247,5 +247,87 @@ class NominalAnnotationPreservationTest(unittest.TestCase):
             self.assertNotIn("asé saûsub[ROOT]", expression.eval(True))
 
 
+class QuantifiedNominalArgumentTest(unittest.TestCase):
+    def test_deadverbal_phrase_is_a_third_person_subject(self):
+        # Pending Araújo draft: implementation of the contributor's analysis,
+        # not an independently approved historical reference.
+        from pydicate.lang.tupilang.pos import Number, Particle, nduara, esé
+
+        number = Number("sete")
+        derived = nduara * (esé * (Noun("abá") * Noun("eté", definition="(t) (s.) corpo")))
+        phrase = number * derived
+        say = Verb("'i")
+        result = Particle("nã") >> (phrase * say)
+        self.assertEqual(result.eval(), "sete abá reté reséndûara nã e'i")
+        self.assertEqual(AnnotatedString(result.eval(True)).get_clean(), result.eval())
+        self.assertEqual(result.subject().inflection(), "3p")
+        self.assertEqual(result.subject().arguments[0].category, "deadverbal_noun")
+        self.assertEqual(phrase.eval(), "sete abá reté reséndûara")
+        self.assertEqual(len(phrase.arguments), 1)
+        self.assertEqual(len(number.arguments), 0)
+        self.assertEqual(len(say.arguments), 0)
+        self.assertEqual((Particle("nã") >> (derived * say)).eval(),
+                         "abá reté reséndûara nã e'i")
+
+    def test_ordinary_nominal_and_transitive_object_contrast(self):
+        from pydicate.lang.tupilang.pos import Number
+
+        number = Number("sete")
+        phrase = number * Noun("abá")
+        self.assertEqual((phrase * Verb("'i")).eval(), "sete abá e'i")
+        result = phrase * Verb("aûsub")
+        self.assertEqual(result.eval(), "sete abá osaûsub")
+        self.assertEqual(result.object().eval(), "sete abá")
+        self.assertIsNone(result.subject())
+        self.assertEqual(number.eval(), "sete")
+        with self.assertRaises(ValueError):
+            phrase * Noun("kunhã")
+
+
+class IrregularAgentNominalTest(unittest.TestCase):
+    def test_sara_attachment_explicit_atara_and_nominal_object(self):
+        # Pending Araújo "Atâra mombytá.": requested analysis, not approval.
+        from pydicate.lang.tupilang.pos import sara, mo
+
+        verb = Verb("gûatá", verb_class="(v. intr.)", definition="andar")
+        regular = sara * verb
+        varied = regular.var(1)
+        self.assertEqual(regular.eval(), "gûatasara")
+        self.assertEqual(varied.eval(), "atara")
+        self.assertEqual(varied.eval(True),
+                         "at[ROOT]ar[ABSOLUTE_AGENT_SUFFIX]"
+                         "a[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING]")
+        self.assertEqual(varied.var(0).eval(), "gûatasara")
+        self.assertEqual(verb.eval(), "gûatá")
+        self.assertEqual(varied.arguments[0].definition, "andar")
+        self.assertEqual((sara * Verb("îeruré", verb_class="(v. intr.)"))
+                         .var(1).eval(), "îeruresara")
+        result = (varied * (mo.var(2) * Verb("pytá", verb_class="(v. intr.)"))).base_nominal()
+        self.assertEqual(result.eval(), "ataramombytá")
+        self.assertIn("at[ROOT]ar[ABSOLUTE_AGENT_SUFFIX]", result.eval(True))
+
+
+    def test_explicit_atara_variant_and_contrasts(self):
+        # Studio pending Araújo draft, 2026-09-30: contributor's proposal,
+        # not an independently established historical attestation.
+        from pydicate.lang.tupilang.pos import sara
+
+        verb = Verb("gûatá", verb_class="(v. intr.)", definition="andar")
+        nominal = (verb / sara).base_nominal()
+        varied = nominal.var(1)
+        self.assertEqual(nominal.eval(), "gûatasara")
+        self.assertEqual(varied.eval(), "atara")
+        self.assertEqual(AnnotatedString(varied.eval(True)).get_clean(), "atara")
+        self.assertEqual(varied.var(0).eval(), "gûatasara")
+        self.assertEqual(varied.definition, nominal.definition)
+        self.assertEqual(varied._nominalization_source.eval(),
+                         nominal._nominalization_source.eval())
+        self.assertEqual(verb.base_nominal().var(1).eval(), "gûatá")
+        self.assertEqual(
+            (Verb("îeruré", verb_class="(v. intr.)") / sara)
+            .base_nominal().var(1).eval(), "îeruresara")
+        self.assertEqual(Noun("gûatasara").var(1).eval(), "gûatasara")
+
+
 if __name__ == "__main__":
     unittest.main()

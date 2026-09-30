@@ -45,6 +45,26 @@ class Noun(Predicate):
                 break
         self.posto = "posposto"
 
+    def var(self, setter):
+        varied = super().var(setter)
+        source = getattr(self, "_nominalization_source", None)
+        compositions = getattr(source, "compositions", ())
+        # Explicit irregular nominal gûatasara ~ atara, requested in Studio.
+        # Keep the source/definitions; this is not a general loss of gû-/s.
+        # Restrict to the bare sara-derived nominal, not an inflected phrase
+        # or a later compound. Treat atar as opaque, without inferred splits.
+        if (
+            getattr(source, "verbete", None) == "gûatasar"
+            and len(compositions) == 1
+            and compositions[0].category == "deverbal_noun"
+            and compositions[0].verbete == "sara"
+            and self.noun.base_verbete in {"gûatasar[ROOT]", "atar[ROOT]"}
+            and not self.compositions
+        ):
+            stem = "atar" if varied.variation_id == 1 else "gûatasar"
+            varied.refresh_verbete(stem)
+        return varied
+
     def refresh_verbete(self, new_verbete):
         old = self.copy()
         self.verbete = new_verbete

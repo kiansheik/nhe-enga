@@ -148,10 +148,12 @@ class Noun(TupiAntigo):
 
         vbt.remove_accent_last_vowel()
 
-        if ends_with_any(vbt, consoantes) and starts_with_any(
+        # Semivowels survive before consonants (e.g. 'useî + bor).
+        # Keep the broader group for following onsets and glottal sandhi.
+        if ends_with_any(vbt, self.consoantes_orais_normais) and starts_with_any(
             mod_vbt, consoantes + nasais
         ):
-            vbt.remove_ending_if_any(consoantes)
+            vbt.remove_ending_if_any(self.consoantes_orais_normais)
         elif ends_with_any(vbt, nasais + consoantes) and starts_with_any(
             mod_vbt, [self.glottal_stop]
         ):
