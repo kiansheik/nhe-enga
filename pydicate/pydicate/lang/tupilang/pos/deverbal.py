@@ -263,11 +263,12 @@ def bae_morphology(self, verb, annotated=False):
     if verb.object():
         if verb.object().inflection() in ["3p", "refl", "mut", "suj", None]:
             return verb.verb.bae(
-                obj=verb.object().eval(annotated=annotated), anotar=annotated
+                obj=verb.object().eval(annotated=annotated), anotar=annotated,
+                negative=verb.negated,
             )
         else:
-            return sara_morphology(verb, annotated=annotated)
-    return verb.verb.bae(anotar=annotated)
+            return sara_morphology(self, verb, annotated=annotated)
+    return verb.verb.bae(anotar=annotated, negative=verb.negated)
 
 
 def pyra_morphology(self, verb, annotated=False):
@@ -311,7 +312,10 @@ def emi_morphology(self, verb, annotated=False):
         )
     elif not subj:
         if referential is None:
-            nom = nom.possessive("absoluta", self.pro_drop)
+            # Explicit short absolute (te)mi-; possession and og stay unchanged.
+            nom = nom.possessive(
+                "absoluta", self.pro_drop or self.variation_id == 1
+            )
     else:
         nom = nom.possessive(subj.inflection(), None)
     if self.vocative:
@@ -479,6 +483,10 @@ def pûer_morphology(self, verb, annotated=False):
     noun = self.noun.puer()
     if getattr(self, "negated", False):
         noun = noun.eym()
+    if getattr(source, "category", None) == "noun":
+        # Realize the nominal absolute class after derivation. Possession
+        # already clears that class; derived sources retain their own inflection.
+        noun = noun.absoluta()
     return noun.substantivo(annotated).strip()
 
 

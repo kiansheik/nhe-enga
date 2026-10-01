@@ -880,7 +880,7 @@ class Verb(TupiAntigo):
             else self.fix_phonetics_preserving_tags(result, {"PROPER_NOUN"})
         )
 
-    def bae(self, obj=None, anotar=False):
+    def bae(self, obj=None, anotar=False, negative=False):
         # We will conjugate for the 3rd person prod_drop first, and then apply the suffix
         obj_t = "3p"
         obj_clean = None if not obj else AnnotatedString(obj).get_clean()
@@ -912,6 +912,9 @@ class Verb(TupiAntigo):
             elif raw.startswith("a[SUBJECT_PREFIX:3p]"):
                 raw = "t[PLURIFORM_PREFIX:T]" + raw[len("a[SUBJECT_PREFIX:3p]") :]
                 vbt = AnnotatedString(raw)
+        # Relative negation precedes ba'e, not the finite na-/i envelope.
+        if negative:
+            vbt.insert_suffix("e'ym[NEGATION_SUFFIX]")
         if ends_with_any(vbt, ["b", "p"]):
             vbt.replace_clean(-1, 1, "")
             vbt.insert_suffix("ba'e")

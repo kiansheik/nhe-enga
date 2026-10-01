@@ -329,5 +329,66 @@ class IrregularAgentNominalTest(unittest.TestCase):
         self.assertEqual(Noun("gûatasara").var(1).eval(), "gûatasara")
 
 
+class EmiAbsoluteVariantTest(unittest.TestCase):
+    def test_absolute_variant_and_context_contrasts(self):
+        # Pending Araújo "Imomĩauçubipyra renocêma.": contributor's
+        # requested analysis, not an independently approved reference.
+        from pydicate.lang.tupilang.pos import emi, mo, pyra, nde, og
+
+        love = Verb("aûsub", definition="to love")
+        regular = emi * love
+        varied = regular.var(1)
+        self.assertEqual(regular.eval(), "temiaûsuba")
+        self.assertEqual(varied.eval(), "miaûsuba")
+        self.assertEqual(AnnotatedString(varied.eval(True)).get_clean(), "miaûsuba")
+        self.assertIn("mi[PATIENT_PREFIX]", varied.eval(True))
+        self.assertEqual(varied.var(0).eval(), regular.eval())
+        self.assertEqual(varied.arguments[0].definition, love.definition)
+        for possessor in (nde, og):
+            self.assertEqual((possessor * varied).eval(),
+                             (possessor * regular).eval())
+        self.assertEqual((pyra * love).var(1).eval(), (pyra * love).eval())
+        result = (Verb("enosem") * (pyra * (varied * mo))).base_nominal()
+        self.assertEqual(result.eval(), "imomiaûsupyrarenosema")
+        self.assertEqual(AnnotatedString(result.eval(True)).get_clean(), result.eval())
+
+
+class NominalPastAbsoluteTest(unittest.TestCase):
+    def test_absolute_and_relational_past(self):
+        # Pending Araújo "Tëõboêra tyma.": contributor's analysis, not approval.
+        # The supplied definition contrasts pirá re'õmbûera and se'õmbûera.
+        from pydicate.lang.tupilang.pos import pûera, nde, ae, emi
+
+        death = Noun("e'õ", definition="(t) (s.) morte")
+        past = pûera * death
+        self.assertEqual(death.eval(), "te'õ")
+        self.assertEqual(past.eval(), "te'õmbûera")
+        self.assertEqual(AnnotatedString(past.eval(True)).get_clean(), past.eval())
+        self.assertIn("t[PLURIFORM_PREFIX:T:ABSOLUTE]", past.eval(True))
+        for possessor, expected in ((nde, "nde re'õmbûera"), (ae, "se'õmbûera")):
+            self.assertEqual((possessor * past).eval(), expected)
+            self.assertEqual((pûera * (possessor * death)).eval(), expected)
+        self.assertEqual((pûera * (emi * Verb("tym"))).eval(), "temitymbûera")
+
+
+class ObjectBoundNominalAbsoluteTest(unittest.TestCase):
+    def test_enonhen_object_blocks_second_absolute_prefix(self):
+        # Pending Araújo: "Oicomemoãbäe renonhêna." The supplied lexical
+        # definition also cites Bettendorff, Compêndio 23. Not approval.
+        from pydicate.lang.tupilang.pos import bae, moro
+
+        verb = Verb(value='enonhen', verb_class='(s) (v.tr.)', definition="(ou enonhẽ) (s) (v.tr.) - 1) repreender; corrigir, doutrinar em costumes (p.ex., o pai ao filho): Enonhẽ, eîakaká, t'oîepysyrõ-motá anhanga ratá suí. - Corrige-os, censura-os, para que queiram livrar-se do inferno. (Anch., Poemas, 158); Morubixaba tuîba'e onhe'eng memẽ i xupé, senonhena, i akakapa. - Os chefes velhos falam sempre a eles, repreendendo-os, censurando-os. (Anch., Teatro, 34); 2) reprimir: Mba'e-aí-potara renonhena. - Reprimir o desejo de coisas más. (Ar., Cat., 19v) ● enonhẽndara (t) - o repreensor, o que corrige, o que repreende: E'ikatu ipó senonhẽndarama supé é... - Pode certamente (contá-lo) para quem o repreenderá. (Ar., Cat., 73v)", vid=4050)
+        obj = bae * (Verb("ikó") / Noun("memûã"))
+        nominal = (obj * verb).base_nominal()
+        self.assertEqual(nominal.eval(), "oîkomemûãba'erenonhena")
+        self.assertIn("[OBJECT:DIRECT]r[PLURIFORM_PREFIX:R]", nominal.eval(True))
+        self.assertNotIn("[AGENT_PREFIX:GENERIC:PEOPLE:ABSOLUTE]", nominal.eval(True))
+        self.assertEqual(verb.base_nominal().eval(), "morenonhena")
+        self.assertEqual((Noun("abá") * verb).base_nominal().eval(), "abárenonhena")
+        self.assertEqual((moro * verb).base_nominal().eval(), "mororenonhena")
+        self.assertIsNone(nominal._nominalization_source.subject())
+        self.assertEqual(nominal._nominalization_source.object().eval(), obj.eval())
+
+
 if __name__ == "__main__":
     unittest.main()
