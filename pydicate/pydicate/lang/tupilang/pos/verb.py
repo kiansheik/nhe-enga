@@ -646,6 +646,12 @@ class Verb(Predicate):
         final.post_adjuncts = [x.copy() for x in self.post_adjuncts]
         final.v_adjuncts = [x.copy() for x in self.v_adjuncts]
         final.v_adjuncts_pre = [x.copy() for x in self.v_adjuncts_pre]
+        # Object inflection was already realized by nominal conjugation.
+        # Do not reapply the lexical absolute class to the entire phrase
+        # (e.g. (s) would add generic mor- even before an explicit object).
+        if self.verb.transitivo and self.object() is not None:
+            final.noun.pluriforme = None
+            final.noun.m_pluriforme = False
         final.arguments = [arg.copy() for arg in self.arguments]
         return final
 
@@ -861,6 +867,24 @@ class VerbAugmentor(Verb):
         self._arguments = []
         self.ero_switch = ero_switch
         self._augmentee = None
+
+    def var(self, setter):
+        result = super().var(setter)
+        # Select only the annotated outer ero derivation, never lexical r.
+        augmentor = getattr(result, "_augmentor", None)
+        if (
+            setter in (0, 1)
+            and getattr(result, "_augmentee", None) is not None
+            and getattr(augmentor, "ero_switch", False)
+        ):
+            for prefix in ("ero", "eno"):
+                marker = prefix + "[CAUSATIVE_PREFIX:ERO]"
+                if result.verbete.startswith(marker):
+                    stem = ("eno" if setter == 1 else "ero") + result.verbete[3:]
+                    result.verbete = stem
+                    result.verb.verbete = stem
+                    break
+        return result
 
     def _prefix_form(self):
         if self.verbete == "mo" and self.variation_id == 1:
