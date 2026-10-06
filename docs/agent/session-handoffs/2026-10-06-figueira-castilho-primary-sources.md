@@ -8,8 +8,9 @@ shared viewer/renderer/Pages build, keep the year-qualified Figueira citation
 linked with an honest warning, and stop for review before Sousa or D’Abbeville.
 
 Implementation branch: `feat/figueira-castilho-primary-sources`, based on
-`docs/next-primary-source-groundwork` (PR #26). The implementation PR link is
-added after it is opened. Nothing was merged or deployed.
+`docs/next-primary-source-groundwork` (PR #26). Review it in
+[PR #27](https://github.com/kiansheik/nhe-enga/pull/27). Nothing was merged or
+deployed.
 
 ## Files inspected
 

@@ -3,8 +3,9 @@
 ## 2026-10-06 — Figueira and Castilho primary sources
 
 - The dependent implementation branch `feat/figueira-castilho-primary-sources`
-  is based on PR #26's research groundwork. It adds the complete 200-page 1878
-  Figueira facsimile scan and 16 explicit crops from the 1937 Castilho edition.
+  is open as [PR #27](https://github.com/kiansheik/nhe-enga/pull/27) against
+  PR #26's research groundwork. It adds the complete 200-page 1878 Figueira
+  facsimile scan and 16 explicit crops from the 1937 Castilho edition.
   The source PDFs remain outside Git; checksums, render settings, page maps and
   provenance live in each source's `source.json` and `README.md`.
 - `linkSources()` now links all 622 explicit `Fig., Arte` citations in 455

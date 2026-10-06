@@ -2,8 +2,9 @@
 
 ## 2026-10-06 — Figueira and Castilho primary-source implementation
 
-Implemented the first two books from PR #26's verified research plan on a
-dependent review branch. Added the complete 200-image Figueira scan and 16
+Implemented the first two books from PR #26's verified research plan in
+[PR #27](https://github.com/kiansheik/nhe-enga/pull/27), a dependent review
+branch. Added the complete 200-image Figueira scan and 16
 Castilho page-side crops, production manifests, reproducible target-width/crop
 rendering, citation links, manifest-driven viewer behavior, Pages inclusion,
 inventory coverage and regression tests. All 622 Figueira citations and 215
