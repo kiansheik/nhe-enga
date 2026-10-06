@@ -933,37 +933,54 @@
   function linkSources(definition) {
     let replacedString = definition;
 
+    // Navarro cites the 1929 Portuguese edition. Its printed page number is
+    // also the zero-based scan filename; the PDF's page ordinal is one higher.
+    // Keep each page in lists/ranges clickable without changing citation text.
+    let regex = /\b(D['’‘ʼ]\s*[EÉÈÊ]vreux,\s*Viagem,\s*(?:pp?\.\s*)?)(\d+(?:\s*[-–—,]\s*\d+)*)(?![\dA-Za-zÀ-ÿ])/gi;
+    replacedString = replacedString.replace(regex, (match, prefix, pages) => {
+      const pageNumbers = pages.match(/\d+/g).map(Number);
+      if (pageNumbers.some((page) => page < 14 || page > 442)) {
+        return match;
+      }
+      let firstPage = true;
+      return pages.replace(/\d+/g, (page) => {
+        const label = firstPage ? `${prefix}${page}` : page;
+        firstPage = false;
+        return `<a href="/nhe-enga/docs/primary_sources/?book_name=evreux1929&page_number=${Number(page)}" target="_blank" rel="noopener">${label}</a>`;
+      });
+    });
+
     // VLB
-    let regex = /VLB, (I|II), (\d+)/g;
+    regex = /VLB, (I|II), (\d+)/g;
     replacedString = replacedString.replace(regex, (match, p1, p2) => {
       if (p1 === 'II') {
-        return `<a href="/nhe-enga/docs/primary_sources/?book_name=vlb&page_number=${parseInt(p2, 10) + 154}" target="_blank">${match}</a>`;
+        return `<a href="/nhe-enga/docs/primary_sources/?book_name=vlb&page_number=${parseInt(p2, 10) + 154}" target="_blank" rel="noopener">${match}</a>`;
       }
-      return `<a href="/nhe-enga/docs/primary_sources/?book_name=vlb&page_number=${p2}" target="_blank">${match}</a>`;
+      return `<a href="/nhe-enga/docs/primary_sources/?book_name=vlb&page_number=${p2}" target="_blank" rel="noopener">${match}</a>`;
     });
 
     // Anchieta Arte
     regex = /Anch\., Arte, (\d+v?)/g;
     replacedString = replacedString.replace(regex, (match, p1) => (
-      `<a href="/nhe-enga/docs/primary_sources/?book_name=ancharte&page_number=${p1}" target="_blank">${match}</a>`
+      `<a href="/nhe-enga/docs/primary_sources/?book_name=ancharte&page_number=${p1}" target="_blank" rel="noopener">${match}</a>`
     ));
 
     // Araujo Cat 1618
     regex = /Ar\., Cat\., (?!1686)(\d+v?)/g;
     replacedString = replacedString.replace(regex, (match, p1) => (
-      `<a href="/nhe-enga/docs/primary_sources/?book_name=arcat1618&page_number=${p1}" target="_blank">${match}</a>`
+      `<a href="/nhe-enga/docs/primary_sources/?book_name=arcat1618&page_number=${p1}" target="_blank" rel="noopener">${match}</a>`
     ));
 
     // Bettendorf compendio
     regex = /Bettendorff, Compêndio, (\d+v?)/g;
     replacedString = replacedString.replace(regex, (match, p1) => (
-      `<a href="/nhe-enga/docs/primary_sources/?book_name=betcomp&page_number=${Number(p1) + 9}" target="_blank">${match}</a>`
+      `<a href="/nhe-enga/docs/primary_sources/?book_name=betcomp&page_number=${Number(p1) + 9}" target="_blank" rel="noopener">${match}</a>`
     ));
 
     // Lery Histoire
     regex = /L(é|e)ry, Histoire, (\d+v?)/g;
     replacedString = replacedString.replace(regex, (match, _p1, p2) => (
-      `<a href="/nhe-enga/docs/primary_sources/?book_name=lerhist&page_number=${Number(p2) + (341 - 287)}" target="_blank">${match}</a>`
+      `<a href="/nhe-enga/docs/primary_sources/?book_name=lerhist&page_number=${Number(p2) + (341 - 287)}" target="_blank" rel="noopener">${match}</a>`
     ));
 
     return replacedString;

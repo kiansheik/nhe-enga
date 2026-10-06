@@ -109,11 +109,16 @@ for path in \
   docs/primary_sources/arcat1618 \
   docs/primary_sources/betcomp \
   docs/primary_sources/cartas_portiguara \
+  docs/primary_sources/evreux1929 \
   docs/primary_sources/lerhist \
   docs/primary_sources/vlb
 do
   copy_primary_source_images "$path"
 done
+
+# Keep the new source's provenance available beside its page images.
+copy_path "docs/primary_sources/evreux1929/source.json"
+copy_path "docs/primary_sources/DTAbib.txt"
 
 for path in \
   docs/primary_sources/*.css \
