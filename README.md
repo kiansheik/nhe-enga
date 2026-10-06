@@ -223,6 +223,8 @@ If you publish derivatives, cite the original authors and this toolkit.
 
 ## Contributing and next steps
 
+For the source-scan task, see the [D’Evreux pilot instructions for a local agent](docs/agent/session-handoffs/2026-10-06-devreux-primary-source.md). The handoff contains the verified edition and page mapping, implementation steps, source-inventory scope, and acceptance checks for an implementation PR.
+
 This codebase has grown organically; expect rough edges. Ideas that would add immediate value:
 
 1. Turn the retained data-extraction scripts into small argument-driven CLIs with focused tests.

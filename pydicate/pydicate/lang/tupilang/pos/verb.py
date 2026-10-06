@@ -218,16 +218,23 @@ class Verb(Predicate):
         subject = self.subject()
         person = subject.inflection() if subject is not None else None
         nominal = nominal or (
-            (self.mood == "circunstancial" or (
-                self.mood == "indicativo" and not self.is_subordinated()
-                and self.indicative() == "circunstancial"
-            ))
-            and person is not None and "2p" not in person
+            (
+                self.mood == "circunstancial"
+                or (
+                    self.mood == "indicativo"
+                    and not self.is_subordinated()
+                    and self.indicative() == "circunstancial"
+                )
+            )
+            and person is not None
+            and "2p" not in person
         )
         rendered = argument.eval(annotated=True)
         if (
-            nominal and argument is self.object()
-            and subject is not None and subject.category == "pronoun"
+            nominal
+            and argument is self.object()
+            and subject is not None
+            and subject.category == "pronoun"
             and person in {"1ps", "1ppi", "1ppe", "2ps", "2pp"}
         ):
             possessor = argument
@@ -248,13 +255,15 @@ class Verb(Predicate):
                 # No text-wide substitution: require the initial tagged
                 # possessor, and remove only its adjacent relational r-.
                 if rendered.startswith(prefix):
-                    tail = rendered[len(prefix):]
+                    tail = rendered[len(prefix) :]
                     relational = "r[PLURIFORM_PREFIX:R]"
                     if tail.startswith(relational):
-                        tail = tail[len(relational):]
+                        tail = tail[len(relational) :]
                     rendered = "îe[POSSESSIVE_PRONOUN:REFLEXIVE]" + tail
-        return rendered if annotated or self._contains_proper_noun(argument) else (
-            self.verb.remove_brackets_and_contents(rendered)
+        return (
+            rendered
+            if annotated or self._contains_proper_noun(argument)
+            else (self.verb.remove_brackets_and_contents(rendered))
         )
 
     def refresh_verbete(self, new_verbete):

@@ -24,6 +24,7 @@ apixara = Noun("apixara", "(t)")
 class CompoundAnnotationTest(unittest.TestCase):
     def test_explicit_nasal_mo_causative(self):
         from pydicate.lang.tupilang.pos.verb import mo
+
         root = Verb("pytá")
         before = root.eval(annotated=True)
         result = mo.var(2) * root
@@ -41,9 +42,15 @@ class CompoundAnnotationTest(unittest.TestCase):
 
     def test_nasal_causative_onsets_and_annotation(self):
         from pydicate.lang.tupilang.pos.verb import mo
-        for stem, expected in (("só", "mondó"), ("katú", "mongatú"),
-                               ("tá", "mondá"), ("tym", "motym"),
-                               ("abá", "moabá"), ("pytá[ROOT]", "mombytá")):
+
+        for stem, expected in (
+            ("só", "mondó"),
+            ("katú", "mongatú"),
+            ("tá", "mondá"),
+            ("tym", "motym"),
+            ("abá", "moabá"),
+            ("pytá[ROOT]", "mombytá"),
+        ):
             with self.subTest(stem=stem):
                 root = Verb(stem)
                 self.assertEqual((mo.var(2) * root).eval(), expected)
@@ -52,7 +59,9 @@ class CompoundAnnotationTest(unittest.TestCase):
         # The next * fills a verbal argument; it must not apply sandhi again.
         nasal = mo.var(2) * Verb("pytá")
         ordinary = mo * Verb("pytá")
-        self.assertEqual((nasal * nde).eval(), (ordinary * nde).eval().replace("pytá", "mbytá"))
+        self.assertEqual(
+            (nasal * nde).eval(), (ordinary * nde).eval().replace("pytá", "mbytá")
+        )
         self.assertEqual((mo * nasal).eval(), "momombytá")
 
     def test_compound_preserves_semivowels_before_consonants(self):
