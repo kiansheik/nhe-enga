@@ -230,7 +230,7 @@ viewer with `node --test tests/primary_sources.test.cjs`.
 
 ## Contributing and next steps
 
-For the source-scan task, see the [D’Evreux pilot instructions for a local agent](docs/agent/session-handoffs/2026-10-06-devreux-primary-source.md). The handoff contains the verified edition and page mapping, implementation steps, source-inventory scope, and acceptance checks for an implementation PR.
+The D’Evreux pilot is merged. The [next-source groundwork for a local agent](docs/primary_sources/plans/README.md) covers Figueira, Castilho, Sousa, and D’Abbeville, with exact editions, PDF identities, checked page/folio maps, unresolved cases, and a measured storage baseline. Run `python3 scripts/check_pages_size.py .pages-build` on the complete optimized artifact before adding more source images. The [original D’Evreux handoff](docs/agent/session-handoffs/2026-10-06-devreux-primary-source.md) remains available as historical context.
 
 This codebase has grown organically; expect rough edges. Ideas that would add immediate value:
 

@@ -1,0 +1,974 @@
+{
+  "schema_version": 1,
+  "id": "castilho1937",
+  "status": "research_plan",
+  "research_date": "2026-10-06",
+  "purpose": "Groundwork for a later local-agent implementation. This file is not a live source manifest and must not be passed directly to render_source_pages.py or registered by the viewer/build.",
+  "navarro_bibliography": {
+    "path": "docs/primary_sources/DTAbib.txt",
+    "lines": [
+      22
+    ],
+    "verbatim_entry": "(Castilho) CASTILHO, Pero de, Os Nomes das Partes do Corpo Humano pela Língua do Brasil. Edição de Plínio Ayrosa, Revista dos Tribunais, São Paulo, 1937.",
+    "edition": {
+      "author": "Pero de Castilho",
+      "editor": "Plínio Ayrosa",
+      "title": "Os Nomes das Partes do Corpo Humano pela Língua do Brasil",
+      "publisher": "Revista dos Tribunais",
+      "place": "São Paulo",
+      "year": 1937,
+      "catalog_printed_extent": "129 p.; this is not the PDF page count",
+      "scan_title_spelling": "Os “Nomes das partes do corpo humano pella lingua do Brasil” de Pero de Castilho",
+      "verification": "The 1937 title and Revista dos Tribunais imprint are visible on the right side of PDF index 2."
+    }
+  },
+  "pdf": {
+    "catalog_url": "https://bibliotecadigital.mj.gov.br/handle/1/7907",
+    "url": "https://bibliotecadigital.mj.gov.br/bitstream/1/7907/1/ayrosa_1937_nomes.pdf",
+    "filename": "ayrosa_1937_nomes.pdf",
+    "sha256": "7e2f9dc0323e4ef1a7bbc82a6dcd3b687f93457e780fecb868c8841389fe1519",
+    "bytes": 11660598,
+    "page_count": 70,
+    "downloaded_and_checked": true,
+    "checked_at": "2026-10-06",
+    "page_box_pdf_points": [
+      0,
+      0,
+      792,
+      612
+    ],
+    "page_layout": "Landscape scans of facing pages; blank leaves, section dividers and manuscript facsimiles occur between printed pages.",
+    "digitization_credit": "Biblioteca Digital Curt Nimuendajú",
+    "alternate_catalog_url": "https://www.etnolinguistica.org/biblio:ayrosa-1937-nomes",
+    "alternate_file_caution": "The curator also lists a larger OCR PDF. This hash, page count and mapping apply only to the exact Ministry of Justice PDF above; do not reuse this mapping for another file without checking it.",
+    "storage": "Keep the original PDF outside the Git repository and link to its institutional URL. Only small verification samples were rendered during this research."
+  },
+  "mapping": {
+    "locator_unit": "printed_page",
+    "proposed_rule": {
+      "strategy": "Explicit lookup of each cited printed page to zero-based pdf_index and scan_side using cited_targets.",
+      "pdf_fragment_rule": "For every target, the full original spread is available at pdf.url + #page=(pdf_index + 1).",
+      "do_not_use": "Do not assume printed_page equals PDF index, apply one global offset, equate two physical sides with two consecutive printed numbers, or infer pagination from entry numbers.",
+      "critical_insertion": "PDF index 21 contains printed 38 on the left and an unnumbered manuscript facsimile on the right. PDF index 22 contains a blank left leaf and printed 39 on the right. Printed 40 and 41 are at index 23, not index 22.",
+      "second_part_insertion": "After index 23 (printed 40–41), index 24 has the unnumbered Segunda Parte / Português-Tupi divider on the right and index 25 is blank. At index 26, a manuscript facsimile is on the left and printed 45 is on the right. Do not assign printed 42–44 to these sides merely to fill a sequence."
+    },
+    "verification_scope": {
+      "verification_status": "all_current_cited_targets_visually_verified",
+      "date": "2026-10-06",
+      "cited_printed_page_count": 16,
+      "source_spread_count": 10,
+      "source_pdf_indices": [
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        26
+      ],
+      "method": "Read the visible bracketed printed page number and left/right location in rendered previews of the exact checksum-verified PDF. Also inspect the intervening facsimile, blank and divider spreads and the title/credit spreads.",
+      "limitations": [
+        "This is verification of all current locator mappings, not a reading of all 215 cited passages.",
+        "Pagination outside the 16 listed targets has not been exhaustively mapped. Whole-spread browsing can still use PDF indices without inventing printed labels.",
+        "Per-target crop boxes are proposed working bounds; only the listed representative output crops were rendered, and optimized crops 28 and 39 were visually checked."
+      ]
+    },
+    "anchors": [
+      {
+        "pdf_index": 2,
+        "scan_side": "right",
+        "printed_page": null,
+        "verification_status": "visually_verified",
+        "content": "Title names Plínio Ayrosa, Pero de Castilho, 1937 and Empresa Gráfica da Revista dos Tribunais, São Paulo."
+      },
+      {
+        "pdf_index": 2,
+        "scan_side": "left",
+        "printed_page": null,
+        "verification_status": "visually_verified",
+        "content": "The PDF adds a visible Biblioteca Digital Curt Nimuendajú credit and download URL at the foot of this side. A right-only title crop would omit that credit."
+      },
+      {
+        "pdf_index": 3,
+        "scan_side": "left",
+        "printed_page": null,
+        "verification_status": "visually_verified",
+        "content": "Visible digitizer notice concerning academic access; preserve it in full-spread/PDF context rather than removing PDF overlays."
+      },
+      {
+        "pdf_index": 15,
+        "scan_side": "right",
+        "printed_page": 27,
+        "verification_status": "visually_verified",
+        "content": "First printed Tupi–Portuguese vocabulary page; the facing left side reproduces its manuscript source."
+      },
+      {
+        "pdf_index": 21,
+        "scan_side": "left",
+        "printed_page": 38,
+        "verification_status": "visually_verified",
+        "content": "Printed page 38; its facing manuscript facsimile is unnumbered."
+      },
+      {
+        "pdf_index": 21,
+        "scan_side": "right",
+        "printed_page": null,
+        "verification_status": "visually_verified",
+        "content": "Manuscript facsimile captioned as a page from the first part; it is not printed page 39."
+      },
+      {
+        "pdf_index": 22,
+        "scan_side": "left",
+        "printed_page": null,
+        "verification_status": "visually_verified",
+        "content": "Blank reverse of inserted facsimile."
+      },
+      {
+        "pdf_index": 22,
+        "scan_side": "right",
+        "printed_page": 39,
+        "verification_status": "visually_verified",
+        "content": "Printed page 39 starts with entry 214; this is the key offset-break regression."
+      },
+      {
+        "pdf_index": 23,
+        "scan_side": "left",
+        "printed_page": 40,
+        "verification_status": "visually_verified",
+        "content": "Printed page 40, continuing the first part."
+      },
+      {
+        "pdf_index": 23,
+        "scan_side": "right",
+        "printed_page": 41,
+        "verification_status": "visually_verified",
+        "content": "Printed page 41 ends the first part."
+      },
+      {
+        "pdf_index": 24,
+        "scan_side": "right",
+        "printed_page": null,
+        "verification_status": "visually_verified",
+        "content": "Unnumbered Segunda Parte / Português-Tupi divider."
+      },
+      {
+        "pdf_index": 25,
+        "scan_side": "full",
+        "printed_page": null,
+        "verification_status": "visually_verified",
+        "content": "Blank spread between divider and the next vocabulary opening."
+      },
+      {
+        "pdf_index": 26,
+        "scan_side": "right",
+        "printed_page": 45,
+        "verification_status": "visually_verified",
+        "content": "First printed Portuguese–Tupi vocabulary page. Entry 261 gives the arm-joint form behind the dictionary’s îybaypy citation; a manuscript facsimile occupies the left side."
+      }
+    ],
+    "cited_targets": [
+      {
+        "locator": "27",
+        "printed_page": 27,
+        "pdf_index": 15,
+        "scan_side": "right",
+        "verification_status": "visually_verified",
+        "visible_printed_label": "[27]",
+        "pdf_ordinal": 16,
+        "citation_occurrences": 5,
+        "example": {
+          "record_index": 2316,
+          "lemma": "'a",
+          "raw_citation": "Castilho, Nomes, 27"
+        },
+        "proposed_crop_box_pdf_points": [
+          424,
+          0,
+          792,
+          612
+        ],
+        "crop_verification_status": "sample_rendered_visual_review_pending"
+      },
+      {
+        "locator": "28",
+        "printed_page": 28,
+        "pdf_index": 16,
+        "scan_side": "left",
+        "verification_status": "visually_verified",
+        "visible_printed_label": "[28]",
+        "pdf_ordinal": 17,
+        "citation_occurrences": 18,
+        "example": {
+          "record_index": 2316,
+          "lemma": "'a",
+          "raw_citation": "Castilho, Nomes, 28"
+        },
+        "proposed_crop_box_pdf_points": [
+          0,
+          0,
+          432,
+          612
+        ],
+        "crop_verification_status": "optimized_sample_visually_checked"
+      },
+      {
+        "locator": "29",
+        "printed_page": 29,
+        "pdf_index": 16,
+        "scan_side": "right",
+        "verification_status": "visually_verified",
+        "visible_printed_label": "[29]",
+        "pdf_ordinal": 17,
+        "citation_occurrences": 17,
+        "example": {
+          "record_index": 3134,
+          "lemma": "api'aîuru'uma",
+          "raw_citation": "Castilho, Nomes, 29"
+        },
+        "proposed_crop_box_pdf_points": [
+          424,
+          0,
+          792,
+          612
+        ],
+        "crop_verification_status": "not_individually_rendered"
+      },
+      {
+        "locator": "30",
+        "printed_page": 30,
+        "pdf_index": 17,
+        "scan_side": "left",
+        "verification_status": "visually_verified",
+        "visible_printed_label": "[30]",
+        "pdf_ordinal": 18,
+        "citation_occurrences": 15,
+        "example": {
+          "record_index": 3437,
+          "lemma": "arukangûyra",
+          "raw_citation": "Castilho, Nomes, 30"
+        },
+        "proposed_crop_box_pdf_points": [
+          0,
+          0,
+          422,
+          612
+        ],
+        "crop_verification_status": "not_individually_rendered"
+      },
+      {
+        "locator": "31",
+        "printed_page": 31,
+        "pdf_index": 17,
+        "scan_side": "right",
+        "verification_status": "visually_verified",
+        "visible_printed_label": "[31]",
+        "pdf_ordinal": 18,
+        "citation_occurrences": 16,
+        "example": {
+          "record_index": 3832,
+          "lemma": "'ekatuaba",
+          "raw_citation": "Castilho, Nomes, 31"
+        },
+        "proposed_crop_box_pdf_points": [
+          414,
+          0,
+          792,
+          612
+        ],
+        "crop_verification_status": "not_individually_rendered"
+      },
+      {
+        "locator": "32",
+        "printed_page": 32,
+        "pdf_index": 18,
+        "scan_side": "left",
+        "verification_status": "visually_verified",
+        "visible_printed_label": "[32]",
+        "pdf_ordinal": 19,
+        "citation_occurrences": 16,
+        "example": {
+          "record_index": 5200,
+          "lemma": "ikepuba",
+          "raw_citation": "Castilho, Nomes, 32"
+        },
+        "proposed_crop_box_pdf_points": [
+          0,
+          0,
+          430,
+          612
+        ],
+        "crop_verification_status": "not_individually_rendered"
+      },
+      {
+        "locator": "33",
+        "printed_page": 33,
+        "pdf_index": 18,
+        "scan_side": "right",
+        "verification_status": "visually_verified",
+        "visible_printed_label": "[33]",
+        "pdf_ordinal": 19,
+        "citation_occurrences": 12,
+        "example": {
+          "record_index": 5576,
+          "lemma": "îurupopy",
+          "raw_citation": "Castilho, Nomes, 33"
+        },
+        "proposed_crop_box_pdf_points": [
+          422,
+          0,
+          792,
+          612
+        ],
+        "crop_verification_status": "not_individually_rendered"
+      },
+      {
+        "locator": "34",
+        "printed_page": 34,
+        "pdf_index": 19,
+        "scan_side": "left",
+        "verification_status": "visually_verified",
+        "visible_printed_label": "[34]",
+        "pdf_ordinal": 20,
+        "citation_occurrences": 19,
+        "example": {
+          "record_index": 8825,
+          "lemma": "poatasaba",
+          "raw_citation": "Castilho, Nomes, 34"
+        },
+        "proposed_crop_box_pdf_points": [
+          0,
+          0,
+          430,
+          612
+        ],
+        "crop_verification_status": "not_individually_rendered"
+      },
+      {
+        "locator": "35",
+        "printed_page": 35,
+        "pdf_index": 19,
+        "scan_side": "right",
+        "verification_status": "visually_verified",
+        "visible_printed_label": "[35]",
+        "pdf_ordinal": 20,
+        "citation_occurrences": 12,
+        "example": {
+          "record_index": 7719,
+          "lemma": "nambi",
+          "raw_citation": "Castilho, Nomes, 35"
+        },
+        "proposed_crop_box_pdf_points": [
+          422,
+          0,
+          792,
+          612
+        ],
+        "crop_verification_status": "not_individually_rendered"
+      },
+      {
+        "locator": "36",
+        "printed_page": 36,
+        "pdf_index": 20,
+        "scan_side": "left",
+        "verification_status": "visually_verified",
+        "visible_printed_label": "[36]",
+        "pdf_ordinal": 21,
+        "citation_occurrences": 8,
+        "example": {
+          "record_index": 8796,
+          "lemma": "pitanguru",
+          "raw_citation": "Castilho, Nomes, 36"
+        },
+        "proposed_crop_box_pdf_points": [
+          0,
+          0,
+          419,
+          612
+        ],
+        "crop_verification_status": "not_individually_rendered"
+      },
+      {
+        "locator": "37",
+        "printed_page": 37,
+        "pdf_index": 20,
+        "scan_side": "right",
+        "verification_status": "visually_verified",
+        "visible_printed_label": "[37]",
+        "pdf_ordinal": 21,
+        "citation_occurrences": 14,
+        "example": {
+          "record_index": 2338,
+          "lemma": "aba",
+          "raw_citation": "Castilho, Nomes, 37"
+        },
+        "proposed_crop_box_pdf_points": [
+          411,
+          0,
+          792,
+          612
+        ],
+        "crop_verification_status": "not_individually_rendered"
+      },
+      {
+        "locator": "38",
+        "printed_page": 38,
+        "pdf_index": 21,
+        "scan_side": "left",
+        "verification_status": "visually_verified",
+        "visible_printed_label": "[38]",
+        "pdf_ordinal": 22,
+        "citation_occurrences": 22,
+        "example": {
+          "record_index": 2499,
+          "lemma": "ãîa",
+          "raw_citation": "Castilho, Nomes, 38"
+        },
+        "proposed_crop_box_pdf_points": [
+          0,
+          0,
+          434,
+          612
+        ],
+        "crop_verification_status": "not_individually_rendered"
+      },
+      {
+        "locator": "39",
+        "printed_page": 39,
+        "pdf_index": 22,
+        "scan_side": "right",
+        "verification_status": "visually_verified",
+        "visible_printed_label": "[39]",
+        "pdf_ordinal": 23,
+        "citation_occurrences": 17,
+        "example": {
+          "record_index": 3914,
+          "lemma": "embé",
+          "raw_citation": "Castilho, Nomes, 39"
+        },
+        "proposed_crop_box_pdf_points": [
+          427,
+          0,
+          792,
+          612
+        ],
+        "crop_verification_status": "optimized_sample_visually_checked"
+      },
+      {
+        "locator": "40",
+        "printed_page": 40,
+        "pdf_index": 23,
+        "scan_side": "left",
+        "verification_status": "visually_verified",
+        "visible_printed_label": "[40]",
+        "pdf_ordinal": 24,
+        "citation_occurrences": 19,
+        "example": {
+          "record_index": 4269,
+          "lemma": "(e)tymã",
+          "raw_citation": "Castilho, Nomes, 40"
+        },
+        "proposed_crop_box_pdf_points": [
+          0,
+          0,
+          432,
+          612
+        ],
+        "crop_verification_status": "not_individually_rendered"
+      },
+      {
+        "locator": "41",
+        "printed_page": 41,
+        "pdf_index": 23,
+        "scan_side": "right",
+        "verification_status": "visually_verified",
+        "visible_printed_label": "[41]",
+        "pdf_ordinal": 24,
+        "citation_occurrences": 4,
+        "example": {
+          "record_index": 10724,
+          "lemma": "ubapûã",
+          "raw_citation": "Castilho, Nomes, 41"
+        },
+        "proposed_crop_box_pdf_points": [
+          424,
+          0,
+          792,
+          612
+        ],
+        "crop_verification_status": "not_individually_rendered"
+      },
+      {
+        "locator": "45",
+        "printed_page": 45,
+        "pdf_index": 26,
+        "scan_side": "right",
+        "verification_status": "visually_verified",
+        "visible_printed_label": "[45]",
+        "pdf_ordinal": 27,
+        "citation_occurrences": 1,
+        "example": {
+          "record_index": 5612,
+          "lemma": "îybaypy",
+          "raw_citation": "Castilho, Nomes, 45"
+        },
+        "proposed_crop_box_pdf_points": [
+          425,
+          0,
+          792,
+          612
+        ],
+        "crop_verification_status": "sample_rendered_visual_review_pending"
+      }
+    ],
+    "unresolved": [
+      {
+        "scope": "non-cited printed pages",
+        "status": "not_exhaustively_mapped",
+        "action": "Use scan-position labels during whole-spread browsing. A cited-only implementation does not require complete book pagination."
+      },
+      {
+        "scope": "crop bounds beyond representative samples",
+        "status": "proposed_not_all_individually_rendered",
+        "action": "Check every generated crop for the whole text block, outer margin and bracketed page number. Adjust its gutter coordinate if necessary; do not change the verified locator-to-spread mapping."
+      },
+      {
+        "scope": "output strategy and asset destination",
+        "status": "implementation_choice",
+        "action": "Choose either the 16 cited-page crops with availability-aware navigation/PDF fallback, or 70 full spreads with target-side focus. Follow the shared storage plan and avoid mandatory duplicate derivatives."
+      }
+    ]
+  },
+  "citation_baseline": {
+    "input_path": "docs/dict-conjugated.json.gz",
+    "uncompressed_sha256": "8906cb4ddd292db7d67901ec9fb3c288d94b9baf9ae9cb35cb1d8a4a30e8e02e",
+    "explicit_occurrences": 215,
+    "records": 162,
+    "repository_commit": "81c21de3f444983630a06ffc252e821c03dffb35",
+    "total_input_records": 13922,
+    "lexical_records_before_bibliography": 13712,
+    "cited_page_count": 16,
+    "locator_syntax": "Castilho, Nomes, <Arabic printed page>",
+    "method": "Count explicit Castilho, Nomes references in definition field d before the BIBLIOGRAFIA record, preserving original record indices and lemma field f.",
+    "current_link_state": "The main-baseline linker has no Castilho source handler. Do not treat this plan as already deployed."
+  },
+  "render_plan": {
+    "preferred_strategy": {
+      "name": "cited_page_crops",
+      "asset_count": 16,
+      "proposed_filename_rule": "p{printed_page}.jpg",
+      "target_width_pixels": 1200,
+      "format": "JPEG",
+      "quality": 85,
+      "progressive": true,
+      "colorspace": "RGB",
+      "composition": "Render the complete PDF page composition with the selected clipping rectangle; preserve all contributing image masks and PDF text overlays. Do not extract only one embedded bitmap.",
+      "crop_coordinates": "PDF points, origin at the top left, within the 792×612 page box. A working gutter coordinate is recorded per source spread; keep a 4-point overlap into the gutter on either side, retain full y=0..612 and the outer margin. These are deliberately page crops, not tight text-only crops.",
+      "gutter_overlap_points": 4,
+      "resampling": "Scale the clipped page to 1200 px wide while preserving its aspect ratio. If raster rounding yields 1201 px, resize once with Lanczos. Keep the complete source PDF available for maximum-resolution reading.",
+      "navigation": "Use the ordered available printed targets [27..41,45], label any jump as an available-page jump, and offer the original PDF for uncached neighbors. Never increment directly to an ungenerated p42.jpg or silently display a different page.",
+      "context_and_credit": "Always show the digitization credit and catalog link, plus the full original spread link at #page=(pdf_index+1). Link the title/credit spread at #page=3 and the digitizer notice at #page=4. The original PDF preserves the facing manuscript and intervening leaves without storing duplicate full-spread images."
+    },
+    "alternative_strategy": {
+      "name": "all_original_spreads",
+      "asset_count": 70,
+      "proposed_filename_rule": "{zero_based_pdf_index}.jpg",
+      "target_width_pixels": 2400,
+      "format": "JPEG",
+      "quality": 85,
+      "progressive": true,
+      "navigation": "Browse PDF indices 0..69. On citation entry, load its verified spread and identify/focus the left or right target. For unverified non-cited positions show scan positions rather than made-up printed page numbers.",
+      "context_and_credit": "Preserves all facing context, blank leaves, facsimiles and existing title/notice overlays automatically. Do not also require a second set of page crops.",
+      "optimizer_caveat": "The current Pages image optimizer caps width at 1800 and recompresses to JPEG quality 82. Measurements below include that actual path; it reduces per-side resolution. If full-spread assets are served externally at 2400 px, keep that policy separate from legacy Pages defaults."
+    },
+    "proposed_gutters_pdf_points": [
+      {
+        "pdf_index": 15,
+        "gutter_x": 428,
+        "verification_status": "working_coordinate_from_preview",
+        "method": "Estimated from the visible crease; local agent must inspect final crops."
+      },
+      {
+        "pdf_index": 16,
+        "gutter_x": 428,
+        "verification_status": "working_coordinate_from_preview",
+        "method": "Estimated from the visible crease; local agent must inspect final crops."
+      },
+      {
+        "pdf_index": 17,
+        "gutter_x": 418,
+        "verification_status": "working_coordinate_from_preview",
+        "method": "Estimated from the visible crease; local agent must inspect final crops."
+      },
+      {
+        "pdf_index": 18,
+        "gutter_x": 426,
+        "verification_status": "working_coordinate_from_preview",
+        "method": "Estimated from the visible crease; local agent must inspect final crops."
+      },
+      {
+        "pdf_index": 19,
+        "gutter_x": 426,
+        "verification_status": "working_coordinate_from_preview",
+        "method": "Estimated from the visible crease; local agent must inspect final crops."
+      },
+      {
+        "pdf_index": 20,
+        "gutter_x": 415,
+        "verification_status": "working_coordinate_from_preview",
+        "method": "Estimated from the visible crease; local agent must inspect final crops."
+      },
+      {
+        "pdf_index": 21,
+        "gutter_x": 430,
+        "verification_status": "working_coordinate_from_preview",
+        "method": "Estimated from the visible crease; local agent must inspect final crops."
+      },
+      {
+        "pdf_index": 22,
+        "gutter_x": 431,
+        "verification_status": "working_coordinate_from_preview",
+        "method": "Estimated from the visible crease; local agent must inspect final crops."
+      },
+      {
+        "pdf_index": 23,
+        "gutter_x": 428,
+        "verification_status": "working_coordinate_from_preview",
+        "method": "Estimated from the visible crease; local agent must inspect final crops."
+      },
+      {
+        "pdf_index": 26,
+        "gutter_x": 429,
+        "verification_status": "working_coordinate_from_preview",
+        "method": "Estimated from the visible crease; local agent must inspect final crops."
+      }
+    ],
+    "measurement": {
+      "date": "2026-10-06",
+      "tools": {
+        "PyMuPDF": "1.26.6",
+        "Pillow": "12.3.0"
+      },
+      "method": "Four representative single-page crops (27, 28, 39, 45) and three whole spreads (indices 2, 16, 26) were rendered outside the repository. Each was encoded as progressive optimized RGB JPEG at qualities 82, 85, 90; a copy of each q90 image then went through the existing optimizer at its unchanged defaults.",
+      "whole_book_rendered": false,
+      "binaries_committed": false,
+      "samples": [
+        {
+          "sample": "p27",
+          "printed_page": 27,
+          "pdf_index": 15,
+          "scan_side": "right",
+          "crop_box_pdf_points": [
+            424.0,
+            0.0,
+            792.0,
+            612.0
+          ],
+          "output_width": 1200,
+          "output_height": 1994,
+          "jpeg_bytes": {
+            "82": 280798,
+            "85": 310272,
+            "90": 388728
+          },
+          "current_optimizer_from_q90": {
+            "jpeg_bytes": 309221,
+            "width": 1200,
+            "height": 1994,
+            "quality": 82,
+            "max_size": [
+              1800,
+              2400
+            ]
+          },
+          "verification_status": "sample_rendered"
+        },
+        {
+          "sample": "p28",
+          "printed_page": 28,
+          "pdf_index": 16,
+          "scan_side": "left",
+          "crop_box_pdf_points": [
+            0.0,
+            0.0,
+            432.0,
+            612.0
+          ],
+          "output_width": 1200,
+          "output_height": 1700,
+          "jpeg_bytes": {
+            "82": 306083,
+            "85": 336962,
+            "90": 414885
+          },
+          "current_optimizer_from_q90": {
+            "jpeg_bytes": 333205,
+            "width": 1200,
+            "height": 1700,
+            "quality": 82,
+            "max_size": [
+              1800,
+              2400
+            ]
+          },
+          "verification_status": "optimized_sample_visually_checked",
+          "visual_check": "Complete printed page, header, bracketed page number, small letters and diacritics remain legible after the current optimizer; no neighboring text is required to read the page."
+        },
+        {
+          "sample": "p39",
+          "printed_page": 39,
+          "pdf_index": 22,
+          "scan_side": "right",
+          "crop_box_pdf_points": [
+            427.0,
+            0.0,
+            792.0,
+            612.0
+          ],
+          "output_width": 1200,
+          "output_height": 2011,
+          "jpeg_bytes": {
+            "82": 310289,
+            "85": 343631,
+            "90": 428555
+          },
+          "current_optimizer_from_q90": {
+            "jpeg_bytes": 339804,
+            "width": 1200,
+            "height": 2011,
+            "quality": 82,
+            "max_size": [
+              1800,
+              2400
+            ]
+          },
+          "verification_status": "optimized_sample_visually_checked",
+          "visual_check": "Complete printed page, header, bracketed page number, small letters and diacritics remain legible after the current optimizer; no neighboring text is required to read the page."
+        },
+        {
+          "sample": "p45",
+          "printed_page": 45,
+          "pdf_index": 26,
+          "scan_side": "right",
+          "crop_box_pdf_points": [
+            425.0,
+            0.0,
+            792.0,
+            612.0
+          ],
+          "output_width": 1200,
+          "output_height": 2000,
+          "jpeg_bytes": {
+            "82": 295677,
+            "85": 327078,
+            "90": 405127
+          },
+          "current_optimizer_from_q90": {
+            "jpeg_bytes": 327439,
+            "width": 1200,
+            "height": 2000,
+            "quality": 82,
+            "max_size": [
+              1800,
+              2400
+            ]
+          },
+          "verification_status": "sample_rendered"
+        },
+        {
+          "sample": "credit-title",
+          "printed_page": null,
+          "pdf_index": 2,
+          "scan_side": "full",
+          "crop_box_pdf_points": [
+            0.0,
+            0.0,
+            792.0,
+            612.0
+          ],
+          "output_width": 2400,
+          "output_height": 1855,
+          "jpeg_bytes": {
+            "82": 485394,
+            "85": 539989,
+            "90": 675113
+          },
+          "current_optimizer_from_q90": {
+            "jpeg_bytes": 317482,
+            "width": 1800,
+            "height": 1391,
+            "quality": 82,
+            "max_size": [
+              1800,
+              2400
+            ]
+          },
+          "verification_status": "sample_rendered"
+        },
+        {
+          "sample": "spread16",
+          "printed_page": null,
+          "pdf_index": 16,
+          "scan_side": "full",
+          "crop_box_pdf_points": [
+            0,
+            0,
+            792,
+            612
+          ],
+          "output_width": 2400,
+          "output_height": 1855,
+          "jpeg_bytes": {
+            "82": 660531,
+            "85": 728191,
+            "90": 893546
+          },
+          "current_optimizer_from_q90": {
+            "jpeg_bytes": 431830,
+            "width": 1800,
+            "height": 1391,
+            "quality": 82,
+            "max_size": [
+              1800,
+              2400
+            ]
+          },
+          "verification_status": "sample_rendered"
+        },
+        {
+          "sample": "spread26",
+          "printed_page": null,
+          "pdf_index": 26,
+          "scan_side": "full",
+          "crop_box_pdf_points": [
+            0,
+            0,
+            792,
+            612
+          ],
+          "output_width": 2400,
+          "output_height": 1855,
+          "jpeg_bytes": {
+            "82": 537709,
+            "85": 589888,
+            "90": 717611
+          },
+          "current_optimizer_from_q90": {
+            "jpeg_bytes": 349994,
+            "width": 1800,
+            "height": 1391,
+            "quality": 82,
+            "max_size": [
+              1800,
+              2400
+            ]
+          },
+          "verification_status": "sample_rendered"
+        }
+      ],
+      "cited_only_estimate": {
+        "asset_count": 16,
+        "sample_count": 4,
+        "method": "Sample minimum, mean and maximum multiplied by asset count; not a measured complete output or a statistical confidence interval.",
+        "scenarios": [
+          {
+            "encoding": "82",
+            "sample_min_bytes": 280798,
+            "sample_mean_bytes": 298211.75,
+            "sample_max_bytes": 310289,
+            "estimated_total_mib_min": 4.28,
+            "estimated_total_mib_mean": 4.55,
+            "estimated_total_mib_max": 4.73
+          },
+          {
+            "encoding": "85",
+            "sample_min_bytes": 310272,
+            "sample_mean_bytes": 329485.75,
+            "sample_max_bytes": 343631,
+            "estimated_total_mib_min": 4.73,
+            "estimated_total_mib_mean": 5.03,
+            "estimated_total_mib_max": 5.24
+          },
+          {
+            "encoding": "90",
+            "sample_min_bytes": 388728,
+            "sample_mean_bytes": 409323.75,
+            "sample_max_bytes": 428555,
+            "estimated_total_mib_min": 5.93,
+            "estimated_total_mib_mean": 6.25,
+            "estimated_total_mib_max": 6.54
+          },
+          {
+            "encoding": "current_optimizer_from_q90",
+            "sample_min_bytes": 309221,
+            "sample_mean_bytes": 327417.25,
+            "sample_max_bytes": 339804,
+            "estimated_total_mib_min": 4.72,
+            "estimated_total_mib_mean": 5.0,
+            "estimated_total_mib_max": 5.18
+          }
+        ]
+      },
+      "all_spreads_estimate": {
+        "asset_count": 70,
+        "sample_count": 3,
+        "method": "Sample minimum, mean and maximum multiplied by asset count; not a measured complete output or a statistical confidence interval.",
+        "scenarios": [
+          {
+            "encoding": "82",
+            "sample_min_bytes": 485394,
+            "sample_mean_bytes": 561211.33,
+            "sample_max_bytes": 660531,
+            "estimated_total_mib_min": 32.4,
+            "estimated_total_mib_mean": 37.46,
+            "estimated_total_mib_max": 44.1
+          },
+          {
+            "encoding": "85",
+            "sample_min_bytes": 539989,
+            "sample_mean_bytes": 619356.0,
+            "sample_max_bytes": 728191,
+            "estimated_total_mib_min": 36.05,
+            "estimated_total_mib_mean": 41.35,
+            "estimated_total_mib_max": 48.61
+          },
+          {
+            "encoding": "90",
+            "sample_min_bytes": 675113,
+            "sample_mean_bytes": 762090.0,
+            "sample_max_bytes": 893546,
+            "estimated_total_mib_min": 45.07,
+            "estimated_total_mib_mean": 50.87,
+            "estimated_total_mib_max": 59.65
+          },
+          {
+            "encoding": "current_optimizer_from_q90",
+            "sample_min_bytes": 317482,
+            "sample_mean_bytes": 366435.33,
+            "sample_max_bytes": 431830,
+            "estimated_total_mib_min": 21.19,
+            "estimated_total_mib_mean": 24.46,
+            "estimated_total_mib_max": 28.83
+          }
+        ]
+      },
+      "estimate_limits": "Estimates exclude metadata, thumbnails, caches and previous immutable asset versions. They do not include the 11.66 MB source PDF, which remains external. Samples are selected examples, not a random sample or a measured complete book."
+    },
+    "local_outputs": "Render to a temporary or staging directory outside the Git tree. Choose one final encoding path rather than accumulating masters, recompressed copies and duplicate spreads in the website repository."
+  },
+  "local_agent_actions": [
+    "Read AGENTS.md and the shared primary-source storage handoff. Treat this JSON as research input, not as a deployable source.json or an instruction to run the existing renderer unchanged.",
+    "Download the exact institutional PDF outside the repository, verify its SHA-256, byte count and 70-page count, and recheck the title at PDF index 2 before reusing the mapping. Stop and investigate if the source file differs.",
+    "Regenerate the citation inventory from the served gzip dataset. Confirm the recorded hash and 215 occurrences across 162 records, or explain changes. Preserve dictionary data and all existing source mappings.",
+    "Choose either the 16 cited crops or all 70 whole spreads, following the shared asset-storage plan. Keep the original PDF external and avoid requiring both derivative sets. Use measured complete output totals in the implementation PR, not this sample estimate as an exact budget.",
+    "For crops, deliberately implement or extend the renderer to consume explicit crop bounds and printed-page output names. The current render_source_pages.py only renders whole PDF indices and does not understand this plan’s mapping or crop schema.",
+    "Verify each of the 16 output targets, including complete bracketed page labels, text blocks and diacritics. Retain all source layers during composition. In particular, keep the inserted facsimile at index 21 from being misidentified as page 39 and keep page 45 at index 26/right.",
+    "Create a reviewed runtime manifest with the verified edition, source hash, citation map, chosen asset URLs and dimensions. Implement a dedicated Castilho/Nomes citation handler preserving displayed text and leaving unrelated sources unchanged.",
+    "Implement mode-appropriate navigation: available-page jumps/PDF fallback for a crop subset, or scan 0..69 browsing and target-side focus for full spreads. Retain reload/share URLs and accurate distinctions between printed pages, manuscript inserts and scan indices.",
+    "Add focused tests that execute the production citation/viewer path and cover all 215 baseline citations. Include independent anchor assertions for 27→15/right, 38→21/left, 39→22/right, 40→23/left, 41→23/right and 45→26/right; source PDF fragments must use index + 1.",
+    "In a real browser, inspect the îybaypy result and its page 45 image/PDF page 27; inspect a page 39 target and PDF page 23; check mobile/desktop fit, zoom, missing-image behavior and available navigation. Verify existing D’Evreux and legacy source links still work.",
+    "Include actual derivative sizes, representative screenshots, source credit, the complete verified locator table and unresolved non-cited pagination limits in the implementation PR. Keep this groundwork PR free of image/PDF binaries."
+  ]
+}

@@ -1,0 +1,417 @@
+{
+  "schema_version": 1,
+  "id": "abbeville1614",
+  "status": "research_plan",
+  "navarro_bibliography": {
+    "path": "docs/primary_sources/DTAbib.txt",
+    "lines": [
+      25
+    ],
+    "verbatim_entry": "(D'Abbeville) D'ABBEVILLE, Claude, Histoire de la Mission des Pères Capucins en Isle de Maragnan et Terres Circonvoisines. Paris, 1614.",
+    "edition": "Claude d’Abbeville, Histoire de la Mission des Pères Capucins en Isle de Maragnan et Terres Circonvoisines, Paris, 1614. The inspected copy is printed by François Huby.",
+    "selection_rule": "Use the French 1614 edition specified by Navarro. A Portuguese translation or later reset edition requires its own concordance and is not interchangeable."
+  },
+  "pdf": {
+    "catalog_url": "https://archive.org/details/histoiredelamiss00clau",
+    "url": "https://archive.org/download/histoiredelamiss00clau/histoiredelamiss00clau.pdf",
+    "sha256": "0435035c95e553585f4278af30784e7b78688c1e504e4c035054e488768debcc",
+    "bytes": 82893760,
+    "page_count": 846,
+    "downloaded_and_checked": true,
+    "checked_date": "2026-10-06",
+    "catalog_scan_pages": 848,
+    "catalog_extent": "[8],395,[17] leaves",
+    "layout": "One recto or verso per actual PDF page. Folio numbers count leaves, not images.",
+    "edition_evidence_pdf_indices": [
+      4
+    ],
+    "catalog_pdf_discrepancy": "The catalog says 848 pages; the pinned downloaded PDF actually contains 846 pages. All pdf_index values in this plan refer to that 846-page PDF, never the catalog total or Internet Archive leafNum.",
+    "supporting_metadata": [
+      {
+        "url": "https://archive.org/download/histoiredelamiss00clau/histoiredelamiss00clau_scandata.xml",
+        "sha256": "0dbac21da1dd5751fadbe42ff442d3fe770fb8824053922a6f9631e7d7a35fc3",
+        "bytes": 858569,
+        "note": "850 pageData entries; 4 are excluded from access formats, yielding 846 PDF pages. IA leafNum includes excluded scans, so it is not pdf_index."
+      },
+      {
+        "url": "https://archive.org/download/histoiredelamiss00clau/histoiredelamiss00clau_page_numbers.json",
+        "sha256": "72efcdc292125da5fb7f8cda1e08001bb9d238f7f09fddd7a2566b7d65a6e89a",
+        "bytes": 143871,
+        "note": "Metadata has overall confidence 0; page numbers are not a substitute for visual verification."
+      }
+    ]
+  },
+  "mapping": {
+    "locator_unit": "Numbered leaf plus recto/verso; bare Arabic numbers designate recto, v designates verso. Roman/chapter citations require a separate chapter map.",
+    "pdf_index_base": 0,
+    "proposed_rule": {
+      "status": "sampled_not_complete",
+      "recto_formula": "pdf_index=2*folio+16",
+      "verso_formula": "pdf_index=2*folio+17",
+      "scope": "Fits checked leaves 186, 207, 351 and logical 362 in the pinned PDF; do not extrapolate to all leaves without checking numbering errors/insertions.",
+      "live_manifest": false
+    },
+    "verification_scope": "Engraved title and a small set of recto/verso anchors visually inspected; corresponding dictionary examples checked. The catalog flags errors in pages; a concrete 362/392 misprint is documented. Full foliation mapping remains local-agent work.",
+    "verification_status_meanings": {
+      "verified_visual": "Numbered recto visually inspected.",
+      "verified_adjacent_rectos_and_content": "Unnumbered verso established from adjacent numbered rectos and matching cited material.",
+      "verified_sequence_and_content_with_misprint": "Logical folio established from adjacent printed numbers, signature/scan metadata and matching passage despite wrong printed numeral.",
+      "pending_visual": "Only sampled formula is available; pdf_index remains null.",
+      "pending_chapter_disambiguation": "A Roman/chapter locator has not been matched to its heading and passage.",
+      "unlocated": "Citation names the work but gives no locator."
+    },
+    "anchors": [
+      {
+        "locator": "engraved title",
+        "pdf_index": 4,
+        "scan_side": "full",
+        "verification_status": "verified_visual",
+        "evidence": "Visually reads Claude d’Abbeville, Histoire de la Mission, Paris, François Huby, 1614."
+      },
+      {
+        "locator": "186",
+        "pdf_index": 388,
+        "scan_side": "full",
+        "verification_status": "verified_visual",
+        "evidence": "Recto clearly printed 186; discussion of Tapouytapere."
+      },
+      {
+        "locator": "186v",
+        "pdf_index": 389,
+        "scan_side": "full",
+        "verification_status": "verified_adjacent_rectos_and_content",
+        "evidence": "Unnumbered verso between printed 186 at 388 and 187 at 390; village-chief paragraph gives Avation and the gloss Mil noir, matching Abatiúna entry 2389.",
+        "citation_match_status": "sample_matched"
+      },
+      {
+        "locator": "187",
+        "pdf_index": 390,
+        "scan_side": "full",
+        "verification_status": "verified_visual",
+        "evidence": "The following recto is clearly printed 187."
+      },
+      {
+        "locator": "207",
+        "pdf_index": 430,
+        "scan_side": "full",
+        "verification_status": "verified_visual",
+        "evidence": "Recto clearly printed 207; Avatyy/maize passage matches abati entry 2379.",
+        "citation_match_status": "sample_matched"
+      },
+      {
+        "locator": "351",
+        "pdf_index": 718,
+        "scan_side": "full",
+        "verification_status": "verified_visual",
+        "evidence": "Recto visibly printed 351; chapter passage immediately precedes the Tupinamba speech at 351v."
+      },
+      {
+        "locator": "351v",
+        "pdf_index": 719,
+        "scan_side": "full",
+        "verification_status": "verified_adjacent_rectos_and_content",
+        "evidence": "Unnumbered verso between printed 351 at 718 and 352 at 720; long Tupinamba speech begins with Conseignéum and contains the material cited for ahẽ and other records.",
+        "citation_match_status": "sample_matched"
+      },
+      {
+        "locator": "352",
+        "pdf_index": 720,
+        "scan_side": "full",
+        "verification_status": "verified_visual",
+        "evidence": "The following recto is clearly printed 352."
+      },
+      {
+        "locator": "361",
+        "pdf_index": 738,
+        "scan_side": "full",
+        "verification_status": "verified_visual",
+        "evidence": "Recto clearly printed 361, signature Zz, immediately before the leaf logically numbered 362."
+      },
+      {
+        "locator": "362",
+        "pdf_index": 740,
+        "scan_side": "full",
+        "verification_status": "verified_sequence_and_content_with_misprint",
+        "evidence": "Logical folio 362 is misprinted 392. Heading names Itapoucou; paragraph glosses the name as a bar of iron. Neighboring rectos are 361 at 738 and 363 at 742, and IA scandata labels this leaf 362. Matches Itapuku entry 5426.",
+        "printed_number": "392",
+        "citation_match_status": "sample_matched"
+      },
+      {
+        "locator": "363",
+        "pdf_index": 742,
+        "scan_side": "full",
+        "verification_status": "verified_visual",
+        "evidence": "Recto clearly printed 363, signature Zz iij, following the misprinted 392/362 leaf."
+      }
+    ],
+    "cited_targets": [
+      {"locator": "12v", "locator_type": "folio_side", "folio": 12, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "15", "locator_type": "folio_side", "folio": 15, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "52v", "locator_type": "folio_side", "folio": 52, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "57", "locator_type": "folio_side", "folio": 57, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "58", "locator_type": "folio_side", "folio": 58, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "61", "locator_type": "folio_side", "folio": 61, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "65", "locator_type": "folio_side", "folio": 65, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "66", "locator_type": "folio_side", "folio": 66, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "82", "locator_type": "folio_side", "folio": 82, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "96", "locator_type": "folio_side", "folio": 96, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "96v", "locator_type": "folio_side", "folio": 96, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "119", "locator_type": "folio_side", "folio": 119, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "131", "locator_type": "folio_side", "folio": 131, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "140", "locator_type": "folio_side", "folio": 140, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "158v", "locator_type": "folio_side", "folio": 158, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "182", "locator_type": "folio_side", "folio": 182, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 5, "citation_match_status": "not_checked"},
+      {"locator": "182v", "locator_type": "folio_side", "folio": 182, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 8, "citation_match_status": "not_checked"},
+      {"locator": "183", "locator_type": "folio_side", "folio": 183, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 4, "citation_match_status": "not_checked"},
+      {"locator": "183v", "locator_type": "folio_side", "folio": 183, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 7, "citation_match_status": "not_checked"},
+      {"locator": "184", "locator_type": "folio_side", "folio": 184, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 6, "citation_match_status": "not_checked"},
+      {"locator": "184v", "locator_type": "folio_side", "folio": 184, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 11, "citation_match_status": "not_checked"},
+      {"locator": "185", "locator_type": "folio_side", "folio": 185, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 6, "citation_match_status": "not_checked"},
+      {"locator": "185v", "locator_type": "folio_side", "folio": 185, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 2, "citation_match_status": "not_checked"},
+      {"locator": "186", "locator_type": "folio_side", "folio": 186, "folio_side": "recto", "pdf_index": 388, "scan_side": "full", "verification_status": "verified_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "186v", "locator_type": "folio_side", "folio": 186, "folio_side": "verso", "pdf_index": 389, "scan_side": "full", "verification_status": "verified_adjacent_rectos_and_content", "occurrences": 8, "citation_match_status": "sample_matched"},
+      {"locator": "187", "locator_type": "folio_side", "folio": 187, "folio_side": "recto", "pdf_index": 390, "scan_side": "full", "verification_status": "verified_visual", "occurrences": 7, "citation_match_status": "not_checked"},
+      {"locator": "187v", "locator_type": "folio_side", "folio": 187, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "188", "locator_type": "folio_side", "folio": 188, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 12, "citation_match_status": "not_checked"},
+      {"locator": "188v", "locator_type": "folio_side", "folio": 188, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "189", "locator_type": "folio_side", "folio": 189, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 4, "citation_match_status": "not_checked"},
+      {"locator": "204", "locator_type": "folio_side", "folio": 204, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "204v", "locator_type": "folio_side", "folio": 204, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "207", "locator_type": "folio_side", "folio": 207, "folio_side": "recto", "pdf_index": 430, "scan_side": "full", "verification_status": "verified_visual", "occurrences": 1, "citation_match_status": "sample_matched"},
+      {"locator": "208v", "locator_type": "folio_side", "folio": 208, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "217", "locator_type": "folio_side", "folio": 217, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 5, "citation_match_status": "not_checked"},
+      {"locator": "218", "locator_type": "folio_side", "folio": 218, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "218v", "locator_type": "folio_side", "folio": 218, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "219", "locator_type": "folio_side", "folio": 219, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "219v", "locator_type": "folio_side", "folio": 219, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 2, "citation_match_status": "not_checked"},
+      {"locator": "220", "locator_type": "folio_side", "folio": 220, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "221", "locator_type": "folio_side", "folio": 221, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "221v", "locator_type": "folio_side", "folio": 221, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 2, "citation_match_status": "not_checked"},
+      {"locator": "222", "locator_type": "folio_side", "folio": 222, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "222v", "locator_type": "folio_side", "folio": 222, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 4, "citation_match_status": "not_checked"},
+      {"locator": "223", "locator_type": "folio_side", "folio": 223, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 4, "citation_match_status": "not_checked"},
+      {"locator": "223v", "locator_type": "folio_side", "folio": 223, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 4, "citation_match_status": "not_checked"},
+      {"locator": "224", "locator_type": "folio_side", "folio": 224, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 6, "citation_match_status": "not_checked"},
+      {"locator": "224v", "locator_type": "folio_side", "folio": 224, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 5, "citation_match_status": "not_checked"},
+      {"locator": "225", "locator_type": "folio_side", "folio": 225, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 4, "citation_match_status": "not_checked"},
+      {"locator": "225v", "locator_type": "folio_side", "folio": 225, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 2, "citation_match_status": "not_checked"},
+      {"locator": "226", "locator_type": "folio_side", "folio": 226, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 5, "citation_match_status": "not_checked"},
+      {"locator": "226v", "locator_type": "folio_side", "folio": 226, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "228", "locator_type": "folio_side", "folio": 228, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 2, "citation_match_status": "not_checked"},
+      {"locator": "228v", "locator_type": "folio_side", "folio": 228, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "229", "locator_type": "folio_side", "folio": 229, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "229v", "locator_type": "folio_side", "folio": 229, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 7, "citation_match_status": "not_checked"},
+      {"locator": "230", "locator_type": "folio_side", "folio": 230, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "232", "locator_type": "folio_side", "folio": 232, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "232v", "locator_type": "folio_side", "folio": 232, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "233", "locator_type": "folio_side", "folio": 233, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 6, "citation_match_status": "not_checked"},
+      {"locator": "233v", "locator_type": "folio_side", "folio": 233, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 2, "citation_match_status": "not_checked"},
+      {"locator": "234", "locator_type": "folio_side", "folio": 234, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "234v", "locator_type": "folio_side", "folio": 234, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "235", "locator_type": "folio_side", "folio": 235, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "235v", "locator_type": "folio_side", "folio": 235, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "236", "locator_type": "folio_side", "folio": 236, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 2, "citation_match_status": "not_checked"},
+      {"locator": "236v", "locator_type": "folio_side", "folio": 236, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "237", "locator_type": "folio_side", "folio": 237, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 4, "citation_match_status": "not_checked"},
+      {"locator": "237v", "locator_type": "folio_side", "folio": 237, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "238", "locator_type": "folio_side", "folio": 238, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 2, "citation_match_status": "not_checked"},
+      {"locator": "238v", "locator_type": "folio_side", "folio": 238, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "239", "locator_type": "folio_side", "folio": 239, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 4, "citation_match_status": "not_checked"},
+      {"locator": "239v", "locator_type": "folio_side", "folio": 239, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 2, "citation_match_status": "not_checked"},
+      {"locator": "240", "locator_type": "folio_side", "folio": 240, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "240v", "locator_type": "folio_side", "folio": 240, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "241", "locator_type": "folio_side", "folio": 241, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "241v", "locator_type": "folio_side", "folio": 241, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 4, "citation_match_status": "not_checked"},
+      {"locator": "242", "locator_type": "folio_side", "folio": 242, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "242v", "locator_type": "folio_side", "folio": 242, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 4, "citation_match_status": "not_checked"},
+      {"locator": "243v", "locator_type": "folio_side", "folio": 243, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 2, "citation_match_status": "not_checked"},
+      {"locator": "244", "locator_type": "folio_side", "folio": 244, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 6, "citation_match_status": "not_checked"},
+      {"locator": "244v", "locator_type": "folio_side", "folio": 244, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 4, "citation_match_status": "not_checked"},
+      {"locator": "245", "locator_type": "folio_side", "folio": 245, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 5, "citation_match_status": "not_checked"},
+      {"locator": "245v", "locator_type": "folio_side", "folio": 245, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "246", "locator_type": "folio_side", "folio": 246, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 4, "citation_match_status": "not_checked"},
+      {"locator": "247", "locator_type": "folio_side", "folio": 247, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 8, "citation_match_status": "not_checked"},
+      {"locator": "247v", "locator_type": "folio_side", "folio": 247, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 7, "citation_match_status": "not_checked"},
+      {"locator": "248", "locator_type": "folio_side", "folio": 248, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 11, "citation_match_status": "not_checked"},
+      {"locator": "248v", "locator_type": "folio_side", "folio": 248, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 5, "citation_match_status": "not_checked"},
+      {"locator": "249", "locator_type": "folio_side", "folio": 249, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "249v", "locator_type": "folio_side", "folio": 249, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "250", "locator_type": "folio_side", "folio": 250, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "251", "locator_type": "folio_side", "folio": 251, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 2, "citation_match_status": "not_checked"},
+      {"locator": "251v", "locator_type": "folio_side", "folio": 251, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 8, "citation_match_status": "not_checked"},
+      {"locator": "252", "locator_type": "folio_side", "folio": 252, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 2, "citation_match_status": "not_checked"},
+      {"locator": "252v", "locator_type": "folio_side", "folio": 252, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 8, "citation_match_status": "not_checked"},
+      {"locator": "253", "locator_type": "folio_side", "folio": 253, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "253v", "locator_type": "folio_side", "folio": 253, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 4, "citation_match_status": "not_checked"},
+      {"locator": "255", "locator_type": "folio_side", "folio": 255, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 5, "citation_match_status": "not_checked"},
+      {"locator": "255v", "locator_type": "folio_side", "folio": 255, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 6, "citation_match_status": "not_checked"},
+      {"locator": "256", "locator_type": "folio_side", "folio": 256, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "257v", "locator_type": "folio_side", "folio": 257, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 2, "citation_match_status": "not_checked"},
+      {"locator": "258", "locator_type": "folio_side", "folio": 258, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "260v", "locator_type": "folio_side", "folio": 260, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "267v", "locator_type": "folio_side", "folio": 267, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "274", "locator_type": "folio_side", "folio": 274, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "275", "locator_type": "folio_side", "folio": 275, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "275v", "locator_type": "folio_side", "folio": 275, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "283", "locator_type": "folio_side", "folio": 283, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 4, "citation_match_status": "not_checked"},
+      {"locator": "283v", "locator_type": "folio_side", "folio": 283, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 2, "citation_match_status": "not_checked"},
+      {"locator": "288v", "locator_type": "folio_side", "folio": 288, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 2, "citation_match_status": "not_checked"},
+      {"locator": "289", "locator_type": "folio_side", "folio": 289, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 4, "citation_match_status": "not_checked"},
+      {"locator": "294", "locator_type": "folio_side", "folio": 294, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "298", "locator_type": "folio_side", "folio": 298, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "300", "locator_type": "folio_side", "folio": 300, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "305", "locator_type": "folio_side", "folio": 305, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "305v", "locator_type": "folio_side", "folio": 305, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "306v", "locator_type": "folio_side", "folio": 306, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "316v", "locator_type": "folio_side", "folio": 316, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 6, "citation_match_status": "not_checked"},
+      {"locator": "317", "locator_type": "folio_side", "folio": 317, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "318v", "locator_type": "folio_side", "folio": 318, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 2, "citation_match_status": "not_checked"},
+      {"locator": "319", "locator_type": "folio_side", "folio": 319, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 2, "citation_match_status": "not_checked"},
+      {"locator": "319v", "locator_type": "folio_side", "folio": 319, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 2, "citation_match_status": "not_checked"},
+      {"locator": "323", "locator_type": "folio_side", "folio": 323, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "327", "locator_type": "folio_side", "folio": 327, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 2, "citation_match_status": "not_checked"},
+      {"locator": "341v", "locator_type": "folio_side", "folio": 341, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 11, "citation_match_status": "not_checked"},
+      {"locator": "342", "locator_type": "folio_side", "folio": 342, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 18, "citation_match_status": "not_checked"},
+      {"locator": "349v", "locator_type": "folio_side", "folio": 349, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "350", "locator_type": "folio_side", "folio": 350, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 11, "citation_match_status": "not_checked"},
+      {"locator": "351v", "locator_type": "folio_side", "folio": 351, "folio_side": "verso", "pdf_index": 719, "scan_side": "full", "verification_status": "verified_adjacent_rectos_and_content", "occurrences": 6, "citation_match_status": "sample_matched"},
+      {"locator": "353", "locator_type": "folio_side", "folio": 353, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 9, "citation_match_status": "not_checked"},
+      {"locator": "357", "locator_type": "folio_side", "folio": 357, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 3, "citation_match_status": "not_checked"},
+      {"locator": "357v", "locator_type": "folio_side", "folio": 357, "folio_side": "verso", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "359", "locator_type": "folio_side", "folio": 359, "folio_side": "recto", "pdf_index": null, "scan_side": "full", "verification_status": "pending_visual", "occurrences": 1, "citation_match_status": "not_checked"},
+      {"locator": "362", "locator_type": "folio_side", "folio": 362, "folio_side": "recto", "pdf_index": 740, "scan_side": "full", "verification_status": "verified_sequence_and_content_with_misprint", "occurrences": 1, "citation_match_status": "sample_matched", "printed_number": "392"},
+      {"locator": null, "locator_type": "work_only", "pdf_index": null, "scan_side": null, "verification_status": "unlocated", "occurrences": 1, "entry_index": 2686, "headword": "akarapeba", "raw_citation": "D'Abbeville, Histoire", "citation_match_status": "not_checked"},
+      {"locator": "XLVI", "locator_type": "roman_locator", "pdf_index": null, "scan_side": null, "verification_status": "pending_chapter_disambiguation", "occurrences": 1, "entry_index": 4749, "headword": "îandûaba", "raw_citation": "D'Abbeville, Histoire, XLVI", "citation_match_status": "not_checked"},
+      {"locator": "LI", "locator_type": "roman_locator", "pdf_index": null, "scan_side": null, "verification_status": "pending_chapter_disambiguation", "occurrences": 1, "entry_index": 9532, "headword": "sapukaî", "raw_citation": "D'Abbeville, Histoire, LI", "citation_match_status": "not_checked"},
+      {"locator": "cap. LI", "locator_type": "chapter", "pdf_index": null, "scan_side": null, "verification_status": "pending_chapter_disambiguation", "occurrences": 1, "entry_index": 11042, "headword": "ybakuna", "raw_citation": "D'Abbeville, Histoire, cap. LI", "citation_match_status": "not_checked"}
+    ],
+    "unresolved": [
+      {
+        "type": "incomplete_foliation_map",
+        "targets": "All pending_visual targets",
+        "action": "Verify every cited recto and verso; retain the raw printed numeral and logical folio label as separate fields when the printer erred. Inventory repeated/skipped numbers and plates. Do not trust IA leafNum or the 846/848 catalog count as a page offset."
+      },
+      {
+        "type": "known_printer_error",
+        "logical_folio": "362",
+        "printed_number": "392",
+        "pdf_index": 740,
+        "scan_side": "full",
+        "verification_status": "verified_sequence_and_content_with_misprint",
+        "entry_index": 5426,
+        "headword": "Itapuku",
+        "raw_citation": "D'Abbeville, Histoire, 362",
+        "evidence": "Physical foliation 361, 392, 363 at PDF indices 738, 740, 742; IA metadata labels middle leaf 362. Heading Du premier Indien nommé Itapoucou and iron-bar gloss match the dictionary.",
+        "action": "Preserve citation 362 and document the printer’s 392. Do not map 362 to the later actual logical 392 leaf and do not alter the scanned image."
+      },
+      {
+        "type": "chapter_locator",
+        "targets": [
+          "XLVI",
+          "LI",
+          "cap. LI"
+        ],
+        "entry_indices": [
+          4749,
+          9532,
+          11042
+        ],
+        "action": "Use the table of chapters, the full dictionary definition and the chapter text to locate each passage; do not convert XLVI or LI into an Arabic folio number."
+      },
+      {
+        "type": "unlocated",
+        "entry_index": 2686,
+        "headword": "akarapeba",
+        "raw_citation": "D'Abbeville, Histoire",
+        "action": "Keep unlinked until a passage is located and recorded with evidence."
+      },
+      {
+        "type": "range",
+        "raw_locator": "341v-342",
+        "action": "Preserve mixed-face range order 341v then 342r, verify both targets; never parse this as an integer-only page range."
+      }
+    ]
+  },
+  "citation_baseline": {
+    "input_path": "docs/dict-conjugated.json.gz",
+    "uncompressed_sha256": "8906cb4ddd292db7d67901ec9fb3c288d94b9baf9ae9cb35cb1d8a4a30e8e02e",
+    "audit_path": "docs/primary_sources/source_citation_audit.jsonl.gz",
+    "audit_uncompressed_sha256": "ac32d0d42a163114ca5ebb04e5a94d0a2f37a6c6785e27c863cb51b518ed33e0",
+    "explicit_occurrences": 449,
+    "records": 439,
+    "counting": "Each explicit catalogued citation occurrence, including repeated occurrences within one dictionary record. Expanded target counts can exceed occurrence counts for ranges/lists.",
+    "numeric_folio_occurrences": 445,
+    "distinct_numeric_targets": 135,
+    "roman_chapter_or_unlocated_occurrences": 4
+  },
+  "render_plan": {
+    "activation": "Follow-up after Figueira/Castilho and completion of the foliation map; large-book storage gate required.",
+    "commit_source_pdf": false,
+    "commit_generated_images_in_this_pr": false,
+    "layout": "One individual folio-side image per PDF page; preserve margins containing glosses and comments. The small physical PDF page size requires a pixel-width target rather than copied DPI.",
+    "production_width_px": null,
+    "production_jpeg_quality": null,
+    "sample_only": {
+      "samples": [
+        {
+          "locator": "186v",
+          "pdf_index": 389,
+          "scan_side": "full",
+          "width": 1600,
+          "height": 2448,
+          "bytes": 551827
+        },
+        {
+          "locator": "207",
+          "pdf_index": 430,
+          "scan_side": "full",
+          "width": 1600,
+          "height": 2448,
+          "bytes": 610586
+        },
+        {
+          "locator": "351v",
+          "pdf_index": 719,
+          "scan_side": "full",
+          "width": 1600,
+          "height": 2448,
+          "bytes": 610017
+        },
+        {
+          "locator": "362",
+          "pdf_index": 740,
+          "scan_side": "full",
+          "width": 1600,
+          "height": 2448,
+          "bytes": 577229
+        }
+      ],
+      "mean_bytes": 587415,
+      "median_bytes": 593623,
+      "min_bytes": 551827,
+      "max_bytes": 610586,
+      "width_target": 1600,
+      "jpeg_quality": 85
+    },
+    "sample_projection": {
+      "full_pdf_pages": 846,
+      "estimated_jpeg_bytes": 496953090,
+      "cited_folio_side_targets": 135,
+      "estimated_numeric_cited_jpeg_bytes": 79301025,
+      "qualification": "Linear estimate from 4 selected pages, not a full render and not a recommended production setting. Cited-only estimate omits chapter-only references, title and navigation needs.",
+      "calculation": "Each projected byte total is the page count multiplied by sample_only.mean_bytes. The sample mean is rounded to the nearest whole byte before projection; totals are approximate."
+    },
+    "storage_gate": "The full 846-page sample projection is about 497 MB before other assets, exceeding the room remaining in the existing approximately 720 MB gh-pages tree under a conservative 1 GB cap. Measure complete built output and settle an asset strategy before bulk conversion. Any sparse set must have explicit available-label navigation."
+  },
+  "local_agent_actions": [
+    "Start a separate branch from current merged main and read repository instructions and existing folio/range behavior before editing the linker.",
+    "Download the pinned 846-page PDF and metadata outside Git; verify SHA256 and the engraved 1614 Paris Huby title. Do not assume the 848 catalog count equals PDF pages.",
+    "Recompute the citation baseline and include D'Abbeville, D'Abbéville and D'abbeville spellings without changing display text.",
+    "Build an explicit logical-folio+face to PDF index map, verifying all 135 numeric targets and required neighbors. Record the 362/392 printer error and inspect any other discrepancies.",
+    "Resolve the 3 Roman/chapter references and the 1 unlocated work citation by passage evidence; keep them unlinked while unestablished.",
+    "Use source-text/OCR only to find candidate pages; verify each anchor and difficult accent from the facsimile image.",
+    "Estimate assets using representative prose, marginalia and Tupinamba text. Tune rendering dimensions/quality and measure total final Pages output before rendering/committing the full book.",
+    "Enable only targets that have verified mappings and actual assets; implement recto/verso and mixed-face range 341v-342 navigation using available page labels.",
+    "Open a separate implementation PR with the live map, provenance, intended assets, integration changes, mobile/desktop readability checks, citation cases and existing-source regression results. This research JSON must not be loaded as a render manifest."
+  ]
+}
