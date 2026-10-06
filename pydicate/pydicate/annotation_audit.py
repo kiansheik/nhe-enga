@@ -23,6 +23,8 @@ NODE_RELATIONS = (
     "principal",
     "_augmentee",
     "_augmentor",
+    "incorporated_object",
+    "source_verb",
     "_subject",
     "_nominalization_source",
     "verb",

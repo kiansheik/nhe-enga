@@ -254,7 +254,9 @@ class QuantifiedNominalArgumentTest(unittest.TestCase):
         from pydicate.lang.tupilang.pos import Number, Particle, nduara, esé
 
         number = Number("sete")
-        derived = nduara * (esé * (Noun("abá") * Noun("eté", definition="(t) (s.) corpo")))
+        derived = nduara * (
+            esé * (Noun("abá") * Noun("eté", definition="(t) (s.) corpo"))
+        )
         phrase = number * derived
         say = Verb("'i")
         result = Particle("nã") >> (phrase * say)
@@ -266,8 +268,9 @@ class QuantifiedNominalArgumentTest(unittest.TestCase):
         self.assertEqual(len(phrase.arguments), 1)
         self.assertEqual(len(number.arguments), 0)
         self.assertEqual(len(say.arguments), 0)
-        self.assertEqual((Particle("nã") >> (derived * say)).eval(),
-                         "abá reté reséndûara nã e'i")
+        self.assertEqual(
+            (Particle("nã") >> (derived * say)).eval(), "abá reté reséndûara nã e'i"
+        )
 
     def test_ordinary_nominal_and_transitive_object_contrast(self):
         from pydicate.lang.tupilang.pos import Number
@@ -294,18 +297,22 @@ class IrregularAgentNominalTest(unittest.TestCase):
         varied = regular.var(1)
         self.assertEqual(regular.eval(), "gûatasara")
         self.assertEqual(varied.eval(), "atara")
-        self.assertEqual(varied.eval(True),
-                         "at[ROOT]ar[ABSOLUTE_AGENT_SUFFIX]"
-                         "a[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING]")
+        self.assertEqual(
+            varied.eval(True),
+            "at[ROOT]ar[ABSOLUTE_AGENT_SUFFIX]"
+            "a[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING]",
+        )
         self.assertEqual(varied.var(0).eval(), "gûatasara")
         self.assertEqual(verb.eval(), "gûatá")
         self.assertEqual(varied.arguments[0].definition, "andar")
-        self.assertEqual((sara * Verb("îeruré", verb_class="(v. intr.)"))
-                         .var(1).eval(), "îeruresara")
-        result = (varied * (mo.var(2) * Verb("pytá", verb_class="(v. intr.)"))).base_nominal()
+        self.assertEqual(
+            (sara * Verb("îeruré", verb_class="(v. intr.)")).var(1).eval(), "îeruresara"
+        )
+        result = (
+            varied * (mo.var(2) * Verb("pytá", verb_class="(v. intr.)"))
+        ).base_nominal()
         self.assertEqual(result.eval(), "ataramombytá")
         self.assertIn("at[ROOT]ar[ABSOLUTE_AGENT_SUFFIX]", result.eval(True))
-
 
     def test_explicit_atara_variant_and_contrasts(self):
         # Studio pending Araújo draft, 2026-09-30: contributor's proposal,
@@ -320,12 +327,17 @@ class IrregularAgentNominalTest(unittest.TestCase):
         self.assertEqual(AnnotatedString(varied.eval(True)).get_clean(), "atara")
         self.assertEqual(varied.var(0).eval(), "gûatasara")
         self.assertEqual(varied.definition, nominal.definition)
-        self.assertEqual(varied._nominalization_source.eval(),
-                         nominal._nominalization_source.eval())
+        self.assertEqual(
+            varied._nominalization_source.eval(), nominal._nominalization_source.eval()
+        )
         self.assertEqual(verb.base_nominal().var(1).eval(), "gûatá")
         self.assertEqual(
             (Verb("îeruré", verb_class="(v. intr.)") / sara)
-            .base_nominal().var(1).eval(), "îeruresara")
+            .base_nominal()
+            .var(1)
+            .eval(),
+            "îeruresara",
+        )
         self.assertEqual(Noun("gûatasara").var(1).eval(), "gûatasara")
 
 
@@ -345,8 +357,7 @@ class EmiAbsoluteVariantTest(unittest.TestCase):
         self.assertEqual(varied.var(0).eval(), regular.eval())
         self.assertEqual(varied.arguments[0].definition, love.definition)
         for possessor in (nde, og):
-            self.assertEqual((possessor * varied).eval(),
-                             (possessor * regular).eval())
+            self.assertEqual((possessor * varied).eval(), (possessor * regular).eval())
         self.assertEqual((pyra * love).var(1).eval(), (pyra * love).eval())
         result = (Verb("enosem") * (pyra * (varied * mo))).base_nominal()
         self.assertEqual(result.eval(), "imomiaûsupyrarenosema")
@@ -377,7 +388,12 @@ class ObjectBoundNominalAbsoluteTest(unittest.TestCase):
         # definition also cites Bettendorff, Compêndio 23. Not approval.
         from pydicate.lang.tupilang.pos import bae, moro
 
-        verb = Verb(value='enonhen', verb_class='(s) (v.tr.)', definition="(ou enonhẽ) (s) (v.tr.) - 1) repreender; corrigir, doutrinar em costumes (p.ex., o pai ao filho): Enonhẽ, eîakaká, t'oîepysyrõ-motá anhanga ratá suí. - Corrige-os, censura-os, para que queiram livrar-se do inferno. (Anch., Poemas, 158); Morubixaba tuîba'e onhe'eng memẽ i xupé, senonhena, i akakapa. - Os chefes velhos falam sempre a eles, repreendendo-os, censurando-os. (Anch., Teatro, 34); 2) reprimir: Mba'e-aí-potara renonhena. - Reprimir o desejo de coisas más. (Ar., Cat., 19v) ● enonhẽndara (t) - o repreensor, o que corrige, o que repreende: E'ikatu ipó senonhẽndarama supé é... - Pode certamente (contá-lo) para quem o repreenderá. (Ar., Cat., 73v)", vid=4050)
+        verb = Verb(
+            value="enonhen",
+            verb_class="(s) (v.tr.)",
+            definition="(ou enonhẽ) (s) (v.tr.) - 1) repreender; corrigir, doutrinar em costumes (p.ex., o pai ao filho): Enonhẽ, eîakaká, t'oîepysyrõ-motá anhanga ratá suí. - Corrige-os, censura-os, para que queiram livrar-se do inferno. (Anch., Poemas, 158); Morubixaba tuîba'e onhe'eng memẽ i xupé, senonhena, i akakapa. - Os chefes velhos falam sempre a eles, repreendendo-os, censurando-os. (Anch., Teatro, 34); 2) reprimir: Mba'e-aí-potara renonhena. - Reprimir o desejo de coisas más. (Ar., Cat., 19v) ● enonhẽndara (t) - o repreensor, o que corrige, o que repreende: E'ikatu ipó senonhẽndarama supé é... - Pode certamente (contá-lo) para quem o repreenderá. (Ar., Cat., 73v)",
+            vid=4050,
+        )
         obj = bae * (Verb("ikó") / Noun("memûã"))
         nominal = (obj * verb).base_nominal()
         self.assertEqual(nominal.eval(), "oîkomemûãba'erenonhena")
