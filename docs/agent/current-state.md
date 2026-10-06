@@ -5,7 +5,9 @@
 - The implementation branch `devreux-primary-source` adds the complete
   444-page 1929 *Viagem ao Norte do Brasil* scan under
   `docs/primary_sources/evreux1929/`, with checksum-validated provenance and a
-  reproducible whole-page renderer. The PDF itself remains outside Git.
+  reproducible whole-page renderer. The PDF itself remains outside Git. The
+  implementation is awaiting review in
+  [PR #25](https://github.com/kiansheik/nhe-enga/pull/25).
 - `linkSources()` now links all 120 explicit `D'Evreux, Viagem` citations in
   113 dictionary records. The 121 anchors cover the 42 verified printed pages;
   range endpoints remain separate, displayed citation text is unchanged, and

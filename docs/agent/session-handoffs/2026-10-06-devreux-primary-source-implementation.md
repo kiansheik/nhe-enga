@@ -7,6 +7,8 @@ Portuguese edition, link the dictionary’s explicit `D'Evreux, Viagem`
 citations, extend the primary-source viewer and Pages build, produce a
 repeatable source inventory, validate the real workflow, and stop for review.
 
+Implementation review: [PR #25](https://github.com/kiansheik/nhe-enga/pull/25).
+
 No other source, dictionary definition, morphology code, corpus ground truth,
 deployment, or merge was authorized.
 
