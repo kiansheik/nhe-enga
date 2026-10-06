@@ -1,5 +1,21 @@
 # Agent Log
 
+## 2026-10-06 — Figueira and Castilho primary-source implementation
+
+Implemented the first two books from PR #26's verified research plan on a
+dependent review branch. Added the complete 200-image Figueira scan and 16
+Castilho page-side crops, production manifests, reproducible target-width/crop
+rendering, citation links, manifest-driven viewer behavior, Pages inclusion,
+inventory coverage and regression tests. All 622 Figueira citations and 215
+Castilho citations link without changing displayed text. The lone
+`Fig., Arte, 1686, 64` label stays verbatim and now opens the exact *çoába*
+passage with a visible 1687-edition warning. Independent rerendering matched
+all 216 JPEGs byte for byte; 12 Node tests, six Pages-size tests, lint, syntax
+checks and the full 777,563,987-byte Pages build pass. Real Chromium desktop
+and 400px checks covered both books, mapping labels, sparse navigation and
+readability. PDFs remain outside Git; nothing was deployed or merged. Sousa
+and D’Abbeville remain explicitly deferred for mapping/content/storage review.
+
 ## 2026-10-06 — D’Evreux 1929 primary-source pilot
 
 Implemented the reviewed D’Evreux pilot without changing dictionary data,

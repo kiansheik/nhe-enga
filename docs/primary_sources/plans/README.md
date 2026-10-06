@@ -1,29 +1,26 @@
 # Next primary sources: groundwork for the local agent
 
 The D’Evreux pilot is merged in [PR #25](https://github.com/kiansheik/nhe-enga/pull/25).
-This follow-up prepares **Figueira, Castilho, Sousa, and D’Abbeville** for local
+This follow-up prepared **Figueira, Castilho, Sousa, and D’Abbeville** for local
 implementation. It supplies exact-edition acquisition records, PDF checksums,
 page/folio research, cited targets, unresolved references, and storage checks.
-It adds no new book images or live citation links.
+Figueira and Castilho are now implemented for review; Sousa and D’Abbeville
+remain research plans and have no live images or citation links.
 
 Research starts from main commit `81c21de3f444983630a06ffc252e821c03dffb35`.
 Read `AGENTS.md` and `CLAUDE.md` before implementing. This task concerns source
 assets and citation display; dictionary definitions, corpus ground truth, and
 morphology are not inputs to rewrite to make a citation fit a scan.
 
-## Start here
+## Implementation boundary
 
-> Read `docs/primary_sources/plans/README.md` and the four source-plan JSON
-> files beside it. Implement Figueira and Castilho first, using the merged
-> D’Evreux code as the baseline. Download each pinned PDF outside the repo,
-> verify its checksum, use the verified locator maps, and prepare readable
-> web images with per-book render settings. Extend the existing viewer,
-> linker, and Pages copy pipeline, run the size preflight on the complete
-> optimized artifact, and open a reviewable implementation PR. Keep Sousa
-> and D’Abbeville as the next stages: resolve their explicitly pending
-> mappings/content discrepancies and measure storage before adding assets.
-> Preserve the original citation text and keep every unresolved case visible.
-> Do not merge or deploy the implementation PR as part of this task.
+The Figueira/Castilho implementation uses production manifests under
+`docs/primary_sources/{figueira1878,castilho1937}/`; the JSON files in this
+directory remain research records. Review and merge that implementation before
+starting another book. Sousa and D’Abbeville are the next stages: resolve their
+explicitly pending mappings/content discrepancies and measure storage before
+adding assets. Preserve original citation text, keep unresolved cases visible,
+and do not merge or deploy without an explicit review decision.
 
 ### Plans and expected coverage
 
@@ -34,7 +31,7 @@ checksum changes; these counts are not a license to force ambiguous matches.
 
 | Order | Plan | Edition Navarro specifies | Explicit citations / records | Main implementation issue |
 | --- | --- | --- | ---: | --- |
-| 1 | [figueira1878.json](figueira1878.json) | Lisbon 1687, in Platzmann’s Leipzig 1878 facsimile | 622 / 455 | 117 unambiguous cited printed pages checked; one `1686, 64` citation remains unresolved. |
+| 1 | [figueira1878.json](figueira1878.json) | Lisbon 1687, in Platzmann’s Leipzig 1878 facsimile | 622 / 455 | All 117 distinct cited pages checked; `1686, 64` is linked with a visible probable-year-typo warning after passage collation. |
 | 2 | [castilho1937.json](castilho1937.json) | Plínio Ayrosa’s 1937 edition of Castilho’s *Nomes* | 215 / 162 | All 16 cited page/side targets checked; inserted facsimiles break a constant spread offset. |
 | 3 | [sousa1987.json](sousa1987.json) | Fifth edition, Companhia Editora Nacional, 1987 | 394 / 389 | Two-page spreads, 18 chapter/Roman-numeral references, and sampled quotation/page discrepancies. |
 | 4 | [abbeville1614.json](abbeville1614.json) | Paris, François Huby, 1614 | 449 / 439 | Recto/verso folios, numbering errors, and PDF indices differing from catalog scan counts. |
@@ -88,9 +85,12 @@ cited printed-page targets have been checked, using header OCR with a visual
 check where OCR split the digits on p. 133. This does not claim that all 200
 leaves or every quotation have been visually examined.
 
-Keep `Fig., Arte, 1686, 64` in the unresolved list; it cannot be silently
-reinterpreted as an ordinary 1687 citation just because p. 64 exists. Page
-ranges and the inherited numeric continuation are separate parsing cases.
+`Fig., Arte, 1686, 64` is retained verbatim but can be linked with a visible
+year-discrepancy warning. Navarro's bibliography and authoritative catalogs
+identify the relevant second edition as 1687, no separate 1686 edition was
+found, and p. 64 of the selected 1687/1878 text contains the exact *çoába*
+statement described by the dictionary. Page ranges and the inherited numeric
+continuation remain separate parsing cases.
 
 The scan’s roughly 2264 × 3256 pixel body images are embedded on physically
 small PDF pages. D’Evreux’s 120 dpi would render this book at only about 452

@@ -67,6 +67,7 @@
     <header id="sourceDetails" hidden>
         <h1 id="sourceTitle"></h1>
         <p id="sourceEdition"></p>
+        <p id="sourceNotice" role="note" hidden></p>
         <p>
             <a id="sourceInfo" target="_blank" rel="noopener">Digitalização: Biblioteca Digital Curt Nimuendajú — Coleção Nicolai</a>
             · <a id="sourcePdf" target="_blank" rel="noopener">Abrir PDF nesta página</a>
@@ -131,7 +132,9 @@
             arcat1618: ".png",
             betcomp: ".jpg",
             cartas_portiguara: ".jpg",
+            castilho1937: ".jpg",
             evreux1929: ".jpg",
+            figueira1878: ".jpg",
             lerhist: ".jpg",
             vlb: ".png",
         };
@@ -153,47 +156,171 @@
         function imageFormatForBook(name) {
             return imageFormats[name] || defaultImageFormats[name] || ".png";
         }
-        // Get the query parameters from the URL
+        const manifestBookNames = new Set(["figueira1878", "castilho1937"]);
         const urlParams = new URLSearchParams(window.location.search);
         let bookName = urlParams.get('book_name');
-        const edition = Object.prototype.hasOwnProperty.call(sourceEditions, bookName) ? sourceEditions[bookName] : null;
+        let edition = Object.prototype.hasOwnProperty.call(sourceEditions, bookName) ? sourceEditions[bookName] : null;
+        let sourceManifest = null;
+        let manifestTargets = [];
+        let manifestPosition = 0;
         let pageNumber;
         let pn;
         let isZoomed = false;
-        if (bookName === 'vlb') {
-            pageNumber = parseInt(urlParams.get('page_number'), 10);
-        }
-        if (bookName === 'betcomp') {
-            pageNumber = parseInt(urlParams.get('page_number'), 10);
-        }
-        if (bookName === 'lerhist') {
-            pageNumber = parseInt(urlParams.get('page_number'), 10);
-        } else if (bookName === 'arcat1618') {
-            pageNumber = generateArcat1618Page(urlParams.get('page_number'))
-        } else if (bookName === 'ancharte') {
-            let pn = urlParams.get('page_number').replace('v', 'a');
-            // Find the index of the page number in the page map
-            if (pn.replace('a', '').length < 2) {
-                pn = '0' + pn;
-            }
-            pageNumber = anchieta_arte_page_map.findIndex((pages) => pages.includes(pn));
-            // Add a link to the text version here: http://www.etnolinguistica.org/arte:02a/
-        }
-        if (edition) {
-            const requestedPage = urlParams.get('page_number');
-            const parsedPage = /^-?\d+$/.test(requestedPage || '') ? Number(requestedPage) : 1;
-            pageNumber = Math.min(edition.lastScan, Math.max(edition.firstScan, parsedPage));
+
+        function showSourceDetails(title, editionText, catalogUrl, credit) {
             document.getElementById('sourceDetails').hidden = false;
-            document.getElementById('sourceTitle').textContent = edition.title;
-            document.getElementById('sourceEdition').textContent = edition.edition;
-            document.getElementById('sourceInfo').href = edition.bibliographyUrl;
+            document.getElementById('sourceTitle').textContent = title;
+            document.getElementById('sourceEdition').textContent = editionText;
+            const sourceInfo = document.getElementById('sourceInfo');
+            sourceInfo.href = catalogUrl;
+            sourceInfo.textContent = `Digitalização: ${credit}`;
+        }
+
+        function initializeLegacyViewer() {
+            if (bookName === 'vlb' || bookName === 'betcomp' || bookName === 'lerhist') {
+                pageNumber = parseInt(urlParams.get('page_number'), 10);
+            } else if (bookName === 'arcat1618') {
+                pageNumber = generateArcat1618Page(urlParams.get('page_number'));
+            } else if (bookName === 'ancharte') {
+                let requested = urlParams.get('page_number').replace('v', 'a');
+                if (requested.replace('a', '').length < 2) {
+                    requested = '0' + requested;
+                }
+                pageNumber = anchieta_arte_page_map.findIndex((pages) => pages.includes(requested));
+            }
+            if (edition) {
+                const requestedPage = urlParams.get('page_number');
+                const parsedPage = /^-?\d+$/.test(requestedPage || '') ? Number(requestedPage) : 1;
+                pageNumber = Math.min(edition.lastScan, Math.max(edition.firstScan, parsedPage));
+                showSourceDetails(
+                    edition.title,
+                    edition.edition,
+                    edition.bibliographyUrl,
+                    'Biblioteca Digital Curt Nimuendajú — Coleção Nicolai',
+                );
+                updateUrl();
+            }
+        }
+
+        async function loadSourceManifest() {
+            if (!manifestBookNames.has(bookName)) return;
+            const response = await fetch(`/nhe-enga/docs/primary_sources/${bookName}/source.json`);
+            if (!response.ok) throw new Error('source manifest unavailable');
+            sourceManifest = await response.json();
+            edition = sourceManifest;
+            const editionText = bookName === 'castilho1937'
+                ? `${sourceManifest.edition} · somente as 16 páginas citadas estão armazenadas`
+                : `${sourceManifest.edition} · volume completo`;
+            showSourceDetails(
+                `${sourceManifest.author} — ${sourceManifest.title}`,
+                editionText,
+                sourceManifest.catalog_url,
+                sourceManifest.digitization_credit,
+            );
+            if (bookName === 'figueira1878' && urlParams.get('citation_year') === '1686') {
+                const notice = document.getElementById('sourceNotice');
+                notice.textContent = 'Nota sobre a citação: o dicionário conserva “1686”, mas a bibliografia e os catálogos identificam esta edição como 1687; o trecho citado foi conferido nesta página 64.';
+                notice.hidden = false;
+            }
+            const requestedPage = urlParams.get('page_number');
+            if (sourceManifest.pagination?.navigation === 'complete_scan') {
+                const pagination = sourceManifest.pagination;
+                const requestedPrinted = /^\d+$/.test(requestedPage || '') ? Number(requestedPage) : null;
+                const requestedScanValue = urlParams.get('scan');
+                const requestedScan = /^\d+$/.test(requestedScanValue || '') ? Number(requestedScanValue) : null;
+                if (urlParams.has('page_number')
+                    && (requestedPrinted === null
+                        || requestedPrinted < pagination.first_printed_page
+                        || requestedPrinted > pagination.last_printed_page)) {
+                    throw new Error('printed page is outside the verified map');
+                }
+                if (urlParams.has('scan')
+                    && (requestedScan === null
+                        || requestedScan < sourceManifest.images.first_index
+                        || requestedScan > sourceManifest.images.last_index)) {
+                    throw new Error('scan is outside the stored volume');
+                }
+                if (requestedPrinted !== null) {
+                    pageNumber = requestedPrinted + pagination.printed_page_to_pdf_index_offset;
+                } else if (requestedScan !== null) {
+                    pageNumber = requestedScan;
+                } else {
+                    pageNumber = sourceManifest.images.first_index;
+                }
+            } else {
+                manifestTargets = sourceManifest.mapping.targets;
+                const requestedPosition = manifestTargets.findIndex((target) => target.locator === requestedPage);
+                if (urlParams.has('page_number') && requestedPosition < 0) {
+                    throw new Error('printed page is outside the verified map');
+                }
+                manifestPosition = requestedPosition >= 0 ? requestedPosition : 0;
+                pageNumber = manifestTargets[manifestPosition].pdf_index;
+                document.getElementById('prevPage').textContent = 'Página citada anterior';
+                document.getElementById('nextPage').textContent = 'Próxima página citada';
+            }
             updateUrl();
         }
+
+        function currentManifestTarget() {
+            if (!sourceManifest) return null;
+            if (sourceManifest.pagination?.navigation === 'complete_scan') {
+                const pagination = sourceManifest.pagination;
+                const printedPage = pageNumber - pagination.printed_page_to_pdf_index_offset;
+                return {
+                    locator: printedPage >= pagination.first_printed_page && printedPage <= pagination.last_printed_page
+                        ? String(printedPage) : null,
+                    printed_page: printedPage,
+                    pdf_index: pageNumber,
+                    pdf_ordinal: pageNumber + 1,
+                    image: `${pageNumber}${imageFormatForBook(bookName)}`,
+                    scan_side: 'full',
+                };
+            }
+            return manifestTargets[manifestPosition];
+        }
+
         function updateUrl() {
+            if (sourceManifest) {
+                const target = currentManifestTarget();
+                if (target.locator !== null) {
+                    urlParams.set('page_number', target.locator);
+                    urlParams.delete('scan');
+                } else {
+                    urlParams.delete('page_number');
+                    urlParams.set('scan', String(target.pdf_index));
+                }
+                if (bookName === 'figueira1878' && target.locator !== '64') {
+                    urlParams.delete('citation_year');
+                    document.getElementById('sourceNotice').hidden = true;
+                }
+                window.history.replaceState(null, '', `${window.location.pathname}?${urlParams}`);
+                return;
+            }
             urlParams.set('page_number', calculateNFromPage(pageNumber));
             window.history.replaceState(null, '', `${window.location.pathname}?${urlParams}`);
         }
+
         function pageLabel() {
+            if (sourceManifest) {
+                const target = currentManifestTarget();
+                if (bookName === 'castilho1937') {
+                    const side = target.scan_side === 'left' ? 'lado esquerdo' : 'lado direito';
+                    return `Página impressa ${target.printed_page} · ${side} · PDF página ${target.pdf_ordinal}`;
+                }
+                const pagination = sourceManifest.pagination;
+                if (pageNumber === pagination.title_page_index) {
+                    return `Folha de rosto de 1878 · imagem ${pageNumber + 1} de ${sourceManifest.pdf.page_count}`;
+                }
+                if (target.locator !== null) {
+                    return `Página impressa ${target.printed_page} de ${pagination.last_printed_page} · PDF página ${target.pdf_ordinal}`;
+                }
+                if (pageNumber === pagination.errata_index) {
+                    return `Errata sem numeração · PDF página ${target.pdf_ordinal}`;
+                }
+                const section = pageNumber < pagination.first_printed_page + pagination.printed_page_to_pdf_index_offset
+                    ? 'Preliminar sem numeração' : 'Pós-texto sem numeração';
+                return `${section} · imagem ${pageNumber + 1} de ${sourceManifest.pdf.page_count}`;
+            }
             if (edition) {
                 if (pageNumber === edition.firstScan) return 'Capa (sem numeração)';
                 if (pageNumber < edition.firstPrintedPage) return `Preliminares ${pageNumber} de ${edition.firstPrintedPage - 1} (sem numeração)`;
@@ -229,7 +356,9 @@
                 nav.appendChild(text_link);
             }
 
-            const imageUrl = `/nhe-enga/docs/primary_sources/${bookName}/${pageNumber}${imageFormatForBook(bookName)}`;
+            const manifestTarget = currentManifestTarget();
+            const imageName = manifestTarget ? manifestTarget.image : `${pageNumber}${imageFormatForBook(bookName)}`;
+            const imageUrl = `/nhe-enga/docs/primary_sources/${bookName}/${imageName}`;
             const image = document.createElement('img');
             image.id = 'pageImage';
             image.src = imageUrl;
@@ -240,10 +369,21 @@
                 document.getElementById('imageError').hidden = false;
             });
             document.getElementById('currentPage').textContent = pageLabel();
-            document.getElementById('prevPage').disabled = pageNumber <= (edition ? edition.firstScan : 1);
-            document.getElementById('nextPage').disabled = edition ? pageNumber >= edition.lastScan : false;
+            if (sourceManifest?.pagination?.navigation === 'complete_scan') {
+                document.getElementById('prevPage').disabled = pageNumber <= sourceManifest.images.first_index;
+                document.getElementById('nextPage').disabled = pageNumber >= sourceManifest.images.last_index;
+            } else if (sourceManifest) {
+                document.getElementById('prevPage').disabled = manifestPosition === 0;
+                document.getElementById('nextPage').disabled = manifestPosition === manifestTargets.length - 1;
+            } else {
+                document.getElementById('prevPage').disabled = pageNumber <= (edition ? edition.firstScan : 1);
+                document.getElementById('nextPage').disabled = edition ? pageNumber >= edition.lastScan : false;
+            }
             document.getElementById('openImage').href = imageUrl;
-            if (edition) {
+            if (sourceManifest) {
+                document.title = `${sourceManifest.title} (${sourceManifest.year}) — ${pageLabel()}`;
+                document.getElementById('sourcePdf').href = `${sourceManifest.pdf.url}#page=${manifestTarget.pdf_ordinal}`;
+            } else if (edition) {
                 document.title = `${edition.title} (1929) — ${pageLabel()}`;
                 document.getElementById('sourcePdf').href = `${edition.pdfUrl}#page=${pageNumber + 1}`;
             }
@@ -256,21 +396,47 @@
             body.appendChild(image);
         }
 
-        // Initially load the image
-        loadImageFormats().then(updateImage);
+        initializeLegacyViewer();
+        Promise.all([loadImageFormats(), loadSourceManifest()])
+            .then(updateImage)
+            .catch(() => {
+                const error = document.getElementById('imageError');
+                error.textContent = 'Não foi possível carregar o mapa desta fonte. Abra o PDF original ou tente novamente.';
+                error.hidden = false;
+                document.getElementById('prevPage').disabled = true;
+                document.getElementById('nextPage').disabled = true;
+            });
 
         // Add event listeners to buttons
         document.getElementById('prevPage').addEventListener('click', () => {
-            if (pageNumber > (edition ? edition.firstScan : 1)) {
+            if (sourceManifest?.pagination?.navigation === 'complete_scan') {
+                if (pageNumber <= sourceManifest.images.first_index) return;
                 pageNumber--;
-                updateImage();
-                updateUrl();
+            } else if (sourceManifest) {
+                if (manifestPosition === 0) return;
+                manifestPosition--;
+                pageNumber = manifestTargets[manifestPosition].pdf_index;
+            } else {
+                if (pageNumber > (edition ? edition.firstScan : 1)) {
+                    pageNumber--;
+                }
             }
+            updateImage();
+            updateUrl();
         });
 
         document.getElementById('nextPage').addEventListener('click', () => {
-            if (edition && pageNumber >= edition.lastScan) return;
-            pageNumber++;
+            if (sourceManifest?.pagination?.navigation === 'complete_scan') {
+                if (pageNumber >= sourceManifest.images.last_index) return;
+                pageNumber++;
+            } else if (sourceManifest) {
+                if (manifestPosition >= manifestTargets.length - 1) return;
+                manifestPosition++;
+                pageNumber = manifestTargets[manifestPosition].pdf_index;
+            } else {
+                if (edition && pageNumber >= edition.lastScan) return;
+                pageNumber++;
+            }
             updateImage();
             updateUrl();
         });
