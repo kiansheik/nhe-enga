@@ -1,5 +1,21 @@
 # Agent Log
 
+## 2026-10-06 — D’Evreux 1929 primary-source pilot
+
+Implemented the reviewed D’Evreux pilot without changing dictionary data,
+morphology, corpus ground truth, deployment, or any other cited book. Added the
+verified 444-page 1929 scan and provenance, a reproducible renderer and citation
+inventory, production citation links, viewer metadata/navigation/zoom/error
+handling, Pages asset inclusion, and focused production-code tests. The exact
+PDF checksum/page count passed and an independent full rerender matched every
+checked-in JPEG byte for byte. All eight Node tests pass; the inventory is
+stable at 120 explicit citations, 113 records, 121 anchors and 42 printed
+pages; a full 691 MiB Pages build passes; all source and optimized D’Evreux
+JPEGs decode. Real Chromium desktop and narrow-window checks covered page 293,
+PDF page 294, navigation/reload, range endpoints, the spaced author variant,
+the unresolved `op. cit.` case, legacy links, fit and native-size zoom. Work is
+on the implementation branch for review and has not been deployed or merged.
+
 ## 2026-09-25 — Historic surface consistency
 
 Repaired three rendering paths exposed by the qualification appendix. Finite

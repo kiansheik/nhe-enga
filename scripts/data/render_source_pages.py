@@ -37,7 +37,9 @@ def main() -> int:
     with fitz.open(args.pdf) as document:
         if len(document) != manifest["pdf"]["page_count"]:
             parser.error("PDF page count does not match the source manifest")
-        pages = sorted(set(args.page)) if args.page is not None else range(len(document))
+        pages = (
+            sorted(set(args.page)) if args.page is not None else range(len(document))
+        )
         if any(page < 0 or page >= len(document) for page in pages):
             parser.error("--page must be a valid zero-based PDF index")
         output_dir.mkdir(parents=True, exist_ok=True)
@@ -48,7 +50,9 @@ def main() -> int:
             pixmap = document[index].get_pixmap(
                 dpi=settings["dpi"], colorspace=fitz.csRGB, alpha=False
             )
-            image = Image.frombytes("RGB", (pixmap.width, pixmap.height), pixmap.samples)
+            image = Image.frombytes(
+                "RGB", (pixmap.width, pixmap.height), pixmap.samples
+            )
             output_path = output_dir / f"{index}.jpg"
             temporary_path = output_path.with_suffix(".jpg.tmp")
             image.save(
