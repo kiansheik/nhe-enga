@@ -1,21 +1,101 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fontes primárias — Nhe'enga</title>
     <style>
-        img {
+        body {
+            margin: 1rem;
+            font-family: sans-serif;
+            height: calc(100vh - 2rem);
+            height: calc(100dvh - 2rem);
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-rows: auto auto auto minmax(0, 1fr);
+        }
+        h1 {
+            margin: 0 0 0.5rem;
+            font-size: 1.2rem;
+        }
+        #sourceDetails p {
+            margin: 0.5rem 0;
+        }
+        #sourceDetails {
+            grid-row: 1;
+        }
+        #navigation {
+            grid-row: 2;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 0.75rem 0;
+        }
+        #navigation button {
+            min-height: 2rem;
+        }
+        #imageError {
+            grid-row: 3;
+        }
+        #pageImage {
+            grid-row: 4;
+            align-self: start;
+            justify-self: center;
+            display: block;
+            min-width: 0;
+            min-height: 0;
             max-width: 100%;
-            max-height: 100vh; /* Adjusts to the height of the viewport */
-            object-fit: contain; /* Ensures the image is scaled to maintain its aspect ratio without cropping */
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            margin: 0 auto;
+            cursor: zoom-in;
+        }
+        body.zoomed {
+            display: block;
+            height: auto;
+        }
+        body.zoomed #pageImage {
+            max-width: none;
+            max-height: none;
+            cursor: zoom-out;
         }
     </style>
 </head>
 <body>
+    <header id="sourceDetails" hidden>
+        <h1 id="sourceTitle"></h1>
+        <p id="sourceEdition"></p>
+        <p>
+            <a id="sourceInfo" target="_blank" rel="noopener">Digitalização: Biblioteca Digital Curt Nimuendajú — Coleção Nicolai</a>
+            · <a id="sourcePdf" target="_blank" rel="noopener">Abrir PDF nesta página</a>
+        </p>
+    </header>
     <div id="navigation">
-        <button id="prevPage">Última</button>
+        <button id="prevPage">Anterior</button>
+        <span id="currentPage" aria-live="polite"></span>
         <button id="nextPage">Próxima</button>
+        <button id="zoomPage" aria-pressed="false">Ampliar</button>
+        <a id="openImage" target="_blank" rel="noopener">Abrir imagem</a>
     </div>
+    <p id="imageError" role="status" hidden>Não foi possível carregar esta página. Tente abrir a imagem ou o PDF.</p>
     <script>
+        // This edition is the one listed in Navarro's bibliography (DTAbib.txt).
+        // Printed page p = scan p.jpg = PDF page p + 1. The scan also includes
+        // an unnumbered cover (0), preliminaries (1–13), and final blank (443).
+        const sourceEditions = {
+            evreux1929: {
+                title: "Yves d’Évreux — Viagem ao Norte do Brasil",
+                edition: "Rio de Janeiro, 1929 · Tradução de César Augusto Marques",
+                firstScan: 0,
+                lastScan: 443,
+                firstPrintedPage: 14,
+                lastPrintedPage: 442,
+                bibliographyUrl: "https://www.etnolinguistica.org/biblio:evreux-1929-viagem",
+                pdfUrl: "https://archive.org/download/evreux-1929-viagem-ao-norte-do-brasil/Evreux_1929_ViagemAoNorteDoBrasil.pdf",
+            },
+        };
         function generateArcat1618Page(n) {
             let page = parseInt(n.replace('v', ''));
             page -= n >= 129? 1 : 0;
@@ -51,6 +131,7 @@
             arcat1618: ".png",
             betcomp: ".jpg",
             cartas_portiguara: ".jpg",
+            evreux1929: ".jpg",
             lerhist: ".jpg",
             vlb: ".png",
         };
@@ -75,8 +156,10 @@
         // Get the query parameters from the URL
         const urlParams = new URLSearchParams(window.location.search);
         let bookName = urlParams.get('book_name');
+        const edition = Object.prototype.hasOwnProperty.call(sourceEditions, bookName) ? sourceEditions[bookName] : null;
         let pageNumber;
         let pn;
+        let isZoomed = false;
         if (bookName === 'vlb') {
             pageNumber = parseInt(urlParams.get('page_number'), 10);
         }
@@ -95,6 +178,38 @@
             }
             pageNumber = anchieta_arte_page_map.findIndex((pages) => pages.includes(pn));
             // Add a link to the text version here: http://www.etnolinguistica.org/arte:02a/
+        }
+        if (edition) {
+            const requestedPage = urlParams.get('page_number');
+            const parsedPage = /^-?\d+$/.test(requestedPage || '') ? Number(requestedPage) : 1;
+            pageNumber = Math.min(edition.lastScan, Math.max(edition.firstScan, parsedPage));
+            document.getElementById('sourceDetails').hidden = false;
+            document.getElementById('sourceTitle').textContent = edition.title;
+            document.getElementById('sourceEdition').textContent = edition.edition;
+            document.getElementById('sourceInfo').href = edition.bibliographyUrl;
+            updateUrl();
+        }
+        function updateUrl() {
+            urlParams.set('page_number', calculateNFromPage(pageNumber));
+            window.history.replaceState(null, '', `${window.location.pathname}?${urlParams}`);
+        }
+        function pageLabel() {
+            if (edition) {
+                if (pageNumber === edition.firstScan) return 'Capa (sem numeração)';
+                if (pageNumber < edition.firstPrintedPage) return `Preliminares ${pageNumber} de ${edition.firstPrintedPage - 1} (sem numeração)`;
+                if (pageNumber === edition.lastScan) return 'Página final em branco (sem numeração)';
+                return `Página ${pageNumber} de ${edition.lastPrintedPage}`;
+            }
+            // Legacy books have different offsets/folio maps; do not present
+            // their scan indices as printed pagination.
+            return `Imagem ${pageNumber}`;
+        }
+        function toggleZoom() {
+            isZoomed = !isZoomed;
+            document.body.classList.toggle('zoomed', isZoomed);
+            const button = document.getElementById('zoomPage');
+            button.textContent = isZoomed ? 'Ajustar à tela' : 'Ampliar';
+            button.setAttribute('aria-pressed', String(isZoomed));
         }
         // Function to update the image based on the current page number
         function updateImage() {
@@ -116,10 +231,22 @@
 
             const imageUrl = `/nhe-enga/docs/primary_sources/${bookName}/${pageNumber}${imageFormatForBook(bookName)}`;
             const image = document.createElement('img');
+            image.id = 'pageImage';
             image.src = imageUrl;
-            image.alt = `Página ${pageNumber} de ${bookName}`;
-            image.style.width = '100%'; // Ensures the image width is responsive
-            image.style.height = 'auto'; // Maintains aspect ratio
+            image.alt = `${pageLabel()} — ${edition ? edition.title : bookName}`;
+            image.addEventListener('click', toggleZoom);
+            document.getElementById('imageError').hidden = true;
+            image.addEventListener('error', () => {
+                document.getElementById('imageError').hidden = false;
+            });
+            document.getElementById('currentPage').textContent = pageLabel();
+            document.getElementById('prevPage').disabled = pageNumber <= (edition ? edition.firstScan : 1);
+            document.getElementById('nextPage').disabled = edition ? pageNumber >= edition.lastScan : false;
+            document.getElementById('openImage').href = imageUrl;
+            if (edition) {
+                document.title = `${edition.title} (1929) — ${pageLabel()}`;
+                document.getElementById('sourcePdf').href = `${edition.pdfUrl}#page=${pageNumber + 1}`;
+            }
             // Remove the existing image if any
             const existingImage = document.querySelector('img');
             if (existingImage) {
@@ -134,22 +261,20 @@
 
         // Add event listeners to buttons
         document.getElementById('prevPage').addEventListener('click', () => {
-            if (pageNumber > 1) {
+            if (pageNumber > (edition ? edition.firstScan : 1)) {
                 pageNumber--;
                 updateImage();
-                // Optionally, update the URL
-                urlParams.set('page_number', calculateNFromPage(pageNumber));
-                window.history.replaceState(null, '', `${window.location.pathname}?${urlParams}`);
+                updateUrl();
             }
         });
 
         document.getElementById('nextPage').addEventListener('click', () => {
+            if (edition && pageNumber >= edition.lastScan) return;
             pageNumber++;
             updateImage();
-            // Optionally, update the URL
-            urlParams.set('page_number', calculateNFromPage(pageNumber));
-            window.history.replaceState(null, '', `${window.location.pathname}?${urlParams}`);
+            updateUrl();
         });
+        document.getElementById('zoomPage').addEventListener('click', toggleZoom);
     </script>
 </body>
 </html>
