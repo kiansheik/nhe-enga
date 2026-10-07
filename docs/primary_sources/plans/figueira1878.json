@@ -296,16 +296,16 @@
         "entry_index": 9643,
         "headword": "só",
         "raw_citation": "Fig., Arte, 1686, 64",
-        "verification_status": "unresolved_edition",
-        "pdf_index": null,
-        "reason": "The explicit year 1686 conflicts with Navarro's bibliography, which specifies Figueira 1687 and its 1878 facsimile. Do not silently remove the year or treat 1686 as a page number.",
+        "verification_status": "resolved_probable_year_typo_link_with_warning",
+        "pdf_index": 87,
+        "reason": "The explicit year 1686 conflicts with Navarro's bibliography and authoritative catalogs, which identify the second edition as 1687. No separate 1686 edition was found, while page 64 of the selected 1687/1878 text contains the exact çoába passage described by the dictionary. Preserve 1686 verbatim, link page 64, and show the discrepancy in the viewer.",
         "context": "soaba - tempo, lugar, modo, etc. de ir; ida (Fig., Arte, 1686, 64)",
         "related_verified_page": {
           "locator": "64",
           "pdf_index": 87,
-          "note": "This verifies the existence and number of page 64 in the selected scan, not the identity of the year-qualified citation."
+          "note": "The page contains the exact cited semantic statement: ‘Çoába, o fim para que, o instrumento em que, o lugar por onde se vai.’"
         },
-        "required_action": "Check the printed Navarro citation and compare the passage with the selected edition and relevant bibliography. Preserve the raw citation and leave this occurrence unlinked until the edition discrepancy is resolved with documented evidence."
+        "required_action": "Keep the raw 1686 text unchanged, link it to the verified page 64 image, and show a visible note that the selected edition and catalogs say 1687."
       },
       {
         "id": "fig-arte-inherited-163",
@@ -506,7 +506,7 @@
     },
     {
       "id": "resolve-year-exception",
-      "action": "Investigate the single raw citation Fig., Arte, 1686, 64. Keep it explicitly unresolved and unlinked unless its intended edition is documented; the normal page64 map alone is not a resolution."
+      "action": "The single raw citation Fig., Arte, 1686, 64 was resolved as a probable year typo because the exact çoába passage occurs on p. 64 of the catalogued 1687/1878 text and no separate 1686 edition was found. Preserve the raw year and show the discrepancy when linking it."
     },
     {
       "id": "select-render-budget",

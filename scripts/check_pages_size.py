@@ -36,7 +36,9 @@ def entries_from_directory(root: Path) -> list[tuple[str, int]]:
         for name in subdirectories:
             path = Path(directory) / name
             if path.is_symlink():
-                raise ValueError(f"Resolve symlink before measuring the artifact: {path.relative_to(root)}")
+                raise ValueError(
+                    f"Resolve symlink before measuring the artifact: {path.relative_to(root)}"
+                )
         for name in files:
             if name == ".git":
                 continue
@@ -86,7 +88,9 @@ def entries_from_tree(path: Path) -> list[tuple[str, int]]:
         raise ValueError("Recursive Git tree is missing parent directory entries")
     unexpanded = directories - parents
     if unexpanded:
-        raise ValueError(f"Git tree has unexpanded directories; request recursive=1: {', '.join(sorted(unexpanded))}")
+        raise ValueError(
+            f"Git tree has unexpanded directories; request recursive=1: {', '.join(sorted(unexpanded))}"
+        )
     return entries
 
 
@@ -130,7 +134,9 @@ def main() -> int:
     parser.add_argument("--tree-json", type=Path)
     parser.add_argument("--max-bytes", type=int, default=DEFAULT_BUDGET_BYTES)
     parser.add_argument("--max-file-bytes", type=int, default=GIT_FILE_LIMIT_BYTES)
-    parser.add_argument("--json", action="store_true", help="Print the full JSON report")
+    parser.add_argument(
+        "--json", action="store_true", help="Print the full JSON report"
+    )
     args = parser.parse_args()
     if (args.directory is None) == (args.tree_json is None):
         parser.error("Provide either an artifact directory or --tree-json, exclusively")
@@ -150,7 +156,9 @@ def main() -> int:
         print(json.dumps(report, ensure_ascii=False, indent=2))
     else:
         print(f"Files: {report['files']:,}")
-        print(f"Total: {report['total_bytes']:,} bytes ({report['total_bytes'] / 1e6:.1f} MB)")
+        print(
+            f"Total: {report['total_bytes']:,} bytes ({report['total_bytes'] / 1e6:.1f} MB)"
+        )
         print(f"Project budget: {args.max_bytes:,} bytes")
         print(f"Remaining budget: {report['remaining_budget_bytes']:,} bytes")
         for name, group in list(report["groups"].items())[:12]:

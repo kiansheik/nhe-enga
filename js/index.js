@@ -950,6 +950,44 @@
       });
     });
 
+    // Navarro's lone "1686" Figueira citation is a probable year typo. The
+    // catalogued 1687 edition (in Platzmann's 1878 facsimile) has the exact
+    // cited çoába passage on p. 64. Preserve the raw year and let the viewer
+    // display the discrepancy rather than withholding the verified page.
+    regex = /\b(Fig\.,?\s*Arte,\s*1686,\s*)(64)(?![\dA-Za-zÀ-ÿ])/g;
+    replacedString = replacedString.replace(regex, (match) => (
+      `<a href="/nhe-enga/docs/primary_sources/?book_name=figueira1878&page_number=64&citation_year=1686" target="_blank" rel="noopener">${match}</a>`
+    ));
+
+    // Figueira's 1687 pagination is preserved by the 1878 facsimile. The
+    // viewer manifest owns the printed-page to PDF/image mapping.
+    regex = /\b(Fig\.,?\s*Arte,\s*(?!1686\s*,)(?:pp?\.\s*)?)(\d+(?:\s*[-–—,;]\s*\d+)*)(?![\dA-Za-zÀ-ÿ])/g;
+    replacedString = replacedString.replace(regex, (match, prefix, pages) => {
+      const pageNumbers = pages.match(/\d+/g).map(Number);
+      if (pageNumbers.some((page) => page < 1 || page > 167)) return match;
+      let firstPage = true;
+      return pages.replace(/\d+/g, (page) => {
+        const label = firstPage ? `${prefix}${page}` : page;
+        firstPage = false;
+        return `<a href="/nhe-enga/docs/primary_sources/?book_name=figueira1878&page_number=${Number(page)}" target="_blank" rel="noopener">${label}</a>`;
+      });
+    });
+
+    // Castilho is intentionally a sparse set of verified cited-page crops.
+    // The viewer manifest supplies the non-linear spread/side mapping.
+    regex = /\b(Castilho,\s*Nomes,\s*(?:pp?\.\s*)?)(\d+(?:\s*[-–—,;]\s*\d+)*)(?![\dA-Za-zÀ-ÿ])/g;
+    replacedString = replacedString.replace(regex, (match, prefix, pages) => {
+      const availablePages = new Set([27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 45]);
+      const pageNumbers = pages.match(/\d+/g).map(Number);
+      if (pageNumbers.some((page) => !availablePages.has(page))) return match;
+      let firstPage = true;
+      return pages.replace(/\d+/g, (page) => {
+        const label = firstPage ? `${prefix}${page}` : page;
+        firstPage = false;
+        return `<a href="/nhe-enga/docs/primary_sources/?book_name=castilho1937&page_number=${Number(page)}" target="_blank" rel="noopener">${label}</a>`;
+      });
+    });
+
     // VLB
     regex = /VLB, (I|II), (\d+)/g;
     replacedString = replacedString.replace(regex, (match, p1, p2) => {
