@@ -214,6 +214,7 @@ Because many scripts operate on large PDFs and external APIs, there is no single
 
 - **Navarro dictionary**: Eduardo de Almeida Navarro, *Dicionário de Tupi Antigo*, 2007. The DOCX is not redistributed here; only derived JSON/JS needed for the UI.
 - **Anchieta/Artes, VLB, Bettendorff**: stored as PDFs/images under `docs/primary_sources/` solely for research and citation. Respect the copyrights of the original works.
+- **D’Evreux (1929)**: the complete 444-page scan is available through dictionary citations. The [edition and page-mapping notes](docs/primary_sources/evreux1929/README.md) document the original scan, its checksum, and how to reproduce the JPEGs.
 - **Nheengatu dataset**: parsed from Marcel Twardowsky Avila’s 2021 dissertation (*Proposta de dicionário nheengatu-português*).
 - **Mbyá dataset**: parsed from Robert A. Dooley’s *Léxico Guarani, Dialeto Mbyá* (SIL, 2006).
 - **Neologisms**: pulled from the Google Sheet referenced inside the Makefile (`neologisms.csv`).
@@ -221,7 +222,15 @@ Because many scripts operate on large PDFs and external APIs, there is no single
 
 If you publish derivatives, cite the original authors and this toolkit.
 
+The [source citation inventory](docs/primary_sources/source_inventory.md) lists
+Navarro’s source labels, observed works and editions, current link coverage,
+and unresolved references for the next digitization passes. Regenerate it with
+`python scripts/data/source_inventory.py`. Check the citation links and source
+viewer with `node --test tests/primary_sources.test.cjs`.
+
 ## Contributing and next steps
+
+For the source-scan task, see the [D’Evreux pilot instructions for a local agent](docs/agent/session-handoffs/2026-10-06-devreux-primary-source.md). The handoff contains the verified edition and page mapping, implementation steps, source-inventory scope, and acceptance checks for an implementation PR.
 
 This codebase has grown organically; expect rough edges. Ideas that would add immediate value:
 

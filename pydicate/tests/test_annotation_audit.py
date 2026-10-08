@@ -21,7 +21,7 @@ from pydicate.annotation_audit import (
     parse_occurrences,
     validate_audit_report,
 )
-from pydicate.lang.tupilang.pos import Noun, Conjunction
+from pydicate.lang.tupilang.pos import Noun, Conjunction, Verb, mo
 
 
 class Literal(Predicate):
@@ -132,6 +132,26 @@ class AnnotationAuditTest(unittest.TestCase):
         expression.new_wrapper = Literal("y[ROOT]")
         report = audit_annotation(expression)
         self.assertIn("unsupported_predicate_relation", report["hard_failures"])
+
+    def test_incorporated_object_sources_are_explicit_stored_relations(self):
+        # Araújo 0110 and 0115 exercise the same stored relation shape through
+        # larger causative/nominal chains. This neutral fixture checks structure,
+        # not either passage's historical or linguistic analysis.
+        incorporated = Noun("potaba", "portion") / Verb(
+            "me'eng", verb_class="v.tr.", definition="give"
+        )
+        expression = (mo * incorporated).base_nominal()
+        report = audit_annotation(expression)
+
+        self.assertTrue(report["passed"], report["hard_failures"])
+        paths = {node["path"] for node in report["tree"]}
+        self.assertIn("root._nominalization_source.incorporated_object", paths)
+        self.assertIn("root._nominalization_source.source_verb", paths)
+        self.assertIn(
+            "root._nominalization_source._augmentee.incorporated_object", paths
+        )
+        self.assertIn("root._nominalization_source._augmentee.source_verb", paths)
+        self.assertFalse(report["unsupported_relations"])
 
     def test_unknown_nested_container_predicates_cannot_disappear(self):
         expression = Literal("x[ROOT]")

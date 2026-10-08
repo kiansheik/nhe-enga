@@ -325,9 +325,7 @@ def emi_morphology(self, verb, annotated=False):
     elif not subj:
         if referential is None:
             # Explicit short absolute (te)mi-; possession and og stay unchanged.
-            nom = nom.possessive(
-                "absoluta", self.pro_drop or self.variation_id == 1
-            )
+            nom = nom.possessive("absoluta", self.pro_drop or self.variation_id == 1)
     else:
         nom = nom.possessive(subj.inflection(), None)
     if self.vocative:

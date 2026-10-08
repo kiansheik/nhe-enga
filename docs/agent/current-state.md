@@ -1,5 +1,36 @@
 # Current State
 
+## 2026-10-06 — D’Evreux 1929 primary-source pilot
+
+- The implementation branch `devreux-primary-source` adds the complete
+  444-page 1929 *Viagem ao Norte do Brasil* scan under
+  `docs/primary_sources/evreux1929/`, with checksum-validated provenance and a
+  reproducible whole-page renderer. The PDF itself remains outside Git. The
+  implementation is awaiting review in
+  [PR #25](https://github.com/kiansheik/nhe-enga/pull/25).
+- `linkSources()` now links all 120 explicit `D'Evreux, Viagem` citations in
+  113 dictionary records. The 121 anchors cover the 42 verified printed pages;
+  range endpoints remain separate, displayed citation text is unchanged, and
+  contextual `op. cit.` text remains unresolved.
+- The viewer distinguishes scan positions from printed pages, provides bounded
+  navigation, shareable URLs, direct image/PDF links, fit/native-size zoom, and
+  a visible failure state. Existing Anchieta, Araújo, Bettendorff, Léry, and VLB
+  viewer behavior has focused regression coverage.
+- The exact 121,180,986-byte PDF has SHA-256
+  `1e6c7d93aa7e49f6cf76dd5ae84384e71ab40de592495f21b5708e4cdab61864`
+  and 444 pages. A clean PyMuPDF 1.26.6/Pillow 12.3.0 rerender matched all 444
+  checked-in JPEGs byte for byte. Source images occupy 259.3 MiB; the Pages
+  optimizer reduces the D’Evreux copy to 212.0 MiB.
+- `make pages-build` passes with the baseline generated dictionary assets
+  supplied locally. The resulting artifact is 691 MiB, includes all D’Evreux
+  pages, metadata and `DTAbib.txt`, and contains no PDF. Real Chromium checks
+  passed on desktop and at about 500 CSS pixels wide. Nothing was deployed or
+  merged; review is required before any other source is digitized.
+- The repeatable inventory currently reports 47 bibliography labels, 69
+  work-family rows, and 11 rows without a resolved bibliography match. These
+  are auditable parser groupings, not proof of edition or locator identity.
+  See the [implementation handoff](session-handoffs/2026-10-06-devreux-primary-source-implementation.md).
+
 ## 2026-09-25 — Historic ordinary and annotated surfaces agree
 
 - Finite `Verb.preval` applies the same named phonetic rewrites to annotated
@@ -66,7 +97,9 @@
 - The Pages artifact intentionally copies only derived primary-source page images from citation folders, not raw PDFs, EPUBs, MOBIs, OPFs, TXT files, or extraction scripts.
 - `make pages-build` optimizes copied primary-source images inside `.pages-build` only. Source scans are left untouched; generated `image-formats.json` lets the citation viewer load optimized `.jpg` files.
 - `bettvulg` is excluded from the Pages artifact for now because no runtime references were found and it dominates artifact size.
-- Latest measured optimized `.pages-build` size is about 477 MB with primary-source images at about 432 MB.
+- Latest measured optimized `.pages-build` size with the D’Evreux pilot is
+  about 691 MiB; its 444 optimized pages account for about 212 MiB. The prior
+  artifact without D’Evreux measured about 477 MB.
 - The failed 4.1 GB deployment history is preserved locally as `gh-pages-oversized-backup-20260912`; it is not reachable from the published `gh-pages` branch and must not be pushed.
 - Root-level PDFs, DOCX output, and Graphviz renderings removed in the 2026-09-12 cleanup were generated and unreferenced. They remain recoverable from Git history and are now covered by ignore rules where needed.
 - `make gen_data` is noisy and can take over a minute; it updates generated dictionary/conjugation data. Keep those outputs separate from source-only cleanup changes unless intentionally refreshing data.

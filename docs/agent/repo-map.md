@@ -7,7 +7,12 @@
 - Neologisms: `neologisms.csv` and `neologisms/index.html`.
 - Quiz: `quiz/index.html`, `quiz/quiz.js`, `quiz/styles.css`; loads `../docs/dict-conjugated.json.gz`.
 - Nheengatu and Mbya pages: `katu/index.html`, `mbya/index.html`; load `docs/extracted_entries_nheengatu.tar.gz` and `docs/dooley_2006_mbya_dic.json.gz`.
-- Citation viewer: `docs/primary_sources/index.html`; opens page images under `docs/primary_sources/{vlb,ancharte,arcat1618,betcomp,lerhist}`. The `cartas_portiguara` image folder is preserved in the Pages artifact for now; `bettvulg` is excluded because no runtime references were found.
+- Citation viewer: `docs/primary_sources/index.html`; opens page images under
+  `docs/primary_sources/{vlb,ancharte,arcat1618,betcomp,evreux1929,lerhist}`.
+  D’Evreux provenance and page mapping live beside its images in `source.json`
+  and `README.md`. The `cartas_portiguara` image folder is preserved in the
+  Pages artifact for now; `bettvulg` is excluded because no runtime references
+  were found.
 - Grammar site: source is `gramatica/docs/src`; built output belongs in the Pages artifact under `gramatica/`, not tracked on the source branch.
 
 ## Generated Or Reproducible Outputs
@@ -18,7 +23,11 @@
 
 ## Script Layout
 
-- `scripts/data/`: maintained Navarro, conjugation, Nheengatu, Mbyá, and primary-source data pipelines. Run from the repository root because their data paths are checkout-relative.
+- `scripts/data/`: maintained Navarro, conjugation, Nheengatu, Mbyá, and
+  primary-source data pipelines. `source_inventory.py` audits the served
+  dictionary and production citation linker; `render_source_pages.py` renders
+  checksum-verified source PDFs. Run from the repository root because their
+  data paths are checkout-relative.
 - `scripts/media/`: optional PDF-bookmark and WAV-to-Opus utilities; generated outputs are not versioned.
 - `scripts/build_pages.sh`, `scripts/deploy_gh_pages.sh`, `scripts/optimize_pages_images.py`: maintained Pages build and deployment tooling.
 - `misc/experiments/`: retained historical research scratchpads, machine-local model experiments, and the manual Pydicate/Graphviz story harness. Nothing under `misc/` is a build or deployment dependency.
