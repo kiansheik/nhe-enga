@@ -16,6 +16,27 @@ class SizeSuffixTests(unittest.TestCase):
             with self.subTest(stem=stem, suffix=suffix):
                 self.assertEqual((Noun(stem) / SizeSuffix(suffix)).eval(), surface)
 
+    def test_size_after_nominal_classifier(self):
+        from pydicate.lang.tupilang.pos import Adverb
+        from pydicate.lang.tupilang.pos.deverbal import pûera, rama, saba
+
+        # Pending Araujo: "Abá marã cecó agoérĩ"; requested analysis,
+        # not an independently approved historical reference.
+        source = pûera * (saba * (Noun("abá") * (
+            Adverb("marã") >> Verb("ikó", verb_class="(v. intr. irreg.)", vid=5202)
+        )))
+        original = source.eval()
+        result = source / SizeSuffix("-'ĩ")
+        self.assertEqual(" ".join(result.eval().split()), "abá marã sekoagûerĩ")
+        self.assertEqual(source.eval(), original)
+        annotated = result.eval(annotated=True)
+        self.assertIn("gûer[PRETERITE_SUFFIX]ĩ[SIZE_SUFFIX]", annotated)
+        self.assertEqual(annotated.count("[PRETERITE_SUFFIX]"), 1)
+        self.assertEqual(result.arguments[0].definition, source.arguments[0].definition)
+        self.assertEqual(result.verbete, source.verbete)
+        self.assertEqual((pûera * Noun("abá") / SizeSuffix("-'ĩ")).eval(), "abápûerĩ")
+        self.assertEqual((rama * Noun("abá") / SizeSuffix("-'ĩ")).eval(), "abáramĩ")
+
     def test_verbal_base(self):
         self.assertEqual(
             (Verb("îur", verb_class="(v.i.)") / SizeSuffix("-usu")).eval(), "îurusu"

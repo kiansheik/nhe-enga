@@ -117,6 +117,8 @@ class Verb(Predicate):
         if not found and vid and not (verb_class or definition):
             raise ValueError(f"Verb with ID {vid} not found in the dictionary.")
 
+        # Retained through composition/copy: the leftmost lexical base.
+        self._lexical_base_verbete = self.verbete
         self.verb = TupiVerb(self.verbete, verb_class, definition, vid=vid)
         if not self.verb.pluriforme:
             if "(t, t)" in verb_class:
@@ -918,6 +920,21 @@ class VerbAugmentor(Verb):
             new_verb = VerbAugmentor.from_existing(fin)
             prefix, prefix_tag = self._prefix_form()
             stem = AnnotatedString(fin.verbete)
+            # ero + leftmost ikó -> er + ekó, then replay stored compounds.
+            # No inference from opaque iko- spellings or through derivations.
+            lexical_base = getattr(fin, "_lexical_base_verbete", fin.verbete)
+            if (
+                self.ero_switch and prefix == "ero"
+                and AnnotatedString(lexical_base).clean == "ikó"
+                and getattr(fin, "_augmentee", None) is None
+            ):
+                prefix = "er"
+                recomposed = fin.copy()
+                recomposed.compositions = []
+                recomposed.refresh_verbete("ekó[ROOT]")
+                for modifier in fin.compositions:
+                    recomposed = recomposed.compose(modifier)
+                stem = AnnotatedString(recomposed.verbete)
             # Explicit nasal causative: reuse composition's onset table while
             # retaining mo's spelling, argument structure and prefix annotation.
             if self.verbete == "mo" and self.variation_id == 2 and len(stem):

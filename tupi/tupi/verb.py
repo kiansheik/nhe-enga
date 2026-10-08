@@ -880,9 +880,9 @@ class Verb(TupiAntigo):
             else self.fix_phonetics_preserving_tags(result, {"PROPER_NOUN"})
         )
 
-    def bae(self, obj=None, anotar=False, negative=False):
-        # We will conjugate for the 3rd person prod_drop first, and then apply the suffix
-        obj_t = "3p"
+    def bae(self, obj=None, anotar=False, negative=False, object_tense=None):
+        # Preserve object person; ba'e is not interchangeable with sara.
+        obj_t = object_tense or "3p"
         obj_clean = None if not obj else AnnotatedString(obj).get_clean()
         if obj_clean == "îe":
             obj_t = "refl"
@@ -892,10 +892,11 @@ class Verb(TupiAntigo):
             subject_tense="3p",
             object_tense=obj_t,
             dir_obj_raw=obj,
-            dir_subj_raw=None,
+            # Generic objects retain the finite subject prefix under ba'e.
+            dir_subj_raw="" if obj_t in {"gen", "gen_compound"} else None,
             mode="indicativo",
             pos="anteposto",
-            pro_drop=True,
+            pro_drop=obj_t not in {"gen", "gen_compound"},
             negative=False,
             anotar=True,
         )

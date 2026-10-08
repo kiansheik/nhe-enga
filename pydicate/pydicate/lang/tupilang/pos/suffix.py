@@ -24,6 +24,14 @@ class SizeSuffix(Noun):
 
         if not isinstance(base, (Noun, Verb)) or isinstance(base, SizeSuffix):
             raise TypeError("size suffix requires a noun or verb base")
+        # Classifiers must finish their derivation before the size suffix.
+        # Keep the source tree and defer attachment instead of rewriting pûer.
+        from .deverbal import Classifier
+
+        if isinstance(base, Classifier) and base.arguments:
+            result = base.copy()
+            result.compositions.append(self.copy())
+            return result
         stem = base.verbete
         if not isinstance(stem, str) or not stem or " " in stem:
             raise ValueError("size suffix requires a single lexical stem")

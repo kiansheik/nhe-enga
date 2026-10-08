@@ -207,6 +207,20 @@ class Classifier(Noun):
         if self.arguments:
             arg = self.arguments[0]
             retval = self.morphology(self, arg, annotated=annotated).strip()
+            for modifier in self.compositions:
+                if getattr(modifier, "category", "") == "size_suffix":
+                    # Attach to the derived head, before external adjuncts.
+                    clean = re.sub(r"\[[^\]]+\]", "", retval)
+                    head = clean.split()[-1]
+                    sized = modifier.attach(Noun(head)).verbete
+                    # Preserve derivational tags; remove only nominal -a.
+                    if head.endswith("a") and not sized.startswith(head):
+                        retval = re.sub(r"a\[SUBSTANTIVE_SUFFIX[^\]]*\]$", "", retval)
+                        if re.sub(r"\[[^\]]+\]", "", retval).endswith("a"):
+                            retval = re.sub(r"a((?:\[[^\]]+\])*)$", r"\1", retval)
+                        head = head[:-1]
+                    ending = sized[len(head):]
+                    retval += ending + ("[SIZE_SUFFIX]" if annotated else "")
             # Classifiers over deverbals should preserve verbal adjunct context
             # carried by the argument chain.
             arg_pre = list(arg.pre_adjuncts)
@@ -259,16 +273,14 @@ class Classifier(Noun):
 
 
 def bae_morphology(self, verb, annotated=False):
-    """Resolve the morphology of the Deverbal object."""
-    if verb.object():
-        if verb.object().inflection() in ["3p", "refl", "mut", "suj", None]:
-            return verb.verb.bae(
-                obj=verb.object().eval(annotated=annotated), anotar=annotated,
-                negative=verb.negated,
-            )
-        else:
-            return sara_morphology(self, verb, annotated=annotated)
-    return verb.verb.bae(anotar=annotated, negative=verb.negated)
+    """Realize ba'e without substituting the distinct sara nominalizer."""
+    obj = verb.object()
+    return verb.verb.bae(
+        obj=obj.eval(annotated=annotated) if obj else None,
+        object_tense=obj.inflection() if obj else None,
+        anotar=annotated,
+        negative=verb.negated,
+    )
 
 
 def pyra_morphology(self, verb, annotated=False):
