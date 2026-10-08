@@ -22,6 +22,39 @@ apixara = Noun("apixara", "(t)")
 
 
 class CompoundAnnotationTest(unittest.TestCase):
+    def test_ero_leftmost_iko(self):
+        # Pending Araújo: "Oguerecomemoãçâra çupé nhirõ."
+        # Requested analysis, not an independently approved historical reading.
+        from pydicate.lang.tupilang.pos.verb import ero, mo
+        root = Verb("ikó") / Noun("memûã")
+        before = root.eval(True)
+        result = ero * root
+        self.assertEqual(result.eval(), "erekomemûã")
+        self.assertEqual(result.eval(True), "er[CAUSATIVE_PREFIX:ERO]eko[ROOT]memûã[ROOT]")
+        self.assertEqual(root.eval(True), before)
+        self.assertEqual(result._augmentee.eval(True), before)
+        self.assertEqual(result.definition, root.definition)
+        self.assertTrue(result.verb.transitivo)
+        self.assertEqual((mo * root).eval(), "moikomemûã")
+        self.assertEqual((ero * Verb("ikó")).eval(), "erekó")
+        self.assertEqual((ero * Verb("pytá")).eval(), "eropytá")
+
+    def test_ero_replays_iko_compositions(self):
+        from pydicate.lang.tupilang.pos.verb import ero
+        iko = Verb("ikó")
+        for modifiers in ((Noun("katú"),), (Noun("memûã"), Noun("eté"))):
+            root = iko
+            expected = ero * iko
+            for modifier in modifiers:
+                root = root / modifier
+                expected = expected / modifier
+            self.assertEqual((ero * root).eval(), expected.eval())
+            self.assertEqual((ero * root).eval(True), expected.eval(True))
+        # Opaque spelling and a non-leftmost ikó are not structural ikó bases.
+        self.assertEqual((ero * Verb("ikomemûã")).eval(), "eroikomemûã")
+        other = Verb("pytá") / iko
+        self.assertEqual((ero * other).eval(), "ero" + other.eval())
+
     def test_explicit_nasal_mo_causative(self):
         from pydicate.lang.tupilang.pos.verb import mo
 
