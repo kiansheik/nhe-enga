@@ -1,12 +1,43 @@
 # Current State
 
+## 2026-10-06 — Figueira and Castilho primary sources
+
+- The dependent implementation branch `feat/figueira-castilho-primary-sources`
+  is open as [PR #27](https://github.com/kiansheik/nhe-enga/pull/27) against
+  PR #26's research groundwork. It adds the complete 200-page 1878 Figueira
+  facsimile scan and 16 explicit crops from the 1937 Castilho edition.
+  The source PDFs remain outside Git; checksums, render settings, page maps and
+  provenance live in each source's `source.json` and `README.md`.
+- `linkSources()` now links all 622 explicit `Fig., Arte` citations in 455
+  dictionary records and all 215 `Castilho, Nomes` citations in 162 records.
+  Figueira covers 117 distinct printed pages; Castilho covers the 16 currently
+  cited pages 27–41 and 45 through a non-linear spread-side map. Citation text,
+  dictionary data, morphology and corpus ground truth are unchanged.
+- `Fig., Arte, 1686, 64` is no longer stranded. The citation stays verbatim,
+  links to the exact *çoába* passage on printed page 64, and displays a visible
+  warning that the bibliography/catalogs identify the edition as 1687. No
+  separate 1686 Figueira edition was found.
+- The shared viewer loads production manifests, provides complete-scan
+  navigation for Figueira and sparse cited-page navigation for Castilho, uses
+  accurate PDF ordinals, rejects unmapped locators, and remains usable at a
+  400-CSS-pixel Chromium viewport. D’Evreux and legacy-source regressions pass.
+- The renderer now supports target pixel widths and manifest-defined crop
+  boxes while retaining D’Evreux's fixed-DPI behavior. An independent rerender
+  matched all 216 new JPEGs byte for byte. The source images occupy about 55.1
+  MiB total.
+- The complete Pages artifact is 777,563,987 bytes, below the 900,000,000-byte
+  project budget by 122,436,013 bytes. It contains 2,229 files, no PDFs and no
+  oversized files. Nothing was deployed or merged; Sousa and D’Abbeville remain
+  pending until this implementation is reviewed. See the
+  [implementation handoff](session-handoffs/2026-10-06-figueira-castilho-primary-sources.md).
+
 ## 2026-10-06 — D’Evreux 1929 primary-source pilot
 
 - The implementation branch `devreux-primary-source` adds the complete
   444-page 1929 *Viagem ao Norte do Brasil* scan under
   `docs/primary_sources/evreux1929/`, with checksum-validated provenance and a
   reproducible whole-page renderer. The PDF itself remains outside Git. The
-  implementation is awaiting review in
+  implementation was merged in
   [PR #25](https://github.com/kiansheik/nhe-enga/pull/25).
 - `linkSources()` now links all 120 explicit `D'Evreux, Viagem` citations in
   113 dictionary records. The 121 anchors cover the 42 verified printed pages;
@@ -21,11 +52,11 @@
   and 444 pages. A clean PyMuPDF 1.26.6/Pillow 12.3.0 rerender matched all 444
   checked-in JPEGs byte for byte. Source images occupy 259.3 MiB; the Pages
   optimizer reduces the D’Evreux copy to 212.0 MiB.
-- `make pages-build` passes with the baseline generated dictionary assets
+- `make pages-build` passed with the baseline generated dictionary assets
   supplied locally. The resulting artifact is 691 MiB, includes all D’Evreux
   pages, metadata and `DTAbib.txt`, and contains no PDF. Real Chromium checks
-  passed on desktop and at about 500 CSS pixels wide. Nothing was deployed or
-  merged; review is required before any other source is digitized.
+  passed on desktop and at about 500 CSS pixels wide. This pilot was merged;
+  its deployment remains a separate operation.
 - The repeatable inventory currently reports 47 bibliography labels, 69
   work-family rows, and 11 rows without a resolved bibliography match. These
   are auditable parser groupings, not proof of edition or locator identity.
@@ -97,9 +128,10 @@
 - The Pages artifact intentionally copies only derived primary-source page images from citation folders, not raw PDFs, EPUBs, MOBIs, OPFs, TXT files, or extraction scripts.
 - `make pages-build` optimizes copied primary-source images inside `.pages-build` only. Source scans are left untouched; generated `image-formats.json` lets the citation viewer load optimized `.jpg` files.
 - `bettvulg` is excluded from the Pages artifact for now because no runtime references were found and it dominates artifact size.
-- Latest measured optimized `.pages-build` size with the D’Evreux pilot is
-  about 691 MiB; its 444 optimized pages account for about 212 MiB. The prior
-  artifact without D’Evreux measured about 477 MB.
+- Latest measured optimized `.pages-build` size with D’Evreux, Figueira and
+  Castilho is 777,563,987 bytes (about 741.5 MiB), leaving 122,436,013 bytes
+  under the 900 MB project budget. D’Evreux's 444 optimized pages account for
+  about 212 MiB; the prior artifact without D’Evreux measured about 477 MB.
 - The failed 4.1 GB deployment history is preserved locally as `gh-pages-oversized-backup-20260912`; it is not reachable from the published `gh-pages` branch and must not be pushed.
 - Root-level PDFs, DOCX output, and Graphviz renderings removed in the 2026-09-12 cleanup were generated and unreferenced. They remain recoverable from Git history and are now covered by ignore rules where needed.
 - `make gen_data` is noisy and can take over a minute; it updates generated dictionary/conjugation data. Keep those outputs separate from source-only cleanup changes unless intentionally refreshing data.

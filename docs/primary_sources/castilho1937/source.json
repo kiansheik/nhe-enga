@@ -1,0 +1,75 @@
+{
+  "schema_version": 2,
+  "id": "castilho1937",
+  "author": "Pero de Castilho",
+  "editor": "Plínio Ayrosa",
+  "title": "Os Nomes das Partes do Corpo Humano pela Língua do Brasil",
+  "year": 1937,
+  "edition": "São Paulo: Empresa Gráfica da Revista dos Tribunais, 1937",
+  "navarro_bibliography": "../DTAbib.txt",
+  "navarro_citation": "Castilho, Nomes",
+  "digitization_credit": "Biblioteca Digital Curt Nimuendajú",
+  "catalog_url": "https://bibliotecadigital.mj.gov.br/handle/1/7907",
+  "alternate_catalog_url": "https://www.etnolinguistica.org/biblio:ayrosa-1937-nomes",
+  "pdf": {
+    "url": "https://bibliotecadigital.mj.gov.br/bitstream/1/7907/1/ayrosa_1937_nomes.pdf",
+    "filename": "ayrosa_1937_nomes.pdf",
+    "sha256": "7e2f9dc0323e4ef1a7bbc82a6dcd3b687f93457e780fecb868c8841389fe1519",
+    "bytes": 11660598,
+    "page_count": 70,
+    "retrieved_at": "2026-10-06"
+  },
+  "images": {
+    "extension": ".jpg",
+    "filename_rule": "p{printed_page}.jpg",
+    "navigation": "available_cited_pages"
+  },
+  "mapping": {
+    "locator_unit": "printed_page",
+    "targets": [
+      {"locator": "27", "printed_page": 27, "pdf_index": 15, "pdf_ordinal": 16, "scan_side": "right", "image": "p27.jpg", "crop_box_pdf_points": [424, 0, 792, 612]},
+      {"locator": "28", "printed_page": 28, "pdf_index": 16, "pdf_ordinal": 17, "scan_side": "left", "image": "p28.jpg", "crop_box_pdf_points": [0, 0, 432, 612]},
+      {"locator": "29", "printed_page": 29, "pdf_index": 16, "pdf_ordinal": 17, "scan_side": "right", "image": "p29.jpg", "crop_box_pdf_points": [424, 0, 792, 612]},
+      {"locator": "30", "printed_page": 30, "pdf_index": 17, "pdf_ordinal": 18, "scan_side": "left", "image": "p30.jpg", "crop_box_pdf_points": [0, 0, 422, 612]},
+      {"locator": "31", "printed_page": 31, "pdf_index": 17, "pdf_ordinal": 18, "scan_side": "right", "image": "p31.jpg", "crop_box_pdf_points": [414, 0, 792, 612]},
+      {"locator": "32", "printed_page": 32, "pdf_index": 18, "pdf_ordinal": 19, "scan_side": "left", "image": "p32.jpg", "crop_box_pdf_points": [0, 0, 430, 612]},
+      {"locator": "33", "printed_page": 33, "pdf_index": 18, "pdf_ordinal": 19, "scan_side": "right", "image": "p33.jpg", "crop_box_pdf_points": [422, 0, 792, 612]},
+      {"locator": "34", "printed_page": 34, "pdf_index": 19, "pdf_ordinal": 20, "scan_side": "left", "image": "p34.jpg", "crop_box_pdf_points": [0, 0, 430, 612]},
+      {"locator": "35", "printed_page": 35, "pdf_index": 19, "pdf_ordinal": 20, "scan_side": "right", "image": "p35.jpg", "crop_box_pdf_points": [422, 0, 792, 612]},
+      {"locator": "36", "printed_page": 36, "pdf_index": 20, "pdf_ordinal": 21, "scan_side": "left", "image": "p36.jpg", "crop_box_pdf_points": [0, 0, 419, 612]},
+      {"locator": "37", "printed_page": 37, "pdf_index": 20, "pdf_ordinal": 21, "scan_side": "right", "image": "p37.jpg", "crop_box_pdf_points": [411, 0, 792, 612]},
+      {"locator": "38", "printed_page": 38, "pdf_index": 21, "pdf_ordinal": 22, "scan_side": "left", "image": "p38.jpg", "crop_box_pdf_points": [0, 0, 434, 612]},
+      {"locator": "39", "printed_page": 39, "pdf_index": 22, "pdf_ordinal": 23, "scan_side": "right", "image": "p39.jpg", "crop_box_pdf_points": [427, 0, 792, 612]},
+      {"locator": "40", "printed_page": 40, "pdf_index": 23, "pdf_ordinal": 24, "scan_side": "left", "image": "p40.jpg", "crop_box_pdf_points": [0, 0, 432, 612]},
+      {"locator": "41", "printed_page": 41, "pdf_index": 23, "pdf_ordinal": 24, "scan_side": "right", "image": "p41.jpg", "crop_box_pdf_points": [424, 0, 792, 612]},
+      {"locator": "45", "printed_page": 45, "pdf_index": 26, "pdf_ordinal": 27, "scan_side": "right", "image": "p45.jpg", "crop_box_pdf_points": [425, 0, 792, 612]}
+    ],
+    "notes": [
+      "Only the 16 currently cited printed pages are stored; navigation follows this explicit available-page list.",
+      "An inserted manuscript facsimile after printed page 38 breaks a constant spread offset: page 39 is on PDF index 22, right side.",
+      "The original PDF remains linked for facing-page context, uncited leaves, title and digitization notices."
+    ]
+  },
+  "verification": {
+    "date": "2026-10-06",
+    "mapping_scope": "All 16 currently cited printed-page targets were visually verified; the 215 cited passages were not individually collated.",
+    "all_cited_pages": [27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 45],
+    "example": {
+      "lemma": "îybaypy",
+      "printed_page": 45,
+      "pdf_index": 26,
+      "pdf_ordinal": 27,
+      "scan_side": "right",
+      "image": "p45.jpg"
+    }
+  },
+  "render": {
+    "method": "explicit full-height page-side crops from composed PDF spreads",
+    "target_width_px": 1200,
+    "jpeg_quality": 85,
+    "progressive": true,
+    "colorspace": "RGB",
+    "targets_path": "mapping.targets",
+    "renderer_versions": {"PyMuPDF": "1.26.6", "Pillow": "12.3.0"}
+  }
+}

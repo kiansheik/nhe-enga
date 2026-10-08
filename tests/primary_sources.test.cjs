@@ -16,7 +16,11 @@ assert.ok(linkSourcesStart >= 0 && linkSourcesEnd > linkSourcesStart);
 const linkSources = vm.runInNewContext(`${dictionaryScript.slice(linkSourcesStart, linkSourcesEnd)}; linkSources;`);
 const viewerHtml = fs.readFileSync(path.join(root, 'docs/primary_sources/index.html'), 'utf8');
 const viewerScript = viewerHtml.match(/<script>([\s\S]*?)<\/script>/)[1];
-const manifest = JSON.parse(fs.readFileSync(path.join(root, 'docs/primary_sources/evreux1929/source.json'), 'utf8'));
+const manifests = Object.fromEntries(['evreux1929', 'figueira1878', 'castilho1937'].map((book) => [
+  book,
+  JSON.parse(fs.readFileSync(path.join(root, `docs/primary_sources/${book}/source.json`), 'utf8')),
+]));
+const manifest = manifests.evreux1929;
 
 function links(html) {
   return [...html.matchAll(/<a href="([^"]+)"[^>]*>([^<]*)<\/a>/g)].map((match) => ({
@@ -80,7 +84,14 @@ async function openViewer(query, formats = null) {
   };
   vm.runInNewContext(viewerScript, {
     document, window, URLSearchParams,
-    fetch: async () => ({ ok: Boolean(formats), json: async () => formats }),
+    fetch: async (url) => {
+      if (url.endsWith('/image-formats.json')) {
+        return { ok: Boolean(formats), json: async () => formats };
+      }
+      const match = url.match(/\/primary_sources\/([^/]+)\/source\.json$/);
+      const source = match && manifests[match[1]];
+      return { ok: Boolean(source), json: async () => source };
+    },
   });
   // Allow loadImageFormats().then(updateImage) to complete.
   await new Promise(setImmediate);
@@ -108,7 +119,8 @@ test('D’Evreux preserves citation wording, apostrophe variants, and each page 
 
 test('shorthand, other editions/books, and unavailable printed pages stay unlinked', () => {
   for (const citation of [
-    "Yves D'Evreux, (op. cit., p. 157)", "D'Evreux, Voyage, 293", 'Fig., Arte, 150',
+    "Yves D'Evreux, (op. cit., p. 157)", "D'Evreux, Voyage, 293", 'Fig., Missão do Maranhão, 150',
+    'Fig., Arte, 1685, 64', 'Castilho, Nomes, 42',
     "D'Evreux, Viagem, 1864, 293", "D'Evreux, Viagem, 0", "D'Evreux, Viagem, 3",
     "D'Evreux, Viagem, 443", "D'Evreux, Viagem, 293v",
   ]) assert.equal(linkSources(citation), citation);
@@ -136,6 +148,55 @@ test('the served dictionary’s 120 explicit citations reach the 42 verified pri
   assert.deepEqual([...pages].sort((a, b) => a - b), manifest.verification.all_cited_pages);
 });
 
+test('Figueira links every current Arte citation, ranges and inherited pages without changing text', () => {
+  const entries = JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(root, 'docs/dict-conjugated.json.gz'))));
+  let citationCount = 0;
+  const records = new Set();
+  const pages = new Set();
+  entries.forEach((entry, entryIndex) => {
+    const definition = entry.d || '';
+    const linked = linkSources(definition);
+    assert.equal(linked.replace(/<\/?a\b[^>]*>/g, ''), definition);
+    const sourceLinks = links(linked).filter((link) => link.href.includes('book_name=figueira1878'));
+    if (sourceLinks.length) records.add(entryIndex);
+    for (const link of sourceLinks) {
+      if (link.text.includes('Fig.')) citationCount += 1;
+      pages.add(Number(new URL(link.href, 'https://example.test').searchParams.get('page_number')));
+    }
+  });
+  assert.equal(citationCount, 622);
+  assert.equal(records.size, 455);
+  assert.deepEqual([...pages].sort((a, b) => a - b), manifests.figueira1878.verification.all_cited_pages);
+
+  const inherited = "(Fig., Arte, 147; 163)";
+  assert.deepEqual(links(linkSources(inherited)).map((link) => link.text), ['Fig., Arte, 147', '163']);
+  const qualified = links(linkSources('(Fig., Arte, 1686, 64)'));
+  assert.equal(qualified.length, 1);
+  assert.equal(qualified[0].text, 'Fig., Arte, 1686, 64');
+  assert.equal(new URL(qualified[0].href, 'https://example.test').searchParams.get('citation_year'), '1686');
+});
+
+test('Castilho links all 215 current Nomes citations to the 16 explicit crop targets', () => {
+  const entries = JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(root, 'docs/dict-conjugated.json.gz'))));
+  let citationCount = 0;
+  const records = new Set();
+  const pages = new Set();
+  entries.forEach((entry, entryIndex) => {
+    const definition = entry.d || '';
+    const linked = linkSources(definition);
+    assert.equal(linked.replace(/<\/?a\b[^>]*>/g, ''), definition);
+    const sourceLinks = links(linked).filter((link) => link.href.includes('book_name=castilho1937'));
+    if (sourceLinks.length) records.add(entryIndex);
+    for (const link of sourceLinks) {
+      if (link.text.includes('Castilho')) citationCount += 1;
+      pages.add(Number(new URL(link.href, 'https://example.test').searchParams.get('page_number')));
+    }
+  });
+  assert.equal(citationCount, 215);
+  assert.equal(records.size, 162);
+  assert.deepEqual([...pages].sort((a, b) => a - b), manifests.castilho1937.verification.all_cited_pages);
+});
+
 test('so’o-Îurupari citation opens the 1929 page 293 scan and PDF ordinal 294', async () => {
   // Attestation: source.json records “Soo-Jeropary” at printed p. 293.
   const href = links(linkSources("(D'Evreux, Viagem, 293)"))[0].href;
@@ -153,6 +214,66 @@ test('so’o-Îurupari citation opens the 1929 page 293 scan and PDF ordinal 294
   assert.equal(reloaded.image().src, '/nhe-enga/docs/primary_sources/evreux1929/294.jpg');
   reloaded.click('prevPage');
   assert.equal(reloaded.window.location.searchParams.get('page_number'), '293');
+});
+
+test('Figueira resolves printed pages through its manifest and explains the 1686 typo', async () => {
+  const ordinaryHref = links(linkSources('(Fig., Arte, 85)'))[0].href;
+  const ordinary = await openViewer(ordinaryHref.split('?')[1]);
+  assert.equal(ordinary.image().src, '/nhe-enga/docs/primary_sources/figueira1878/108.jpg');
+  assert.match(ordinary.get('currentPage').textContent, /Página impressa 85.*PDF página 109/);
+  assert.equal(ordinary.get('sourcePdf').href, `${manifests.figueira1878.pdf.url}#page=109`);
+  assert.equal(ordinary.get('sourceNotice').hidden, true);
+
+  const qualifiedHref = links(linkSources('(Fig., Arte, 1686, 64)'))[0].href;
+  const qualified = await openViewer(qualifiedHref.split('?')[1]);
+  assert.equal(qualified.image().src, '/nhe-enga/docs/primary_sources/figueira1878/87.jpg');
+  assert.equal(qualified.get('sourcePdf').href, `${manifests.figueira1878.pdf.url}#page=88`);
+  assert.equal(qualified.get('sourceNotice').hidden, false);
+  assert.match(qualified.get('sourceNotice').textContent, /conserva “1686”.*1687.*página 64/);
+  assert.equal(qualified.window.location.searchParams.get('citation_year'), '1686');
+  qualified.click('nextPage');
+  assert.equal(qualified.window.location.searchParams.has('citation_year'), false);
+  assert.equal(qualified.get('sourceNotice').hidden, true);
+
+  const first = await openViewer('book_name=figueira1878&page_number=1');
+  assert.match(first.image().src, /\/24\.jpg$/);
+  first.click('prevPage');
+  assert.match(first.image().src, /\/23\.jpg$/);
+  assert.match(first.get('currentPage').textContent, /Preliminar sem numeração/);
+  assert.equal(first.window.location.searchParams.get('scan'), '23');
+  assert.equal(first.window.location.searchParams.has('page_number'), false);
+  first.click('nextPage');
+  assert.equal(first.window.location.searchParams.get('page_number'), '1');
+
+  const unavailable = await openViewer('book_name=figueira1878&page_number=168');
+  assert.equal(unavailable.image(), null);
+  assert.equal(unavailable.get('imageError').hidden, false);
+  assert.match(unavailable.get('imageError').textContent, /mapa desta fonte/);
+  assert.equal(unavailable.window.location.searchParams.get('page_number'), '168');
+});
+
+test('Castilho uses its non-linear crop map and jumps only among available pages', async () => {
+  const page38 = await openViewer('book_name=castilho1937&page_number=38');
+  assert.equal(page38.image().src, '/nhe-enga/docs/primary_sources/castilho1937/p38.jpg');
+  assert.match(page38.get('currentPage').textContent, /Página impressa 38.*lado esquerdo.*PDF página 22/);
+  assert.equal(page38.get('sourcePdf').href, `${manifests.castilho1937.pdf.url}#page=22`);
+  page38.click('nextPage');
+  assert.equal(page38.window.location.searchParams.get('page_number'), '39');
+  assert.match(page38.image().src, /\/p39\.jpg$/);
+  assert.match(page38.get('currentPage').textContent, /lado direito.*PDF página 23/);
+
+  const page41 = await openViewer('book_name=castilho1937&page_number=41');
+  page41.click('nextPage');
+  assert.equal(page41.window.location.searchParams.get('page_number'), '45');
+  assert.equal(page41.get('nextPage').disabled, true);
+  page41.click('nextPage');
+  assert.match(page41.image().src, /\/p45\.jpg$/);
+
+  const unavailable = await openViewer('book_name=castilho1937&page_number=42');
+  assert.equal(unavailable.image(), null);
+  assert.equal(unavailable.get('imageError').hidden, false);
+  assert.match(unavailable.get('imageError').textContent, /mapa desta fonte/);
+  assert.equal(unavailable.window.location.searchParams.get('page_number'), '42');
 });
 
 test('cover, unnumbered preliminaries, and final blank have bounded navigation and honest labels', async () => {
