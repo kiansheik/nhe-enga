@@ -933,7 +933,8 @@ class VerbAugmentor(Verb):
             # No inference from opaque iko- spellings or through derivations.
             lexical_base = getattr(fin, "_lexical_base_verbete", fin.verbete)
             if (
-                self.ero_switch and prefix == "ero"
+                self.ero_switch
+                and prefix == "ero"
                 and AnnotatedString(lexical_base).clean == "ikó"
                 and getattr(fin, "_augmentee", None) is None
             ):

@@ -9,7 +9,10 @@ REPO = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(REPO / "pydicate"), str(REPO / "tupi")]
 
 from pydicate.lang.tupilang.pos import (
+    Adverb,
     Noun,
+    SizeSuffix,
+    esé,
     ProperNoun,
     Verb,
     abé,
@@ -31,6 +34,32 @@ class HistoricSurfaceConsistencyTest(unittest.TestCase):
     def assert_ordinary_matches_annotated(self, expression, expected):
         self.assertEqual(expression.eval(), expected)
         self.assertEqual(surface(expression.eval(annotated=True)), expected)
+
+    def test_araujo_118_nominal_preverbal_adjunct_has_one_boundary(self):
+        # Araújo 1686:118: overt abá + preverbal marã under -saba/-pûera/-ĩ.
+        base = Noun("abá") * (
+            Adverb("marã") >> Verb("ikó", verb_class="(v. intr. irreg.)")
+        )
+        expression = (esé * ((pûera * (saba * base)) / SizeSuffix("-'ĩ"))) + Noun(
+            "nherane'yma"
+        )
+        self.assert_ordinary_matches_annotated(
+            expression, "abá marã sekoagûerĩ resé nherane'yma"
+        )
+
+    def test_nominal_adjunct_boundary_preserves_no_adjunct_and_dropped_subject(self):
+        for subject in (Noun("abá"), +Noun("abá")):
+            with self.subTest(dropped=subject.pro_drop):
+                verb = Verb("ikó", verb_class="(v. intr. irreg.)")
+                nominal = (subject * (Adverb("marã") >> verb)).base_nominal(True)
+                expected = ("i " if subject.pro_drop else "abá ") + "marã sekó"
+                self.assert_ordinary_matches_annotated(nominal, expected)
+        self.assert_ordinary_matches_annotated(
+            (Noun("abá") * Verb("ikó", verb_class="(v. intr. irreg.)")).base_nominal(
+                True
+            ),
+            "abá rekó",
+        )
 
     def test_araujo_bettendorff_20_finite_gerund_applies_phonetics(self):
         expression = oré * Verb("îase'o")

@@ -26,11 +26,14 @@ class CompoundAnnotationTest(unittest.TestCase):
         # Pending Araújo: "Oguerecomemoãçâra çupé nhirõ."
         # Requested analysis, not an independently approved historical reading.
         from pydicate.lang.tupilang.pos.verb import ero, mo
+
         root = Verb("ikó") / Noun("memûã")
         before = root.eval(True)
         result = ero * root
         self.assertEqual(result.eval(), "erekomemûã")
-        self.assertEqual(result.eval(True), "er[CAUSATIVE_PREFIX:ERO]eko[ROOT]memûã[ROOT]")
+        self.assertEqual(
+            result.eval(True), "er[CAUSATIVE_PREFIX:ERO]eko[ROOT]memûã[ROOT]"
+        )
         self.assertEqual(root.eval(True), before)
         self.assertEqual(result._augmentee.eval(True), before)
         self.assertEqual(result.definition, root.definition)
@@ -41,6 +44,7 @@ class CompoundAnnotationTest(unittest.TestCase):
 
     def test_ero_replays_iko_compositions(self):
         from pydicate.lang.tupilang.pos.verb import ero
+
         iko = Verb("ikó")
         for modifiers in ((Noun("katú"),), (Noun("memûã"), Noun("eté"))):
             root = iko

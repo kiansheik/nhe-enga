@@ -219,7 +219,7 @@ class Classifier(Noun):
                         if re.sub(r"\[[^\]]+\]", "", retval).endswith("a"):
                             retval = re.sub(r"a((?:\[[^\]]+\])*)$", r"\1", retval)
                         head = head[:-1]
-                    ending = sized[len(head):]
+                    ending = sized[len(head) :]
                     retval += ending + ("[SIZE_SUFFIX]" if annotated else "")
             # Classifiers over deverbals should preserve verbal adjunct context
             # carried by the argument chain.

@@ -483,7 +483,9 @@ class Verb(TupiAntigo):
                 redup_space = self.reduplicate(
                     AnnotatedString(redup_space)
                 ).get_annotated()
-            joiner = "" if fuse_subj or self.segunda_classe else " "
+            # A preverbal adjunct already carries its leading word boundary.
+            # Do not add a second separator after the nominal subject.
+            joiner = "" if fuse_subj or self.segunda_classe or vadjs_pre else " "
             result = (
                 f"{subj if not pro_drop else ''}{joiner}{vadjs_pre}{redup_space}{vadjs}"
             ).strip()

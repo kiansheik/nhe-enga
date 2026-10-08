@@ -22,9 +22,16 @@ class SizeSuffixTests(unittest.TestCase):
 
         # Pending Araujo: "Abá marã cecó agoérĩ"; requested analysis,
         # not an independently approved historical reference.
-        source = pûera * (saba * (Noun("abá") * (
-            Adverb("marã") >> Verb("ikó", verb_class="(v. intr. irreg.)", vid=5202)
-        )))
+        source = pûera * (
+            saba
+            * (
+                Noun("abá")
+                * (
+                    Adverb("marã")
+                    >> Verb("ikó", verb_class="(v. intr. irreg.)", vid=5202)
+                )
+            )
+        )
         original = source.eval()
         result = source / SizeSuffix("-'ĩ")
         self.assertEqual(" ".join(result.eval().split()), "abá marã sekoagûerĩ")
