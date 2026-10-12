@@ -1,5 +1,13 @@
 # Agent Log
 
+## 2026-10-12 — Diffuse locative -bo
+
+Implemented `bo` (Navarro -bo2) beside `pe` and routed hyphenated dictionary
+`Postposition` values `-bo`/`-pe` through their bound classes. Rejected the
+`YFix` wrapper approach: it skips `Postposition.__mul__` and raises. 92 engine
+tests and 113 corpus tests pass; all 160 historic renders are byte-identical.
+The consonant-final `y` branch is an inference awaiting editorial confirmation.
+
 ## 2026-10-06 — D’Evreux 1929 primary-source pilot
 
 Implemented the reviewed D’Evreux pilot without changing dictionary data,
