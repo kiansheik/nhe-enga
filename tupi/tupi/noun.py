@@ -385,6 +385,37 @@ class Noun(TupiAntigo):
         ret_noun.recreate += f".{func_name}({args_str})"
         return ret_noun
 
+    def bo(self):
+        """Diffuse locative -bo (Navarro, -bo2): kóbo, ka'abo, nhũbo, potasábo.
+
+        Unlike -pe it has no nasal allomorph (nhũbo). The epenthetic y after a
+        consonant-final stem follows -pe's -ype by analogy; it is not attested
+        in the -bo2 entry itself.
+        """
+        frame = inspect.currentframe()
+        func_name = frame.f_code.co_name
+        args, _, _, values = inspect.getargvalues(frame)
+        args_str = ", ".join(
+            f"{arg}={repr(values[arg])}" for arg in args if "self" != arg
+        )
+        ret_noun = self._clone()
+        ret_noun.aglutinantes[-1] = self
+        annotated = ret_noun.latest_verbete
+
+        if ends_with_any(annotated, ["ab"]):
+            annotated.replace_clean(-2, 2, "á")
+        elif ends_with_any(annotated, ret_noun.semi_vogais):
+            pass
+        elif ends_with_any(annotated, ret_noun.consoantes):
+            annotated.insert_suffix("y[SUBSTANTIVE_SUFFIX:CONSONANT_ENDING:CLITIC]")
+        annotated.insert_suffix("bo")
+        annotated.insert_suffix("[POSTPOSITION:DIFFUSIVE]")
+        ret_noun.aglutinantes.append(ret_noun)
+        ret_noun.segunda_classe = True
+        ret_noun.transitivo = False
+        ret_noun.recreate += f".{func_name}({args_str})"
+        return ret_noun
+
     def sara(self, variation_id=0):
         frame = inspect.currentframe()
         func_name = frame.f_code.co_name

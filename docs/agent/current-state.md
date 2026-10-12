@@ -1,5 +1,15 @@
 # Current State
 
+## 2026-10-12 — Diffuse locative -bo and hyphenated postpositions
+
+- `bo` (`Diffusive`, `tupi.Noun.bo`) implements Navarro's -bo2 diffuse
+  locative; `Postposition("-bo")` and `Postposition("-pe")` from dictionary
+  headwords now realize through `Diffusive`/`Locative` instead of `oka -bo`.
+- 92 engine tests pass; all 160 historic plain/annotated renders unchanged.
+  Consonant-final `okybo` is inferred, not attested. Under review on branch
+  `feat/bound-postposition-bo`. See the
+  [handoff](session-handoffs/2026-10-12-bound-postposition-bo.md).
+
 ## 2026-10-06 — D’Evreux 1929 primary-source pilot
 
 - The implementation branch `devreux-primary-source` adds the complete
