@@ -124,6 +124,10 @@
   let searchIndex = [];
   let dataReady = false;
 
+  function normalizeApostrophes(str) {
+    return str.replace(/[\u2018\u2019\u201B\u02BB\u02BC\uFF07]/g, "'");
+  }
+
   function escapeRegExp(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
@@ -141,7 +145,7 @@
   }
 
   function normalizeExact(str) {
-    return removePunctuation(str).toLowerCase();
+    return removePunctuation(normalizeApostrophes(str)).toLowerCase();
   }
 
   function normalizeNoAccent(str) {
@@ -149,13 +153,21 @@
   }
 
   function buildSearchIndex(data) {
-    return data.map((item) => ({
-      item,
-      firstWordExact: normalizeExact(item.first_word || ''),
-      firstWordNoAccent: normalizeNoAccent(item.first_word || ''),
-      definitionLower: (item.definition || '').toLowerCase(),
-      definitionNoAccent: normalizeNoAccent(item.definition || ''),
-    }));
+    return data.map((item) => {
+      item.first_word = normalizeApostrophes(item.first_word || '');
+      item.definition = normalizeApostrophes(item.definition || '');
+      if (typeof item.con === 'string') {
+        item.con = normalizeApostrophes(item.con);
+      }
+
+      return {
+        item,
+        firstWordExact: normalizeExact(item.first_word),
+        firstWordNoAccent: normalizeNoAccent(item.first_word),
+        definitionLower: item.definition.toLowerCase(),
+        definitionNoAccent: normalizeNoAccent(item.definition),
+      };
+    });
   }
 
   const warnOnce = (() => {
@@ -2035,7 +2047,8 @@
       return;
     }
 
-    const query = searchInput.value.trim();
+    const query = normalizeApostrophes(searchInput.value.trim());
+    searchInput.value = query;
     const queryLower = query.toLowerCase();
 
     if (!query) {
