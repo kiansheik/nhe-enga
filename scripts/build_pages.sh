@@ -136,6 +136,11 @@ mkdir -p "$BUILD_DIR/gramatica"
 cp -R "$GRAMMAR_DIST/." "$BUILD_DIR/gramatica/"
 rm -rf "$GRAMMAR_DIST"
 
+# Preserve the independently built installer; no Gradle/content embedding here.
+"$PYTHON_BIN" "$ROOT_DIR/scripts/stage_android.py" "$BUILD_DIR"
+# Hash final optimized/re-written bytes, never raw source scans or VuePress input.
+"$PYTHON_BIN" "$ROOT_DIR/scripts/build_offline.py" "$BUILD_DIR" --prepare
+
 touch "$BUILD_DIR/.nojekyll"
 if [[ -n "${SITE_CNAME:-kiansheik.io}" ]]; then
   printf '%s\n' "${SITE_CNAME:-kiansheik.io}" > "$BUILD_DIR/CNAME"
