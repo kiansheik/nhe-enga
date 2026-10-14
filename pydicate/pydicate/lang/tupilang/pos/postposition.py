@@ -130,7 +130,9 @@ class Locative(Postposition):
 
 
 class Diffusive(Postposition):
-    def __init__(self, definition="in, through, around (no specific place); according to"):
+    def __init__(
+        self, definition="in, through, around (no specific place); according to"
+    ):
         """Initialize the diffuse locative -bo (Navarro, -bo2)."""
         super().__init__("bo", definition=definition, tag="[POSTPOSITION:DIFFUSIVE]")
 

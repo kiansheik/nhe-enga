@@ -37,7 +37,9 @@ class DiffusiveBoTests(unittest.TestCase):
 
     def test_annotated_tag(self):
         self.assertTrue(
-            (bo * Noun("ka'a")).eval(annotated=True).endswith("bo[POSTPOSITION:DIFFUSIVE]")
+            (bo * Noun("ka'a"))
+            .eval(annotated=True)
+            .endswith("bo[POSTPOSITION:DIFFUSIVE]")
         )
 
     def test_locative_contrast_unchanged(self):
@@ -49,7 +51,9 @@ class HyphenatedPostpositionTests(unittest.TestCase):
     """A dictionary headword such as -bo or -pe names a bound postposition."""
 
     def test_hyphenated_value_uses_bound_allomorphy(self):
-        self.assertEqual((Postposition("-bo", definition="em, por") * Noun("ka'a")).eval(), "ka'abo")
+        self.assertEqual(
+            (Postposition("-bo", definition="em, por") * Noun("ka'a")).eval(), "ka'abo"
+        )
         self.assertEqual((Postposition("-bo") * Noun("oka")).eval(), "okybo")
         self.assertEqual((Postposition("-pe") * Noun("oka")).eval(), "okype")
         self.assertEqual((Postposition("-pe") * Noun("nhũ")).eval(), "nhũme")
@@ -58,7 +62,9 @@ class HyphenatedPostpositionTests(unittest.TestCase):
         p = Postposition("-bo", definition="em, por, per")
         self.assertEqual(p.definition, "em, por, per")
         self.assertTrue(
-            (p * Noun("ka'a")).eval(annotated=True).endswith("bo[POSTPOSITION:DIFFUSIVE]")
+            (p * Noun("ka'a"))
+            .eval(annotated=True)
+            .endswith("bo[POSTPOSITION:DIFFUSIVE]")
         )
 
     def test_hyphenated_value_without_argument_shows_bare_form(self):
