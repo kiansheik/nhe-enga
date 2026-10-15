@@ -1,6 +1,7 @@
 import base64
 import importlib.util
 import json
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -31,6 +32,53 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(p["downloadBytes"], sum(f["bytes"] for f in files))
             for f in files:
                 self.assertEqual(f["sha256"], b.file_hash(self.build / f["path"]))
+
+    def test_make_discovers_local_signing_key_without_shell_configuration(self):
+        home = Path(self.tmp.name) / "home"
+        signing_dir = home / ".config/nhe-enga"
+        signing_dir.mkdir(parents=True)
+        key = signing_dir / "content-private.pem"
+        key.touch()
+        environment = os.environ.copy()
+        for name in ("OFFLINE_SIGNING_KEY", "NHE_SIGNING_DIR"):
+            environment.pop(name, None)
+        environment["HOME"] = str(home)
+
+        def configured_key(**overrides):
+            result = subprocess.run(
+                [
+                    "make",
+                    "--no-print-directory",
+                    "-s",
+                    "-f",
+                    "Makefile",
+                    "-f",
+                    "-",
+                    "print-signing-key",
+                ],
+                input='print-signing-key:\n\t@printf "%s" "$$OFFLINE_SIGNING_KEY"\n',
+                cwd=b.ROOT,
+                env={**environment, **overrides},
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            return result.stdout
+
+        self.assertEqual(configured_key(), str(key))
+        self.assertEqual(
+            configured_key(OFFLINE_SIGNING_KEY="/explicit/content.pem"),
+            "/explicit/content.pem",
+        )
+        custom = home / "custom-signing"
+        custom.mkdir()
+        (custom / "content-private.pem").touch()
+        self.assertEqual(
+            configured_key(NHE_SIGNING_DIR=str(custom)),
+            str(custom / "content-private.pem"),
+        )
+        key.unlink()
+        self.assertEqual(configured_key(), "")
 
     def test_direct_image_optimization_preserves_sources_and_output_bytes(self):
         spec = importlib.util.spec_from_file_location(

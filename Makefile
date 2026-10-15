@@ -10,6 +10,8 @@ PYTHON_DEPS_STAMP ?= .venv/.requirements-installed
 GRAMMAR_DIR := gramatica/docs
 VUEPRESS_PUBLIC := $(GRAMMAR_DIR)/src/.vuepress/public
 PAGES_BUILD_DIR ?= .pages-build
+NHE_SIGNING_DIR ?= $(HOME)/.config/nhe-enga
+export OFFLINE_SIGNING_KEY ?= $(wildcard $(NHE_SIGNING_DIR)/content-private.pem)
 
 .PHONY: help setup lint format python-deps node-deps build-wheels grammar-build pages-build deploy-gh-pages push gen_data
 

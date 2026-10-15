@@ -159,6 +159,13 @@ Dictionary/source updates remain independent of native APK updates.
 For the permanent local identities under `$HOME/.config/nhe-enga`, the signing
 wrapper loads credentials without printing them:
 
+Plain `make pages-build` and `make deploy-gh-pages` automatically discover
+`$HOME/.config/nhe-enga/content-private.pem` when it exists; no shell profile
+changes or exports are needed. An explicit `OFFLINE_SIGNING_KEY` takes precedence,
+and `NHE_SIGNING_DIR` can select another local signing directory. APK/content-key
+matching is still enforced. The wrapper remains useful for APK builds, which also
+need the private keystore credentials.
+
 ```sh
 scripts/with_android_signing.sh make apk-release
 scripts/with_android_signing.sh make deploy-gh-pages
