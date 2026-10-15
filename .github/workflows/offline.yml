@@ -30,12 +30,15 @@ jobs:
             /tests/offline/
             /Makefile
             /manifest.json
+            /index.html
+            /styles.css
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - run: python -m pip install Pillow==12.3.0
       - run: make offline-test
       - run: python -m pip install playwright==1.55.0 && python -m playwright install --with-deps chromium
       - run: make offline-browser-test

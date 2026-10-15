@@ -85,14 +85,22 @@ def main():
                 page.wait_for_function("async () => {const r=await(await caches.open('nhe-offline-meta-v1')).match('/nhe-enga/offline/state');return !(await r.json()).saved['docs/primary_sources/lerhist/2.png']}")
                 print("PASS saved-only source removal through download UI")
                 homepage = (build_offline.ROOT / 'index.html').read_text()
-                for android in (False, True):
-                    install_context = browser.new_context(service_workers='block', user_agent='Mozilla/5.0 (Linux; Android 14) Chrome/140.0 Mobile' if android else 'Desktop Browser', viewport={'width': 360 if android else 1280, 'height': 800})
+                for viewport_width, android in ((360, True), (400, True), (1280, False)):
+                    install_context = browser.new_context(service_workers='block', user_agent='Mozilla/5.0 (Linux; Android 14) Chrome/140.0 Mobile' if android else 'Desktop Browser', viewport={'width': viewport_width, 'height': 800})
                     install_page = install_context.new_page()
                     install_page.route(base, lambda route: route.fulfill(body=homepage, content_type='text/html'))
                     install_page.route('**/styles.css', lambda route: route.fulfill(body=(build_offline.ROOT / 'styles.css').read_text(), content_type='text/css'))
                     install_page.route('**/downloads/android.json', lambda route: route.fulfill(json={'url': 'nhe-enga.apk', 'versionCode': 1, 'versionName': '0.1.0', 'bytes': 350000, 'sha256': 'a' * 64}))
                     install_page.goto(base)
                     if android:
+                        install_page.locator('#android-install').wait_for()
+                        install_page.evaluate('document.fonts.ready')
+                        link_bounds = 'links => links.map(link => {const bounds = link.getBoundingClientRect(); return [bounds.x, bounds.y, bounds.width, bounds.height]})'
+                        shown = install_page.locator('main > .content > a').evaluate_all(link_bounds)
+                        install_page.locator('#android-install').evaluate('button => button.hidden = true')
+                        hidden = install_page.locator('main > .content > a').evaluate_all(link_bounds)
+                        assert shown == hidden, 'Install icon changed homepage link positions or spacing'
+                        install_page.locator('#android-install').evaluate('button => button.hidden = false')
                         install_page.locator('#android-install').click()
                         assert install_page.locator('#android-install-dialog').is_visible()
                         assert 'APK é assinado' in install_page.locator('#android-install-dialog').inner_text()
