@@ -6,6 +6,7 @@
     <link rel="icon" href="/nhe-enga/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="styles.css">
     <link rel="manifest" href="manifest.json">
+<script defer src="/nhe-enga/offline/register.js"></script>
 </head>
 <!--    The following HTML document is an academic paper which seaks to explore a methods in which on might be able to represent a book which such authors as Eudardo Navarro have written.
     His monumental work titled "Dicionário de Tupi antigo: A língua indígena clássica do Brasil" has allowed many in the world to be able to study the ancestral language of Brasil.
@@ -38,8 +39,8 @@
     <meta name="citation_author" content="Eduardo de Almeida Navarro">
     <meta name="citation_publication_date" content="2007">
     <meta name="citation_publisher" content="Global Editora e Distribuidora Ltda.">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.3/pako.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+    <script src="/nhe-enga/js/pako.min.js"></script>
+    <script src="/nhe-enga/vendor/pyodide/v0.25.0/pyodide.js"></script>
     <script>
         // Function to load JSON from a file
         function loadJSON(url, callback) {
@@ -55,13 +56,13 @@
         }
         function loadCompressedJSONSync(url) {
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', url, false); // Make the request synchronous
-            xhr.responseType = 'arraybuffer'; // Use arraybuffer to handle binary data
+            xhr.open('GET', url, false);
+            xhr.overrideMimeType('text/plain; charset=x-user-defined');
             xhr.send(null);
 
             if (xhr.readyState == 4 && xhr.status == 200) {
-                // Decompress the data using pako
-                var decompressedData = pako.inflate(xhr.response, { to: 'string' });
+                var bytes = Uint8Array.from(xhr.responseText, character => character.charCodeAt(0) & 255);
+                var decompressedData = pako.inflate(bytes, { to: 'string' });
                 return JSON.parse(decompressedData);
             }
 
@@ -81,7 +82,7 @@
         }
         let globalPyodide, pyodideReady = false;
         async function initializePython() {
-            globalPyodide = await loadPyodide();
+            globalPyodide = await loadPyodide({indexURL: '/nhe-enga/vendor/pyodide/v0.25.0/'});
             console.log(globalPyodide.runPython(`
                 import sys
                 sys.version
@@ -128,7 +129,7 @@
             pythonCode += `.substantivo(anotated=${anotated_str})`
             return globalPyodide.runPython(pythonCode);
         }
-        window.jsonData = loadJSONSync('docs/dict-conjugated.json').map(item => ({
+        window.jsonData = loadCompressedJSONSync('docs/dict-conjugated.json.gz').map(item => ({
             "first_word": item.f || "",
             "optional_number": item.o || "",
             "definition": item.d || "",

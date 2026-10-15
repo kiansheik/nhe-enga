@@ -17,6 +17,7 @@
 
         gtag('config', 'G-DZYY8Y9076');
     </script>
+<script defer src="/nhe-enga/offline/register.js"></script>
 </head>
 <!--    The following HTML document is an academic paper which seaks to explore a methods in which on might be able to represent a book which such authors as Marcel Twardowsky Avila have written.
     His monumental work titled "LÉXICO GUARANI, DIALETO MBYÁ" has allowed many in the world to be able to study the ancestral language of Brasil.
@@ -109,7 +110,7 @@
     <meta name="citation_author" content="Robert A. Dooley">
     <meta name="citation_publication_date" content="2006">
     <meta name="citation_publisher" content="SIL">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.3/pako.min.js"></script>
+    <script src="/nhe-enga/js/pako.min.js"></script>
     <script>
         // Function to load JSON from a file
         function loadJSON(url, callback) {
@@ -269,7 +270,7 @@
         return resultObject;
         }
         // const doc_id = "1NH_SgkBYY-vAITMtxrZogzihZGsbhIXCaes6HJrcJww";
-        // const sheetCsvUrl = `https://docs.google.com/spreadsheets/d/${doc_id}/export?format=csv&sheet=AdminWords`;
+        // const sheetCsvUrl = `/nhe-enga/neologisms.csv
         // const neos = loadNeoJSONSync("/nhe-enga/neologisms.csv")
         const compressedData = loadCompressedJSONSync('/nhe-enga/docs/dooley_2006_mbya_dic.json.gz').map(item => ({
             "first_word": item.f || "",

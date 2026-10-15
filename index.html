@@ -24,6 +24,7 @@
     <script src="/nhe-enga/js/papaparse.min.js" defer></script>
     <script src="/nhe-enga/js/pako.min.js" defer></script>
     <script src="/nhe-enga/js/index.js" defer></script>
+    <script src="/nhe-enga/offline/register.js" defer></script>
 </head>
 <!--    The following HTML document is an academic paper which seaks to explore a methods in which on might be able to represent a book which such authors as Eudardo Navarro have written.
     His monumental work titled "Dicionário de Tupi antigo: A língua indígena clássica do Brasil" has allowed many in the world to be able to study the ancestral language of Brasil.
@@ -32,6 +33,13 @@
 <body>
     <main>
         <div class='content'>
+            <button id="android-install" type="button" hidden aria-label="Instalar Nhe'enga no Android" title="Instalar no Android">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                    <polyline points="7 10 12 15 17 10" />
+                    <line x1="12" x2="12" y1="15" y2="3" />
+                </svg>
+            </button>
             <a href="/nhe-enga/quiz">Quiz</a><br>
             <a href="/nhe-enga/gramatica">Gramática</a><br>
             <a href="/nhe-enga/gramatica/guide/tools/playground.html">Playground</a><br>
@@ -52,6 +60,17 @@
             <section class='results' id="results"></section>
         </div>
     </main>
+    <dialog id="android-install-dialog" aria-labelledby="android-install-title">
+        <h2 id="android-install-title">Nhe'enga para Android</h2>
+        <p id="android-install-version"></p>
+        <p>O aplicativo é gratuito e o APK é assinado, mas é distribuído fora da Play Store.</p>
+        <p>Ao abrir o APK, o Android pode pedir que você permita instalar apps desta fonte nas configurações do navegador. Autorize apenas se confiar neste site; não é necessário desativar o Play Protect.</p>
+        <p>Para atualizar depois, use a engrenagem e “Verificar atualização do aplicativo”. Instale por cima da versão atual, sem desinstalar, para preservar seus downloads.</p>
+        <div class="android-install-actions">
+            <form method="dialog"><button type="submit">Agora não</button></form>
+            <a id="android-apk-download" href="/nhe-enga/downloads/nhe-enga.apk" download>Baixar APK</a>
+        </div>
+    </dialog>
     <div class='credits'>Dicionário por Eduardo de Almeida Navarro</div>
 </body>
 </html>

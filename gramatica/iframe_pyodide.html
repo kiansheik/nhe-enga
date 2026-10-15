@@ -1,13 +1,13 @@
-<script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+<script src="/nhe-enga/vendor/pyodide/v0.25.0/pyodide.js"></script>
 <script>
 let globalPyodide;
 let nextOrderId = 0;
 let messageQueue = [];
 async function initializePython() {
-    globalPyodide = await loadPyodide();
+    globalPyodide = await loadPyodide({indexURL: '/nhe-enga/vendor/pyodide/v0.25.0/'});
     await globalPyodide.loadPackage('micropip');
     const micropip = globalPyodide.pyimport('micropip');
-    await micropip.install('https://kiansheik.io/nhe-enga/gramatica/pylibs/tupi-0.1.2-py3-none-any.whl');
+    await micropip.install('/nhe-enga/gramatica/pylibs/tupi-0.1.2-py3-none-any.whl');
     globalPyodide.runPython('import tupi');
     globalPyodide.runPython('print(tupi.Noun(\'îagûar\', \'normal\'))');
     this.pyodideReady = true;
@@ -51,4 +51,4 @@ window.addEventListener('message', (event) => {
 });
 
 initializePython();
-</script>
+</script><script defer src="/nhe-enga/offline/register.js"></script>
