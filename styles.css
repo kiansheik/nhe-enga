@@ -1,7 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Righteous&family=Cormorant+Garamond:wght@400;500;600;700&display=swap');
 
 #android-install {
-    float: right;
+    position: absolute;
+    top: 0;
+    right: 8px;
     width: 40px;
     height: 40px;
     padding: 10px;
@@ -831,6 +833,7 @@ main {
 	justify-items: center;
 }
 main > div.content {
+    position: relative;
 	width: 100%;
 }
 main > div.content > div.title > h1 {
