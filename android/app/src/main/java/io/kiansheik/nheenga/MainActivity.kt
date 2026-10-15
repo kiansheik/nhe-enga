@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.view.Gravity
 import android.view.View
 import android.webkit.*
 import android.widget.*
@@ -66,6 +67,25 @@ class MainActivity : Activity() {
         statusView = layout.text(library.status())
         val content = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }; layout.addView(content)
         layout.button("Consultar opções / atualizações") { async { val c = library.refreshCatalog(); runOnUiThread { if (revision == screen) populate(content, c) } } }
+        layout.button("Verificar atualização do aplicativo") {
+            async {
+                val updates = AppUpdates(); val release = updates.latest()
+                runOnUiThread {
+                    if (isFinishing || isDestroyed || revision != screen) return@runOnUiThread
+                    if (release == null || release.versionCode <= BuildConfig.VERSION_CODE) {
+                        AlertDialog.Builder(this).setMessage("Seu aplicativo está atualizado (${BuildConfig.VERSION_NAME}). Os dicionários são atualizados separadamente.")
+                            .setPositiveButton("OK", null).show()
+                    } else {
+                        AlertDialog.Builder(this).setTitle("Nhe'enga ${release.versionName}")
+                            .setMessage("Baixar atualização (${"%.1f".format(release.bytes / 1_000_000.0)} MB)?\n\nO APK é assinado e distribuído gratuitamente fora da Play Store. O Android pode pedir que você permita instalar apps desta fonte nas configurações do navegador. Autorize apenas se confiar na origem. O Android confirma a instalação; seus downloads são preservados ao atualizar, sem desinstalar.")
+                            .setNegativeButton("Cancelar", null).setPositiveButton("Baixar") { _, _ ->
+                                try { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(updates.downloadUrl))) }
+                                catch (_: Exception) { Toast.makeText(this, "Não há navegador para baixar o aplicativo", Toast.LENGTH_LONG).show() }
+                            }.show()
+                    }
+                }
+            }
+        }
         layout.button("Pausar downloads") { SyncWorker.pause(this) }
         layout.button("Abrir dicionários / aplicar versão baixada") {
             if (library.coreReady()) showWebsite() else Toast.makeText(this, "Baixe os dicionários primeiro", Toast.LENGTH_SHORT).show()
@@ -73,27 +93,31 @@ class MainActivity : Activity() {
         layout.button("Restaurar versão anterior") { SyncWorker.pause(this); async { library.rollback(); runOnUiThread { showWebsite() } } }
         layout.text("Atualizações são verificadas ao abrir o app e periodicamente quando o Android permite. Desinstalar ou limpar os dados remove a biblioteca. Nenhuma imagem é apagada automaticamente para liberar espaço.")
         val existing = library.cachedCatalog()
-        if (existing != null) populate(content, existing)
-        else async { val c = library.refreshCatalog(); runOnUiThread { if (revision == screen) populate(content, c) } }
+        populate(content, existing)
+        if (existing == null) async { val c = library.refreshCatalog(); runOnUiThread { if (revision == screen) populate(content, c) } }
     }
-    private fun populate(layout: LinearLayout, catalog: Catalog) {
+    private fun populate(layout: LinearLayout, catalog: Catalog?) {
         layout.removeAllViews()
         val s = library.state(); val selected = s.getJSONArray("selected")
         val selectedIds = (0 until selected.length()).map { selected.getString(it) }.toSet()
         val boxes = mutableMapOf<String, CheckBox>()
-        for (p in catalog.packs) {
+        for (p in catalog?.packs.orEmpty()) {
             val row = CheckBox(this).apply {
                 text = "${p.title} — ${"%.1f".format(p.bytes / 1_000_000.0)} MB"
                 isChecked = p.id in selectedIds || p.id == "core"; isEnabled = p.id != "core"
             }
             boxes[p.id] = row; layout.addView(row)
-            if (p.id != "core" && s.getJSONObject("installed").has(p.id)) layout.button("Remover ${p.title}") {
+        }
+        for ((id, title) in library.removablePacks()) {
+            val label = catalog?.packs?.find { it.id == id }?.title ?: title
+            layout.button("Remover $label") {
                 AlertDialog.Builder(this).setMessage("Remover os arquivos baixados deste pacote?")
                     .setNegativeButton("Cancelar", null).setPositiveButton("Remover") { _, _ ->
-                        SyncWorker.pause(this); async { library.remove(p.id); runOnUiThread { populate(layout, catalog) } }
+                        SyncWorker.pause(this); async { library.remove(id); runOnUiThread { populate(layout, catalog) } }
                     }.show()
             }
         }
+        if (catalog == null) return
         val all = CheckBox(this).apply { text = "Todas as fontes, incluindo novas coleções"; isChecked = s.optBoolean("allSources") }; layout.addView(all)
         val metered = CheckBox(this).apply { text = "Permitir dados móveis (downloads e atualizações)"; isChecked = library.preferences.getBoolean("metered", false) }; layout.addView(metered)
         val estimate = layout.text("")
@@ -137,8 +161,13 @@ class MainActivity : Activity() {
     private fun showWebsite() {
         if (!library.coreReady()) { settings(); return }
         val revision = ++screen
-        val layout = column(); setContentView(layout)
-        layout.button("Downloads / atualizar") { settings() }
+        val layout = FrameLayout(this).apply {
+            setOnApplyWindowInsetsListener { view, insets ->
+                view.setPadding(insets.systemWindowInsetLeft, insets.systemWindowInsetTop,
+                    insets.systemWindowInsetRight, insets.systemWindowInsetBottom); insets
+            }
+        }
+        setContentView(layout)
         statusView = null
         async {
             val session = library.session()
@@ -198,7 +227,21 @@ class MainActivity : Activity() {
                         (result.obj as WebView.WebViewTransport).webView = popup; result.sendToTarget(); return true
                     }
                 }
-                layout.addView(view, LinearLayout.LayoutParams(-1, 0, 1f))
+                layout.addView(view, FrameLayout.LayoutParams(-1, -1))
+                val density = resources.displayMetrics.density
+                val settingsButton = ImageButton(this).apply {
+                    setImageResource(R.drawable.ic_settings)
+                    contentDescription = "Configurações e downloads"
+                    val padding = (12 * density).toInt(); setPadding(padding, padding, padding, padding)
+                    val background = android.util.TypedValue()
+                    theme.resolveAttribute(android.R.attr.selectableItemBackgroundBorderless, background, true)
+                    setBackgroundResource(background.resourceId)
+                    if (Build.VERSION.SDK_INT >= 26) tooltipText = contentDescription
+                    setOnClickListener { settings() }
+                }
+                layout.addView(settingsButton, FrameLayout.LayoutParams((48 * density).toInt(), (48 * density).toInt(), Gravity.TOP or Gravity.END).apply {
+                    topMargin = (4 * density).toInt(); marginEnd = (4 * density).toInt()
+                })
                 view.loadUrl(local + basePath)
             }
         }

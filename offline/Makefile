@@ -1,5 +1,5 @@
 # Included by the repository Makefile. Content deployment never depends on apk.
-.PHONY: apk apk-release offline-manifest offline-test offline-native-test offline-browser-test offline-fixture offline-help
+.PHONY: apk apk-release offline-manifest offline-test offline-native-test offline-browser-test offline-android-test offline-fixture offline-help
 
 offline-help:
 	@printf '%s\n' 'make apk                 Build content-free Android debug shell (JDK 17+, SDK 35).' \
@@ -7,6 +7,7 @@ offline-help:
 	  'make offline-test        Run catalog and service-worker protocol regressions.' \
 	  'make offline-native-test Run the actual streaming downloader on the host JVM.' \
 	  'make offline-browser-test Run real Chromium offline smoke tests (Playwright required).' \
+	  'make offline-android-test Run emulator-only Android/WebView acceptance (resets debug app).' \
 	  'make offline-fixture     Create tiny synthetic site at dist/offline-fixture/nhe-enga.'
 
 apk:
@@ -28,6 +29,9 @@ offline-native-test:
 
 offline-browser-test:
 	python3 tests/offline/browser_smoke.py
+
+offline-android-test:
+	python3 tests/offline/android_smoke.py $(OFFLINE_ANDROID_ARGS)
 
 offline-fixture:
 	python3 tests/offline/fixture.py dist/offline-fixture/nhe-enga

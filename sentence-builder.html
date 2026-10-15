@@ -55,13 +55,13 @@
         }
         function loadCompressedJSONSync(url) {
             var xhr = new XMLHttpRequest();
-            xhr.open('GET', url, false); // Make the request synchronous
-            xhr.responseType = 'arraybuffer'; // Use arraybuffer to handle binary data
+            xhr.open('GET', url, false);
+            xhr.overrideMimeType('text/plain; charset=x-user-defined');
             xhr.send(null);
 
             if (xhr.readyState == 4 && xhr.status == 200) {
-                // Decompress the data using pako
-                var decompressedData = pako.inflate(xhr.response, { to: 'string' });
+                var bytes = Uint8Array.from(xhr.responseText, character => character.charCodeAt(0) & 255);
+                var decompressedData = pako.inflate(bytes, { to: 'string' });
                 return JSON.parse(decompressedData);
             }
 
@@ -128,7 +128,7 @@
             pythonCode += `.substantivo(anotated=${anotated_str})`
             return globalPyodide.runPython(pythonCode);
         }
-        window.jsonData = loadJSONSync('docs/dict-conjugated.json').map(item => ({
+        window.jsonData = loadCompressedJSONSync('docs/dict-conjugated.json.gz').map(item => ({
             "first_word": item.f || "",
             "optional_number": item.o || "",
             "definition": item.d || "",

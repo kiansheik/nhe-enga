@@ -181,6 +181,10 @@ self.addEventListener('message', event => {
         const removed = s.installed[msg.id];
         delete s.installed[msg.id]; s.selected = s.selected.filter(id => id !== msg.id); s.allSources = false;
         for (const f of removed?.files || []) delete s.saved[f.path];
+        if (typeof msg.id === 'string' && msg.id.startsWith('source-')) {
+          const prefix = 'docs/primary_sources/' + msg.id.slice(7) + '/';
+          for (const path of Object.keys(s.saved)) if (path.startsWith(prefix)) delete s.saved[path];
+        }
         await write(s);
         // GC is explicit, never storage-pressure eviction of user downloads.
         // Existing documents retain their pinned versions until closed.

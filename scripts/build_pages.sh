@@ -29,24 +29,6 @@ copy_optional_path() {
   fi
 }
 
-copy_primary_source_images() {
-  local path="$1"
-  local file rel
-
-  require_path "$path"
-  mkdir -p "$BUILD_DIR/$path"
-
-  while IFS= read -r -d '' file; do
-    rel="${file#$ROOT_DIR/}"
-    mkdir -p "$(dirname "$BUILD_DIR/$rel")"
-    cp "$file" "$BUILD_DIR/$rel"
-  done < <(
-    find "$ROOT_DIR/$path" -maxdepth 1 -type f \
-      \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' -o -iname '*.gif' \) \
-      -print0
-  )
-}
-
 rm -rf "$BUILD_DIR"
 mkdir -p "$BUILD_DIR"
 
@@ -113,7 +95,7 @@ for path in \
   docs/primary_sources/lerhist \
   docs/primary_sources/vlb
 do
-  copy_primary_source_images "$path"
+  require_path "$path"
 done
 
 # Keep the new source's provenance available beside its page images.
@@ -129,7 +111,9 @@ do
   copy_optional_path "$path"
 done
 
-"$PYTHON_BIN" "$ROOT_DIR/scripts/optimize_pages_images.py" "$BUILD_DIR/docs/primary_sources"
+"$PYTHON_BIN" "$ROOT_DIR/scripts/optimize_pages_images.py" "$ROOT_DIR/docs/primary_sources" \
+  --output-dir "$BUILD_DIR/docs/primary_sources" \
+  --books ancharte arcat1618 betcomp cartas_portiguara evreux1929 lerhist vlb
 
 make -C "$ROOT_DIR" grammar-build
 mkdir -p "$BUILD_DIR/gramatica"

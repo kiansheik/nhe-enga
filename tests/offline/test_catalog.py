@@ -1,4 +1,5 @@
 import base64
+import importlib.util
 import json
 from pathlib import Path
 import shutil
@@ -27,6 +28,24 @@ class CatalogTests(unittest.TestCase):
             self.assertEqual(p["downloadBytes"], sum(f["bytes"] for f in files))
             for f in files:
                 self.assertEqual(f["sha256"], b.file_hash(self.build / f["path"]))
+
+    def test_direct_image_optimization_preserves_sources_and_output_bytes(self):
+        spec = importlib.util.spec_from_file_location("optimize_pages_images", b.ROOT / "scripts/optimize_pages_images.py")
+        optimizer = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(optimizer)
+        root = Path(self.tmp.name)
+        source = root / "source.png"
+        optimizer.Image.new("RGBA", (32, 48), (80, 120, 160, 128)).save(source)
+        original = source.read_bytes()
+        copied = root / "copied.png"
+        shutil.copyfile(source, copied)
+        legacy, _, _ = optimizer.optimize_image(copied, (16, 24), 82)
+        destination = root / "artifact/vlb/scan.jpg"
+        output, _, _ = optimizer.optimize_image(source, (16, 24), 82, destination)
+        self.assertEqual(output, destination)
+        self.assertEqual(output.read_bytes(), legacy.read_bytes())
+        self.assertEqual(source.read_bytes(), original)
+        self.assertFalse(source.with_suffix(".jpg").exists())
 
     def test_deterministic_and_delta(self):
         old = {p["id"]: p["sha256"] for p in self.catalog["packs"]}

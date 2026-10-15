@@ -7,6 +7,8 @@ native rebuild. Native capabilities, security fixes and OS compatibility still d
 
 **Status: implementation for emulator validation, not a signed production release.**
 Start with [the local-agent handoff](../docs/agent/session-handoffs/2026-10-14-android-offline.md).
+See the [Android 16 validation report](../docs/agent/session-handoffs/2026-10-15-android-validation.md)
+for current passing checks and remaining release gates.
 
 ## Components
 
@@ -26,6 +28,9 @@ Start with [the local-agent handoff](../docs/agent/session-handoffs/2026-10-14-a
 ```sh
 make offline-test
 make offline-native-test         # JDK + kotlinc on PATH, or set KOTLINC
+make offline-browser-test        # Playwright + Chromium
+make offline-android-test        # Running emulator; clears ONLY its debug app
+OFFLINE_ANDROID_ARGS='--site .pages-build --tools --serial emulator-5554' make offline-android-test
 make offline-fixture
 python3 -m http.server 8000 --directory dist/offline-fixture
 # Another terminal; SDK 35, build-tools 35.0.0 and JDK 17+ must be installed:
@@ -34,6 +39,13 @@ adb install -r android/app/build/outputs/apk/debug/app-debug.apk
 ```
 
 The debug package is `io.kiansheik.nheenga.debug`, separate from the release app.
+The Android smoke harness defaults to `emulator-5554` (or `ANDROID_SERIAL`), rejects
+physical devices before resetting data, and restores airplane-mode/Wi-Fi settings.
+It uses the Node Android API shipped with the Python Playwright package; Node and
+`adb` must be on PATH. Install its native UI test driver with
+`python3 -m playwright install android` before running the Android smoke.
+JDK 21 is verified locally; Android Studio's JDK 25 is too
+new for this pinned Gradle/Kotlin baseline. Set `JAVA_HOME` to JDK 17 or 21.
 Unsigned catalogs are accepted **only by debug builds without a pinned public
 key**. HTTP is restricted to emulator/loopback hosts in native configuration and
 is disabled in release. A debug build with a public key verifies signatures too.
@@ -93,6 +105,9 @@ work waits for an unmetered connection. WorkManager checks periodically (12 hour
 and when the application opens, with resume checks throttled after successful
 checks. Background batches stop/retry before seven minutes; completed files remain.
 Android scheduling is best-effort, not continuous connectivity monitoring.
+Saved-only source pages and retired packs are listed for explicit removal even
+when a current catalog cannot be fetched. Removal retains blobs still used by
+other installed/rollback packs.
 
 The browser requests persistent storage when a user saves a selection, but browser
 quotas/eviction and service-worker lifetimes still apply. Keep a browser page open
@@ -132,6 +147,38 @@ OFFLINE_SEQUENCE="$(date +%s)" make deploy-gh-pages
 budget, and stages it in ignored `dist/android/`. The Pages build copies this
 installer to `/nhe-enga/downloads/nhe-enga.apk`, plus checksum and release metadata.
 The website shows the link only when release metadata is available.
+
+The homepage shows a small install icon only to Android browser visitors. It asks
+for consent and explains installation from a trusted source; the APK is signed,
+not unsigned. The native gear menu separately checks `downloads/android.json`
+for a higher APK version and opens the fixed same-site APK download after consent.
+Android's installer verifies signing continuity and asks the user to install;
+updates do not silently install and should never require uninstalling first.
+Dictionary/source updates remain independent of native APK updates.
+
+For the permanent local identities under `$HOME/.config/nhe-enga`, the signing
+wrapper loads credentials without printing them:
+
+```sh
+scripts/with_android_signing.sh make apk-release
+scripts/with_android_signing.sh make deploy-gh-pages
+```
+
+For a later native release, increment the version code before rebuilding:
+
+```sh
+APK_VERSION_CODE=2 APK_VERSION_NAME=0.1.1 scripts/with_android_signing.sh make apk-release
+scripts/with_android_signing.sh make deploy-gh-pages
+```
+
+Website/dictionary-only releases need just the second command and retain the
+existing installer. Source scans are optimized directly into the artifact rather
+than copied raw first, so local builds do not need a second full raw scan tree.
+
+Back up `content-private.pem`, `android-release.p12`, and
+`android-keystore-password` securely outside this repository. Losing or replacing
+the APK key prevents existing installations from accepting updates. The wrapper
+also accepts the explicit signing environment variables documented above.
 
 A fresh checkout can recover the existing installer from the project's own HTTPS
 site without Gradle. A non-404 recovery failure fails the build rather than silently

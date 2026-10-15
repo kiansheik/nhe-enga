@@ -5,20 +5,29 @@ let worker, catalog = [];
 function selected() { return [...document.querySelectorAll('[data-pack]:checked')].map(e => e.dataset.pack); }
 function total() { const ids = new Set(selected()); $('size').textContent = 'Tamanho completo da seleção: ' + size(catalog.filter(p => ids.has(p.id) || ($('all').checked && p.kind === 'source')).reduce((n, p) => n + p.downloadBytes, 0)) + '. Arquivos já salvos não são baixados novamente.'; }
 function requestStatus() { worker?.postMessage({type: 'status'}); }
+function appendRemove(row, id, title) {
+  const remove = document.createElement('button'); remove.textContent = 'Remover download';
+  remove.onclick = () => { if (confirm('Remover ' + title + '?')) worker.postMessage({type: 'remove', id}); }; row.append(remove);
+}
 navigator.serviceWorker?.addEventListener('message', async event => {
   const m = event.data;
   if (m.type === 'status') {
     catalog = m.packs; $('packs').replaceChildren(); $('all').checked = !!m.state.allSources;
+    const stored = new Map(Object.entries(m.state.installed).filter(([id]) => id !== 'core').map(([id, pack]) => [id, pack.title]));
+    for (const path of Object.keys(m.state.saved)) {
+      const book = path.match(/^docs\/primary_sources\/([^/]+)\//)?.[1];
+      if (book && !stored.has('source-' + book)) stored.set('source-' + book, book);
+    }
     for (const p of catalog) {
       const row = document.createElement('div'), label = document.createElement('label'), input = document.createElement('input');
       input.type = 'checkbox'; input.dataset.pack = p.id;
       input.checked = p.id === 'core' || m.state.selected.includes(p.id); input.disabled = p.id === 'core';
       input.addEventListener('change', total); label.append(input, ' ' + p.title + ' — ' + size(p.downloadBytes)); row.append(label);
-      if (m.state.installed[p.id] && p.id !== 'core') {
-        const remove = document.createElement('button'); remove.textContent = 'Remover download';
-        remove.onclick = () => { if (confirm('Remover ' + p.title + '?')) worker.postMessage({type: 'remove', id: p.id}); }; row.append(remove);
-      }
+      if (stored.has(p.id)) { appendRemove(row, p.id, p.title); stored.delete(p.id); }
       $('packs').append(row);
+    }
+    for (const [id, title] of stored) {
+      const row = document.createElement('div'); row.append(title); appendRemove(row, id, title); $('packs').append(row);
     }
     $('download').disabled = !catalog.length; total();
     $('status').textContent = m.state.installed.core ? 'Dicionários disponíveis sem internet.' : 'Selecione o que deseja guardar.';

@@ -19,6 +19,7 @@ android {
         applicationId = "io.kiansheik.nheenga"
         minSdk = 23
         targetSdk = 35
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         versionCode = environment("APK_VERSION_CODE", "1").toInt()
         versionName = environment("APK_VERSION_NAME", "0.1.0")
         buildConfigField("String", "CONTENT_BASE", quoted(contentBase))
@@ -53,4 +54,7 @@ dependencies {
     implementation("androidx.webkit:webkit:1.14.0")
     implementation("androidx.work:work-runtime-ktx:2.10.5")
     testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test:runner:1.6.2")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
 }

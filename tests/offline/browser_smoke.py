@@ -21,6 +21,9 @@ def main():
         requests = []
         class Handler(http.server.SimpleHTTPRequestHandler):
             def log_message(self, *_): pass
+            def end_headers(self):
+                self.send_header('Cache-Control', 'no-store')
+                super().end_headers()
             def do_GET(self):
                 requests.append(self.path)
                 super().do_GET()
@@ -70,6 +73,40 @@ def main():
                 assert 'corrompido' in page.evaluate('window.offlineError')
                 context.set_offline(True); page.reload(); assert page.locator('#version').inner_text() == 'v2'
                 print("PASS corrupt update rejected and last verified version preserved")
+                context.set_offline(False)
+                page.goto(base + 'docs/primary_sources/?book_name=lerhist&page_number=2')
+                page.wait_for_function("document.getElementById('scan').naturalWidth > 0")
+                page.wait_for_function("async () => {const r=await(await caches.open('nhe-offline-meta-v1')).match('/nhe-enga/offline/state');return !!(await r.json()).saved['docs/primary_sources/lerhist/2.png']}")
+                page.goto(base + 'offline/')
+                saved_row = page.locator('#packs > div').filter(has_text='Léry')
+                saved_row.get_by_role('button', name='Remover download').wait_for()
+                page.on('dialog', lambda dialog: dialog.accept())
+                saved_row.get_by_role('button', name='Remover download').click()
+                page.wait_for_function("async () => {const r=await(await caches.open('nhe-offline-meta-v1')).match('/nhe-enga/offline/state');return !(await r.json()).saved['docs/primary_sources/lerhist/2.png']}")
+                print("PASS saved-only source removal through download UI")
+                homepage = (build_offline.ROOT / 'index.html').read_text()
+                for android in (False, True):
+                    install_context = browser.new_context(service_workers='block', user_agent='Mozilla/5.0 (Linux; Android 14) Chrome/140.0 Mobile' if android else 'Desktop Browser', viewport={'width': 360 if android else 1280, 'height': 800})
+                    install_page = install_context.new_page()
+                    install_page.route(base, lambda route: route.fulfill(body=homepage, content_type='text/html'))
+                    install_page.route('**/styles.css', lambda route: route.fulfill(body=(build_offline.ROOT / 'styles.css').read_text(), content_type='text/css'))
+                    install_page.route('**/downloads/android.json', lambda route: route.fulfill(json={'url': 'nhe-enga.apk', 'versionCode': 1, 'versionName': '0.1.0', 'bytes': 350000, 'sha256': 'a' * 64}))
+                    install_page.goto(base)
+                    if android:
+                        install_page.locator('#android-install').click()
+                        assert install_page.locator('#android-install-dialog').is_visible()
+                        assert 'APK é assinado' in install_page.locator('#android-install-dialog').inner_text()
+                        assert install_page.locator('#android-apk-download').get_attribute('href') == '/nhe-enga/downloads/nhe-enga.apk'
+                        install_page.get_by_role('button', name='Agora não').click()
+                        assert not install_page.locator('#android-install-dialog').is_visible()
+                    else:
+                        assert install_page.locator('#android-install').is_hidden()
+                    for navigation_link in install_page.locator('main > .content > a').all():
+                        bounds = navigation_link.bounding_box()
+                        self_center = bounds['x'] + bounds['width'] / 2
+                        assert abs(self_center - install_page.viewport_size['width'] / 2) < 1, 'Install icon shifted a centered navigation link'
+                    install_context.close()
+                print("PASS Android-only install icon, consent dialog, fixed APK URL, and centered homepage links")
                 browser.close()
         finally:
             server.shutdown(); server.server_close(); thread.join()

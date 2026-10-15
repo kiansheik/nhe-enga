@@ -24,7 +24,7 @@ data class Catalog(val sequence: Long, val packs: List<Pack>)
 data class LibrarySession(val catalog: Catalog?, val files: MutableMap<String, Asset>)
 
 /** One instance per process. Network IO never holds the state lock. */
-class Library private constructor(context: Context) {
+class Library internal constructor(context: Context, private val base: String = BuildConfig.CONTENT_BASE) {
     val context: Context = context.applicationContext
     private val root = File(this.context.filesDir, "library").apply { mkdirs() }
     private val manifests = File(root, "manifests").apply { mkdirs() }
@@ -32,7 +32,6 @@ class Library private constructor(context: Context) {
     private val catalogFile = AtomicFile(File(root, "catalog.json"))
     private val stateLock = Any()
     val preferences = this.context.getSharedPreferences("offline", Context.MODE_PRIVATE)
-    private val base = BuildConfig.CONTENT_BASE
     private val blobs = VerifiedFiles(File(root, "blobs"), base)
     private val catalogLock = Any()
     @Volatile private var activeSession: LibrarySession? = null
@@ -212,11 +211,31 @@ class Library private constructor(context: Context) {
         pause(); status("Versão anterior restaurada; atualizações pausadas")
     }
     /** Explicit removal; never automatic eviction of selected/viewed content. */
+    fun removablePacks(): Map<String, String> {
+        val s = state(); val result = sortedMapOf<String, String>()
+        for (group in listOf("installed", "previous")) {
+            val packs = s.optJSONObject(group) ?: continue
+            for (id in packs.keysList()) if (id != "core") result[id] = packs.getJSONObject(id).getString("title")
+        }
+        for (path in s.getJSONObject("saved").keysList()) {
+            val book = Regex("^docs/primary_sources/([^/]+)/").find(path)?.groupValues?.get(1) ?: continue
+            if (!result.containsKey("source-$book")) result["source-$book"] = book
+        }
+        return result
+    }
     @Synchronized
     fun remove(id: String) {
         require(id != "core")
-        val old = state().getJSONObject("installed").optJSONObject(id)
-        val paths = if (old == null) emptySet() else manifest(pack(old), false).map { it.path }.toSet()
+        val before = state()
+        val paths = mutableSetOf<String>()
+        for (group in listOf("installed", "previous")) {
+            val old = before.optJSONObject(group)?.optJSONObject(id) ?: continue
+            paths.addAll(manifest(pack(old), false).map { it.path })
+        }
+        if (id.startsWith("source-")) {
+            val prefix = "docs/primary_sources/${id.removePrefix("source-")}/"
+            paths.addAll(before.getJSONObject("saved").keysList().filter { it.startsWith(prefix) })
+        }
         mutate { s ->
             s.getJSONObject("installed").remove(id); s.optJSONObject("previous")?.remove(id)
             s.put("selected", JSONArray(s.getJSONArray("selected").strings().filter { it != id })).put("allSources", false)
