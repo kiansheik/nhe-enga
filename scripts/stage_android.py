@@ -34,21 +34,36 @@ def public_fingerprint():
 
 
 def package():
-    metadata = json.loads((ROOT / "android/app/build/outputs/apk/release/output-metadata.json").read_text())
-    if metadata["variantName"] != "release" or metadata["applicationId"] != "io.kiansheik.nheenga":
+    metadata = json.loads(
+        (
+            ROOT / "android/app/build/outputs/apk/release/output-metadata.json"
+        ).read_text()
+    )
+    if (
+        metadata["variantName"] != "release"
+        or metadata["applicationId"] != "io.kiansheik.nheenga"
+    ):
         raise ValueError("Only the release application can be published")
     element = metadata["elements"][0]
     source = ROOT / "android/app/build/outputs/apk/release" / element["outputFile"]
     if not 0 < source.stat().st_size <= 15 * 1024 * 1024:
         raise ValueError("Release APK exceeds the 15 MiB shell size budget")
     sdk = Path(os.environ.get("ANDROID_HOME") or os.environ["ANDROID_SDK_ROOT"])
-    subprocess.run([str(sdk / "build-tools/35.0.0/apksigner"), "verify", "--verbose", str(source)], check=True)
+    subprocess.run(
+        [str(sdk / "build-tools/35.0.0/apksigner"), "verify", "--verbose", str(source)],
+        check=True,
+    )
     CACHE.mkdir(parents=True, exist_ok=True)
     target = CACHE / "nhe-enga.apk"
     shutil.copyfile(source, target)
-    metadata = {"versionCode": element["versionCode"], "versionName": element["versionName"],
-                "bytes": target.stat().st_size, "sha256": sha(target), "url": "nhe-enga.apk",
-                "contentKeySha256": public_fingerprint()}
+    metadata = {
+        "versionCode": element["versionCode"],
+        "versionName": element["versionName"],
+        "bytes": target.stat().st_size,
+        "sha256": sha(target),
+        "url": "nhe-enga.apk",
+        "contentKeySha256": public_fingerprint(),
+    }
     (CACHE / "android.json").write_text(json.dumps(metadata, indent=2) + "\n")
     print(f"Verified release staged at {target}")
 
@@ -74,7 +89,9 @@ def restore():
         raise ValueError("Invalid APK size")
     CACHE.mkdir(parents=True, exist_ok=True)
     temporary = CACHE / "nhe-enga.apk.part"
-    with urllib.request.urlopen(REMOTE + "nhe-enga.apk", timeout=60) as response, temporary.open("wb") as output:
+    with urllib.request.urlopen(
+        REMOTE + "nhe-enga.apk", timeout=60
+    ) as response, temporary.open("wb") as output:
         written = 0
         while chunk := response.read(64 * 1024):
             written += len(chunk)
@@ -97,19 +114,31 @@ def stage(build):
         return
     metadata = json.loads((CACHE / "android.json").read_text())
     apk = CACHE / "nhe-enga.apk"
-    if not apk.is_file() or apk.stat().st_size != metadata["bytes"] or sha(apk) != metadata["sha256"]:
+    if (
+        not apk.is_file()
+        or apk.stat().st_size != metadata["bytes"]
+        or sha(apk) != metadata["sha256"]
+    ):
         raise ValueError("Local APK artifact mismatch; rebuild or restore it")
     key = os.environ.get("OFFLINE_SIGNING_KEY")
     if not key:
-        raise ValueError("Publishing an APK requires OFFLINE_SIGNING_KEY for compatible content catalogs")
-    public = subprocess.run(["openssl", "pkey", "-in", key, "-pubout", "-outform", "DER"], check=True, capture_output=True).stdout
+        raise ValueError(
+            "Publishing an APK requires OFFLINE_SIGNING_KEY for compatible content catalogs"
+        )
+    public = subprocess.run(
+        ["openssl", "pkey", "-in", key, "-pubout", "-outform", "DER"],
+        check=True,
+        capture_output=True,
+    ).stdout
     if hashlib.sha256(public).hexdigest() != metadata["contentKeySha256"]:
         raise ValueError("Content signing key does not match the APK's trusted key")
     destination = build / "downloads"
     destination.mkdir(parents=True, exist_ok=True)
     for name in ("nhe-enga.apk", "android.json"):
         shutil.copyfile(CACHE / name, destination / name)
-    (destination / "nhe-enga.apk.sha256").write_text(metadata["sha256"] + "  nhe-enga.apk\n")
+    (destination / "nhe-enga.apk.sha256").write_text(
+        metadata["sha256"] + "  nhe-enga.apk\n"
+    )
 
 
 if __name__ == "__main__":

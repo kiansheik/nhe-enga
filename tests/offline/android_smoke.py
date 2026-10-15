@@ -4,6 +4,7 @@ Run with JDK 17/21, ANDROID_HOME, adb, and Playwright available:
     python3 tests/offline/android_smoke.py
     python3 tests/offline/android_smoke.py --site .pages-build
 """
+
 import argparse
 import functools
 import http.server
@@ -28,12 +29,16 @@ BASE = "https://appassets.androidplatform.net/nhe-enga/"
 
 def adb(*arguments, check=True):
     serial = os.environ.get("ANDROID_SERIAL", "emulator-5554")
-    return subprocess.run(["adb", "-s", serial, *arguments], check=check, capture_output=True, text=True).stdout.strip()
+    return subprocess.run(
+        ["adb", "-s", serial, *arguments], check=check, capture_output=True, text=True
+    ).stdout.strip()
 
 
 def state():
     try:
-        return json.loads(adb("shell", "run-as", PACKAGE, "cat", "files/library/state.json"))
+        return json.loads(
+            adb("shell", "run-as", PACKAGE, "cat", "files/library/state.json")
+        )
     except (subprocess.CalledProcessError, json.JSONDecodeError):
         return {}
 
@@ -50,17 +55,43 @@ def wait_state(predicate, timeout=90):
 def tap(label):
     for attempt in range(14):
         adb("shell", "uiautomator", "dump", "/data/local/tmp/nhe-enga-window.xml")
-        hierarchy = ET.fromstring(adb("exec-out", "cat", "/data/local/tmp/nhe-enga-window.xml"))
-        width, height = map(int, re.findall(r"\d+", hierarchy.find("node").get("bounds"))[-2:])
+        hierarchy = ET.fromstring(
+            adb("exec-out", "cat", "/data/local/tmp/nhe-enga-window.xml")
+        )
+        width, height = map(
+            int, re.findall(r"\d+", hierarchy.find("node").get("bounds"))[-2:]
+        )
         for node in hierarchy.iter("node"):
-            if label.casefold() not in node.get("text", "").casefold() or node.get("clickable") != "true":
+            if (
+                label.casefold() not in node.get("text", "").casefold()
+                or node.get("clickable") != "true"
+            ):
                 continue
             left, top, right, bottom = map(int, re.findall(r"\d+", node.get("bounds")))
             if bottom - top >= 24 and 24 <= (top + bottom) // 2 < height - 24:
-                adb("shell", "input", "tap", str((left + right) // 2), str((top + bottom) // 2))
+                adb(
+                    "shell",
+                    "input",
+                    "tap",
+                    str((left + right) // 2),
+                    str((top + bottom) // 2),
+                )
                 return
-        start, end = (height * 4 // 5, height // 4) if attempt < 9 else (height // 4, height * 4 // 5)
-        adb("shell", "input", "swipe", str(width // 2), str(start), str(width // 2), str(end), "150")
+        start, end = (
+            (height * 4 // 5, height // 4)
+            if attempt < 9
+            else (height // 4, height * 4 // 5)
+        )
+        adb(
+            "shell",
+            "input",
+            "swipe",
+            str(width // 2),
+            str(start),
+            str(width // 2),
+            str(end),
+            "150",
+        )
     raise AssertionError(f"Native control not found: {label}")
 
 
@@ -69,8 +100,8 @@ def launch():
 
 
 def check_webview(real_site, offline, tools):
-        driver = Path(playwright.__file__).parent / "driver/package"
-        script = r"""
+    driver = Path(playwright.__file__).parent / "driver/package"
+    script = r"""
 const assert = require('node:assert/strict');
 const {_android} = require(process.argv[1]);
 const real = process.argv[2] === 'true', offline = process.argv[3] === 'true';
@@ -146,8 +177,26 @@ const tools = process.argv[5] === 'true';
     }
 })().catch(error => { console.error(error); process.exitCode = 1; });
 """
-        screenshot = ROOT / "dist" / f"android-{'real' if real_site else 'fixture'}-{'offline' if offline else 'online'}.png"
-        subprocess.run(["node", "-e", script, str(driver), str(real_site).lower(), str(offline).lower(), str(screenshot), str(tools).lower(), os.environ.get("ANDROID_SERIAL", "emulator-5554")], check=True, timeout=300)
+    screenshot = (
+        ROOT
+        / "dist"
+        / f"android-{'real' if real_site else 'fixture'}-{'offline' if offline else 'online'}.png"
+    )
+    subprocess.run(
+        [
+            "node",
+            "-e",
+            script,
+            str(driver),
+            str(real_site).lower(),
+            str(offline).lower(),
+            str(screenshot),
+            str(tools).lower(),
+            os.environ.get("ANDROID_SERIAL", "emulator-5554"),
+        ],
+        check=True,
+        timeout=300,
+    )
 
 
 def main():
@@ -155,10 +204,14 @@ def main():
     parser.add_argument("--site", type=Path)
     parser.add_argument("--port", type=int, default=18766)
     parser.add_argument("--tools", action="store_true")
-    parser.add_argument("--serial", default=os.environ.get("ANDROID_SERIAL", "emulator-5554"))
+    parser.add_argument(
+        "--serial", default=os.environ.get("ANDROID_SERIAL", "emulator-5554")
+    )
     args = parser.parse_args()
     os.environ["ANDROID_SERIAL"] = args.serial
-    assert adb("shell", "getprop", "ro.kernel.qemu") == "1", "Refusing to reset a physical device"
+    assert (
+        adb("shell", "getprop", "ro.kernel.qemu") == "1"
+    ), "Refusing to reset a physical device"
     original_airplane = adb("shell", "settings", "get", "global", "airplane_mode_on")
     original_wifi = adb("shell", "settings", "get", "global", "wifi_on")
     requests = []
@@ -168,7 +221,9 @@ def main():
         site = args.site.resolve() if args.site else Path(temporary) / "nhe-enga"
         if not args.site:
             fixture(site)
-        assert (site / "offline/catalog.json").is_file(), "Prepare the offline site first"
+        assert (
+            site / "offline/catalog.json"
+        ).is_file(), "Prepare the offline site first"
 
         class Handler(http.server.SimpleHTTPRequestHandler):
             def log_message(self, *_):
@@ -189,16 +244,36 @@ def main():
                 self.send_header("Cache-Control", "no-store")
                 super().end_headers()
 
-        server = http.server.ThreadingHTTPServer(("127.0.0.1", args.port), functools.partial(Handler, directory=str(site)))
+        server = http.server.ThreadingHTTPServer(
+            ("127.0.0.1", args.port), functools.partial(Handler, directory=str(site))
+        )
         thread = threading.Thread(target=server.serve_forever, daemon=True)
         thread.start()
         try:
-            environment = dict(os.environ, OFFLINE_CONTENT_BASE=f"http://10.0.2.2:{args.port}/nhe-enga/")
-            subprocess.run([str(ROOT / "android/gradlew"), "--no-watch-fs", ":app:assembleDebug"], env=environment, check=True)
-            adb("install", "-r", str(ROOT / "android/app/build/outputs/apk/debug/app-debug.apk"))
+            environment = dict(
+                os.environ,
+                OFFLINE_CONTENT_BASE=f"http://10.0.2.2:{args.port}/nhe-enga/",
+            )
+            subprocess.run(
+                [str(ROOT / "android/gradlew"), "--no-watch-fs", ":app:assembleDebug"],
+                env=environment,
+                check=True,
+            )
+            adb(
+                "install",
+                "-r",
+                str(ROOT / "android/app/build/outputs/apk/debug/app-debug.apk"),
+            )
             adb("shell", "am", "force-stop", PACKAGE)
             adb("shell", "pm", "clear", PACKAGE)
-            adb("shell", "pm", "grant", PACKAGE, "android.permission.POST_NOTIFICATIONS", check=False)
+            adb(
+                "shell",
+                "pm",
+                "grant",
+                PACKAGE,
+                "android.permission.POST_NOTIFICATIONS",
+                check=False,
+            )
             online.clear()
             adb("shell", "cmd", "connectivity", "airplane-mode", "enable")
             adb("shell", "svc", "wifi", "disable")
@@ -206,7 +281,10 @@ def main():
             tap("Abrir dicionários")
             assert not state().get("installed", {}).get("core")
             assert adb("shell", "pidof", PACKAGE), "Fresh offline setup crashed"
-            print("PASS fresh install offline: native setup, no library, no crash", flush=True)
+            print(
+                "PASS fresh install offline: native setup, no library, no crash",
+                flush=True,
+            )
 
             online.set()
             adb("shell", "cmd", "connectivity", "airplane-mode", "disable")
@@ -215,24 +293,41 @@ def main():
             tap("Salvar / baixar seleção")
             wait_state(lambda current: "core" in current.get("installed", {}))
             assert set(state()["installed"]) == {"core"}
-            assert not any(re.search(r"/primary_sources/[^/]+/.*\.(png|jpg|webp)", path) for path in requests)
+            assert not any(
+                re.search(r"/primary_sources/[^/]+/.*\.(png|jpg|webp)", path)
+                for path in requests
+            )
             print("PASS core-only install: no bulk source images", flush=True)
             if args.site:
                 tap("Cartas Potiguaras")
                 if args.tools:
                     tap("Gramática e ferramentas")
                 tap("Salvar / baixar seleção")
-                wanted = {"core", "source-cartas_portiguara"} | ({"tools"} if args.tools else set())
-                wait_state(lambda current: wanted <= current.get("installed", {}).keys(), timeout=180)
+                wanted = {"core", "source-cartas_portiguara"} | (
+                    {"tools"} if args.tools else set()
+                )
+                wait_state(
+                    lambda current: wanted <= current.get("installed", {}).keys(),
+                    timeout=180,
+                )
                 assert set(state()["installed"]) == wanted
-                print("PASS selected real source/tools packs; no unselected books", flush=True)
+                print(
+                    "PASS selected real source/tools packs; no unselected books",
+                    flush=True,
+                )
             tap("Abrir dicionários")
 
             check_webview(bool(args.site), False, args.tools)
             if not args.site:
-                wait_state(lambda current: "docs/primary_sources/lerhist/2.png" in current.get("saved", {}))
+                wait_state(
+                    lambda current: "docs/primary_sources/lerhist/2.png"
+                    in current.get("saved", {})
+                )
                 assert "source-lerhist" not in state()["installed"]
-                print("PASS viewed-only source page persists without whole-book download", flush=True)
+                print(
+                    "PASS viewed-only source page persists without whole-book download",
+                    flush=True,
+                )
             online.clear()
             adb("shell", "cmd", "connectivity", "airplane-mode", "enable")
             adb("shell", "svc", "wifi", "disable")
@@ -241,12 +336,31 @@ def main():
             launch()
             check_webview(bool(args.site), True, args.tools)
             assert len(requests) == before, "Offline library made network requests"
-            print("PASS airplane-mode force-stop/relaunch: local content, zero server requests", flush=True)
-            print(f"PASS Android smoke ({'real site' if args.site else 'synthetic fixture'})", flush=True)
+            print(
+                "PASS airplane-mode force-stop/relaunch: local content, zero server requests",
+                flush=True,
+            )
+            print(
+                f"PASS Android smoke ({'real site' if args.site else 'synthetic fixture'})",
+                flush=True,
+            )
         finally:
             online.set()
-            adb("shell", "cmd", "connectivity", "airplane-mode", "enable" if original_airplane == "1" else "disable", check=False)
-            adb("shell", "svc", "wifi", "enable" if original_wifi in ("1", "2") else "disable", check=False)
+            adb(
+                "shell",
+                "cmd",
+                "connectivity",
+                "airplane-mode",
+                "enable" if original_airplane == "1" else "disable",
+                check=False,
+            )
+            adb(
+                "shell",
+                "svc",
+                "wifi",
+                "enable" if original_wifi in ("1", "2") else "disable",
+                check=False,
+            )
             server.shutdown()
             server.server_close()
             thread.join()

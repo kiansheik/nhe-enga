@@ -48,10 +48,15 @@ def as_rgb(image: Image.Image) -> Image.Image:
 
 
 def optimize_image(
-    image_path: Path, max_size: tuple[int, int], quality: int, destination: Path | None = None
+    image_path: Path,
+    max_size: tuple[int, int],
+    quality: int,
+    destination: Path | None = None,
 ) -> tuple[Path, int, int]:
     original_size = image_path.stat().st_size
-    output_path = destination if destination is not None else image_path.with_suffix(".jpg")
+    output_path = (
+        destination if destination is not None else image_path.with_suffix(".jpg")
+    )
     output_path.parent.mkdir(parents=True, exist_ok=True)
     temp_path = output_path.with_name(f"{output_path.name}.tmp")
 
@@ -106,8 +111,14 @@ def main() -> int:
     total_after = 0
     optimized_count = 0
 
-    for book_name, image_path in iter_images(primary_sources_dir, set(args.books) if args.books else None):
-        destination = output_dir / book_name / image_path.with_suffix(".jpg").name if args.output_dir else None
+    for book_name, image_path in iter_images(
+        primary_sources_dir, set(args.books) if args.books else None
+    ):
+        destination = (
+            output_dir / book_name / image_path.with_suffix(".jpg").name
+            if args.output_dir
+            else None
+        )
         output_path, before, after = optimize_image(
             image_path, (max_width, max_height), quality, destination
         )
