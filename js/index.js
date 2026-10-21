@@ -977,11 +977,20 @@
       `<a href="/nhe-enga/docs/primary_sources/?book_name=ancharte&page_number=${p1}" target="_blank" rel="noopener">${match}</a>`
     ));
 
-    // Araujo Cat 1618
-    regex = /Ar\., Cat\., (?!1686)(\d+v?)/g;
-    replacedString = replacedString.replace(regex, (match, p1) => (
-      `<a href="/nhe-enga/docs/primary_sources/?book_name=arcat1618&page_number=${p1}" target="_blank" rel="noopener">${match}</a>`
-    ));
+    // Araújo, Catecismo. An explicit 1686 suffix selects the second edition;
+    // citations without an edition retain the historic 1618 behavior.
+    regex = /Ar\., Cat\., (\d+(?:\s*[-–—]\s*\d+)?),\s*1686\b|Ar\., Cat\., (?!1686\b)(\d+v?)/g;
+    replacedString = replacedString.replace(regex, (match, pages1686, page1618) => {
+      if (!pages1686) {
+        return `<a href="/nhe-enga/docs/primary_sources/?book_name=arcat1618&page_number=${page1618}" target="_blank" rel="noopener">${match}</a>`;
+      }
+      let firstPage = true;
+      return pages1686.replace(/\d+/g, (page) => {
+        const label = firstPage ? `Ar., Cat., ${page}` : page;
+        firstPage = false;
+        return `<a href="/nhe-enga/docs/primary_sources/?book_name=arcat1686&page_number=${Number(page)}" target="_blank" rel="noopener">${label}</a>`;
+      }) + ', 1686';
+    });
 
     // Bettendorf compendio
     regex = /Bettendorff, Compêndio, (\d+v?)/g;

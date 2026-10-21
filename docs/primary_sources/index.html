@@ -82,17 +82,37 @@
     </div>
     <p id="imageError" role="status" hidden>Não foi possível carregar esta página. Tente abrir a imagem ou o PDF.</p>
     <script>
-        // This edition is the one listed in Navarro's bibliography (DTAbib.txt).
-        // Printed page p = scan p.jpg = PDF page p + 1. The scan also includes
-        // an unnumbered cover (0), preliminaries (1–13), and final blank (443).
         const sourceEditions = {
+            arcat1686: {
+                title: "Antônio de Araújo — Catecismo Brasílico",
+                edition: "Lisboa, 1686 · 2ª edição, emendada por Bartolomeu de Leão",
+                year: 1686,
+                firstScan: 1,
+                lastScan: 371,
+                firstPrintedPage: 1,
+                lastPrintedPage: 371,
+                printedPagesOnly: true,
+                imageOffset: 35,
+                availableRanges: [
+                    [1, 4], [9, 14], [19, 23], [33, 39], [46, 65], [72, 99],
+                    [119, 141], [152, 157], [164, 168], [185, 191], [217, 222],
+                    [232, 243], [247, 251], [266, 271], [275, 286], [350, 355],
+                ],
+                sourceLinkLabel: "Digitalização: Biblioteca Nacional de Portugal — registro na Biblioteca Digital Curt Nimuendajú",
+                bibliographyUrl: "https://www.etnolinguistica.org/biblio:araujo-1686-catecismo",
+                pdfUrl: "https://etnolinguistica.wdfiles.com/local--files/biblio%3Aaraujo-1686-catecismo/araujo_1686_catecismo_bnp.pdf",
+            },
             evreux1929: {
+                // This is the edition listed in Navarro's bibliography. Printed
+                // page p = scan p.jpg = PDF page p + 1; indices 0–13 are front matter.
                 title: "Yves d’Évreux — Viagem ao Norte do Brasil",
                 edition: "Rio de Janeiro, 1929 · Tradução de César Augusto Marques",
+                year: 1929,
                 firstScan: 0,
                 lastScan: 443,
                 firstPrintedPage: 14,
                 lastPrintedPage: 442,
+                sourceLinkLabel: "Digitalização: Biblioteca Digital Curt Nimuendajú — Coleção Nicolai",
                 bibliographyUrl: "https://www.etnolinguistica.org/biblio:evreux-1929-viagem",
                 pdfUrl: "https://archive.org/download/evreux-1929-viagem-ao-norte-do-brasil/Evreux_1929_ViagemAoNorteDoBrasil.pdf",
             },
@@ -130,6 +150,7 @@
         const defaultImageFormats = {
             ancharte: ".png",
             arcat1618: ".png",
+            arcat1686: ".jpg",
             betcomp: ".jpg",
             cartas_portiguara: ".jpg",
             evreux1929: ".jpg",
@@ -153,6 +174,22 @@
         }
         function imageFormatForBook(name) {
             return imageFormats[name] || defaultImageFormats[name] || ".png";
+        }
+        function editionHasPage(candidate) {
+            if (!edition) return true;
+            if (candidate < edition.firstScan || candidate > edition.lastScan) return false;
+            if (!edition.availableRanges) return true;
+            return edition.availableRanges.some(([first, last]) => candidate >= first && candidate <= last);
+        }
+        function closestAvailablePage(candidate) {
+            if (!edition || !edition.availableRanges || editionHasPage(candidate)) return candidate;
+            const endpoints = edition.availableRanges.flatMap(([first, last]) => [first, last]);
+            return endpoints.reduce((closest, page) => (
+                Math.abs(page - candidate) < Math.abs(closest - candidate) ? page : closest
+            ));
+        }
+        function imagePageNumber() {
+            return pageNumber + (edition ? edition.imageOffset || 0 : 0);
         }
         // Get the query parameters from the URL
         const urlParams = new URLSearchParams(window.location.search);
@@ -183,10 +220,11 @@
         if (edition) {
             const requestedPage = urlParams.get('page_number');
             const parsedPage = /^-?\d+$/.test(requestedPage || '') ? Number(requestedPage) : 1;
-            pageNumber = Math.min(edition.lastScan, Math.max(edition.firstScan, parsedPage));
+            pageNumber = closestAvailablePage(Math.min(edition.lastScan, Math.max(edition.firstScan, parsedPage)));
             document.getElementById('sourceDetails').hidden = false;
             document.getElementById('sourceTitle').textContent = edition.title;
             document.getElementById('sourceEdition').textContent = edition.edition;
+            document.getElementById('sourceInfo').textContent = edition.sourceLinkLabel;
             document.getElementById('sourceInfo').href = edition.bibliographyUrl;
             updateUrl();
         }
@@ -196,6 +234,7 @@
         }
         function pageLabel() {
             if (edition) {
+                if (edition.printedPagesOnly) return `Página ${pageNumber} de ${edition.lastPrintedPage} · recorte disponível em torno de páginas citadas`;
                 if (pageNumber === edition.firstScan) return 'Capa (sem numeração)';
                 if (pageNumber < edition.firstPrintedPage) return `Preliminares ${pageNumber} de ${edition.firstPrintedPage - 1} (sem numeração)`;
                 if (pageNumber === edition.lastScan) return 'Página final em branco (sem numeração)';
@@ -230,7 +269,8 @@
                 nav.appendChild(text_link);
             }
 
-            const imageUrl = `/nhe-enga/docs/primary_sources/${bookName}/${pageNumber}${imageFormatForBook(bookName)}`;
+            const imageNumber = imagePageNumber();
+            const imageUrl = `/nhe-enga/docs/primary_sources/${bookName}/${imageNumber}${imageFormatForBook(bookName)}`;
             const image = document.createElement('img');
             image.id = 'pageImage';
             image.src = imageUrl;
@@ -241,12 +281,12 @@
                 document.getElementById('imageError').hidden = false;
             });
             document.getElementById('currentPage').textContent = pageLabel();
-            document.getElementById('prevPage').disabled = pageNumber <= (edition ? edition.firstScan : 1);
-            document.getElementById('nextPage').disabled = edition ? pageNumber >= edition.lastScan : false;
+            document.getElementById('prevPage').disabled = edition ? !editionHasPage(pageNumber - 1) : pageNumber <= 1;
+            document.getElementById('nextPage').disabled = edition ? !editionHasPage(pageNumber + 1) : false;
             document.getElementById('openImage').href = imageUrl;
             if (edition) {
-                document.title = `${edition.title} (1929) — ${pageLabel()}`;
-                document.getElementById('sourcePdf').href = `${edition.pdfUrl}#page=${pageNumber + 1}`;
+                document.title = `${edition.title} (${edition.year}) — ${pageLabel()}`;
+                document.getElementById('sourcePdf').href = `${edition.pdfUrl}#page=${imageNumber + 1}`;
             }
             // Remove the existing image if any
             const existingImage = document.querySelector('img');
@@ -262,7 +302,7 @@
 
         // Add event listeners to buttons
         document.getElementById('prevPage').addEventListener('click', () => {
-            if (pageNumber > (edition ? edition.firstScan : 1)) {
+            if (edition ? editionHasPage(pageNumber - 1) : pageNumber > 1) {
                 pageNumber--;
                 updateImage();
                 updateUrl();
@@ -270,7 +310,7 @@
         });
 
         document.getElementById('nextPage').addEventListener('click', () => {
-            if (edition && pageNumber >= edition.lastScan) return;
+            if (edition && !editionHasPage(pageNumber + 1)) return;
             pageNumber++;
             updateImage();
             updateUrl();
