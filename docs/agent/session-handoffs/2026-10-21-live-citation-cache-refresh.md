@@ -61,8 +61,15 @@ core, without weakening offline integrity or per-document release coherence.
 
 ## Publication
 
-Pending source push, Pages deployment, and a final uncached production-browser
-check of the exact reported query.
+- Source commit `fda36aaf` was pushed to `origin/main`.
+- Static-site commit `8460bbbf` was pushed to `origin/gh-pages`; GitHub Pages
+  reported `built` without an error at 2026-10-21 17:04 America/Sao_Paulo.
+- The deployed `sw.js` SHA-256 is
+  `68032b223aedc1a553ce7336c727209b680d1ee873f70c7e1326f6461a58d57f`,
+  exactly matching the source and Pages artifact.
+- A fresh real-Chromium visit to the exact reported `tiroso perde a vida de sua
+  al` query exposed `book_name=arcat1686&page_number=241`. The viewer loaded
+  `arcat1686/276.jpg` successfully at 786 by 1261 pixels.
 
 ## Remaining questions
 

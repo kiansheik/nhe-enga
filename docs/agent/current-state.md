@@ -13,7 +13,11 @@
   mid-page or weaken corrupt-update rejection.
 - All 10 offline unit tests, the Node service-worker protocol smoke test, and
   the real-Chromium offline/update suite pass, including a new stale-catalog
-  navigation regression. Publication is pending.
+  navigation regression.
+- Source commit `fda36aaf` is on `origin/main`; Pages commit `8460bbbf` built
+  successfully. The live worker matches the artifact byte for byte, and the
+  exact reported query now exposes an `arcat1686` page-241 link whose viewer
+  loads image `276.jpg` at 786 by 1261 pixels.
 
 ## 2026-10-21 — Araújo 1686 citation pages
 

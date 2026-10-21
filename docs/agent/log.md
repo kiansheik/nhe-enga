@@ -10,7 +10,10 @@ revalidate the catalog with `no-store`, prefer the current catalog's verified
 file, and retain installed/saved files as failure fallbacks. Existing documents
 remain version-pinned. All offline unit/protocol checks and the real-Chromium
 offline/update suite pass, including immediate online activation without an
-explicit sync.
+explicit sync. Pushed source commit `fda36aaf` and deployed Pages commit
+`8460bbbf`; GitHub Pages built it successfully. The production worker matches
+the artifact byte for byte, and the exact reported query now links to the live
+1686 page-241 viewer and its loaded `276.jpg` scan.
 
 ## 2026-10-21 — Araújo 1686 citations
 
