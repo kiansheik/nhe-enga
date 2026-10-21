@@ -30,9 +30,7 @@ async function catalog(refresh = false) {
   const cache = await caches.open(META), url = BASE + 'offline/catalog.json';
   const old = await cache.match(url);
   if (old && !refresh) return decodeCatalog(await old.json());
-  const headers = {};
-  if (old?.headers.get('ETag')) headers['If-None-Match'] = old.headers.get('ETag');
-  const r = await fetch(url, {cache: 'no-cache', headers});
+  const r = await fetch(url, {cache: refresh ? 'no-store' : 'no-cache'});
   if (r.status === 304 && old) return decodeCatalog(await old.json());
   if (!r.ok) throw Error('Não foi possível consultar as atualizações');
   const bytes = await r.arrayBuffer();
@@ -112,26 +110,31 @@ async function sync(options = {}) {
   await write(s);
   await notify({type: 'complete', text: 'Downloads concluídos. Reabra a página para usar a versão nova.'});
 }
-async function pin(clientId, s) {
-  if (!clientId) return s;
+async function pin(clientId, s, refresh = false) {
+  if (!clientId) return {...s, catalog: await catalog(refresh).catch(() => null)};
   const cache = await caches.open(META), url = BASE + 'offline/client/' + encodeURIComponent(clientId);
   const old = await cache.match(url);
-  if (old) return old.json();
-  const snapshot = {installed: s.installed, saved: s.saved, catalog: await catalog().catch(() => null)};
+  if (old && !refresh) return old.json();
+  let current = null;
+  try { current = await catalog(refresh); } catch (_) { current = await catalog().catch(() => null); }
+  const snapshot = {installed: s.installed, saved: s.saved, catalog: current};
   await cache.put(url, new Response(JSON.stringify(snapshot)));
   return snapshot;
 }
-async function findFile(path, snapshot) {
-  for (const p of Object.values(snapshot.installed)) {
-    const f = p.files.find(f => f.path === path); if (f) return f;
-  }
-  if (snapshot.saved[path]) return snapshot.saved[path];
-  const c = snapshot.catalog || await catalog();
+async function findFiles(path, snapshot) {
+  const files = [], seen = new Set();
+  const add = file => { if (file && !seen.has(file.sha256)) { seen.add(file.sha256); files.push(file); } };
   // Source packs use the real directory name; all other pages are core/tools.
   const book = path.match(/^docs\/primary_sources\/([^/]+)\//)?.[1];
-  const packs = book ? c.packs.filter(p => p.id === 'source-' + book || p.id === 'core') : c.packs.filter(p => p.kind !== 'source');
-  for (const p of packs) { const f = (await manifest(p)).files.find(f => f.path === path); if (f) return f; }
-  return null;
+  if (snapshot.catalog) {
+    const packs = book ? snapshot.catalog.packs.filter(p => p.id === 'source-' + book || p.id === 'core') : snapshot.catalog.packs.filter(p => p.kind !== 'source');
+    for (const p of packs) {
+      try { add((await manifest(p)).files.find(f => f.path === path)); } catch (_) {}
+    }
+  }
+  for (const p of Object.values(snapshot.installed)) add(p.files.find(f => f.path === path));
+  add(snapshot.saved[path]);
+  return files;
 }
 async function serve(event) {
   const url = new URL(event.request.url);
@@ -139,16 +142,22 @@ async function serve(event) {
   if (!path || path.endsWith('/')) path += 'index.html';
   else if (!path.split('/').pop().includes('.')) path += '/index.html';
   if (!pathOK(path)) return new Response('Caminho inválido', {status: 400});
-  const s = await state(), snapshot = await pin(event.resultingClientId || event.clientId, s);
+  const s = await state();
+  // A new document gets a revalidated catalog. Its subresources keep that
+  // pinned catalog, so online deploys become visible without mixing releases.
+  const snapshot = await pin(event.resultingClientId || event.clientId, s, event.request.mode === 'navigate');
   try {
-    const f = await findFile(path, snapshot);
-    if (f) {
-      const response = await getBlob(f);
-      // Serialise state writes with sync, but do not hold the fetch response up.
-      event.waitUntil(queue = queue.catch(() => {}).then(async () => {
-        const latest = await state(); if (!latest.saved[path]) latest.saved[path] = f; await write(latest);
-      }));
-      return response;
+    for (const f of await findFiles(path, snapshot)) {
+      try {
+        const response = await getBlob(f);
+        // Serialise state writes with sync, but do not hold the fetch response up.
+        event.waitUntil(queue = queue.catch(() => {}).then(async () => {
+          const latest = await state();
+          if (latest.saved[path]?.sha256 !== f.sha256) latest.saved[path] = f;
+          await write(latest);
+        }));
+        return response;
+      } catch (_) {}
     }
     return await fetch(event.request);
   } catch (_) {
