@@ -1,5 +1,20 @@
 # Current State
 
+## 2026-10-21 — Live citation cache refresh
+
+- The deployed citation formatter was correct, but browsers with an older
+  service-worker snapshot could keep serving the former `arcat1618` link on
+  ordinary online visits.
+- New document navigations now bypass the HTTP cache when revalidating the
+  signed offline catalog and prefer files from that pinned current catalog.
+  If the network or a new asset fails verification, the worker falls back to
+  the installed or previously saved verified copy.
+- Existing documents remain pinned to one catalog; this does not mix releases
+  mid-page or weaken corrupt-update rejection.
+- All 10 offline unit tests, the Node service-worker protocol smoke test, and
+  the real-Chromium offline/update suite pass, including a new stale-catalog
+  navigation regression. Publication is pending.
+
 ## 2026-10-21 — Araújo 1686 citation pages
 
 - Explicit `Ar., Cat., {page}, 1686` citations now target a separate

@@ -107,6 +107,11 @@ def main():
                 context.set_offline(False)
                 (site / "index.html").write_text(text.replace(">v2<", ">v3<"))
                 build_offline.generate(site, 3)
+                page.goto(base + "?release=3")
+                assert page.locator("#version").inner_text() == "v3"
+                print("PASS online navigation revalidates a stale offline catalog")
+                (site / "index.html").write_text(text.replace(">v2<", ">v4<"))
+                build_offline.generate(site, 4)
                 (site / "index.html").write_text("corrupt server response")
                 page.evaluate(
                     "window.offlineError=null;navigator.serviceWorker.addEventListener('message',e=>{if(e.data.type==='error')window.offlineError=e.data.text});navigator.serviceWorker.controller.postMessage({type:'sync'})"

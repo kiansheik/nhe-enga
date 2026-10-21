@@ -26,9 +26,11 @@ const sandbox = {URL, Request, Response, Headers, TextDecoder, Uint8Array, Set, 
 vm.createContext(sandbox);
 vm.runInContext(fs.readFileSync(path.join(root, 'offline/sw.js'), 'utf8'), sandbox);
 async function call(code) {return await vm.runInContext(code, sandbox);}
-async function serve(client, url) {
+async function serve(client, url, navigate = false) {
   const waits = [];
-  sandbox.event = {request: new Request(origin + '/nhe-enga/' + url), clientId: client, resultingClientId: client, waitUntil: p => waits.push(p)};
+  const request = new Request(origin + '/nhe-enga/' + url);
+  if (navigate) Object.defineProperty(request, 'mode', {value: 'navigate'});
+  sandbox.event = {request, clientId: client, resultingClientId: client, waitUntil: p => waits.push(p)};
   const result = await call('serve(event)'); await Promise.all(waits); return result;
 }
 try {
@@ -50,6 +52,11 @@ try {
     let text = fs.readFileSync(path.join(site,'index.html'),'utf8');
     fs.writeFileSync(path.join(site,'index.html'), text.replace('>v1<','>v2<'));
     cp.execFileSync('python3',[path.join(root,'scripts/build_offline.py'),site], {env:{...process.env,OFFLINE_SEQUENCE:'2'}});
+    assert.match(await (await serve('fresh-navigation','',true)).text(), />v2</);
+    offline = true;
+    assert.match(await (await serve('old','')).text(), />v1</);
+    console.log('PASS navigation revalidates the catalog while existing documents stay pinned');
+    offline = false;
     const before = requests.filter(p => p.endsWith('/vlb/1.png')).length;
     await call('sync()');
     assert.equal(requests.filter(p => p.endsWith('/vlb/1.png')).length,before);

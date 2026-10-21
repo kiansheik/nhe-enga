@@ -1,5 +1,17 @@
 # Agent Log
 
+## 2026-10-21 — Refresh stale live citation snapshots
+
+Reproduced the reported `arcat1618` target as an offline-service-worker
+versioning problem: the origin and a clean browser already returned the fixed
+`arcat1686` anchor, while an older pinned catalog could continue serving the
+old JavaScript during online navigation. Changed new-document activation to
+revalidate the catalog with `no-store`, prefer the current catalog's verified
+file, and retain installed/saved files as failure fallbacks. Existing documents
+remain version-pinned. All offline unit/protocol checks and the real-Chromium
+offline/update suite pass, including immediate online activation without an
+explicit sync.
+
 ## 2026-10-21 — Araújo 1686 citations
 
 Separated explicit 1686 Araújo citations from the legacy 1618 folio route.
