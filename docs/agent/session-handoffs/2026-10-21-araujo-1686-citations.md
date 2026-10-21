@@ -64,6 +64,16 @@ and is not added to the source commit or Pages artifact.
   corrected dictionary anchor, edition metadata, printed-page label, external
   PDF link at ordinal 277, and readable image 276.
 
+## Publication
+
+- Source commit `cb4b3b87` was pushed to `origin/main`.
+- Static-site commit `99fb18f3` was pushed to `origin/gh-pages`; GitHub Pages
+  reported `built` with no error at 2026-10-21 16:50 America/Sao_Paulo.
+- The live `arcat1686/276.jpg` returned HTTP 200 and matched the local artifact
+  SHA-256 `f63fdc33a38773c1caba04c22d1a649388f1a778ee8793e197948acc1b86d4f4`.
+- A real Chromium production click from the `emo'emyîara` entry opened the
+  `arcat1686` page-241 viewer and displayed the scan successfully.
+
 ## What failed
 
 - System Poppler tools were absent, so PyMuPDF/Pillow were used for PDF

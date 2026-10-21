@@ -9,7 +9,10 @@ those pages plus a two-page context buffer (158 JPEGs). Confirmed printed page
 viewer navigation, range-citation handling, provenance, reproducible selected
 rendering, Pages/offline inclusion, and focused coverage. All 12 source-viewer
 tests, lint, image decoding, the 741 MiB Pages build, and a real-Chromium local
-click from the dictionary entry to the readable scan pass.
+click from the dictionary entry to the readable scan pass. Pushed source commit
+`cb4b3b87` to `main` and Pages commit `99fb18f3` to `gh-pages`; GitHub reported
+the Pages build successful, the live image bytes match the artifact, and a
+real-Chromium production click reaches the readable page-241 scan.
 
 ## 2026-10-12 — Diffuse locative -bo
 

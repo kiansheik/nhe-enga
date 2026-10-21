@@ -12,8 +12,10 @@
 - The production artifact builds successfully at about 741 MiB, contains the
   158 optimized 1686 images as a separate offline pack, and contains no PDFs.
   Focused tests, lint, image decoding, and real-Chromium local navigation pass.
-- Source-branch commit and Pages publication status are recorded in the
-  [handoff](session-handoffs/2026-10-21-araujo-1686-citations.md).
+- Source commit `cb4b3b87` is on `origin/main`; Pages commit `99fb18f3` built
+  successfully and was verified live on the custom domain, including the
+  dictionary-generated page-241 link and the exact deployed JPEG bytes. See
+  the [handoff](session-handoffs/2026-10-21-araujo-1686-citations.md).
 
 ## 2026-10-12 — Diffuse locative -bo and hyphenated postpositions
 
