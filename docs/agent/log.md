@@ -1,5 +1,16 @@
 # Agent Log
 
+## 2026-10-21 — Araújo 1686 citations
+
+Separated explicit 1686 Araújo citations from the legacy 1618 folio route.
+Derived 58 cited printed pages from the served dictionary and rendered only
+those pages plus a two-page context buffer (158 JPEGs). Confirmed printed page
+241 at image/PDF index 276 contains the `emo'emyîara` quotation. Added sparse
+viewer navigation, range-citation handling, provenance, reproducible selected
+rendering, Pages/offline inclusion, and focused coverage. All 12 source-viewer
+tests, lint, image decoding, the 741 MiB Pages build, and a real-Chromium local
+click from the dictionary entry to the readable scan pass.
+
 ## 2026-10-12 — Diffuse locative -bo
 
 Implemented `bo` (Navarro -bo2) beside `pe` and routed hyphenated dictionary

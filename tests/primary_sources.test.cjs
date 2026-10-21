@@ -17,6 +17,7 @@ const linkSources = vm.runInNewContext(`${dictionaryScript.slice(linkSourcesStar
 const viewerHtml = fs.readFileSync(path.join(root, 'docs/primary_sources/index.html'), 'utf8');
 const viewerScript = viewerHtml.match(/<script>([\s\S]*?)<\/script>/)[1];
 const manifest = JSON.parse(fs.readFileSync(path.join(root, 'docs/primary_sources/evreux1929/source.json'), 'utf8'));
+const arcat1686Manifest = JSON.parse(fs.readFileSync(path.join(root, 'docs/primary_sources/arcat1686/source.json'), 'utf8'));
 
 function links(html) {
   return [...html.matchAll(/<a href="([^"]+)"[^>]*>([^<]*)<\/a>/g)].map((match) => ({
@@ -134,6 +135,73 @@ test('the served dictionary’s 120 explicit citations reach the 42 verified pri
   assert.equal(citationCount, 120);
   assert.equal(pageLinks, 121); // Marabá's pp. 142–143 supplies two links.
   assert.deepEqual([...pages].sort((a, b) => a - b), manifest.verification.all_cited_pages);
+});
+
+test('Araújo 1686 citations select the second edition and preserve ranges', () => {
+  for (const [citation, expected] of [
+    ['Ar., Cat., 241, 1686', ['241']],
+    ['Ar., Cat., 11-12, 1686', ['11', '12']],
+    ['Ar., Cat., 11–12, 1686', ['11', '12']],
+  ]) {
+    const linked = linkSources(citation);
+    assert.equal(linked.replace(/<\/?a\b[^>]*>/g, ''), citation);
+    assert.deepEqual(links(linked).map((link) => new URL(link.href, 'https://example.test').searchParams.get('page_number')), expected);
+    assert.ok(links(linked).every((link) => link.href.includes('book_name=arcat1686')));
+  }
+  assert.equal(linkSources('Ar., Cat., 1686'), 'Ar., Cat., 1686');
+});
+
+test('the served dictionary’s 1686 citations reach exactly the selected source pages', () => {
+  const entries = JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(root, 'docs/dict-conjugated.json.gz'))));
+  let citationCount = 0;
+  let pageLinks = 0;
+  const pages = new Set();
+  for (const entry of entries) {
+    const definition = entry.d || '';
+    citationCount += [...definition.matchAll(/Ar\.,\s*Cat\.,\s*\d+(?:\s*[-–—]\s*\d+)?\s*,\s*1686\b/gi)].length;
+    const linked = linkSources(definition);
+    assert.equal(linked.replace(/<\/?a\b[^>]*>/g, ''), definition);
+    for (const link of links(linked).filter((item) => item.href.includes('book_name=arcat1686'))) {
+      pageLinks += 1;
+      pages.add(Number(new URL(link.href, 'https://example.test').searchParams.get('page_number')));
+    }
+  }
+  assert.equal(citationCount, arcat1686Manifest.verification.citation_count);
+  assert.equal(pageLinks, 91); // The 11–12 citation supplies two links.
+  assert.deepEqual([...pages].sort((a, b) => a - b), arcat1686Manifest.verification.all_cited_pages);
+});
+
+test('Araújo 1686 publishes only cited pages and the two-page context buffer', () => {
+  const { first_printed_page: first, last_printed_page: last, printed_page_to_image_offset: offset } = arcat1686Manifest.pagination;
+  const context = arcat1686Manifest.selection.context_pages_each_side;
+  const expected = new Set();
+  for (const cited of arcat1686Manifest.verification.all_cited_pages) {
+    for (let page = Math.max(first, cited - context); page <= Math.min(last, cited + context); page += 1) {
+      expected.add(page + offset);
+    }
+  }
+  const actual = fs.readdirSync(path.join(root, 'docs/primary_sources/arcat1686'))
+    .filter((name) => name.endsWith('.jpg'))
+    .map((name) => Number.parseInt(name, 10));
+  assert.equal(actual.length, arcat1686Manifest.selection.rendered_image_count);
+  assert.deepEqual(actual.sort((a, b) => a - b), [...expected].sort((a, b) => a - b));
+});
+
+test("emo'emyîara opens printed page 241 of Araújo 1686 with bounded context", async () => {
+  const href = links(linkSources('Ar., Cat., 241, 1686'))[0].href;
+  const viewer = await openViewer(href.split('?')[1]);
+  assert.equal(viewer.image().src, '/nhe-enga/docs/primary_sources/arcat1686/276.jpg');
+  assert.match(viewer.get('currentPage').textContent, /^Página 241 de 371/);
+  assert.match(viewer.document.title, /Catecismo Brasílico \(1686\)/);
+  assert.equal(viewer.get('sourceDetails').hidden, false);
+  assert.equal(viewer.get('sourceInfo').href, arcat1686Manifest.catalog_url);
+  assert.match(viewer.get('sourcePdf').href, /#page=277$/);
+  viewer.click('nextPage');
+  viewer.click('nextPage');
+  assert.equal(viewer.window.location.searchParams.get('page_number'), '243');
+  assert.equal(viewer.get('nextPage').disabled, true);
+  viewer.click('nextPage');
+  assert.equal(viewer.window.location.searchParams.get('page_number'), '243');
 });
 
 test('so’o-Îurupari citation opens the 1929 page 293 scan and PDF ordinal 294', async () => {

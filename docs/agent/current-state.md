@@ -1,5 +1,20 @@
 # Current State
 
+## 2026-10-21 — Araújo 1686 citation pages
+
+- Explicit `Ar., Cat., {page}, 1686` citations now target a separate
+  `arcat1686` viewer instead of being misrouted through the 1618 folio map.
+- The served dictionary contains 90 explicit citations to 58 distinct printed
+  pages. The source directory contains those pages plus a two-page context
+  buffer: 158 JPEGs across 16 ranges, not the complete 420-page scan.
+- Printed page `p` maps to zero-based PDF/image index `p + 35`; page 241 is
+  image `276.jpg`, visually checked against the `emo'emyîara` quotation.
+- The production artifact builds successfully at about 741 MiB, contains the
+  158 optimized 1686 images as a separate offline pack, and contains no PDFs.
+  Focused tests, lint, image decoding, and real-Chromium local navigation pass.
+- Source-branch commit and Pages publication status are recorded in the
+  [handoff](session-handoffs/2026-10-21-araujo-1686-citations.md).
+
 ## 2026-10-12 — Diffuse locative -bo and hyphenated postpositions
 
 - `bo` (`Diffusive`, `tupi.Noun.bo`) implements Navarro's -bo2 diffuse

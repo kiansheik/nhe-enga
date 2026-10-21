@@ -62,6 +62,7 @@ SOURCE_NAMES = {
     "vlb": "Vocabulário na Língua Brasílica (VLB)",
     "ancharte": "Anchieta — Arte",
     "arcat1618": "Araújo — Catecismo (1618)",
+    "arcat1686": "Araújo — Catecismo (1686, cited excerpts)",
     "betcomp": "Bettendorff — Compêndio",
     "lerhist": "Léry — História",
     "cartas_portiguara": "Cartas Potiguaras",

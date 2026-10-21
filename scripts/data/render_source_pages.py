@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Render a verified source PDF as complete, numbered JPEG page images.
+"""Render verified source PDF pages as numbered JPEG images.
 
 Requires PyMuPDF and Pillow. Run from the repository root; see the source's
-README for the download URL, checksum, and printed-page mapping.
+README for the download URL, checksum, printed-page mapping, and whether the
+manifest selects a cited-page subset.
 """
 
 from __future__ import annotations
@@ -37,9 +38,26 @@ def main() -> int:
     with fitz.open(args.pdf) as document:
         if len(document) != manifest["pdf"]["page_count"]:
             parser.error("PDF page count does not match the source manifest")
-        pages = (
-            sorted(set(args.page)) if args.page is not None else range(len(document))
-        )
+        if args.page is not None:
+            pages = sorted(set(args.page))
+        elif selection := manifest.get("selection"):
+            pagination = manifest["pagination"]
+            offset = pagination["printed_page_to_image_offset"]
+            first_printed = pagination["first_printed_page"]
+            last_printed = pagination["last_printed_page"]
+            context = selection["context_pages_each_side"]
+            printed_pages = manifest["verification"]["all_cited_pages"]
+            pages = sorted(
+                {
+                    printed_page + offset + delta
+                    for printed_page in printed_pages
+                    for delta in range(-context, context + 1)
+                    if first_printed <= printed_page + delta <= last_printed
+                    and 0 <= printed_page + offset + delta < len(document)
+                }
+            )
+        else:
+            pages = range(len(document))
         if any(page < 0 or page >= len(document) for page in pages):
             parser.error("--page must be a valid zero-based PDF index")
         output_dir.mkdir(parents=True, exist_ok=True)

@@ -1,0 +1,74 @@
+{
+  "id": "arcat1686",
+  "author": "Antônio de Araújo",
+  "title": "Catecismo Brasílico da Doutrina Cristã",
+  "editor": "Bartolomeu de Leão",
+  "year": 1686,
+  "place": "Lisboa",
+  "imprint": "Officina de Miguel Deslandes",
+  "navarro_bibliography": "../DTAbib.txt",
+  "navarro_citation": "Ar., Cat., {page}, 1686",
+  "digitization_credit": "Biblioteca Nacional de Portugal",
+  "catalog_url": "https://www.etnolinguistica.org/biblio:araujo-1686-catecismo",
+  "archive_url": "https://purl.pt/14250",
+  "pdf": {
+    "filename": "ar.Cat.1686.pdf",
+    "sha256": "7acb95b61976b62c381e04def7f77f4d3809d68dbeff1d0e3721c4e4a024660e",
+    "bytes": 84734099,
+    "page_count": 420
+  },
+  "images": {
+    "extension": ".jpg",
+    "filename_rule": "{zero_based_pdf_index}.jpg",
+    "available_printed_page_ranges": [
+      [1, 4], [9, 14], [19, 23], [33, 39], [46, 65], [72, 99],
+      [119, 141], [152, 157], [164, 168], [185, 191], [217, 222],
+      [232, 243], [247, 251], [266, 271], [275, 286], [350, 355]
+    ]
+  },
+  "pagination": {
+    "printed_page_to_image_offset": 35,
+    "printed_page_to_pdf_ordinal_offset": 36,
+    "first_printed_page": 1,
+    "last_printed_page": 371,
+    "notes": [
+      "Printed page 1 is zero-based PDF index 36 (PDF ordinal 37).",
+      "Printed page 137 is misnumbered 237 in the source; sequence and the source catalog establish its identity.",
+      "Indices 407-419 contain the table, manuscript leaves, and blanks after printed page 371."
+    ]
+  },
+  "selection": {
+    "policy": "all explicitly cited printed pages in the served dictionary, plus context",
+    "context_pages_each_side": 2,
+    "rendered_image_count": 158
+  },
+  "verification": {
+    "date": "2026-10-21",
+    "served_dictionary": "../../dict-conjugated.json.gz",
+    "citation_count": 90,
+    "all_cited_pages": [
+      2, 11, 12, 21, 35, 37, 48, 53, 58, 61, 63, 74, 76, 79, 82,
+      83, 85, 88, 89, 90, 95, 96, 97, 121, 122, 123, 125, 126, 127,
+      128, 133, 134, 135, 136, 138, 139, 154, 155, 166, 187, 188, 189,
+      219, 220, 234, 235, 236, 241, 249, 268, 269, 277, 279, 280, 283,
+      284, 352, 353
+    ],
+    "method": "Citation pages were extracted from the served gzip dictionary. Printed pages 1, 241, and 371 were visually checked to establish and bound the constant +35 image-index mapping.",
+    "example": {
+      "lemma": "emo'emyîara",
+      "printed_page": 241,
+      "pdf_ordinal": 277,
+      "image": "276.jpg",
+      "attested_excerpt": "Aquêia iacatú temo'emiára ... õanga recobecába ... mocanhemi"
+    }
+  },
+  "render": {
+    "method": "whole PDF page",
+    "dpi": 240,
+    "jpeg_quality": 88,
+    "progressive": true,
+    "colorspace": "RGB",
+    "renderer_versions": {"PyMuPDF": "2.0", "Pillow": "12.3.0"},
+    "note": "Only the selected cited pages and two-page context buffer are rendered. The Pages optimizer processes the deployment copies again."
+  }
+}

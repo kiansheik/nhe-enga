@@ -44,6 +44,7 @@ These paths are referenced by source code or documented as public static pages. 
 - `/nhe-enga/docs/primary_sources/vlb/*.png`
 - `/nhe-enga/docs/primary_sources/ancharte/*.png`
 - `/nhe-enga/docs/primary_sources/arcat1618/*.png`
+- `/nhe-enga/docs/primary_sources/arcat1686/*.jpg`: cited printed pages plus a two-page context buffer
 - `/nhe-enga/docs/primary_sources/betcomp/*.jpg`
 - `/nhe-enga/docs/primary_sources/lerhist/*.jpg`
 - `/nhe-enga/docs/primary_sources/cartas_portiguara/*.{png,jpg}`

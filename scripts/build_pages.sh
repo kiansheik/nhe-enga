@@ -89,6 +89,7 @@ done
 for path in \
   docs/primary_sources/ancharte \
   docs/primary_sources/arcat1618 \
+  docs/primary_sources/arcat1686 \
   docs/primary_sources/betcomp \
   docs/primary_sources/cartas_portiguara \
   docs/primary_sources/evreux1929 \
@@ -100,6 +101,7 @@ done
 
 # Keep the new source's provenance available beside its page images.
 copy_path "docs/primary_sources/evreux1929/source.json"
+copy_path "docs/primary_sources/arcat1686/source.json"
 copy_path "docs/primary_sources/DTAbib.txt"
 
 for path in \
@@ -113,7 +115,7 @@ done
 
 "$PYTHON_BIN" "$ROOT_DIR/scripts/optimize_pages_images.py" "$ROOT_DIR/docs/primary_sources" \
   --output-dir "$BUILD_DIR/docs/primary_sources" \
-  --books ancharte arcat1618 betcomp cartas_portiguara evreux1929 lerhist vlb
+  --books ancharte arcat1618 arcat1686 betcomp cartas_portiguara evreux1929 lerhist vlb
 
 make -C "$ROOT_DIR" grammar-build
 mkdir -p "$BUILD_DIR/gramatica"

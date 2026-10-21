@@ -8,7 +8,9 @@
 - Quiz: `quiz/index.html`, `quiz/quiz.js`, `quiz/styles.css`; loads `../docs/dict-conjugated.json.gz`.
 - Nheengatu and Mbya pages: `katu/index.html`, `mbya/index.html`; load `docs/extracted_entries_nheengatu.tar.gz` and `docs/dooley_2006_mbya_dic.json.gz`.
 - Citation viewer: `docs/primary_sources/index.html`; opens page images under
-  `docs/primary_sources/{vlb,ancharte,arcat1618,betcomp,evreux1929,lerhist}`.
+  `docs/primary_sources/{vlb,ancharte,arcat1618,arcat1686,betcomp,evreux1929,lerhist}`.
+  The 1686 Araújo directory is intentionally sparse: all currently cited
+  printed pages plus a two-page context buffer, not the complete scan.
   D’Evreux provenance and page mapping live beside its images in `source.json`
   and `README.md`. The `cartas_portiguara` image folder is preserved in the
   Pages artifact for now; `bettvulg` is excluded because no runtime references
