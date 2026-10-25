@@ -81,6 +81,18 @@ generated source-inventory artifact was changed.
   target opened in a new tab, loaded the expected image, exposed the correct
   printed/PDF page label, and retained its external source link.
 
+## Publication
+
+- Source commit `31194fd4` was pushed to `origin/main`.
+- Static-site commit `2333ed15` was pushed to `origin/gh-pages`; GitHub Pages
+  reported `built` with no error after 84,063 ms.
+- The custom-domain JavaScript contains the new `anchteatro1954` and
+  `figueira1878` routes. The live Anchieta 683, Figueira 118, and Figueira 63
+  JPEGs match the deployed worktree SHA-256 values byte for byte.
+- A real Chrome search for `ma'enduar` exposed all three links. The deployed
+  viewers opened in separate tabs and loaded the expected 1400-pixel-wide
+  images with the correct page labels.
+
 ## What failed
 
 - The local scan available for Anchieta is Martins's 1954 *Poesias*, not
@@ -101,10 +113,9 @@ generated source-inventory artifact was changed.
   the exact cited editions. Do not extrapolate from this page-176 witness.
 - Refresh the checked-in generated source inventory only when generated audit
   outputs are explicitly in scope.
-- Work remains local; review is still needed before any commit or deployment.
 
 ## Suggested next prompt
 
-“Review the local Figueira/Anchieta source-link diff and the page-95, page-40,
-and page-176 viewers. If accepted, authorize a commit/deployment separately;
-do not broaden the Anchieta mapping by numeric offset.”
+“Choose the next unresolved primary source, verify its exact edition and
+locator system, and propose a bounded mapping without extrapolating the
+Anchieta page-176 concordance.”

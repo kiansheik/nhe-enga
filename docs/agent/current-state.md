@@ -21,8 +21,11 @@
   plus separate 200-image Figueira and one-image Anchieta offline packs. Real
   Chrome clicks from `ma'enduar` opened all three requested viewers and loaded
   the expected images.
-- This work is local only: no commit, push, or deployment was performed. See
-  the [handoff](session-handoffs/2026-10-25-figueira-anchieta-source-links.md).
+- Source commit `31194fd4` is on `origin/main`. Pages commit `2333ed15` built
+  successfully and is live on the custom domain. The deployed JavaScript has
+  all three routes; the three deployed JPEGs match the artifact byte for byte,
+  and real Chrome loaded them at 1400 pixels wide. See the
+  [handoff](session-handoffs/2026-10-25-figueira-anchieta-source-links.md).
 
 ## 2026-10-21 — Live citation cache refresh
 

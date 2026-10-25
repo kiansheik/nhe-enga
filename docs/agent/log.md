@@ -12,7 +12,11 @@ ranges, lists, other years, and all other Teatro pages remain unlinked. Wired
 both sources through Pages optimization and selective offline packs. All 18
 source/viewer tests, 11 offline tests, the service-worker smoke suite, lint,
 syntax, diff checks, a 791 MiB no-PDF Pages build, and real-Chrome clicks from
-the reported `ma'enduar` entry pass. No commit, push, or deployment was made.
+the reported `ma'enduar` entry pass. Pushed source commit `31194fd4` to `main`
+and Pages commit `2333ed15` to `gh-pages`; GitHub reported the build successful.
+The live JavaScript exposes all three routes, the deployed JPEG hashes match
+the artifact, and real Chrome loaded each expected image from the custom
+domain.
 
 ## 2026-10-21 — Refresh stale live citation snapshots
 
