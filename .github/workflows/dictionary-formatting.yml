@@ -1,0 +1,50 @@
+name: Dictionary formatting
+
+on:
+  pull_request:
+    paths:
+      - 'js/index.js'
+      - 'index.html'
+      - 'styles.css'
+      - 'offline/register.js'
+      - 'docs/dict-conjugated.json.gz'
+      - 'scripts/qa/sample_dictionary_entries.py'
+      - 'tests/dictionary_formatting.test.cjs'
+      - 'tests/dictionary_formatting_browser.py'
+      - '.github/workflows/dictionary-formatting.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  formatter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/workflows/dictionary-formatting.yml
+            /docs/dict-conjugated.json.gz
+            /favicon.ico
+            /index.html
+            /js/index.js
+            /js/pako.min.js
+            /js/papaparse.min.js
+            /manifest.json
+            /offline/register.js
+            /scripts/qa/sample_dictionary_entries.py
+            /styles.css
+            /tests/dictionary_formatting.test.cjs
+            /tests/dictionary_formatting_browser.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: node --test tests/dictionary_formatting.test.cjs
+      - run: python -m pip install playwright==1.55.0
+      - run: python -m playwright install --with-deps chromium
+      - run: python tests/dictionary_formatting_browser.py
