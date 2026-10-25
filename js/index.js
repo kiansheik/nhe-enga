@@ -962,6 +962,38 @@
       });
     });
 
+    // Navarro's lone "1686" Figueira citation is a probable year typo. The
+    // catalogued 1687 edition (in Platzmann's 1878 facsimile) has the exact
+    // cited çoába passage on p. 64. Preserve the year and let the viewer
+    // explain the discrepancy.
+    regex = /\b(Fig\.,?\s*Arte,\s*1686,\s*)(64)(?![\dA-Za-zÀ-ÿ])/g;
+    replacedString = replacedString.replace(regex, (match) => (
+      `<a href="/nhe-enga/docs/primary_sources/?book_name=figueira1878&page_number=64&citation_year=1686" target="_blank" rel="noopener">${match}</a>`
+    ));
+
+    // Figueira's 1687 pagination is preserved by the 1878 facsimile. Keep
+    // each page in inherited lists/ranges clickable without changing text.
+    regex = /\b(Fig\.,?\s*Arte,\s*(?!1686\s*,)(?:pp?\.\s*)?)(\d+(?:\s*[-–—,;]\s*\d+)*)(?![\dA-Za-zÀ-ÿ])/g;
+    replacedString = replacedString.replace(regex, (match, prefix, pages) => {
+      const pageNumbers = pages.match(/\d+/g).map(Number);
+      if (pageNumbers.some((page) => page < 1 || page > 167)) return match;
+      let firstPage = true;
+      return pages.replace(/\d+/g, (page) => {
+        const label = firstPage ? `${prefix}${page}` : page;
+        firstPage = false;
+        return `<a href="/nhe-enga/docs/primary_sources/?book_name=figueira1878&page_number=${Number(page)}" target="_blank" rel="noopener">${label}</a>`;
+      });
+    });
+
+    // The cited Navarro page and the available Martins documentary edition
+    // have no general numeric offset. Page 176 is linked only because all nine
+    // unsuffixed quotations on that locator were explicitly aligned to
+    // Martins 1954, p. 632. The separately cited 2006 edition stays unlinked.
+    regex = /\bAnch\.,\s*Teatro,\s*176(?=\s*(?:\)|$))/g;
+    replacedString = replacedString.replace(regex, (match) => (
+      `<a href="/nhe-enga/docs/primary_sources/?book_name=anchteatro1954&page_number=176" target="_blank" rel="noopener">${match}</a>`
+    ));
+
     // VLB
     regex = /VLB, (I|II), (\d+)/g;
     replacedString = replacedString.replace(regex, (match, p1, p2) => {

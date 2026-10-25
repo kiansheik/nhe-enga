@@ -1,19 +1,21 @@
 {
   "books": {
     "ancharte": ".jpg",
+    "anchteatro1954": ".jpg",
     "arcat1618": ".jpg",
     "arcat1686": ".jpg",
     "betcomp": ".jpg",
     "cartas_portiguara": ".jpg",
     "evreux1929": ".jpg",
+    "figueira1878": ".jpg",
     "lerhist": ".jpg",
     "vlb": ".jpg"
   },
-  "bytes_after": 710007652,
-  "bytes_before": 2796732178,
+  "bytes_after": 762591525,
+  "bytes_before": 2849440394,
   "format": "jpg",
   "max_height": 2400,
   "max_width": 1800,
-  "optimized_count": 2009,
+  "optimized_count": 2210,
   "quality": 82
 }
