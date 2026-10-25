@@ -17,6 +17,35 @@ import fitz
 from PIL import Image
 
 
+def render_image(page, settings: dict) -> Image.Image:
+    target_width = settings.get("target_width_px")
+    if target_width is not None:
+        if type(target_width) is not int or target_width < 1:
+            raise ValueError("render.target_width_px must be a positive integer")
+        scale = target_width / page.rect.width
+        pixmap = page.get_pixmap(
+            matrix=fitz.Matrix(scale, scale),
+            colorspace=fitz.csRGB,
+            alpha=False,
+        )
+    else:
+        dpi = settings.get("dpi")
+        if type(dpi) is not int or dpi < 1:
+            raise ValueError("render.dpi must be a positive integer")
+        pixmap = page.get_pixmap(
+            dpi=dpi,
+            colorspace=fitz.csRGB,
+            alpha=False,
+        )
+    image = Image.frombytes("RGB", (pixmap.width, pixmap.height), pixmap.samples)
+    if target_width is not None and image.width != target_width:
+        target_height = round(image.height * target_width / image.width)
+        image = image.resize(
+            (target_width, target_height), resample=Image.Resampling.LANCZOS
+        )
+    return image
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--pdf", required=True, type=Path)
@@ -65,12 +94,10 @@ def main() -> int:
         for index in pages:
             # Render the whole page, not just its embedded scan: some pages
             # carry the digitizing library's credit as a visible PDF text layer.
-            pixmap = document[index].get_pixmap(
-                dpi=settings["dpi"], colorspace=fitz.csRGB, alpha=False
-            )
-            image = Image.frombytes(
-                "RGB", (pixmap.width, pixmap.height), pixmap.samples
-            )
+            try:
+                image = render_image(document[index], settings)
+            except (TypeError, ValueError) as exc:
+                parser.error(f"cannot render PDF index {index}: {exc}")
             output_path = output_dir / f"{index}.jpg"
             temporary_path = output_path.with_suffix(".jpg.tmp")
             image.save(

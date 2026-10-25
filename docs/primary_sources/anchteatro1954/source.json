@@ -1,0 +1,89 @@
+{
+  "schema_version": 2,
+  "id": "anchteatro1954",
+  "author": "José de Anchieta",
+  "title": "Poesias",
+  "year": 1954,
+  "edition": "Edição documentária e crítica de Maria de Lourdes de Paula Martins",
+  "imprint": "São Paulo: Museu Paulista / Comissão do IV Centenário da Cidade de São Paulo, 1954",
+  "navarro_bibliography": "../DTAbib.txt",
+  "navarro_citation": "Anch., Teatro, 176",
+  "citation_edition": {
+    "title": "Teatro de Anchieta",
+    "editor_translator": "Eduardo de Almeida Navarro",
+    "year": 1999,
+    "publisher": "Martins Fontes",
+    "note": "Navarro's bibliography says this edition was collated with Martins's documentary edition. Some dictionary citations explicitly name the 2006 second edition; those remain outside this mapping."
+  },
+  "digitization_credit": "Internet Archive / Portal Catarina",
+  "catalog_url": "https://archive.org/details/anchieta-poesisas",
+  "archive_url": "https://archive.org/details/anchieta-poesisas",
+  "pdf": {
+    "url": "https://archive.org/download/anchieta-poesisas/Anchieta%20-%201954%20-%20Poesisas.pdf",
+    "filename": "Anchieta - 1954 - Poesisas.pdf",
+    "sha256": "489d9cbea8bc3f3808942972a4398a62dd11f4e1a6e741ee4a70d7fccb9b07bd",
+    "bytes": 105331955,
+    "page_count": 905,
+    "retrieved_at": "2026-10-25"
+  },
+  "images": {
+    "extension": ".jpg",
+    "filename_rule": "{zero_based_pdf_index}.jpg",
+    "first_index": 683,
+    "last_index": 683
+  },
+  "pagination": {
+    "navigation": "explicit_map",
+    "locator_unit": "printed page in Navarro's Teatro",
+    "notes": [
+      "This is a quotation-level cross-edition map, not a constant pagination offset.",
+      "Navarro page 176 corresponds here to Martins printed page 632, zero-based PDF index 683 and one-based PDF ordinal 684.",
+      "Martins printed page 176 is unrelated and must not be used for this citation."
+    ]
+  },
+  "mapping": {
+    "targets": [
+      {
+        "locator": "176",
+        "cited_edition": "Navarro 1999",
+        "cited_printed_page": 176,
+        "attestation_edition": "Martins 1954",
+        "printed_page": 632,
+        "pdf_index": 683,
+        "pdf_ordinal": 684,
+        "image": "683.jpg",
+        "source_page_url": "https://archive.org/details/anchieta-poesisas/page/n683/mode/1up",
+        "label": "Navarro p. 176 · passagem correspondente em Martins 1954, p. 632 · PDF p. 684"
+      }
+    ]
+  },
+  "verification": {
+    "date": "2026-10-25",
+    "served_dictionary": "../../dict-conjugated.json.gz",
+    "mapping_scope": "All nine served dictionary records with an unsuffixed Anch., Teatro, 176 citation were checked against this page. This does not establish mappings for any other Teatro page or for citations explicitly suffixed 2006.",
+    "citation_count": 9,
+    "record_count": 9,
+    "all_cited_pages": [176],
+    "attested_excerpt": "Tupansý, nde maenduá xe ri!",
+    "attested_translation": "Nossa Senhora, lembra-te de mim!",
+    "contrasts_left_unlinked": [
+      "Anch., Teatro, 176, 2006",
+      "all other Anch., Teatro page locators"
+    ]
+  },
+  "viewer": {
+    "title": "José de Anchieta — Teatro (cotejo documentário)",
+    "edition_text": "Citação: Navarro 1999, p. 176 · imagem: Martins 1954, p. 632",
+    "notice": "A citação conserva a paginação de Navarro. A imagem é a passagem correspondente na edição documentária de Martins; não existe uma equivalência geral entre as paginações.",
+    "source_page_link_label": "Abrir esta página no Internet Archive"
+  },
+  "render": {
+    "method": "whole PDF page",
+    "target_width_px": 1400,
+    "jpeg_quality": 88,
+    "progressive": true,
+    "colorspace": "RGB",
+    "renderer_versions": {"PyMuPDF": "2.0", "Pillow": "12.3.0"},
+    "note": "Only the explicitly aligned page is rendered. The Pages optimizer processes the deployment copy again."
+  }
+}

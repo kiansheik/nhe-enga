@@ -1,5 +1,19 @@
 # Agent Log
 
+## 2026-10-25 — Figueira and Anchieta source click-throughs
+
+Restored the reviewed Figueira implementation from the unmerged prior work,
+including the complete 200-page 1878 facsimile, provenance, full-scan viewer,
+all 622 explicit served-dictionary links, inherited list/range handling, and
+the visible `1686` citation-discrepancy warning. Added a deliberately narrower
+Anchieta mapping: all nine unsuffixed `Anch., Teatro, 176` attestations were
+visually collated to Martins 1954 printed p. 632/PDF index 683, while `2006`,
+ranges, lists, other years, and all other Teatro pages remain unlinked. Wired
+both sources through Pages optimization and selective offline packs. All 18
+source/viewer tests, 11 offline tests, the service-worker smoke suite, lint,
+syntax, diff checks, a 791 MiB no-PDF Pages build, and real-Chrome clicks from
+the reported `ma'enduar` entry pass. No commit, push, or deployment was made.
+
 ## 2026-10-21 — Refresh stale live citation snapshots
 
 Reproduced the reported `arcat1618` target as an offline-service-worker

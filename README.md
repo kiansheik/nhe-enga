@@ -215,6 +215,13 @@ Because many scripts operate on large PDFs and external APIs, there is no single
 - **Navarro dictionary**: Eduardo de Almeida Navarro, *Dicionário de Tupi Antigo*, 2007. The DOCX is not redistributed here; only derived JSON/JS needed for the UI.
 - **Anchieta/Artes, VLB, Bettendorff**: stored as PDFs/images under `docs/primary_sources/` solely for research and citation. Respect the copyrights of the original works.
 - **D’Evreux (1929)**: the complete 444-page scan is available through dictionary citations. The [edition and page-mapping notes](docs/primary_sources/evreux1929/README.md) document the original scan, its checksum, and how to reproduce the JPEGs.
+- **Figueira, Arte**: all current citations open the complete 1878 facsimile of
+  the 1687 edition; [provenance and pagination](docs/primary_sources/figueira1878/README.md)
+  are recorded beside the 200 derived page images.
+- **Anchieta, Teatro p. 176**: the linked image is an explicitly collated
+  passage in Martins's 1954 documentary edition, not a general page-equivalent
+  scan of Navarro; the [mapping boundary](docs/primary_sources/anchteatro1954/README.md)
+  is kept visible in the viewer.
 - **Nheengatu dataset**: parsed from Marcel Twardowsky Avila’s 2021 dissertation (*Proposta de dicionário nheengatu-português*).
 - **Mbyá dataset**: parsed from Robert A. Dooley’s *Léxico Guarani, Dialeto Mbyá* (SIL, 2006).
 - **Neologisms**: pulled from the Google Sheet referenced inside the Makefile (`neologisms.csv`).

@@ -18,6 +18,12 @@ const viewerHtml = fs.readFileSync(path.join(root, 'docs/primary_sources/index.h
 const viewerScript = viewerHtml.match(/<script>([\s\S]*?)<\/script>/)[1];
 const manifest = JSON.parse(fs.readFileSync(path.join(root, 'docs/primary_sources/evreux1929/source.json'), 'utf8'));
 const arcat1686Manifest = JSON.parse(fs.readFileSync(path.join(root, 'docs/primary_sources/arcat1686/source.json'), 'utf8'));
+const figueiraManifest = JSON.parse(fs.readFileSync(path.join(root, 'docs/primary_sources/figueira1878/source.json'), 'utf8'));
+const anchTeatroManifest = JSON.parse(fs.readFileSync(path.join(root, 'docs/primary_sources/anchteatro1954/source.json'), 'utf8'));
+const viewerManifests = {
+  anchteatro1954: anchTeatroManifest,
+  figueira1878: figueiraManifest,
+};
 
 function links(html) {
   return [...html.matchAll(/<a href="([^"]+)"[^>]*>([^<]*)<\/a>/g)].map((match) => ({
@@ -81,7 +87,14 @@ async function openViewer(query, formats = null) {
   };
   vm.runInNewContext(viewerScript, {
     document, window, URLSearchParams,
-    fetch: async () => ({ ok: Boolean(formats), json: async () => formats }),
+    fetch: async (url) => {
+      if (url.endsWith('/image-formats.json')) {
+        return { ok: Boolean(formats), json: async () => formats };
+      }
+      const match = url.match(/\/primary_sources\/([^/]+)\/source\.json$/);
+      const source = match && viewerManifests[match[1]];
+      return { ok: Boolean(source), json: async () => source };
+    },
   });
   // Allow loadImageFormats().then(updateImage) to complete.
   await new Promise(setImmediate);
@@ -109,7 +122,9 @@ test('D’Evreux preserves citation wording, apostrophe variants, and each page 
 
 test('shorthand, other editions/books, and unavailable printed pages stay unlinked', () => {
   for (const citation of [
-    "Yves D'Evreux, (op. cit., p. 157)", "D'Evreux, Voyage, 293", 'Fig., Arte, 150',
+    "Yves D'Evreux, (op. cit., p. 157)", "D'Evreux, Voyage, 293", 'Fig., Missão do Maranhão, 150',
+    'Fig., Arte, 1685, 64', 'Fig., Arte, 0', 'Fig., Arte, 168',
+    'Anch., Teatro, 177', 'Anch., Teatro, 176, 2006',
     "D'Evreux, Viagem, 1864, 293", "D'Evreux, Viagem, 0", "D'Evreux, Viagem, 3",
     "D'Evreux, Viagem, 443", "D'Evreux, Viagem, 293v",
   ]) assert.equal(linkSources(citation), citation);
@@ -135,6 +150,83 @@ test('the served dictionary’s 120 explicit citations reach the 42 verified pri
   assert.equal(citationCount, 120);
   assert.equal(pageLinks, 121); // Marabá's pp. 142–143 supplies two links.
   assert.deepEqual([...pages].sort((a, b) => a - b), manifest.verification.all_cited_pages);
+});
+
+test('Figueira links every current Arte citation, ranges and inherited pages without changing text', () => {
+  const entries = JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(root, 'docs/dict-conjugated.json.gz'))));
+  let citationCount = 0;
+  const records = new Set();
+  const pages = new Set();
+  entries.forEach((entry, entryIndex) => {
+    const definition = entry.d || '';
+    const linked = linkSources(definition);
+    assert.equal(linked.replace(/<\/?a\b[^>]*>/g, ''), definition);
+    const sourceLinks = links(linked).filter((link) => link.href.includes('book_name=figueira1878'));
+    if (sourceLinks.length) records.add(entryIndex);
+    for (const link of sourceLinks) {
+      if (link.text.includes('Fig.')) citationCount += 1;
+      pages.add(Number(new URL(link.href, 'https://example.test').searchParams.get('page_number')));
+    }
+  });
+  assert.equal(citationCount, 622);
+  assert.equal(records.size, 455);
+  assert.deepEqual([...pages].sort((a, b) => a - b), figueiraManifest.verification.all_cited_pages);
+
+  const inherited = '(Fig., Arte, 147; 163)';
+  assert.deepEqual(links(linkSources(inherited)).map((link) => link.text), ['Fig., Arte, 147', '163']);
+  const qualified = links(linkSources('(Fig., Arte, 1686, 64)'));
+  assert.equal(qualified.length, 1);
+  assert.equal(qualified[0].text, 'Fig., Arte, 1686, 64');
+  assert.equal(new URL(qualified[0].href, 'https://example.test').searchParams.get('citation_year'), '1686');
+});
+
+test('Anchieta Teatro links only the nine verified unsuffixed page-176 records', () => {
+  const entries = JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(root, 'docs/dict-conjugated.json.gz'))));
+  let citationCount = 0;
+  const records = new Set();
+  entries.forEach((entry, entryIndex) => {
+    const definition = entry.d || '';
+    const linked = linkSources(definition);
+    assert.equal(linked.replace(/<\/?a\b[^>]*>/g, ''), definition);
+    const sourceLinks = links(linked).filter((link) => link.href.includes('book_name=anchteatro1954'));
+    citationCount += sourceLinks.length;
+    if (sourceLinks.length) records.add(entryIndex);
+  });
+  assert.equal(citationCount, anchTeatroManifest.verification.citation_count);
+  assert.equal(records.size, anchTeatroManifest.verification.record_count);
+  for (const unverified of [
+    'Anch., Teatro, 176, 2006',
+    'Anch., Teatro, 176, 2007',
+    'Anch., Teatro, 176-178',
+    'Anch., Teatro, 176; 180',
+  ]) assert.equal(linkSources(unverified), unverified);
+});
+
+test('new source assets match their declared scan bounds and explicit targets', () => {
+  const imageIndices = (book) => fs.readdirSync(path.join(root, 'docs/primary_sources', book))
+    .filter((name) => name.endsWith('.jpg'))
+    .map((name) => Number.parseInt(name, 10))
+    .sort((a, b) => a - b);
+  const figueiraExpected = Array.from(
+    { length: figueiraManifest.images.last_index - figueiraManifest.images.first_index + 1 },
+    (_value, offset) => figueiraManifest.images.first_index + offset,
+  );
+  assert.deepEqual(imageIndices('figueira1878'), figueiraExpected);
+  assert.deepEqual(
+    imageIndices('anchteatro1954'),
+    anchTeatroManifest.mapping.targets.map((target) => target.pdf_index).sort((a, b) => a - b),
+  );
+  for (const target of anchTeatroManifest.mapping.targets) {
+    assert.equal(target.image, `${target.pdf_index}.jpg`);
+  }
+});
+
+test("the ma'enduar examples expose all three requested source links", () => {
+  const definition = "...Nde ma'enduá xe ri! - Lembra-te de mim! (Anch., Teatro, 176); Kûesé Pedro nde resé i ma'enduari. - Ontem Pedro se lembrou de ti. (Fig., Arte, 95); N'i ma'enduari xûéne. - Eles não se lembrarão. (Fig., Arte, 40)";
+  const sourceLinks = links(linkSources(definition));
+  assert.deepEqual(sourceLinks.map((link) => link.text), ['Anch., Teatro, 176', 'Fig., Arte, 95', 'Fig., Arte, 40']);
+  assert.deepEqual(sourceLinks.map((link) => new URL(link.href, 'https://example.test').searchParams.get('book_name')), ['anchteatro1954', 'figueira1878', 'figueira1878']);
+  assert.deepEqual(sourceLinks.map((link) => new URL(link.href, 'https://example.test').searchParams.get('page_number')), ['176', '95', '40']);
 });
 
 test('Araújo 1686 citations select the second edition and preserve ranges', () => {
@@ -221,6 +313,60 @@ test('so’o-Îurupari citation opens the 1929 page 293 scan and PDF ordinal 294
   assert.equal(reloaded.image().src, '/nhe-enga/docs/primary_sources/evreux1929/294.jpg');
   reloaded.click('prevPage');
   assert.equal(reloaded.window.location.searchParams.get('page_number'), '293');
+});
+
+test('Figueira resolves the requested printed pages through the verified complete-scan map', async () => {
+  for (const [citation, printedPage, imageIndex, pdfOrdinal] of [
+    ['Fig., Arte, 95', 95, 118, 119],
+    ['Fig., Arte, 40', 40, 63, 64],
+  ]) {
+    const href = links(linkSources(citation))[0].href;
+    const viewer = await openViewer(href.split('?')[1]);
+    assert.equal(viewer.image().src, `/nhe-enga/docs/primary_sources/figueira1878/${imageIndex}.jpg`);
+    assert.match(viewer.get('currentPage').textContent, new RegExp(`Página impressa ${printedPage}`));
+    assert.equal(viewer.get('sourcePdf').href, `${figueiraManifest.pdf.url}#page=${pdfOrdinal}`);
+    assert.equal(viewer.get('sourceNotice').hidden, true);
+  }
+
+  const qualifiedHref = links(linkSources('(Fig., Arte, 1686, 64)'))[0].href;
+  const qualified = await openViewer(qualifiedHref.split('?')[1]);
+  assert.equal(qualified.get('sourceNotice').hidden, false);
+  assert.match(qualified.get('sourceNotice').textContent, /conserva “1686”.*1687.*página 64/);
+  qualified.click('nextPage');
+  assert.equal(qualified.window.location.searchParams.has('citation_year'), false);
+  assert.equal(qualified.get('sourceNotice').hidden, true);
+
+  const first = await openViewer('book_name=figueira1878&page_number=1');
+  assert.match(first.image().src, /\/24\.jpg$/);
+  first.click('prevPage');
+  assert.match(first.image().src, /\/23\.jpg$/);
+  assert.match(first.get('currentPage').textContent, /Preliminar sem numeração/);
+  assert.equal(first.window.location.searchParams.get('scan'), '23');
+  assert.equal(first.window.location.searchParams.has('page_number'), false);
+  first.click('nextPage');
+  assert.equal(first.window.location.searchParams.get('page_number'), '1');
+
+  const unavailable = await openViewer('book_name=figueira1878&page_number=168');
+  assert.equal(unavailable.image(), null);
+  assert.equal(unavailable.get('imageError').hidden, false);
+  assert.match(unavailable.get('imageError').textContent, /mapa desta fonte/);
+  assert.equal(unavailable.window.location.searchParams.get('page_number'), '168');
+});
+
+test('Anchieta page 176 opens the explicit Martins witness and labels the edition boundary', async () => {
+  const href = links(linkSources('(Anch., Teatro, 176)'))[0].href;
+  const viewer = await openViewer(href.split('?')[1]);
+  const target = anchTeatroManifest.mapping.targets[0];
+  assert.equal(viewer.image().src, `/nhe-enga/docs/primary_sources/anchteatro1954/${target.image}`);
+  assert.equal(viewer.get('currentPage').textContent, target.label);
+  assert.equal(viewer.get('sourceDetails').hidden, false);
+  assert.equal(viewer.get('sourceInfo').href, anchTeatroManifest.catalog_url);
+  assert.equal(viewer.get('sourcePdf').href, target.source_page_url);
+  assert.equal(viewer.get('sourcePdf').textContent, anchTeatroManifest.viewer.source_page_link_label);
+  assert.equal(viewer.get('sourceNotice').hidden, false);
+  assert.match(viewer.get('sourceNotice').textContent, /paginação de Navarro.*Martins.*não existe uma equivalência geral/);
+  assert.equal(viewer.get('prevPage').disabled, true);
+  assert.equal(viewer.get('nextPage').disabled, true);
 });
 
 test('cover, unnumbered preliminaries, and final blank have bounded navigation and honest labels', async () => {

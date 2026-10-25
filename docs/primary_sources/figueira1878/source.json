@@ -1,0 +1,75 @@
+{
+  "schema_version": 2,
+  "id": "figueira1878",
+  "author": "Luís Figueira",
+  "title": "Grammatica da lingua do Brasil",
+  "year": 1878,
+  "edition": "Fac-símile de Júlio Platzmann da edição de Lisboa, 1687",
+  "imprint": "Leipzig: B. G. Teubner, 1878",
+  "navarro_bibliography": "../DTAbib.txt",
+  "navarro_citation": "Fig., Arte",
+  "digitization_credit": "Google Books / Biblioteca Digital Curt Nimuendajú",
+  "catalog_url": "https://www.etnolinguistica.org/biblio:figueira-1878-grammatica",
+  "pdf": {
+    "url": "https://etnolinguistica.wdfiles.com/local--files/biblio:figueira-1878-grammatica/figueira_1878_grammatica.pdf",
+    "filename": "figueira_1878_grammatica.pdf",
+    "sha256": "a48d22961a385c3d0cc55bada47bb6e61af85ca3a2d6e20e3102fdb2a881cb57",
+    "bytes": 1936830,
+    "page_count": 200,
+    "retrieved_at": "2026-10-06"
+  },
+  "images": {
+    "extension": ".jpg",
+    "filename_rule": "{zero_based_pdf_index}.jpg",
+    "first_index": 0,
+    "last_index": 199
+  },
+  "pagination": {
+    "navigation": "complete_scan",
+    "locator_unit": "printed_page",
+    "first_printed_page": 1,
+    "last_printed_page": 167,
+    "printed_page_to_pdf_index_offset": 23,
+    "title_page_index": 10,
+    "errata_index": 191,
+    "notes": [
+      "PDF indices are zero-based; external PDF fragments are one-based.",
+      "Indices 0–23 are unnumbered preliminary scans. Printed pages 1–167 occupy indices 24–190, followed by an unnumbered errata page and eight final scans.",
+      "The 1878 title page explicitly identifies this volume as a facsimile of the 1687 edition."
+    ]
+  },
+  "verification": {
+    "date": "2026-10-06",
+    "mapping_scope": "All 117 distinct currently cited printed pages have verified headers; this does not claim quotation collation or visual verification of every uncited leaf.",
+    "all_cited_pages": [2, 3, 4, 5, 6, 7, 8, 9, 13, 14, 19, 25, 26, 27, 32, 34, 37, 38, 39, 40, 55, 57, 58, 59, 60, 61, 63, 64, 65, 66, 67, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 91, 92, 94, 95, 96, 98, 99, 101, 102, 107, 108, 109, 110, 111, 112, 113, 115, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166],
+    "citation_discrepancies": [
+      {
+        "raw": "Fig., Arte, 1686, 64",
+        "status": "linked_to_verified_passage_with_visible_year_warning",
+        "printed_page": 64,
+        "pdf_index": 87,
+        "reason": "The explicit year is almost certainly a citation typo: Navarro's bibliography and authoritative catalogs identify the second edition as 1687, no separate 1686 edition was found, and the selected edition's page 64 contains the exact çoába passage described by the dictionary.",
+        "observed": "Çoába, o fim para que, o instrumento em que, o lugar por onde se vai.",
+        "edition_evidence": [
+          "https://cpbn.bn.gov.br/planor/handle/20.500.12156.6/3141?show=full",
+          "https://cedoch.fflch.usp.br/ficha002"
+        ]
+      }
+    ],
+    "example": {
+      "lemma": "ã",
+      "printed_page": 85,
+      "pdf_index": 108,
+      "pdf_ordinal": 109,
+      "image": "108.jpg"
+    }
+  },
+  "render": {
+    "method": "whole PDF page, including visible digitization credits and overlays",
+    "target_width_px": 1400,
+    "jpeg_quality": 82,
+    "progressive": true,
+    "colorspace": "RGB",
+    "renderer_versions": {"PyMuPDF": "1.26.6", "Pillow": "12.3.0"}
+  }
+}

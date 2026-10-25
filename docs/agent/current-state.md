@@ -1,5 +1,29 @@
 # Current State
 
+## 2026-10-25 — Figueira Arte and Anchieta Teatro source links
+
+- All 622 explicit `Fig., Arte` citations in 455 served dictionary records now
+  link to the complete 200-scan Platzmann 1878 facsimile of Figueira's 1687
+  edition. Printed pages 1–167 map to zero-based image indices 24–190; the
+  requested pages 95 and 40 open `118.jpg` and `63.jpg` respectively.
+- The nine unsuffixed `Anch., Teatro, 176` records now link to one explicitly
+  collated documentary witness: Navarro 1999 p. 176 corresponds to Martins
+  1954 *Poesias* p. 632, PDF index 683. The viewer labels this cross-edition
+  boundary. The two `176, 2006` records, every other Teatro locator, and any
+  range/list/year suffix remain unlinked because no general page offset is
+  valid.
+- Source provenance, checksums, page mappings, and reproduction commands live
+  beside the images in `figueira1878/` and `anchteatro1954/`. The raw PDFs stay
+  outside the Pages artifact.
+- Validation passes: 18 focused source/viewer tests, 11 offline catalog tests,
+  the service-worker smoke suite, lint/syntax/diff checks, and a full 791 MiB
+  local Pages build with no PDFs. The build publishes both manifests in core
+  plus separate 200-image Figueira and one-image Anchieta offline packs. Real
+  Chrome clicks from `ma'enduar` opened all three requested viewers and loaded
+  the expected images.
+- This work is local only: no commit, push, or deployment was performed. See
+  the [handoff](session-handoffs/2026-10-25-figueira-anchieta-source-links.md).
+
 ## 2026-10-21 — Live citation cache refresh
 
 - The deployed citation formatter was correct, but browsers with an older
@@ -143,9 +167,13 @@
 - The Pages artifact intentionally copies only derived primary-source page images from citation folders, not raw PDFs, EPUBs, MOBIs, OPFs, TXT files, or extraction scripts.
 - `make pages-build` optimizes copied primary-source images inside `.pages-build` only. Source scans are left untouched; generated `image-formats.json` lets the citation viewer load optimized `.jpg` files.
 - `bettvulg` is excluded from the Pages artifact for now because no runtime references were found and it dominates artifact size.
-- Latest measured optimized `.pages-build` size with the D’Evreux pilot is
-  about 691 MiB; its 444 optimized pages account for about 212 MiB. The prior
-  artifact without D’Evreux measured about 477 MB.
+- Latest measured optimized local Pages artifact, including D’Evreux, sparse
+  Araújo 1686, complete Figueira, and the single Anchieta Teatro witness, is
+  about 791 MiB. The prior D’Evreux-only measurement was about 691 MiB.
+- The checked-in generated `source_inventory.*` snapshot predates the Figueira
+  and Anchieta link additions. A temporary regeneration verified 622 Figueira
+  and nine narrow Anchieta anchors, but the generated files were not edited
+  because generated-output refresh was not part of this request.
 - The failed 4.1 GB deployment history is preserved locally as `gh-pages-oversized-backup-20260912`; it is not reachable from the published `gh-pages` branch and must not be pushed.
 - Root-level PDFs, DOCX output, and Graphviz renderings removed in the 2026-09-12 cleanup were generated and unreferenced. They remain recoverable from Git history and are now covered by ignore rules where needed.
 - `make gen_data` is noisy and can take over a minute; it updates generated dictionary/conjugation data. Keep those outputs separate from source-only cleanup changes unless intentionally refreshing data.

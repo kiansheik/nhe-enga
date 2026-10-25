@@ -123,6 +123,32 @@ class CatalogTests(unittest.TestCase):
             any(f["path"].endswith(".apk") for p in files.values() for f in p["files"])
         )
 
+    def test_new_source_pack_names_and_provenance_routing(self):
+        sources = {
+            "anchteatro1954": ("Anchieta — Teatro p. 176 (cotejo Martins 1954)", [683]),
+            "figueira1878": ("Figueira — Arte (fac-símile de 1878)", [0, 1]),
+        }
+        for book, (_title, images) in sources.items():
+            directory = self.build / "docs/primary_sources" / book
+            directory.mkdir(parents=True)
+            (directory / "source.json").write_text("{}")
+            for image in images:
+                (directory / f"{image}.jpg").write_bytes(b"synthetic scan")
+
+        catalog = b.generate(self.build, 2)
+        entries = {pack["id"]: pack for pack in catalog["packs"]}
+        manifests = self.manifests(catalog)
+        core_paths = {item["path"] for item in manifests["core"]["files"]}
+        for book, (title, images) in sources.items():
+            identifier = f"source-{book}"
+            self.assertEqual(entries[identifier]["title"], title)
+            self.assertEqual(entries[identifier]["count"], len(images))
+            self.assertIn(f"docs/primary_sources/{book}/source.json", core_paths)
+            self.assertEqual(
+                {item["path"] for item in manifests[identifier]["files"]},
+                {f"docs/primary_sources/{book}/{image}.jpg" for image in images},
+            )
+
     def test_gzip_is_not_http_content_encoding(self):
         f = next(
             f

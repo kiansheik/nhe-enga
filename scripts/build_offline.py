@@ -61,12 +61,14 @@ REQUIRED = {
 SOURCE_NAMES = {
     "vlb": "Vocabulário na Língua Brasílica (VLB)",
     "ancharte": "Anchieta — Arte",
+    "anchteatro1954": "Anchieta — Teatro p. 176 (cotejo Martins 1954)",
     "arcat1618": "Araújo — Catecismo (1618)",
     "arcat1686": "Araújo — Catecismo (1686, cited excerpts)",
     "betcomp": "Bettendorff — Compêndio",
     "lerhist": "Léry — História",
     "cartas_portiguara": "Cartas Potiguaras",
     "evreux1929": "Évreux (1929)",
+    "figueira1878": "Figueira — Arte (fac-símile de 1878)",
 }
 REPLACEMENTS = {
     "https://cdnjs.cloudflare.com/ajax/libs/pako/2.0.3/pako.min.js": BASE
