@@ -10,6 +10,16 @@
   "navarro_citation": "Fig., Arte",
   "digitization_credit": "Google Books / Biblioteca Digital Curt Nimuendajú",
   "catalog_url": "https://www.etnolinguistica.org/biblio:figueira-1878-grammatica",
+  "viewer": {
+    "title": "Luís Figueira — Arte da Língua Brasílica",
+    "edition_text": "Fac-símile de 1878 da segunda edição, Lisboa, 1687 · volume completo",
+    "source_page_link_label": "Abrir PDF nesta página",
+    "transcription": {
+      "url": "/nhe-enga/docs/primary_sources/figueira_arte_1628.html",
+      "label": "Transcrição pesquisável da 1ª edição (1628)",
+      "notice": "Edição anterior relacionada; a paginação de 1628 não corresponde à edição citada de 1687/1878."
+    }
+  },
   "pdf": {
     "url": "https://etnolinguistica.wdfiles.com/local--files/biblio:figueira-1878-grammatica/figueira_1878_grammatica.pdf",
     "filename": "figueira_1878_grammatica.pdf",
