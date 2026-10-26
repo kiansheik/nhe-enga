@@ -9,6 +9,36 @@ source: 16 verified page-side crops, all 215 current citation links, explicit
 mapping/navigation, reproducible crop rendering, Pages/offline inclusion, and
 focused regressions. The PR remains open for review and is not deployed.
 
+## 2026-10-25 — Repaired dictionary entry boundaries corpus-wide
+
+Reworked the dictionary definition formatter around explicit semantic and
+citation boundaries instead of the earlier single-dash/colon assumptions.
+This fixes the reported `ranhẽ²` bolding and the full audit set: generated
+headings, bracketed notes, compact and omitted translation delimiters,
+post-dialogue examples, adjacent pairs, shared citations or translations,
+editorial tails, Unicode related headwords, and related-entry glosses that
+must remain prose, including `-sûerĩ` and `-te nakó`. Annotated definition
+preambles now retain their gloss boundaries, source variants keep their
+visible `ou`, and a document-flow sticky footer avoids both long-entry overlap
+and short-page drift. Added a reproducible Chromium sampler, corpus-wide Node
+structural and source-token invariants, 53 browser regressions, and a
+path-filtered CI workflow. A real-Chromium pass over all 8,293 records and a
+31-entry visual sample found no remaining credible formatter defect. No
+dictionary or morphology data changed.
+
+## 2026-10-25 — Dictionary-entry formatting audit
+
+Added a deterministic Playwright sampler for the actual served dictionary UI
+and reviewed 24 records from the longest 10% plus the reported `ranhẽ²`
+sentinel. Sixteen entries were coherent and nine exposed five recurring
+boundary classes. The supplied bolding is caused by an `Advérbio:` heading
+being reparsed as a definition/example colon; highlighting is a separate,
+intentional query-match layer. An exhaustive formatter pass finds this exact
+heading defect 274 times in 270 records, with a one-to-one empty-`quote-tupi`
+signature. Captures were stable across repeated browser runs. Recorded current
+versus expected boundaries and staged PR-sized repair/test recommendations;
+production JavaScript and dictionary data were deliberately left unchanged.
+
 ## 2026-10-25 — Figueira and Anchieta source click-throughs
 
 Restored the reviewed Figueira implementation from the unmerged prior work,

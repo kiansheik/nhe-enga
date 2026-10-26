@@ -34,6 +34,17 @@
   dictionary and production citation linker; `render_source_pages.py` renders
   checksum-verified source PDFs. Run from the repository root because their
   data paths are checkout-relative.
+- `scripts/qa/`: optional real-browser audit tools. The dictionary entry
+  sampler selects reproducible long-entry samples and captures the production
+  `.entry` DOM plus initial/expanded page geometry for qualitative formatting
+  and footer review; its Playwright dependency is intentionally audit-only.
+- `tests/dictionary_formatting.test.cjs`: dependency-free corpus structural
+  and source-token-preservation invariants executed directly against the
+  production formatter and served gzip. `tests/dictionary_formatting_browser.py`
+  holds focused semantic and layout regressions against the real
+  search/render/highlight path in Chromium.
+- `.github/workflows/dictionary-formatting.yml`: path-filtered pull-request CI
+  for both dictionary formatting suites, with Playwright pinned explicitly.
 - `scripts/media/`: optional PDF-bookmark and WAV-to-Opus utilities; generated outputs are not versioned.
 - `scripts/build_pages.sh`, `scripts/deploy_gh_pages.sh`, `scripts/optimize_pages_images.py`: maintained Pages build and deployment tooling.
 - `misc/experiments/`: retained historical research scratchpads, machine-local model experiments, and the manual Pydicate/Graphviz story harness. Nothing under `misc/` is a build or deployment dependency.

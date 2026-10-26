@@ -13,6 +13,62 @@
 - This is still review work in PR #26. It has not been merged into `main` or
   deployed.
 
+## 2026-10-25 — Dictionary-entry boundary repair
+
+- The production formatter now keeps generated part-of-speech headings,
+  definitions, editorial notes, related-entry glosses, dialogues, examples,
+  translations, and source citations in separate semantic containers. It also
+  recovers conservative source variations such as compact translation dashes,
+  omitted delimiters, shared citations/translations, malformed category
+  brackets, annotated grammatical preambles, adjacent citation-delimited
+  pairs, and related suffix headwords whose morphological hyphen must be
+  preserved. Source-variant cards retain their visible `ou` separator.
+- `ranhẽ²` now renders `Advérbio:` and its gloss as siblings of the first
+  bilingual example. The same repair covers all 274 occurrences of the
+  original generated-heading signature, rather than special-casing that entry.
+- The formatter was checked against all 8,293 served Tupi–Portuguese records in
+  real Chromium: no structural defects, dialogue mismatches, separator-prefixed
+  definitions, editorial-note source lines, or source citations stranded in
+  Tupi remain. The only one-sided cards are two intentional Portuguese prose
+  quotations. A corpus-wide source-token multiset check also confirms that the
+  formatter no longer silently drops visible dictionary prose.
+- Regression coverage consists of corpus-wide Node structural, citation, and
+  source-token invariants plus 53 real-browser semantic/layout tests. A
+  dedicated pull-request workflow installs the pinned Playwright version and
+  runs both suites.
+- A final deterministic 31-entry sample (long entries plus boundary sentinels)
+  produced no automatic warnings; every screenshot was reviewed
+  qualitatively. The footer now stays at the viewport bottom on short pages
+  and remains below expanded long entries. Dictionary data and morphology code
+  were not changed. See the
+  [audit](dictionary-formatting-audit-2026-10-25.md) and
+  [implementation handoff](session-handoffs/2026-10-25-dictionary-formatting-fix.md).
+
+## 2026-10-25 — Dictionary-entry formatting audit (pre-fix)
+
+- `scripts/qa/sample_dictionary_entries.py` now captures a deterministic,
+  long-entry-biased sample of actual browser-rendered `.entry` elements. It
+  uses the served gzip and production UI, emits JSON plus a standalone gallery,
+  and records structural warnings without treating them as correctness
+  verdicts.
+- A fixed sample of 24 records from the longest 10%, plus `ranhẽ²`, was
+  reviewed against the raw definitions: 16 looked coherent and nine have
+  visible boundary defects. Only two of those nine are invalid-DOM signatures;
+  the rest require semantic comparison of neighboring examples, notes, and
+  citations.
+- The reported bolding is a systemic generated-heading bug, not a search
+  highlight bug. A full formatter pass finds 274 malformed Adjetivo/Advérbio
+  heading-to-quote occurrences across 270 of 8,293 Tupi–Portuguese records;
+  all 274 emit an empty `.quote-tupi`, and none occur outside that signature.
+- Other sampled classes include square-bracket semicolons, compact translation
+  dashes, post-dialogue examples, notes swallowed into translations, and
+  adjacent citation-delimited pairs. See the
+  [audit](dictionary-formatting-audit-2026-10-25.md) and
+  [handoff](session-handoffs/2026-10-25-dictionary-formatting-audit.md).
+- This initial phase changed only audit tooling and documentation. The
+  production repair described above followed after review of the findings;
+  the dictionary data and generated assets remain unchanged.
+
 ## 2026-10-25 — Figueira Arte and Anchieta Teatro source links
 
 - All 622 explicit `Fig., Arte` citations in 455 served dictionary records now

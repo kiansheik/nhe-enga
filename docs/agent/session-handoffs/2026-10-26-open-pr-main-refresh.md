@@ -24,6 +24,9 @@ updated branches for review.
 - PR #33 merged while the refresh was in progress. PR #26 was refreshed a
   second time so its tests retain both the newly merged Figueira Wikisource
   snapshot coverage and the branch's Castilho coverage.
+- PR #32 then merged while the second refresh was in progress. PR #26 was
+  refreshed once more, retaining both documentation histories and combining
+  the formatter implementation with its independent Castilho citation rules.
 - Updated `docs/agent/current-state.md`, `docs/agent/log.md`,
   `docs/agent/repo-map.md`, and `docs/agent/served-assets.md` for the resolved
   Castilho scope.
@@ -57,12 +60,12 @@ updated branches for review.
 
 ## Remaining questions
 
-- PRs #26 and #32 still need human review. PR #26 includes source-plan scope and Castilho
-  provenance before merge.
+- PR #26 still needs human review of its source-plan scope and Castilho
+  provenance before merge. PRs #32 and #33 are merged.
 - The broader Anchieta Teatro mapping remains separate work; current `main`
   intentionally links only the nine verified unsuffixed page-176 citations.
 
 ## Suggested next prompt
 
-Review PRs #26 and #32, merge the desired changes, then ask for a fresh
+Review PR #26, merge the desired changes, then ask for a fresh
 inventory of unlinked source citations or a broader Anchieta Teatro mapping.
