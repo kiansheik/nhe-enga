@@ -218,9 +218,9 @@ Because many scripts operate on large PDFs and external APIs, there is no single
 - **Figueira, Arte**: all current citations open the complete 1878 facsimile of
   the 1687 edition; [provenance and pagination](docs/primary_sources/figueira1878/README.md)
   are recorded beside the 200 derived page images.
-- **Anchieta, Teatro p. 176**: the linked image is an explicitly collated
-  passage in Martins's 1954 documentary edition, not a general page-equivalent
-  scan of Navarro; the [mapping boundary](docs/primary_sources/anchteatro1954/README.md)
+- **Anchieta, Teatro**: all current 1999/2006 citation locators open explicitly
+  aligned passages in Martins's 1954 documentary edition, not a
+  page-equivalent scan of Navarro; the [mapping boundary](docs/primary_sources/anchteatro1954/README.md)
   is kept visible in the viewer.
 - **Nheengatu dataset**: parsed from Marcel Twardowsky Avila’s 2021 dissertation (*Proposta de dicionário nheengatu-português*).
 - **Mbyá dataset**: parsed from Robert A. Dooley’s *Léxico Guarani, Dialeto Mbyá* (SIL, 2006).

@@ -1,5 +1,31 @@
 # Current State
 
+## 2026-10-26 — All current Anchieta Teatro citations linked
+
+- All 1,431 current `Anch., Teatro` citations in 882 served dictionary records
+  now link without changing their displayed text. The linker covers 72
+  unsuffixed Navarro 1999 locators and 35 explicit Navarro 2006 locators,
+  including ranges and the three observed `Anch. Teatro` punctuation variants.
+- The cited Navarro page stays in the URL. An edition-aware explicit map opens
+  the corresponding quotation or headword passage in Martins's public 1954
+  documentary edition. The map stores 75 sparse documentary scan pages for
+  107 edition-and-locator keys; it is not a numeric page offset or a claim that
+  the editions have interchangeable pagination.
+- The reported `îambé` citation, Navarro 1999 p. 36, now links to PDF index
+  757. Navarro 1999 p. 176 remains at index 683, while Navarro 2006 p. 176 is
+  separately routed to index 682.
+- The viewer selects targets by both cited page and edition, carries the 2006
+  discriminator through navigation, and identifies the Martins witness and
+  edition boundary. Unsupported pages and years remain unlinked.
+- `scripts/data/align_anchieta_teatro.py` records the reproducible OCR-ranking
+  step used during alignment. The checked-in source inventory was regenerated
+  and now reports all 1,431 Teatro citations as linked.
+- Validation passes: 20 source/viewer tests, four corpus formatting/link-token
+  tests, 53 real-Chromium formatting tests, 11 offline-catalog tests, the
+  service-worker smoke test, 75 JPEG decode checks, and an 804 MiB Pages build
+  containing all 75 optimized images and no raw Teatro PDF. See the
+  [handoff](session-handoffs/2026-10-26-anchieta-teatro-all-citations.md).
+
 ## 2026-10-25 — Dictionary-entry boundary repair
 
 - The production formatter now keeps generated part-of-speech headings,
@@ -227,12 +253,10 @@
 - `make pages-build` optimizes copied primary-source images inside `.pages-build` only. Source scans are left untouched; generated `image-formats.json` lets the citation viewer load optimized `.jpg` files.
 - `bettvulg` is excluded from the Pages artifact for now because no runtime references were found and it dominates artifact size.
 - Latest measured optimized local Pages artifact, including D’Evreux, sparse
-  Araújo 1686, complete Figueira, and the single Anchieta Teatro witness, is
-  about 791 MiB. The prior D’Evreux-only measurement was about 691 MiB.
-- The checked-in generated `source_inventory.*` snapshot predates the Figueira
-  and Anchieta link additions. A temporary regeneration verified 622 Figueira
-  and nine narrow Anchieta anchors, but the generated files were not edited
-  because generated-output refresh was not part of this request.
+  Araújo 1686, complete Figueira, and 75 sparse Anchieta Teatro witnesses, is
+  about 804 MiB. The prior D’Evreux-only measurement was about 691 MiB.
+- The checked-in generated `source_inventory.*` snapshot is current through
+  the Figueira and all-locator Anchieta Teatro source-link additions.
 - The failed 4.1 GB deployment history is preserved locally as `gh-pages-oversized-backup-20260912`; it is not reachable from the published `gh-pages` branch and must not be pushed.
 - Root-level PDFs, DOCX output, and Graphviz renderings removed in the 2026-09-12 cleanup were generated and unreferenced. They remain recoverable from Git history and are now covered by ignore rules where needed.
 - `make gen_data` is noisy and can take over a minute; it updates generated dictionary/conjugation data. Keep those outputs separate from source-only cleanup changes unless intentionally refreshing data.

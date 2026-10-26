@@ -1,5 +1,20 @@
 # Agent Log
 
+## 2026-10-26 — Linked every current Anchieta Teatro citation
+
+Replaced the one-page Anchieta Teatro exception with separate Navarro 1999
+and 2006 locator maps covering all 1,431 current citations in 882 records.
+Aligned 107 edition-and-page keys to 75 representative pages in Martins's 1954
+documentary scan using dictionary quotation context, Internet Archive OCR, and
+sequence review; preserved the cited wording and kept unsupported pages/years
+unlinked. The reported `îambé` page 36 now routes to scan index 757, while
+the two editions' page 176 routes remain distinct. Added an OCR candidate
+helper, edition-aware viewer navigation, sparse images, provenance, offline
+pack naming, refreshed source inventories, and corpus-wide regressions. All
+20 source/viewer tests, four formatter invariants, 53 Chromium tests, 11
+offline tests, the service-worker smoke test, JPEG verification, diff checks,
+and an 804 MiB no-PDF Pages build pass.
+
 ## 2026-10-25 — Repaired dictionary entry boundaries corpus-wide
 
 Reworked the dictionary definition formatter around explicit semantic and

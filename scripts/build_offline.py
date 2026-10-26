@@ -61,7 +61,7 @@ REQUIRED = {
 SOURCE_NAMES = {
     "vlb": "Vocabulário na Língua Brasílica (VLB)",
     "ancharte": "Anchieta — Arte",
-    "anchteatro1954": "Anchieta — Teatro p. 176 (cotejo Martins 1954)",
+    "anchteatro1954": "Anchieta — Teatro (cotejo Martins 1954, páginas citadas)",
     "arcat1618": "Araújo — Catecismo (1618)",
     "arcat1686": "Araújo — Catecismo (1686, cited excerpts)",
     "betcomp": "Bettendorff — Compêndio",

@@ -29,6 +29,19 @@ const viewerManifests = {
   figueira1878: figueiraManifest,
 };
 
+function anchTeatroTargets() {
+  const defaultYear = anchTeatroManifest.mapping.default_citation_year;
+  return Object.entries(anchTeatroManifest.mapping.citation_editions).flatMap(([year, edition]) => (
+    Object.entries(edition.page_to_pdf_index).map(([locator, pdfIndex]) => ({
+      locator,
+      citationYear: year === defaultYear ? null : year,
+      pdfIndex,
+      label: `${edition.label}, p. ${locator} · passagem correspondente em Martins 1954 · PDF p. ${pdfIndex + 1}`,
+      sourcePageUrl: anchTeatroManifest.mapping.source_page_url_pattern.replace('{pdf_index}', pdfIndex),
+    }))
+  ));
+}
+
 function links(html) {
   return [...html.matchAll(/<a href="([^"]+)"[^>]*>([^<]*)<\/a>/g)].map((match) => ({
     href: match[1],
@@ -128,7 +141,7 @@ test('shorthand, other editions/books, and unavailable printed pages stay unlink
   for (const citation of [
     "Yves D'Evreux, (op. cit., p. 157)", "D'Evreux, Voyage, 293", 'Fig., Missão do Maranhão, 150',
     'Fig., Arte, 1685, 64', 'Fig., Arte, 0', 'Fig., Arte, 168',
-    'Anch., Teatro, 177', 'Anch., Teatro, 176, 2006',
+    'Anch., Teatro, 177', 'Anch., Teatro, 176, 2007',
     "D'Evreux, Viagem, 1864, 293", "D'Evreux, Viagem, 0", "D'Evreux, Viagem, 3",
     "D'Evreux, Viagem, 443", "D'Evreux, Viagem, 293v",
   ]) assert.equal(linkSources(citation), citation);
@@ -184,25 +197,52 @@ test('Figueira links every current Arte citation, ranges and inherited pages wit
   assert.equal(new URL(qualified[0].href, 'https://example.test').searchParams.get('citation_year'), '1686');
 });
 
-test('Anchieta Teatro links only the nine verified unsuffixed page-176 records', () => {
+test('Anchieta Teatro links every current 1999/2006 citation without changing source text', () => {
   const entries = JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(root, 'docs/dict-conjugated.json.gz'))));
   let citationCount = 0;
+  let pageLinkCount = 0;
+  let defaultEditionCount = 0;
+  let secondEditionCount = 0;
   const records = new Set();
+  const editionLocators = new Set();
   entries.forEach((entry, entryIndex) => {
     const definition = entry.d || '';
     const linked = linkSources(definition);
     assert.equal(linked.replace(/<\/?a\b[^>]*>/g, ''), definition);
     const sourceLinks = links(linked).filter((link) => link.href.includes('book_name=anchteatro1954'));
-    citationCount += sourceLinks.length;
     if (sourceLinks.length) records.add(entryIndex);
+    for (const link of sourceLinks) {
+      const url = new URL(link.href, 'https://example.test');
+      const year = url.searchParams.get('citation_year') || '1999';
+      const page = url.searchParams.get('page_number');
+      pageLinkCount += 1;
+      editionLocators.add(`${year}:${page}`);
+      if (link.text.includes('Teatro')) {
+        citationCount += 1;
+        if (year === '2006') secondEditionCount += 1;
+        else defaultEditionCount += 1;
+      }
+    }
   });
   assert.equal(citationCount, anchTeatroManifest.verification.citation_count);
+  assert.equal(pageLinkCount, 1433); // Two range citations each expose both written endpoints.
   assert.equal(records.size, anchTeatroManifest.verification.record_count);
+  assert.equal(defaultEditionCount, anchTeatroManifest.verification.default_edition_citation_count);
+  assert.equal(secondEditionCount, anchTeatroManifest.verification.second_edition_citation_count);
+  assert.deepEqual(
+    [...editionLocators].sort(),
+    anchTeatroTargets().map((target) => `${target.citationYear || '1999'}:${target.locator}`).sort(),
+  );
+
+  assert.deepEqual(links(linkSources('(Anch. Teatro, 6)')).map((link) => link.text), ['Anch. Teatro, 6']);
+  assert.deepEqual(
+    links(linkSources('(Anch., Teatro, 146-148)')).map((link) => link.text),
+    ['Anch., Teatro, 146', '148'],
+  );
   for (const unverified of [
-    'Anch., Teatro, 176, 2006',
     'Anch., Teatro, 176, 2007',
-    'Anch., Teatro, 176-178',
-    'Anch., Teatro, 176; 180',
+    'Anch., Teatro, 177',
+    'Anch., Teatro, 190',
   ]) assert.equal(linkSources(unverified), unverified);
 });
 
@@ -216,13 +256,14 @@ test('new source assets match their declared scan bounds and explicit targets', 
     (_value, offset) => figueiraManifest.images.first_index + offset,
   );
   assert.deepEqual(imageIndices('figueira1878'), figueiraExpected);
+  const anchTeatroExpected = [...new Set(anchTeatroTargets().map((target) => target.pdfIndex))]
+    .sort((a, b) => a - b);
   assert.deepEqual(
     imageIndices('anchteatro1954'),
-    anchTeatroManifest.mapping.targets.map((target) => target.pdf_index).sort((a, b) => a - b),
+    anchTeatroExpected,
   );
-  for (const target of anchTeatroManifest.mapping.targets) {
-    assert.equal(target.image, `${target.pdf_index}.jpg`);
-  }
+  assert.equal(anchTeatroExpected.length, anchTeatroManifest.images.stored_image_count);
+  assert.equal(anchTeatroExpected.length, anchTeatroManifest.verification.stored_image_count);
 });
 
 test("the ma'enduar examples expose all three requested source links", () => {
@@ -231,6 +272,15 @@ test("the ma'enduar examples expose all three requested source links", () => {
   assert.deepEqual(sourceLinks.map((link) => link.text), ['Anch., Teatro, 176', 'Fig., Arte, 95', 'Fig., Arte, 40']);
   assert.deepEqual(sourceLinks.map((link) => new URL(link.href, 'https://example.test').searchParams.get('book_name')), ['anchteatro1954', 'figueira1878', 'figueira1878']);
   assert.deepEqual(sourceLinks.map((link) => new URL(link.href, 'https://example.test').searchParams.get('page_number')), ['176', '95', '40']);
+});
+
+test('the reported îambé citation opens its Teatro witness', () => {
+  const citation = links(linkSources('o mesmo que nhambé (v.) (Anch., Teatro, 36)'))[0];
+  const url = new URL(citation.href, 'https://example.test');
+  assert.equal(citation.text, 'Anch., Teatro, 36');
+  assert.equal(url.searchParams.get('book_name'), 'anchteatro1954');
+  assert.equal(url.searchParams.get('page_number'), '36');
+  assert.equal(url.searchParams.has('citation_year'), false);
 });
 
 test('Araújo 1686 citations select the second edition and preserve ranges', () => {
@@ -391,20 +441,32 @@ test('Figueira Wikisource snapshot is complete, self-contained, attributed, and 
   assert.doesNotMatch(figueiraTranscription, /<img\b[^>]*\bsrc="(?!data:image\/)/i);
 });
 
-test('Anchieta page 176 opens the explicit Martins witness and labels the edition boundary', async () => {
-  const href = links(linkSources('(Anch., Teatro, 176)'))[0].href;
-  const viewer = await openViewer(href.split('?')[1]);
-  const target = anchTeatroManifest.mapping.targets[0];
-  assert.equal(viewer.image().src, `/nhe-enga/docs/primary_sources/anchteatro1954/${target.image}`);
-  assert.equal(viewer.get('currentPage').textContent, target.label);
-  assert.equal(viewer.get('sourceDetails').hidden, false);
-  assert.equal(viewer.get('sourceInfo').href, anchTeatroManifest.catalog_url);
-  assert.equal(viewer.get('sourcePdf').href, target.source_page_url);
-  assert.equal(viewer.get('sourcePdf').textContent, anchTeatroManifest.viewer.source_page_link_label);
-  assert.equal(viewer.get('sourceNotice').hidden, false);
-  assert.match(viewer.get('sourceNotice').textContent, /paginação de Navarro.*Martins.*não existe uma equivalência geral/);
-  assert.equal(viewer.get('prevPage').disabled, true);
-  assert.equal(viewer.get('nextPage').disabled, true);
+test('Anchieta viewer selects the mapped witness and keeps 1999/2006 distinct', async () => {
+  for (const [citation, expectedIndex, expectedYear] of [
+    ['Anch., Teatro, 36', 757, null],
+    ['Anch., Teatro, 176', 683, null],
+    ['Anch., Teatro, 176, 2006', 682, '2006'],
+  ]) {
+    const href = links(linkSources(`(${citation})`))[0].href;
+    const viewer = await openViewer(href.split('?')[1]);
+    const target = anchTeatroTargets().find((candidate) => (
+      candidate.locator === new URL(href, 'https://example.test').searchParams.get('page_number')
+      && candidate.citationYear === expectedYear
+    ));
+    assert.equal(viewer.image().src, `/nhe-enga/docs/primary_sources/anchteatro1954/${expectedIndex}.jpg`);
+    assert.equal(viewer.get('currentPage').textContent, target.label);
+    assert.equal(viewer.get('sourceDetails').hidden, false);
+    assert.equal(viewer.get('sourceInfo').href, anchTeatroManifest.catalog_url);
+    assert.equal(viewer.get('sourcePdf').href, target.sourcePageUrl);
+    assert.equal(viewer.get('sourcePdf').textContent, anchTeatroManifest.viewer.source_page_link_label);
+    assert.equal(viewer.get('sourceNotice').hidden, false);
+    assert.match(viewer.get('sourceNotice').textContent, /paginação de Navarro.*Martins.*não existe uma equivalência geral/);
+    assert.equal(viewer.window.location.searchParams.get('citation_year'), expectedYear);
+  }
+
+  const unavailable = await openViewer('book_name=anchteatro1954&page_number=177');
+  assert.equal(unavailable.image(), null);
+  assert.equal(unavailable.get('imageError').hidden, false);
 });
 
 test('cover, unnumbered preliminaries, and final blank have bounded navigation and honest labels', async () => {
