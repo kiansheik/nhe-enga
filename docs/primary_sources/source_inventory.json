@@ -362,7 +362,7 @@
     "other_parenthetical": 22836,
     "unmatched_candidate": 705
   },
-  "linker_function_sha256": "d89cf9eee66750421419c92da4bfcaae5ba87bb5142faa9eaceacc67c038296a",
+  "linker_function_sha256": "e3eff4bd7a0115b6ce1649ed946316da4a4310cd042d6cdd1d4a3c56aaed612d",
   "works": [
     {
       "source": "VLB",
@@ -2472,8 +2472,10 @@
       "source_spellings": {
         "Castilho": 215
       },
-      "citations_producing_links": 0,
-      "viewer_books": [],
+      "citations_producing_links": 215,
+      "viewer_books": [
+        "castilho1937"
+      ],
       "examples": [
         "Castilho, Nomes, 27",
         "Castilho, Nomes, 28",

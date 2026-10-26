@@ -21,11 +21,13 @@ const manifest = JSON.parse(fs.readFileSync(path.join(root, 'docs/primary_source
 const arcat1686Manifest = JSON.parse(fs.readFileSync(path.join(root, 'docs/primary_sources/arcat1686/source.json'), 'utf8'));
 const figueiraManifest = JSON.parse(fs.readFileSync(path.join(root, 'docs/primary_sources/figueira1878/source.json'), 'utf8'));
 const anchTeatroManifest = JSON.parse(fs.readFileSync(path.join(root, 'docs/primary_sources/anchteatro1954/source.json'), 'utf8'));
+const castilhoManifest = JSON.parse(fs.readFileSync(path.join(root, 'docs/primary_sources/castilho1937/source.json'), 'utf8'));
 const figueiraTranscriptionPath = path.join(root, 'docs/primary_sources/figueira_arte_1628.html');
 const figueiraTranscription = fs.readFileSync(figueiraTranscriptionPath, 'utf8');
 const figueiraTranscriptionMetadata = JSON.parse(fs.readFileSync(path.join(root, 'docs/primary_sources/figueira_arte_1628.json'), 'utf8'));
 const viewerManifests = {
   anchteatro1954: anchTeatroManifest,
+  castilho1937: castilhoManifest,
   figueira1878: figueiraManifest,
 };
 
@@ -142,6 +144,7 @@ test('shorthand, other editions/books, and unavailable printed pages stay unlink
     "Yves D'Evreux, (op. cit., p. 157)", "D'Evreux, Voyage, 293", 'Fig., Missão do Maranhão, 150',
     'Fig., Arte, 1685, 64', 'Fig., Arte, 0', 'Fig., Arte, 168',
     'Anch., Teatro, 177', 'Anch., Teatro, 176, 2007',
+    'Castilho, Nomes, 26', 'Castilho, Nomes, 42', 'Castilho, Nomes, 46',
     "D'Evreux, Viagem, 1864, 293", "D'Evreux, Viagem, 0", "D'Evreux, Viagem, 3",
     "D'Evreux, Viagem, 443", "D'Evreux, Viagem, 293v",
   ]) assert.equal(linkSources(citation), citation);
@@ -246,6 +249,27 @@ test('Anchieta Teatro links every current 1999/2006 citation without changing so
   ]) assert.equal(linkSources(unverified), unverified);
 });
 
+test('Castilho links all 215 current Nomes citations to the 16 explicit crop targets', () => {
+  const entries = JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(root, 'docs/dict-conjugated.json.gz'))));
+  let citationCount = 0;
+  const records = new Set();
+  const pages = new Set();
+  entries.forEach((entry, entryIndex) => {
+    const definition = entry.d || '';
+    const linked = linkSources(definition);
+    assert.equal(linked.replace(/<\/?a\b[^>]*>/g, ''), definition);
+    const sourceLinks = links(linked).filter((link) => link.href.includes('book_name=castilho1937'));
+    if (sourceLinks.length) records.add(entryIndex);
+    for (const link of sourceLinks) {
+      if (link.text.includes('Castilho')) citationCount += 1;
+      pages.add(Number(new URL(link.href, 'https://example.test').searchParams.get('page_number')));
+    }
+  });
+  assert.equal(citationCount, 215);
+  assert.equal(records.size, 162);
+  assert.deepEqual([...pages].sort((a, b) => a - b), castilhoManifest.verification.all_cited_pages);
+});
+
 test('new source assets match their declared scan bounds and explicit targets', () => {
   const imageIndices = (book) => fs.readdirSync(path.join(root, 'docs/primary_sources', book))
     .filter((name) => name.endsWith('.jpg'))
@@ -264,6 +288,12 @@ test('new source assets match their declared scan bounds and explicit targets', 
   );
   assert.equal(anchTeatroExpected.length, anchTeatroManifest.images.stored_image_count);
   assert.equal(anchTeatroExpected.length, anchTeatroManifest.verification.stored_image_count);
+  assert.deepEqual(
+    fs.readdirSync(path.join(root, 'docs/primary_sources/castilho1937'))
+      .filter((name) => name.endsWith('.jpg'))
+      .sort(),
+    castilhoManifest.mapping.targets.map((target) => target.image).sort(),
+  );
 });
 
 test("the ma'enduar examples expose all three requested source links", () => {
@@ -409,6 +439,30 @@ test('Figueira resolves the requested printed pages through the verified complet
   assert.equal(unavailable.get('imageError').hidden, false);
   assert.match(unavailable.get('imageError').textContent, /mapa desta fonte/);
   assert.equal(unavailable.window.location.searchParams.get('page_number'), '168');
+});
+
+test('Castilho uses its non-linear crop map and jumps only among available pages', async () => {
+  const page38 = await openViewer('book_name=castilho1937&page_number=38');
+  assert.equal(page38.image().src, '/nhe-enga/docs/primary_sources/castilho1937/p38.jpg');
+  assert.match(page38.get('currentPage').textContent, /Página impressa 38.*lado esquerdo.*PDF página 22/);
+  assert.equal(page38.get('sourcePdf').href, `${castilhoManifest.pdf.url}#page=22`);
+  page38.click('nextPage');
+  assert.equal(page38.window.location.searchParams.get('page_number'), '39');
+  assert.match(page38.image().src, /\/p39\.jpg$/);
+  assert.match(page38.get('currentPage').textContent, /lado direito.*PDF página 23/);
+
+  const page41 = await openViewer('book_name=castilho1937&page_number=41');
+  page41.click('nextPage');
+  assert.equal(page41.window.location.searchParams.get('page_number'), '45');
+  assert.equal(page41.get('nextPage').disabled, true);
+  page41.click('nextPage');
+  assert.match(page41.image().src, /\/p45\.jpg$/);
+
+  const unavailable = await openViewer('book_name=castilho1937&page_number=42');
+  assert.equal(unavailable.image(), null);
+  assert.equal(unavailable.get('imageError').hidden, false);
+  assert.match(unavailable.get('imageError').textContent, /mapa desta fonte/);
+  assert.equal(unavailable.window.location.searchParams.get('page_number'), '42');
 });
 
 test('Figueira Wikisource snapshot is complete, self-contained, attributed, and non-executable', () => {

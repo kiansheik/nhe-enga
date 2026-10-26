@@ -985,6 +985,21 @@
       });
     });
 
+    // Castilho is intentionally a sparse set of verified cited-page crops.
+    // The viewer manifest supplies the non-linear spread/side mapping.
+    regex = /\b(Castilho,\s*Nomes,\s*(?:pp?\.\s*)?)(\d+(?:\s*[-–—,;]\s*\d+)*)(?![\dA-Za-zÀ-ÿ])/g;
+    replacedString = replacedString.replace(regex, (match, prefix, pages) => {
+      const availablePages = new Set([27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 45]);
+      const pageNumbers = pages.match(/\d+/g).map(Number);
+      if (pageNumbers.some((page) => !availablePages.has(page))) return match;
+      let firstPage = true;
+      return pages.replace(/\d+/g, (page) => {
+        const label = firstPage ? `${prefix}${page}` : page;
+        firstPage = false;
+        return `<a href="/nhe-enga/docs/primary_sources/?book_name=castilho1937&page_number=${Number(page)}" target="_blank" rel="noopener">${label}</a>`;
+      });
+    });
+
     // Navarro's 1999 and 2006 Teatro pagination has no constant offset into
     // Martins's documentary edition. These are the citation locators for which
     // the source manifest records quotation-level OCR alignments.

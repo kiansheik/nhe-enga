@@ -155,6 +155,7 @@
             arcat1686: ".jpg",
             betcomp: ".jpg",
             cartas_portiguara: ".jpg",
+            castilho1937: ".jpg",
             evreux1929: ".jpg",
             figueira1878: ".jpg",
             lerhist: ".jpg",
@@ -178,7 +179,7 @@
         function imageFormatForBook(name) {
             return imageFormats[name] || defaultImageFormats[name] || ".png";
         }
-        const manifestBookNames = new Set(["anchteatro1954", "figueira1878"]);
+        const manifestBookNames = new Set(["anchteatro1954", "castilho1937", "figueira1878"]);
         const urlParams = new URLSearchParams(window.location.search);
         let bookName = urlParams.get('book_name');
         let edition = Object.prototype.hasOwnProperty.call(sourceEditions, bookName) ? sourceEditions[bookName] : null;
@@ -378,6 +379,10 @@
             if (sourceManifest) {
                 const target = currentManifestTarget();
                 if (target.label) return target.label;
+                if (target.scan_side) {
+                    const side = target.scan_side === 'left' ? 'lado esquerdo' : 'lado direito';
+                    return `Página impressa ${target.printed_page} · ${side} · PDF página ${target.pdf_ordinal}`;
+                }
                 const pagination = sourceManifest.pagination;
                 if (pageNumber === pagination.title_page_index) {
                     return `Folha de rosto de 1878 · imagem ${pageNumber + 1} de ${sourceManifest.pdf.page_count}`;

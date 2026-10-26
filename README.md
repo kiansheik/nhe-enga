@@ -222,6 +222,9 @@ Because many scripts operate on large PDFs and external APIs, there is no single
   aligned passages in Martins's 1954 documentary edition, not a
   page-equivalent scan of Navarro; the [mapping boundary](docs/primary_sources/anchteatro1954/README.md)
   is kept visible in the viewer.
+- **Castilho (1937)**: all current citations open one of 16 verified
+  printed-page crops; the [non-linear spread-side map](docs/primary_sources/castilho1937/README.md)
+  is recorded beside the images.
 - **Nheengatu dataset**: parsed from Marcel Twardowsky Avila’s 2021 dissertation (*Proposta de dicionário nheengatu-português*).
 - **Mbyá dataset**: parsed from Robert A. Dooley’s *Léxico Guarani, Dialeto Mbyá* (SIL, 2006).
 - **Neologisms**: pulled from the Google Sheet referenced inside the Makefile (`neologisms.csv`).

@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "measured_on": "2026-10-06",
+  "repository": "kiansheik/nhe-enga",
+  "measurement_method": "Sum size for every blob path in complete (truncated=false) GitHub recursive Git Trees responses. Counts duplicate content at separate paths separately. Does not measure compressed Git history or filesystem allocation.",
+  "main": {
+    "commit": "81c21de3f444983630a06ffc252e821c03dffb35",
+    "tree": "4e524cbc6b492fee59c9e4d63e3fa9307bf17620",
+    "files": 2456,
+    "total_file_bytes": 4637613470,
+    "largest_groups": {
+      "docs/primary_sources/bettvulg": {
+        "files": 249,
+        "bytes": 1819893021
+      },
+      "docs/primary_sources/arcat1618": {
+        "files": 398,
+        "bytes": 1304726502
+      },
+      "docs/primary_sources/vlb": {
+        "files": 303,
+        "bytes": 941607092
+      },
+      "docs/primary_sources/evreux1929": {
+        "files": 446,
+        "bytes": 271863621
+      },
+      "docs/primary_sources/lerhist": {
+        "files": 498,
+        "bytes": 123758895
+      },
+      "docs/primary_sources/ancharte": {
+        "files": 59,
+        "bytes": 86282798
+      },
+      "pydicate": {
+        "files": 48,
+        "bytes": 27326546
+      },
+      "docs": {
+        "files": 30,
+        "bytes": 20475365
+      },
+      "docs/primary_sources/betcomp": {
+        "files": 142,
+        "bytes": 14800582
+      },
+      "translate": {
+        "files": 7,
+        "bytes": 13304553
+      },
+      "full.html": {
+        "files": 1,
+        "bytes": 4392447
+      },
+      "quiz": {
+        "files": 6,
+        "bytes": 2100800
+      },
+      "tupi": {
+        "files": 74,
+        "bytes": 1514703
+      },
+      "gramatica": {
+        "files": 70,
+        "bytes": 1087354
+      },
+      "docs/primary_sources/evreux1929-viewer-preview.png": {
+        "files": 1,
+        "bytes": 885022
+      }
+    },
+    "group_note": "Largest 15 groups shown; total_file_bytes includes every blob path."
+  },
+  "pages": {
+    "commit": "0de8b816633d8b0aeafeb4f390e32d40b5f23888",
+    "tree": "ac1dd0996c226711622763ebb970f303e439721c",
+    "commit_date": "2026-10-06T20:00:59Z",
+    "files": 2011,
+    "total_file_bytes": 720136184,
+    "largest_groups": {
+      "docs/primary_sources/evreux1929": {
+        "files": 445,
+        "bytes": 222271914
+      },
+      "docs/primary_sources/vlb": {
+        "files": 303,
+        "bytes": 150420372
+      },
+      "docs/primary_sources/arcat1618": {
+        "files": 398,
+        "bytes": 148813791
+      },
+      "docs/primary_sources/lerhist": {
+        "files": 498,
+        "bytes": 123299531
+      },
+      "docs": {
+        "files": 12,
+        "bytes": 25733119
+      },
+      "gramatica": {
+        "files": 67,
+        "bytes": 14311106
+      },
+      "docs/primary_sources/betcomp": {
+        "files": 142,
+        "bytes": 13873941
+      },
+      "docs/primary_sources/ancharte": {
+        "files": 59,
+        "bytes": 11721287
+      },
+      "full.html": {
+        "files": 1,
+        "bytes": 4392447
+      },
+      "quiz": {
+        "files": 6,
+        "bytes": 2100800
+      },
+      "docs/primary_sources/cartas_portiguara": {
+        "files": 7,
+        "bytes": 1347806
+      },
+      "pronunciation": {
+        "files": 45,
+        "bytes": 506485
+      },
+      "docs/primary_sources/source_inventory.json": {
+        "files": 1,
+        "bytes": 254560
+      },
+      "docs/primary_sources/emerson_arte_anchieta.json": {
+        "files": 1,
+        "bytes": 228745
+      },
+      "docs/primary_sources/emerson_arte_anchieta.html": {
+        "files": 1,
+        "bytes": 203056
+      }
+    },
+    "group_note": "Largest 15 groups shown; total_file_bytes includes every blob path."
+  },
+  "repository_api_size": {
+    "value": 5815646,
+    "unit": "KiB",
+    "interpretation": "GitHub's repository metadata estimate; not the size of main's checkout or the published site. Do not add these three measurements together."
+  },
+  "budgets": {
+    "github_pages_documented_limit": "1 GB",
+    "conservative_pages_limit_bytes": 1000000000,
+    "project_preflight_budget_bytes": 900000000,
+    "project_budget_reason": "Leave at least 100 MB of room below a conservative decimal interpretation of the documented Pages limit.",
+    "git_single_file_limit_bytes": 104857600
+  },
+  "source_urls": [
+    "https://api.github.com/repos/kiansheik/nhe-enga",
+    "https://api.github.com/repos/kiansheik/nhe-enga/git/trees/81c21de3f444983630a06ffc252e821c03dffb35?recursive=1",
+    "https://api.github.com/repos/kiansheik/nhe-enga/git/trees/0de8b816633d8b0aeafeb4f390e32d40b5f23888?recursive=1",
+    "https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits",
+    "https://docs.github.com/en/repositories/creating-and-managing-repositories/repository-limits",
+    "https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github"
+  ],
+  "limitations": [
+    "The gh-pages tree is the committed publish artifact, not a fresh local rebuild or a measurement of browser bandwidth.",
+    "Site and repository metadata may change after this snapshot.",
+    "The project budget is a planning choice, not a separate GitHub policy.",
+    "Deleting or recompressing files in a new commit does not remove older binary revisions from Git history."
+  ]
+}
