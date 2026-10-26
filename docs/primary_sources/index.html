@@ -299,8 +299,29 @@
                     pageNumber = sourceManifest.images.first_index;
                 }
             } else {
-                manifestTargets = sourceManifest.mapping.targets;
-                const requestedPosition = manifestTargets.findIndex((target) => target.locator === requestedPage);
+                if (sourceManifest.mapping.targets) {
+                    manifestTargets = sourceManifest.mapping.targets;
+                } else {
+                    const editions = sourceManifest.mapping.citation_editions || {};
+                    const defaultYear = sourceManifest.mapping.default_citation_year;
+                    manifestTargets = Object.entries(editions).flatMap(([year, citationEdition]) => (
+                        Object.entries(citationEdition.page_to_pdf_index).map(([locator, pdfIndex]) => ({
+                            locator,
+                            citation_year: year === defaultYear ? null : year,
+                            cited_edition: citationEdition.label,
+                            pdf_index: pdfIndex,
+                            pdf_ordinal: pdfIndex + 1,
+                            image: `${pdfIndex}.jpg`,
+                            source_page_url: sourceManifest.mapping.source_page_url_pattern.replace('{pdf_index}', pdfIndex),
+                            label: `${citationEdition.label}, p. ${locator} · passagem correspondente em Martins 1954 · PDF p. ${pdfIndex + 1}`,
+                        }))
+                    ));
+                }
+                const requestedYear = urlParams.get('citation_year');
+                const requestedPosition = manifestTargets.findIndex((target) => (
+                    target.locator === requestedPage
+                    && (target.citation_year || null) === requestedYear
+                ));
                 if (urlParams.has('page_number') && requestedPosition < 0) {
                     throw new Error('printed page is outside the verified map');
                 }
@@ -335,6 +356,11 @@
                 if (target.locator !== null) {
                     urlParams.set('page_number', target.locator);
                     urlParams.delete('scan');
+                    if (target.citation_year) {
+                        urlParams.set('citation_year', target.citation_year);
+                    } else if (sourceManifest.pagination.navigation === 'explicit_map') {
+                        urlParams.delete('citation_year');
+                    }
                 } else {
                     urlParams.delete('page_number');
                     urlParams.set('scan', String(target.pdf_index));

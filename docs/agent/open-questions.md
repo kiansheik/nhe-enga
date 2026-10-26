@@ -6,7 +6,6 @@
 - Are `gramatica/package.json` and `gramatica/package-lock.json` still useful, or are they leftovers from before `gramatica/docs/package.json` became the active VuePress package?
 - Should the tracked root research outputs (`anotated_token_pairs.json`, `anotated_tokens*.json`, `token_instructions_eng.json`, `replacements.txt`, and `y_i_tupi.txt`) move under a documented data directory after their consumers and regeneration paths are confirmed?
 - Is the stale root `AGENT_NOTES.md` still useful, or should its historical composition notes move into `docs/agent/session-handoffs/`?
-- Should the remaining `Anch., Teatro` citations be aligned quotation by
-  quotation to documentary witnesses, or wait for an exact digitization of
-  Navarro's cited 1999/2006 editions? A numeric page offset is demonstrably
-  unsafe.
+- Can an openly accessible digitization of Navarro's cited 1999/2006 *Teatro*
+  editions be found? Current links use reviewed quotation-level alignments to
+  Martins 1954 and deliberately make no general pagination-equivalence claim.

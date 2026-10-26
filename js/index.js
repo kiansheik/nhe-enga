@@ -1000,14 +1000,35 @@
       });
     });
 
-    // The cited Navarro page and the available Martins documentary edition
-    // have no general numeric offset. Page 176 is linked only because all nine
-    // unsuffixed quotations on that locator were explicitly aligned to
-    // Martins 1954, p. 632. The separately cited 2006 edition stays unlinked.
-    regex = /\bAnch\.,\s*Teatro,\s*176(?=\s*(?:\)|$))/g;
-    replacedString = replacedString.replace(regex, (match) => (
-      `<a href="/nhe-enga/docs/primary_sources/?book_name=anchteatro1954&page_number=176" target="_blank" rel="noopener">${match}</a>`
-    ));
+    // Navarro's 1999 and 2006 Teatro pagination has no constant offset into
+    // Martins's documentary edition. These are the citation locators for which
+    // the source manifest records quotation-level OCR alignments.
+    const teatro1999Pages = new Set([
+      4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38,
+      40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 74, 76, 88, 90,
+      92, 118, 120, 122, 126, 128, 130, 132, 134, 136, 138, 140, 142, 144,
+      146, 148, 150, 152, 154, 156, 158, 160, 162, 164, 166, 168, 170, 172,
+      174, 176, 178, 180, 182, 184, 186, 188,
+    ]);
+    const teatro2006Pages = new Set([
+      10, 14, 25, 30, 32, 42, 44, 122, 130, 138, 140, 142, 143, 144, 146,
+      148, 150, 154, 156, 158, 160, 162, 164, 166, 168, 170, 172, 174, 176,
+      178, 180, 182, 184, 186, 188,
+    ]);
+    regex = /\b(Anch\.,?\s*Teatro,\s*)(\d{1,3}(?:\s*[-–—,;]\s*\d{1,3})*)(\s*,\s*(2006))?(?!\s*,\s*\d{4})(?![\dA-Za-zÀ-ÿ])/g;
+    replacedString = replacedString.replace(regex, (match, prefix, pages, yearSuffix, year) => {
+      const availablePages = year === '2006' ? teatro2006Pages : teatro1999Pages;
+      const pageNumbers = pages.match(/\d+/g).map(Number);
+      if (pageNumbers.some((page) => !availablePages.has(page))) return match;
+      let firstPage = true;
+      return pages.replace(/\d+/g, (page) => {
+        let label = firstPage ? `${prefix}${page}` : page;
+        if (year && pageNumbers.length === 1) label += yearSuffix;
+        firstPage = false;
+        const citationYear = year ? `&citation_year=${year}` : '';
+        return `<a href="/nhe-enga/docs/primary_sources/?book_name=anchteatro1954&page_number=${Number(page)}${citationYear}" target="_blank" rel="noopener">${label}</a>`;
+      });
+    });
 
     // VLB
     regex = /VLB, (I|II), (\d+)/g;

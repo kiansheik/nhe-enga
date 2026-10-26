@@ -118,7 +118,9 @@ def main() -> int:
                 if selected_pages is None or target["pdf_index"] in selected_pages
             ]
         else:
-            pages = selected_pages if selected_pages is not None else range(len(document))
+            pages = (
+                selected_pages if selected_pages is not None else range(len(document))
+            )
             targets = [
                 {"pdf_index": index, "output": f"{index}.jpg", "crop_box": None}
                 for index in pages

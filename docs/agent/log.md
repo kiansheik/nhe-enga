@@ -1,5 +1,21 @@
 # Agent Log
 
+## 2026-10-26 — Linked every current Anchieta Teatro citation
+
+Replaced the one-page Anchieta Teatro exception with separate Navarro 1999
+and 2006 locator maps covering all 1,431 current citations in 882 records.
+Aligned 107 edition-and-page keys to 75 representative pages in Martins's 1954
+documentary scan using dictionary quotation context, Internet Archive OCR, and
+sequence review; preserved the cited wording and kept unsupported pages/years
+unlinked. The reported `îambé` page 36 now routes to scan index 757, while
+the two editions' page 176 routes remain distinct. Added an OCR candidate
+helper, edition-aware viewer navigation, sparse images, provenance, offline
+pack naming, refreshed source inventories, and corpus-wide regressions. All
+20 source/viewer tests, four formatter invariants, 53 Chromium tests, 11
+offline tests, the service-worker smoke test, JPEG verification, diff checks,
+and an 804 MiB no-PDF Pages build pass. Also repaired the Android CI setup by
+overriding its obsolete default `tools` package with `platform-tools`.
+
 ## 2026-10-26 — Refresh source-groundwork PR
 
 Merged current `main` into PR #26 and resolved its obsolete Figueira overlap
@@ -7,7 +23,8 @@ in favor of the deployed implementation, then refreshed it again after PR #33
 merged the Figueira Wikisource snapshot. Preserved the unique Castilho 1937
 source: 16 verified page-side crops, all 215 current citation links, explicit
 mapping/navigation, reproducible crop rendering, Pages/offline inclusion, and
-focused regressions. The PR remains open for review and is not deployed.
+focused regressions. PR #26 later merged into `main`; it was not deployed by
+that branch-refresh session.
 
 ## 2026-10-25 — Repaired dictionary entry boundaries corpus-wide
 

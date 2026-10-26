@@ -12,9 +12,10 @@
   The 1686 Araújo directory is intentionally sparse: all currently cited
   printed pages plus a two-page context buffer, not the complete scan.
   `figueira1878` is a complete scan with a constant printed-page map;
-  `anchteatro1954` is one explicit quotation-level cross-edition witness, not a
-  general pagination map. `castilho1937` stores 16 verified page-side crops
-  behind an explicit non-linear map. D’Evreux, Figueira, Anchieta, and
+  `anchteatro1954` is a sparse 75-page quotation-level cross-edition map for
+  every current 1999/2006 citation locator, not a general pagination map.
+  `castilho1937` stores 16 verified page-side crops behind an explicit
+  non-linear map. D’Evreux, Figueira, Anchieta, and
   Castilho provenance and page mappings live beside their images in
   `source.json` and `README.md`. The
   `cartas_portiguara` image folder is preserved in the Pages artifact for now;
