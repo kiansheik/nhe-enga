@@ -630,7 +630,7 @@ def render_report(summary):
         "",
         "## Edition and locator cautions",
         "",
-        "- **Figueira:** Navarro lists the 1687 Lisbon *Arte*, in Julius Platzmann's 1878 Leipzig facsimile. A citation containing `1686` is an edition discrepancy to review, not authority to select a different PDF silently.",
+        "- **Figueira:** Navarro lists the 1687 Lisbon *Arte*, in Julius Platzmann's 1878 Leipzig facsimile. The lone `1686, 64` citation is preserved verbatim but linked with a warning: authoritative catalogs identify 1687, no separate 1686 edition was found, and the exact *çoába* statement was collated on p. 64 of the selected text.",
         "- **Anchieta:** *Arte* uses the 1933 facsimile, *Poesias* the 1954 documentary edition, *Poemas* the 1997 Navarro edition, and *Teatro* the 1999 Navarro edition. Some dictionary strings add `2006`; retain this discrepancy until that edition is identified. *Doutrina Cristã* I and II are distinct 1993 volumes. The bibliography repeats *Diálogo da Fé* (1988).",
         "- **Araújo:** the unqualified *Cat.* family is provisionally the 1618 edition reproduced in 1952; citations explicitly mentioning 1686 are separated and refer to the 1898 facsimile of the second edition. Existing links can match the wrong edition when a year appears after the page. Valente's cantigas have explicit 1618 and 1686 host references; the bibliography entry identifies the 1686/1898 host, so check each host locator.",
         "- **Léry:** Navarro explicitly defaults to 1578 when no year is mentioned. References to 1580 belong to the second-edition text in the 1994 Lestringant edition. The current formatter can match a year as if it were a page; anchor counts alone are insufficient verification.",

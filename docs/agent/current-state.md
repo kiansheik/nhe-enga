@@ -1,5 +1,18 @@
 # Current State
 
+## 2026-10-26 — PR #26 refreshed against main
+
+- The older Figueira/Castilho source branch now incorporates current `main`.
+  Its duplicate Figueira implementation was resolved in favor of the deployed
+  October 25 implementation and the Figueira Wikisource snapshot subsequently
+  merged through PR #33; the still-unique Castilho source remains in the PR
+  with 16 verified page-side crops covering 215 citations in 162 records.
+- Castilho is integrated with the current manifest viewer, Pages image
+  optimizer, offline source packs, and renderer. The renderer retains current
+  selected-page behavior while adding manifest-defined page-side crops.
+- This is still review work in PR #26. It has not been merged into `main` or
+  deployed.
+
 ## 2026-10-25 — Dictionary-entry boundary repair
 
 - The production formatter now keeps generated part-of-speech headings,

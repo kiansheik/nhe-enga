@@ -1,5 +1,10 @@
 # Local agent task: D’Evreux primary-source pilot
 
+**Status:** implemented and merged in [PR #25](https://github.com/kiansheik/nhe-enga/pull/25).
+The pilot-only review boundary below records the original task. Continue with
+the [next-source groundwork](../../primary_sources/plans/README.md) for the
+subsequent source plans and current storage checks.
+
 ## Task and review boundary
 
 Implement clickable source scans for the dictionary’s explicit `D'Evreux,

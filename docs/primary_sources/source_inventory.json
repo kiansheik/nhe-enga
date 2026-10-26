@@ -362,7 +362,7 @@
     "other_parenthetical": 22836,
     "unmatched_candidate": 705
   },
-  "linker_function_sha256": "fec11f50c2254317383f2b376a9d6635ab2aec7ee96620c0500e59adcfb279f2",
+  "linker_function_sha256": "400a7f4f0b2a193b442bf2649573f497bcadb83882c45c2f0943cefba162e098",
   "works": [
     {
       "source": "VLB",
@@ -1711,8 +1711,10 @@
       "source_spellings": {
         "Fig.": 622
       },
-      "citations_producing_links": 0,
-      "viewer_books": [],
+      "citations_producing_links": 622,
+      "viewer_books": [
+        "figueira1878"
+      ],
       "examples": [
         "Fig., Arte, 85",
         "Fig., Arte, 138",
@@ -2468,8 +2470,10 @@
       "source_spellings": {
         "Castilho": 215
       },
-      "citations_producing_links": 0,
-      "viewer_books": [],
+      "citations_producing_links": 215,
+      "viewer_books": [
+        "castilho1937"
+      ],
       "examples": [
         "Castilho, Nomes, 27",
         "Castilho, Nomes, 28",

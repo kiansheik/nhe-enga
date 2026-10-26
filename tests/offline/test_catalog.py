@@ -126,6 +126,7 @@ class CatalogTests(unittest.TestCase):
     def test_new_source_pack_names_and_provenance_routing(self):
         sources = {
             "anchteatro1954": ("Anchieta — Teatro p. 176 (cotejo Martins 1954)", [683]),
+            "castilho1937": ("Castilho — Nomes (1937, páginas citadas)", [27, 28]),
             "figueira1878": ("Figueira — Arte (fac-símile de 1878)", [0, 1]),
         }
         for book, (_title, images) in sources.items():

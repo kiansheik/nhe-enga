@@ -93,6 +93,7 @@ for path in \
   docs/primary_sources/arcat1686 \
   docs/primary_sources/betcomp \
   docs/primary_sources/cartas_portiguara \
+  docs/primary_sources/castilho1937 \
   docs/primary_sources/evreux1929 \
   docs/primary_sources/figueira1878 \
   docs/primary_sources/lerhist \
@@ -105,6 +106,7 @@ done
 copy_path "docs/primary_sources/anchteatro1954/source.json"
 copy_path "docs/primary_sources/evreux1929/source.json"
 copy_path "docs/primary_sources/arcat1686/source.json"
+copy_path "docs/primary_sources/castilho1937/source.json"
 copy_path "docs/primary_sources/figueira1878/source.json"
 copy_path "docs/primary_sources/DTAbib.txt"
 
@@ -119,7 +121,7 @@ done
 
 "$PYTHON_BIN" "$ROOT_DIR/scripts/optimize_pages_images.py" "$ROOT_DIR/docs/primary_sources" \
   --output-dir "$BUILD_DIR/docs/primary_sources" \
-  --books ancharte anchteatro1954 arcat1618 arcat1686 betcomp cartas_portiguara evreux1929 figueira1878 lerhist vlb
+  --books ancharte anchteatro1954 arcat1618 arcat1686 betcomp cartas_portiguara castilho1937 evreux1929 figueira1878 lerhist vlb
 
 make -C "$ROOT_DIR" grammar-build
 mkdir -p "$BUILD_DIR/gramatica"

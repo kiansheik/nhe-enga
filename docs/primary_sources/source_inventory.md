@@ -89,13 +89,13 @@ The edition column points to exact line numbers in `DTAbib.txt`, whose full text
 | Anch. | Teatro | 1431 | 0 | 882 | 0 | 10 |
 | Anch. | Poemas | 700 | 0 | 507 | 0 | 9 |
 | Marcgrave | História Natural do Brasil | 651 | 3 | 636 | 0 | 48 |
-| Fig. | Arte | 622 | 1 | 455 | 0 | 30 |
+| Fig. | Arte | 622 | 1 | 455 | 622 / figueira1878 | 30 |
 | Anch. | Arte | 537 | 1 | 404 | 537 / ancharte | 2 |
 | D'Abbeville | Histoire | 449 | 0 | 439 | 0 | 25 |
 | Sousa | Tratado Descritivo do Brasil | 394 | 0 | 389 | 0 | 58 |
 | Léry | Histoire 1578 (default) | 230 | 0 | 212 | 228 / lerhist | 43 |
 | Anch. | Doutrina Cristã II | 223 | 0 | 219 | 0 | 7 |
-| Castilho | Os Nomes das Partes do Corpo Humano | 215 | 0 | 162 | 0 | 22 |
+| Castilho | Os Nomes das Partes do Corpo Humano | 215 | 0 | 162 | 215 / castilho1937 | 22 |
 | Piso | De Medicina Brasiliensis | 178 | 1 | 178 | 0 | 52 |
 | Theat. Rer. Nat. Bras. | Theatrum Rerum Naturalium Brasiliae | 163 | 1 | 162 | 0 | 60 |
 | Anch. | Doutrina Cristã I | 150 | 0 | 135 | 0 | 6 |
@@ -156,7 +156,7 @@ The edition column points to exact line numbers in `DTAbib.txt`, whose full text
 
 ## Edition and locator cautions
 
-- **Figueira:** Navarro lists the 1687 Lisbon *Arte*, in Julius Platzmann's 1878 Leipzig facsimile. A citation containing `1686` is an edition discrepancy to review, not authority to select a different PDF silently.
+- **Figueira:** Navarro lists the 1687 Lisbon *Arte*, in Julius Platzmann's 1878 Leipzig facsimile. The lone `1686, 64` citation is preserved verbatim but linked with a warning: authoritative catalogs identify 1687, no separate 1686 edition was found, and the exact *çoába* statement was collated on p. 64 of the selected text.
 - **Anchieta:** *Arte* uses the 1933 facsimile, *Poesias* the 1954 documentary edition, *Poemas* the 1997 Navarro edition, and *Teatro* the 1999 Navarro edition. Some dictionary strings add `2006`; retain this discrepancy until that edition is identified. *Doutrina Cristã* I and II are distinct 1993 volumes. The bibliography repeats *Diálogo da Fé* (1988).
 - **Araújo:** the unqualified *Cat.* family is provisionally the 1618 edition reproduced in 1952; citations explicitly mentioning 1686 are separated and refer to the 1898 facsimile of the second edition. Existing links can match the wrong edition when a year appears after the page. Valente's cantigas have explicit 1618 and 1686 host references; the bibliography entry identifies the 1686/1898 host, so check each host locator.
 - **Léry:** Navarro explicitly defaults to 1578 when no year is mentioned. References to 1580 belong to the second-edition text in the 1994 Lestringant edition. The current formatter can match a year as if it were a page; anchor counts alone are insufficient verification.

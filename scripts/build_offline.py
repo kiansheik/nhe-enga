@@ -67,6 +67,7 @@ SOURCE_NAMES = {
     "betcomp": "Bettendorff — Compêndio",
     "lerhist": "Léry — História",
     "cartas_portiguara": "Cartas Potiguaras",
+    "castilho1937": "Castilho — Nomes (1937, páginas citadas)",
     "evreux1929": "Évreux (1929)",
     "figueira1878": "Figueira — Arte (fac-símile de 1878)",
 }

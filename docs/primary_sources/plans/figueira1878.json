@@ -1,0 +1,536 @@
+{
+  "schema_version": 1,
+  "id": "figueira1878",
+  "status": "research_plan",
+  "purpose": "Research and local-agent implementation groundwork only. This is not a live source manifest or a completed image import; no Figueira source images or production linker/viewer changes are supplied by this plan.",
+  "repository_baseline": "81c21de3f444983630a06ffc252e821c03dffb35",
+  "navarro_bibliography": {
+    "path": "docs/primary_sources/DTAbib.txt",
+    "lines": [
+      30
+    ],
+    "verbatim_entry": "(Fig.) FIGUEIRA, Luís, Arte de Grammatica da Lingoa Brasilica. Miguel Deslandes, Lisboa, 1687 (Ed. facsimilar de Julius Platzmann, sob o título Gramática da língua do Brasil). B. G. Teubner, Leipzig, 1878.",
+    "edition": {
+      "author": "Luís Figueira",
+      "cited_original_title": "Arte de Grammatica da Lingoa Brasilica",
+      "cited_original_imprint": "Lisboa: Miguel Deslandes, 1687",
+      "selected_facsimile_title": "Grammatica da lingua do Brasil",
+      "selected_facsimile_editor": "Júlio (Julius) Platzmann",
+      "selected_facsimile_imprint": "Leipzig: B. G. Teubner, 1878",
+      "relationship": "The 1878 title page explicitly states that this is a facsimile of the 1687 edition. It matches the facsimile specified by Navarro, despite the changed title.",
+      "title_page_pdf_index": 10,
+      "title_page_verification_status": "verified_visual",
+      "exclude_without_new_mapping": [
+        "Figueira 1621",
+        "Figueira 1795",
+        "Figueira 1880",
+        "Figueira, Missão do Maranhão (a different work on bibliography line 31)"
+      ],
+      "supporting_catalog_urls": [
+        "https://www.etnolinguistica.org/biblio:figueira-1878-grammatica",
+        "https://cedoch.fflch.usp.br/ficha002"
+      ],
+      "original_1687_comparison_scan_url": "https://archive.org/details/artedegrammatica01figu",
+      "comparison_scan_status": "Catalog/metadata checked only; no alignment between the 1687 comparison scan and this PDF has been established."
+    }
+  },
+  "pdf": {
+    "catalog_url": "https://www.etnolinguistica.org/biblio:figueira-1878-grammatica",
+    "url": "https://etnolinguistica.wdfiles.com/local--files/biblio:figueira-1878-grammatica/figueira_1878_grammatica.pdf",
+    "sha256": "a48d22961a385c3d0cc55bada47bb6e61af85ca3a2d6e20e3102fdb2a881cb57",
+    "bytes": 1936830,
+    "page_count": 200,
+    "downloaded_and_checked": true,
+    "checks": [
+      "The downloaded file parses as a 200-page PDF.",
+      "The title page at zero-based PDF index 10 visibly identifies Platzmann, the 1687 facsimile, Leipzig, Teubner, and 1878.",
+      "The final numbered text page is 167 at PDF index 190, followed by an unnumbered errata page at index 191."
+    ],
+    "digitization_note": "Google Books scan distributed by Biblioteca Digital Curt Nimuendajú. The PDF contains an initial Google digitization notice and a visible Curt Nimuendajú attribution overlay on index 8; preserve visible credits in whole-page rendering.",
+    "body_text_layer": "No usable embedded OCR body text was found in sampled pages; page-header verification used fresh OCR of small rendered header crops.",
+    "commit_pdf_to_git": false
+  },
+  "mapping": {
+    "locator_unit": "printed_page",
+    "proposed_rule": {
+      "pdf_index": "printed_page + 23",
+      "pdf_ordinal": "printed_page + 24",
+      "printed_page_range": [
+        1,
+        167
+      ],
+      "pdf_index_is_zero_based": true,
+      "applicability": "Only this exact SHA-256 PDF. The rule is verified for every unambiguous cited page and two additional boundary pages, not for every uncited leaf."
+    },
+    "verification_scope": {
+      "cited_target_count": 117,
+      "cited_targets_verified_ocr": 116,
+      "cited_targets_verified_visually": 1,
+      "visually_checked_ocr_exception_pages": [
+        133
+      ],
+      "additional_numbered_boundary_pages_checked": [
+        1,
+        167
+      ],
+      "numbered_pages_with_header_verification_total": 119,
+      "uncited_numbered_pages_not_checked": [
+        10,
+        11,
+        12,
+        15,
+        16,
+        17,
+        18,
+        20,
+        21,
+        22,
+        23,
+        24,
+        28,
+        29,
+        30,
+        31,
+        33,
+        35,
+        36,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        56,
+        62,
+        68,
+        90,
+        93,
+        97,
+        100,
+        103,
+        104,
+        105,
+        106,
+        114,
+        116,
+        117,
+        155
+      ],
+      "method": "Rendered only the top 46 PDF points of each candidate page at 300 dpi, then ran Tesseract 5.3.4, language eng, page segmentation mode 6. The expected page number appeared in the page-header line for 116 cited targets. Page 133 was visually confirmed after OCR split its number into 1 33. Pages 1 and 167 also matched their OCR headers.",
+      "software": {
+        "pymupdf": "1.26.6",
+        "pillow": "12.3.0",
+        "tesseract": "5.3.4"
+      },
+      "attestation_collation": "Page-number alignment is verified; the wording of all 622 quoted dictionary citations has not been collated against their page content.",
+      "full_image_conversion_completed": false,
+      "scan_completeness": "The PDF has 200 pages and numbered text endpoints 1 and 167; every intervening unnumbered/uncited page has not been visually inspected for completeness."
+    },
+    "anchors": [
+      {
+        "kind": "facsimile_title_page",
+        "locator": null,
+        "pdf_index": 10,
+        "verification_status": "verified_visual",
+        "observed": "Fac-simile da edição de 1687; Leipzig; B. G. Teubner; 1878.",
+        "scan_side": "full"
+      },
+      {
+        "kind": "first_numbered_text_page",
+        "locator": "1",
+        "printed_page": 1,
+        "pdf_index": 24,
+        "verification_status": "verified_ocr_header_and_visual",
+        "observed": "Pag. 1.; GRAMMATICA BRASILICA.",
+        "scan_side": "full"
+      },
+      {
+        "kind": "last_numbered_text_page",
+        "locator": "167",
+        "printed_page": 167,
+        "pdf_index": 190,
+        "verification_status": "verified_ocr_header_and_visual",
+        "observed": "Arte da lingua Brafilica. 167; DA SYLLABA.",
+        "scan_side": "full"
+      },
+      {
+        "kind": "errata",
+        "locator": null,
+        "pdf_index": 191,
+        "verification_status": "verified_visual",
+        "observed": "Erratas.",
+        "note": "Unnumbered; do not assign the fictitious printed locator 168.",
+        "scan_side": "full"
+      }
+    ],
+    "cited_targets": [
+      {"locator": "2", "printed_page": 2, "pdf_index": 25, "verification_status": "verified_ocr_header", "observed_header": "; 2 Arte da lingua Brafikca.", "explicit_occurrences": 6, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "3", "printed_page": 3, "pdf_index": 26, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 3", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "4", "printed_page": 4, "pdf_index": 27, "verification_status": "verified_ocr_header", "observed_header": "4 Arte da lingua Brafilica.", "explicit_occurrences": 12, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "5", "printed_page": 5, "pdf_index": 28, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 5", "explicit_occurrences": 3, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "6", "printed_page": 6, "pdf_index": 29, "verification_status": "verified_ocr_header", "observed_header": "| 6 Arte da kngua Brafiica.", "explicit_occurrences": 12, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "7", "printed_page": 7, "pdf_index": 30, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 7", "explicit_occurrences": 8, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "8", "printed_page": 8, "pdf_index": 31, "verification_status": "verified_ocr_header", "observed_header": "8 Arte da kngua Brafihca.", "explicit_occurrences": 4, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "9", "printed_page": 9, "pdf_index": 32, "verification_status": "verified_ocr_header", "observed_header": "Arte da kngua Brafikca. 9", "explicit_occurrences": 9, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "13", "printed_page": 13, "pdf_index": 36, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 13", "explicit_occurrences": 2, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "14", "printed_page": 14, "pdf_index": 37, "verification_status": "verified_ocr_header", "observed_header": "14 Arte da lingua Brafikca.", "explicit_occurrences": 3, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "19", "printed_page": 19, "pdf_index": 42, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 19", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "25", "printed_page": 25, "pdf_index": 48, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafihca. 25", "explicit_occurrences": 2, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "26", "printed_page": 26, "pdf_index": 49, "verification_status": "verified_ocr_header", "observed_header": "26 Arte da kngua Brafibca. |", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "27", "printed_page": 27, "pdf_index": 50, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafiica. 27", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "32", "printed_page": 32, "pdf_index": 55, "verification_status": "verified_ocr_header", "observed_header": "32 Arte da lingua Brafihca. |", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "34", "printed_page": 34, "pdf_index": 57, "verification_status": "verified_ocr_header", "observed_header": "34 Arte da kngua Brafilica. |", "explicit_occurrences": 3, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "37", "printed_page": 37, "pdf_index": 60, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 37", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "38", "printed_page": 38, "pdf_index": 61, "verification_status": "verified_ocr_header", "observed_header": "38 Arte da kngua Brafikca. |", "explicit_occurrences": 10, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "39", "printed_page": 39, "pdf_index": 62, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 39", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "40", "printed_page": 40, "pdf_index": 63, "verification_status": "verified_ocr_header", "observed_header": "40 ©>- Arte da lingua Brafikca.", "explicit_occurrences": 2, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "55", "printed_page": 55, "pdf_index": 78, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 55", "explicit_occurrences": 2, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "57", "printed_page": 57, "pdf_index": 80, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafihca. 57", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "58", "printed_page": 58, "pdf_index": 81, "verification_status": "verified_ocr_header", "observed_header": "58 Arte da lingua Brafikca. |", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "59", "printed_page": 59, "pdf_index": 82, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 59", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "60", "printed_page": 60, "pdf_index": 83, "verification_status": "verified_ocr_header", "observed_header": "60 Arte da lingua Brafikca.", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "61", "printed_page": 61, "pdf_index": 84, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 61", "explicit_occurrences": 2, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "63", "printed_page": 63, "pdf_index": 86, "verification_status": "verified_ocr_header", "observed_header": "cArte da kingua Brafilica. 63 |", "explicit_occurrences": 3, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "64", "printed_page": 64, "pdf_index": 87, "verification_status": "verified_ocr_header", "observed_header": "64 Arte da kngua Brafikca. |", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "65", "printed_page": 65, "pdf_index": 88, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 65", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "66", "printed_page": 66, "pdf_index": 89, "verification_status": "verified_ocr_header", "observed_header": "66 cArte da kngua Brafilca.", "explicit_occurrences": 2, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "67", "printed_page": 67, "pdf_index": 90, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 67", "explicit_occurrences": 3, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "69", "printed_page": 69, "pdf_index": 92, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 69", "explicit_occurrences": 3, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "70", "printed_page": 70, "pdf_index": 93, "verification_status": "verified_ocr_header", "observed_header": "70 Arte da lingua Brajfilica. |", "explicit_occurrences": 2, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "71", "printed_page": 71, "pdf_index": 94, "verification_status": "verified_ocr_header", "observed_header": "Arte da kngua Brafilica. 71", "explicit_occurrences": 2, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "72", "printed_page": 72, "pdf_index": 95, "verification_status": "verified_ocr_header", "observed_header": "72 ‘Arte da lingua Brafihca. |", "explicit_occurrences": 2, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "73", "printed_page": 73, "pdf_index": 96, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 73", "explicit_occurrences": 6, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "74", "printed_page": 74, "pdf_index": 97, "verification_status": "verified_ocr_header", "observed_header": "74 Arte da kngua Brafikca. |", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "75", "printed_page": 75, "pdf_index": 98, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafiica. 75", "explicit_occurrences": 7, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "76", "printed_page": 76, "pdf_index": 99, "verification_status": "verified_ocr_header", "observed_header": "76 Arte da hngua Brafilca. |", "explicit_occurrences": 13, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "77", "printed_page": 77, "pdf_index": 100, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafihca. 77", "explicit_occurrences": 6, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "78", "printed_page": 78, "pdf_index": 101, "verification_status": "verified_ocr_header", "observed_header": "78 Arte da kngua Brafihca. |", "explicit_occurrences": 12, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "79", "printed_page": 79, "pdf_index": 102, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 79", "explicit_occurrences": 11, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "80", "printed_page": 80, "pdf_index": 103, "verification_status": "verified_ocr_header", "observed_header": "80 Arte da lingua Brafilica.", "explicit_occurrences": 5, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "81", "printed_page": 81, "pdf_index": 104, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafihca. 81", "explicit_occurrences": 9, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "82", "printed_page": 82, "pdf_index": 105, "verification_status": "verified_ocr_header", "observed_header": "82 Arte da ingua Brafikca. |", "explicit_occurrences": 2, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "83", "printed_page": 83, "pdf_index": 106, "verification_status": "verified_ocr_header", "observed_header": "Arte da kngua Brafiica. 83 ©", "explicit_occurrences": 4, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "84", "printed_page": 84, "pdf_index": 107, "verification_status": "verified_ocr_header", "observed_header": "84 Arte da kngua Brafikca. |", "explicit_occurrences": 5, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "85", "printed_page": 85, "pdf_index": 108, "verification_status": "verified_ocr_header", "observed_header": "' Arte da lingua Brafihca. 85", "explicit_occurrences": 8, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "86", "printed_page": 86, "pdf_index": 109, "verification_status": "verified_ocr_header", "observed_header": "86 Arte da kngua Brafikca. |", "explicit_occurrences": 3, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "87", "printed_page": 87, "pdf_index": 110, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica.- , 87", "explicit_occurrences": 2, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "88", "printed_page": 88, "pdf_index": 111, "verification_status": "verified_ocr_header", "observed_header": "88 Arte da lingua Brafilica. |", "explicit_occurrences": 15, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "89", "printed_page": 89, "pdf_index": 112, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 89", "explicit_occurrences": 5, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "91", "printed_page": 91, "pdf_index": 114, "verification_status": "verified_ocr_header", "observed_header": "cArte da lingua Brafiica. 91 ©", "explicit_occurrences": 2, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "92", "printed_page": 92, "pdf_index": 115, "verification_status": "verified_ocr_header", "observed_header": "92 Arte da kngua Brafilica.", "explicit_occurrences": 3, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "94", "printed_page": 94, "pdf_index": 117, "verification_status": "verified_ocr_header", "observed_header": "94 Arte da kngua Brafikca.", "explicit_occurrences": 4, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "95", "printed_page": 95, "pdf_index": 118, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilca. 95", "explicit_occurrences": 4, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "96", "printed_page": 96, "pdf_index": 119, "verification_status": "verified_ocr_header", "observed_header": "96 Arte da lingua Brafilica.", "explicit_occurrences": 8, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "98", "printed_page": 98, "pdf_index": 121, "verification_status": "verified_ocr_header", "observed_header": "98 Arte da kngua Brafikca.", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "99", "printed_page": 99, "pdf_index": 122, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 99", "explicit_occurrences": 5, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "101", "printed_page": 101, "pdf_index": 124, "verification_status": "verified_ocr_header", "observed_header": "_ Arte da lingua Brafilica. 101 -", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "102", "printed_page": 102, "pdf_index": 125, "verification_status": "verified_ocr_header", "observed_header": "\"102 Arte da lingua Brafilica,", "explicit_occurrences": 3, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "107", "printed_page": 107, "pdf_index": 130, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 107", "explicit_occurrences": 6, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "108", "printed_page": 108, "pdf_index": 131, "verification_status": "verified_ocr_header", "observed_header": "108 Arte da kngua Brafilca.", "explicit_occurrences": 4, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "109", "printed_page": 109, "pdf_index": 132, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 109", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "110", "printed_page": 110, "pdf_index": 133, "verification_status": "verified_ocr_header", "observed_header": "110 cArte da kngua Brafilica.", "explicit_occurrences": 4, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "111", "printed_page": 111, "pdf_index": 134, "verification_status": "verified_ocr_header", "observed_header": "Arte da ingua Brafiica. 111", "explicit_occurrences": 2, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "112", "printed_page": 112, "pdf_index": 135, "verification_status": "verified_ocr_header", "observed_header": "112 Arte da kngua Brafiica. |", "explicit_occurrences": 3, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "113", "printed_page": 113, "pdf_index": 136, "verification_status": "verified_ocr_header", "observed_header": "Arte da ingua Brafihca. 113", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "115", "printed_page": 115, "pdf_index": 138, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafihca. 115", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "118", "printed_page": 118, "pdf_index": 141, "verification_status": "verified_ocr_header", "observed_header": "118 Arte da kngua Brafikca.", "explicit_occurrences": 7, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "119", "printed_page": 119, "pdf_index": 142, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 119", "explicit_occurrences": 9, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "120", "printed_page": 120, "pdf_index": 143, "verification_status": "verified_ocr_header", "observed_header": "120 Arte da kingua Brafikca.", "explicit_occurrences": 3, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "121", "printed_page": 121, "pdf_index": 144, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 121", "explicit_occurrences": 5, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "122", "printed_page": 122, "pdf_index": 145, "verification_status": "verified_ocr_header", "observed_header": "122 Arte da lingua Brafikca.", "explicit_occurrences": 10, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "123", "printed_page": 123, "pdf_index": 146, "verification_status": "verified_ocr_header", "observed_header": "| Arte da kngua Brafilica. 123", "explicit_occurrences": 7, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "124", "printed_page": 124, "pdf_index": 147, "verification_status": "verified_ocr_header", "observed_header": "124 Arte da lingua Brafihca. |", "explicit_occurrences": 9, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "125", "printed_page": 125, "pdf_index": 148, "verification_status": "verified_ocr_header", "observed_header": "Arte da kngua Brafihca. 125", "explicit_occurrences": 8, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "126", "printed_page": 126, "pdf_index": 149, "verification_status": "verified_ocr_header", "observed_header": "126 cArte da lingua Brafikca.", "explicit_occurrences": 11, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "127", "printed_page": 127, "pdf_index": 150, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafiica. 127", "explicit_occurrences": 6, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "128", "printed_page": 128, "pdf_index": 151, "verification_status": "verified_ocr_header", "observed_header": "128 Arte da lingua Brafikca.", "explicit_occurrences": 24, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "129", "printed_page": 129, "pdf_index": 152, "verification_status": "verified_ocr_header", "observed_header": "Arte da kngua Brafilica. 129", "explicit_occurrences": 12, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "130", "printed_page": 130, "pdf_index": 153, "verification_status": "verified_ocr_header", "observed_header": "130 Arte da lingua Brafilica.", "explicit_occurrences": 13, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "131", "printed_page": 131, "pdf_index": 154, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafiica. 131 ~", "explicit_occurrences": 6, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "132", "printed_page": 132, "pdf_index": 155, "verification_status": "verified_ocr_header", "observed_header": "132 Arte da lingua Brafikca.", "explicit_occurrences": 5, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "133", "printed_page": 133, "pdf_index": 156, "verification_status": "verified_visual_header", "observed_header": "133 (visually read); OCR: Arte da lingua Brafiica. 1 33", "explicit_occurrences": 9, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "134", "printed_page": 134, "pdf_index": 157, "verification_status": "verified_ocr_header", "observed_header": "134 Arte da kngua Brafikca.", "explicit_occurrences": 17, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "135", "printed_page": 135, "pdf_index": 158, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafica. 135", "explicit_occurrences": 12, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "136", "printed_page": 136, "pdf_index": 159, "verification_status": "verified_ocr_header", "observed_header": "136 Arte da lingua Brafikca.", "explicit_occurrences": 14, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "137", "printed_page": 137, "pdf_index": 160, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafikca. 137", "explicit_occurrences": 15, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "138", "printed_page": 138, "pdf_index": 161, "verification_status": "verified_ocr_header", "observed_header": "138 Arte da kngua Brafikca.", "explicit_occurrences": 10, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "139", "printed_page": 139, "pdf_index": 162, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilca. 139", "explicit_occurrences": 10, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "140", "printed_page": 140, "pdf_index": 163, "verification_status": "verified_ocr_header", "observed_header": "140 Arte da ingua Brafikca.", "explicit_occurrences": 7, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "141", "printed_page": 141, "pdf_index": 164, "verification_status": "verified_ocr_header", "observed_header": ". Arte da lingua Brafilica. 141", "explicit_occurrences": 8, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "142", "printed_page": 142, "pdf_index": 165, "verification_status": "verified_ocr_header", "observed_header": "142 Arte da kngua Brafikca.", "explicit_occurrences": 6, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "143", "printed_page": 143, "pdf_index": 166, "verification_status": "verified_ocr_header", "observed_header": "Arte da kngua Brafilica. 143 |", "explicit_occurrences": 7, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "144", "printed_page": 144, "pdf_index": 167, "verification_status": "verified_ocr_header", "observed_header": "144 Arte da kngua Brafikca.", "explicit_occurrences": 7, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "145", "printed_page": 145, "pdf_index": 168, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafikca. 145", "explicit_occurrences": 11, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "146", "printed_page": 146, "pdf_index": 169, "verification_status": "verified_ocr_header", "observed_header": "146 Arte da lingua Brafilica.", "explicit_occurrences": 7, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "147", "printed_page": 147, "pdf_index": 170, "verification_status": "verified_ocr_header", "observed_header": "Arte da kngua Brafilica. 147", "explicit_occurrences": 9, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "148", "printed_page": 148, "pdf_index": 171, "verification_status": "verified_ocr_header", "observed_header": "| 148 Arte da lingua Brafilica.", "explicit_occurrences": 10, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "149", "printed_page": 149, "pdf_index": 172, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafikca. 149", "explicit_occurrences": 6, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "150", "printed_page": 150, "pdf_index": 173, "verification_status": "verified_ocr_header", "observed_header": "150 Arte da kngua Brafthca.", "explicit_occurrences": 2, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "151", "printed_page": 151, "pdf_index": 174, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafikca. 151", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "152", "printed_page": 152, "pdf_index": 175, "verification_status": "verified_ocr_header", "observed_header": "152 Arte da kngua Brafikica. |", "explicit_occurrences": 3, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "153", "printed_page": 153, "pdf_index": 176, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafiica. 153", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "154", "printed_page": 154, "pdf_index": 177, "verification_status": "verified_ocr_header", "observed_header": "154 Arte da kngua Brafikca.", "explicit_occurrences": 2, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "156", "printed_page": 156, "pdf_index": 179, "verification_status": "verified_ocr_header", "observed_header": "156 cArte da kngua Brafilica.", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "157", "printed_page": 157, "pdf_index": 180, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 157", "explicit_occurrences": 2, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "158", "printed_page": 158, "pdf_index": 181, "verification_status": "verified_ocr_header", "observed_header": "158 Arte da kngua Brafthca.", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "159", "printed_page": 159, "pdf_index": 182, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 159", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "160", "printed_page": 160, "pdf_index": 183, "verification_status": "verified_ocr_header", "observed_header": "160 Arte da kngua Brafikca.", "explicit_occurrences": 7, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "161", "printed_page": 161, "pdf_index": 184, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafilica. 161", "explicit_occurrences": 8, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "162", "printed_page": 162, "pdf_index": 185, "verification_status": "verified_ocr_header", "observed_header": "162 Arte da kngua Brafilica. |", "explicit_occurrences": 4, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "163", "printed_page": 163, "pdf_index": 186, "verification_status": "verified_ocr_header", "observed_header": "Arte da lingua Brafikca. 163", "explicit_occurrences": 8, "inherited_occurrences": 1, "scan_side": "full"},
+      {"locator": "164", "printed_page": 164, "pdf_index": 187, "verification_status": "verified_ocr_header", "observed_header": "164 Arte da lingua Brafikca.", "explicit_occurrences": 2, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "165", "printed_page": 165, "pdf_index": 188, "verification_status": "verified_ocr_header", "observed_header": "Arte da kngua Brafilica. 165", "explicit_occurrences": 1, "inherited_occurrences": 0, "scan_side": "full"},
+      {"locator": "166", "printed_page": 166, "pdf_index": 189, "verification_status": "verified_ocr_header", "observed_header": "166 Arte da lingua Brafikca.", "explicit_occurrences": 3, "inherited_occurrences": 0, "scan_side": "full"}
+    ],
+    "unresolved": [
+      {
+        "id": "fig-arte-1686-64",
+        "entry_index": 9643,
+        "headword": "só",
+        "raw_citation": "Fig., Arte, 1686, 64",
+        "verification_status": "resolved_probable_year_typo_link_with_warning",
+        "pdf_index": 87,
+        "reason": "The explicit year 1686 conflicts with Navarro's bibliography and authoritative catalogs, which identify the second edition as 1687. No separate 1686 edition was found, while page 64 of the selected 1687/1878 text contains the exact çoába passage described by the dictionary. Preserve 1686 verbatim, link page 64, and show the discrepancy in the viewer.",
+        "context": "soaba - tempo, lugar, modo, etc. de ir; ida (Fig., Arte, 1686, 64)",
+        "related_verified_page": {
+          "locator": "64",
+          "pdf_index": 87,
+          "note": "The page contains the exact cited semantic statement: ‘Çoába, o fim para que, o instrumento em que, o lugar por onde se vai.’"
+        },
+        "required_action": "Keep the raw 1686 text unchanged, link it to the verified page 64 image, and show a visible note that the selected edition and catalogs say 1687."
+      },
+      {
+        "id": "fig-arte-inherited-163",
+        "entry_index": 4617,
+        "headword": "îá",
+        "raw_citation": " 163",
+        "parenthetical_context": "(Fig., Arte, 147; 163)",
+        "locator": "163",
+        "pdf_index": 186,
+        "verification_status": "page_mapping_verified_linker_pending",
+        "reason": "The audit counts this as one inherited same-parenthesis citation, separate from the 622 explicit author/work occurrences.",
+        "required_action": "Support work/author inheritance inside this one parenthesis, or explicitly leave the shorthand unlinked. Do not infer a source for arbitrary unqualified numbers outside their parenthetical context."
+      }
+    ]
+  },
+  "citation_baseline": {
+    "input_path": "docs/dict-conjugated.json.gz",
+    "uncompressed_sha256": "8906cb4ddd292db7d67901ec9fb3c288d94b9baf9ae9cb35cb1d8a4a30e8e02e",
+    "explicit_occurrences": 622,
+    "records": 455,
+    "records_definition": "Distinct dictionary records with a catalogued or inherited Figueira Arte citation; several records have multiple occurrences.",
+    "inherited_occurrences": 1,
+    "explicit_occurrences_without_year_conflict": 621,
+    "explicit_occurrences_with_year_conflict": 1,
+    "unambiguous_distinct_cited_pages": 117,
+    "inventory_path": "docs/primary_sources/source_inventory.json",
+    "audit_path": "docs/primary_sources/source_citation_audit.jsonl.gz",
+    "examples": [
+      {
+        "entry_index": 2310,
+        "headword": "ã",
+        "citation": "Fig., Arte, 85",
+        "locator": "85",
+        "pdf_index": 108
+      },
+      {
+        "entry_index": 4237,
+        "headword": "esé",
+        "citation": "Fig., Arte, 125-126"
+      },
+      {
+        "entry_index": 8451,
+        "headword": "paranã",
+        "citation": "Fig., Arte, 130-131"
+      },
+      {
+        "entry_index": 13177,
+        "headword": "Paraná",
+        "citation": "Fig., Arte, 130-131"
+      },
+      {
+        "entry_index": 4617,
+        "headword": "îá",
+        "citation": "Fig., Arte, 147; 163",
+        "locators": [
+          "147",
+          "163"
+        ]
+      }
+    ],
+    "input_warning": "Use the served .json.gz file and compare its uncompressed hash. The similarly named docs/dict-conjugated.json is a different compressed dictionary snapshot; do not silently substitute it. Regenerate counts/targets if the input changed."
+  },
+  "render_plan": {
+    "status": "sampled_only",
+    "complete_target_pdf_page_count": 200,
+    "method": "Render complete PDF pages, including visible credits and overlays. Retain covers, preliminary pages, errata, and blank leaves as scan images; label unnumbered pages honestly.",
+    "preferred_initial_candidate": {
+      "format": "JPEG",
+      "target_width_px": 1400,
+      "jpeg_quality": 82,
+      "progressive": true,
+      "optimize": true,
+      "colorspace": "RGB",
+      "reason": "A 1400-pixel quality-82 whole-page sample remains legible while limiting image storage. The final choice still needs local browser review."
+    },
+    "alternative_target_width_px": 1800,
+    "scaling_rule": "Use scale = target_width_px / page.rect.width for that page, then render the entire page. Do not copy D'Evreux's fixed 120 dpi setting.",
+    "dpi_warning": "Most Figueira PDF pages measure 271 x 390 points. At 120 dpi they become only about 452 pixels wide. A 1400-pixel width is about 372 dpi and 1800 pixels about 478 dpi for these pages; front matter includes other page sizes.",
+    "native_body_bitmap_dimensions_approx_px": [
+      2266,
+      3254
+    ],
+    "sample_measurements": {
+      "printed_pages": [
+        1,
+        64,
+        85,
+        133,
+        167
+      ],
+      "pdf_indices": [
+        24,
+        87,
+        108,
+        156,
+        190
+      ],
+      "scope": "Five representative full printed pages rendered at each candidate setting. These are sample estimates, not a completed 200-page conversion or a measured deployment total.",
+      "individual_jpegs": [
+        {"printed_page": 1, "pdf_index": 24, "width": 1400, "height": 2015, "jpeg_quality": 82, "bytes": 283929},
+        {"printed_page": 1, "pdf_index": 24, "width": 1400, "height": 2015, "jpeg_quality": 90, "bytes": 351393},
+        {"printed_page": 1, "pdf_index": 24, "width": 1800, "height": 2591, "jpeg_quality": 82, "bytes": 407865},
+        {"printed_page": 1, "pdf_index": 24, "width": 1800, "height": 2591, "jpeg_quality": 90, "bytes": 501884},
+        {"printed_page": 64, "pdf_index": 87, "width": 1400, "height": 2015, "jpeg_quality": 82, "bytes": 301365},
+        {"printed_page": 64, "pdf_index": 87, "width": 1400, "height": 2015, "jpeg_quality": 90, "bytes": 370964},
+        {"printed_page": 64, "pdf_index": 87, "width": 1800, "height": 2591, "jpeg_quality": 82, "bytes": 438400},
+        {"printed_page": 64, "pdf_index": 87, "width": 1800, "height": 2591, "jpeg_quality": 90, "bytes": 537587},
+        {"printed_page": 85, "pdf_index": 108, "width": 1400, "height": 2015, "jpeg_quality": 82, "bytes": 309179},
+        {"printed_page": 85, "pdf_index": 108, "width": 1400, "height": 2015, "jpeg_quality": 90, "bytes": 380741},
+        {"printed_page": 85, "pdf_index": 108, "width": 1800, "height": 2591, "jpeg_quality": 82, "bytes": 446611},
+        {"printed_page": 85, "pdf_index": 108, "width": 1800, "height": 2591, "jpeg_quality": 90, "bytes": 548087},
+        {"printed_page": 133, "pdf_index": 156, "width": 1400, "height": 2015, "jpeg_quality": 82, "bytes": 235899},
+        {"printed_page": 133, "pdf_index": 156, "width": 1400, "height": 2015, "jpeg_quality": 90, "bytes": 289223},
+        {"printed_page": 133, "pdf_index": 156, "width": 1800, "height": 2591, "jpeg_quality": 82, "bytes": 345127},
+        {"printed_page": 133, "pdf_index": 156, "width": 1800, "height": 2591, "jpeg_quality": 90, "bytes": 421441},
+        {"printed_page": 167, "pdf_index": 190, "width": 1400, "height": 2015, "jpeg_quality": 82, "bytes": 230473},
+        {"printed_page": 167, "pdf_index": 190, "width": 1400, "height": 2015, "jpeg_quality": 90, "bytes": 282687},
+        {"printed_page": 167, "pdf_index": 190, "width": 1800, "height": 2591, "jpeg_quality": 82, "bytes": 325976},
+        {"printed_page": 167, "pdf_index": 190, "width": 1800, "height": 2591, "jpeg_quality": 90, "bytes": 397485}
+      ],
+      "extrapolations": [
+        {
+          "width": 1400,
+          "jpeg_quality": 82,
+          "sample_pages": 5,
+          "min_bytes": 230473,
+          "mean_bytes": 272169,
+          "max_bytes": 309179,
+          "extrapolated_all_200_pages_bytes": 54433800,
+          "extrapolated_all_200_pages_mib": 51.91
+        },
+        {
+          "width": 1400,
+          "jpeg_quality": 90,
+          "sample_pages": 5,
+          "min_bytes": 282687,
+          "mean_bytes": 335002,
+          "max_bytes": 380741,
+          "extrapolated_all_200_pages_bytes": 67000320,
+          "extrapolated_all_200_pages_mib": 63.9
+        },
+        {
+          "width": 1800,
+          "jpeg_quality": 82,
+          "sample_pages": 5,
+          "min_bytes": 325976,
+          "mean_bytes": 392796,
+          "max_bytes": 446611,
+          "extrapolated_all_200_pages_bytes": 78559160,
+          "extrapolated_all_200_pages_mib": 74.92
+        },
+        {
+          "width": 1800,
+          "jpeg_quality": 90,
+          "sample_pages": 5,
+          "min_bytes": 397485,
+          "mean_bytes": 481297,
+          "max_bytes": 548087,
+          "extrapolated_all_200_pages_bytes": 96259360,
+          "extrapolated_all_200_pages_mib": 91.8
+        }
+      ],
+      "visual_checks": [
+        {
+          "printed_page": 85,
+          "width_px": 1400,
+          "jpeg_quality": 82,
+          "result": "Page number, accents, and body text are legible at native display size."
+        },
+        {
+          "printed_page": 133,
+          "width_px": 1800,
+          "jpeg_quality": 82,
+          "result": "Page number and dense body text are legible at native display size."
+        }
+      ]
+    },
+    "estimate_caveats": [
+      "All-200-page estimates multiply the mean of five printed-page samples by 200. Front matter, blanks, and variable page sizes may change the actual total.",
+      "Samples were measured before scripts/optimize_pages_images.py. The current deploy optimizer recompresses at quality 82 and limits images to 1800 x 2400 pixels; its height cap will reduce an 1800-pixel-wide Figueira page further.",
+      "A Git repository and its published Pages tree have different size budgets. Measure the current deployment plus all proposed new sources before committing/importing the full collection.",
+      "Do not commit the source PDF, OCR crops, benchmark variants, or full-resolution originals. Preserve acquisition/checksum/settings in text and keep research intermediates outside the repository."
+    ],
+    "completion_gate": "Measure the actual complete optimized image output and full Pages artifact, then compare with the project's documented storage budget. Sample extrapolations are planning inputs only."
+  },
+  "local_agent_actions": [
+    {
+      "id": "refresh-baseline",
+      "action": "Read current AGENTS.md, update the chosen implementation checkout, and recheck the served dictionary uncompressed SHA-256. Rebuild citation targets if it differs from this baseline."
+    },
+    {
+      "id": "acquire-exact-pdf",
+      "action": "Download the catalogued 1878 facsimile outside the Git tree. Verify SHA-256, bytes, 200 PDF pages, and the title page before using this mapping."
+    },
+    {
+      "id": "complete-inspection",
+      "action": "Recheck the numbered endpoints and target header list against the downloaded file. Inspect the 48 as-yet-unchecked uncited numbered pages and the preliminary/errata leaves before representing a full-volume map as verified."
+    },
+    {
+      "id": "resolve-year-exception",
+      "action": "The single raw citation Fig., Arte, 1686, 64 was resolved as a probable year typo because the exact çoába passage occurs on p. 64 of the catalogued 1687/1878 text and no separate 1686 edition was found. Preserve the raw year and show the discrepancy when linking it."
+    },
+    {
+      "id": "select-render-budget",
+      "action": "Start with a few whole-page 1400-pixel quality-82 candidates and review accents, thin strokes, margins, and credits in the actual viewer. Compare with 1800 pixels only if useful and within the current storage budget."
+    },
+    {
+      "id": "render-implementation-assets",
+      "action": "In a later implementation change, render all 200 scan pages once at the approved target width/format. Keep image naming and unnumbered labels separate from printed locators, and publish links to the original PDF instead of adding that PDF to Git."
+    },
+    {
+      "id": "implement-locator-linking",
+      "action": "Add only the Fig., Arte work family to the source resolver, including the observed 125-126 and 130-131 ranges. Preserve displayed text. Handle same-parenthesis 147; 163 inheritance conservatively and exclude year-qualified citations until resolved."
+    },
+    {
+      "id": "implement-viewer-mapping",
+      "action": "Use zero-based pdf_index = printed_page + 23, bounded by the selected scan, and PDF ordinal = pdf_index + 1. Show exact facsimile/imprint, credits, original PDF, page labels, and readable zoom; do not apply folio recto/verso arithmetic to these ordinary page numbers."
+    },
+    {
+      "id": "wire-deployment",
+      "action": "Integrate the selected image directory and format/provenance into scripts/build_pages.sh and the existing optimizer. Ensure every public relative provenance/bibliography link is actually copied into the deployment."
+    },
+    {
+      "id": "verify-and-review",
+      "action": "Verify every unambiguous citation target has its expected image; compare a few attested passages, ranges, boundary/unnumbered navigation, and old-source links. Measure actual optimized bytes, test the real dictionary-to-viewer workflow in a browser, and present the implementation PR for review without treating this research plan as completed runtime integration."
+    }
+  ]
+}

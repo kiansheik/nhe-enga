@@ -1,5 +1,14 @@
 # Agent Log
 
+## 2026-10-26 — Refresh source-groundwork PR
+
+Merged current `main` into PR #26 and resolved its obsolete Figueira overlap
+in favor of the deployed implementation, then refreshed it again after PR #33
+merged the Figueira Wikisource snapshot. Preserved the unique Castilho 1937
+source: 16 verified page-side crops, all 215 current citation links, explicit
+mapping/navigation, reproducible crop rendering, Pages/offline inclusion, and
+focused regressions. The PR remains open for review and is not deployed.
+
 ## 2026-10-25 — Repaired dictionary entry boundaries corpus-wide
 
 Reworked the dictionary definition formatter around explicit semantic and
