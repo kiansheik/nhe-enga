@@ -71,6 +71,7 @@
         <p>
             <a id="sourceInfo" target="_blank" rel="noopener">Digitalização: Biblioteca Digital Curt Nimuendajú — Coleção Nicolai</a>
             · <a id="sourcePdf" target="_blank" rel="noopener">Abrir PDF nesta página</a>
+            <span id="sourceTranscriptGroup" hidden>· <a id="sourceTranscript"></a></span>
         </p>
     </header>
     <div id="navigation">
@@ -255,6 +256,13 @@
                 sourceManifest.catalog_url,
                 sourceManifest.digitization_credit,
             );
+            const sourceTranscript = document.getElementById('sourceTranscript');
+            if (viewer.transcription) {
+                sourceTranscript.href = viewer.transcription.url;
+                sourceTranscript.textContent = viewer.transcription.label;
+                sourceTranscript.title = viewer.transcription.notice;
+                document.getElementById('sourceTranscriptGroup').hidden = false;
+            }
             const notice = document.getElementById('sourceNotice');
             if (viewer.notice) {
                 notice.textContent = viewer.notice;
