@@ -7,14 +7,22 @@
   "edition": "Edição documentária e crítica de Maria de Lourdes de Paula Martins",
   "imprint": "São Paulo: Museu Paulista / Comissão do IV Centenário da Cidade de São Paulo, 1954",
   "navarro_bibliography": "../DTAbib.txt",
-  "navarro_citation": "Anch., Teatro, 176",
-  "citation_edition": {
-    "title": "Teatro de Anchieta",
-    "editor_translator": "Eduardo de Almeida Navarro",
-    "year": 1999,
-    "publisher": "Martins Fontes",
-    "note": "Navarro's bibliography says this edition was collated with Martins's documentary edition. Some dictionary citations explicitly name the 2006 second edition; those remain outside this mapping."
-  },
+  "navarro_citation": "Anch., Teatro",
+  "citation_editions": [
+    {
+      "title": "Teatro de Anchieta",
+      "editor_translator": "Eduardo de Almeida Navarro",
+      "year": 1999,
+      "publisher": "Martins Fontes"
+    },
+    {
+      "title": "Teatro de Anchieta",
+      "editor_translator": "Eduardo de Almeida Navarro",
+      "year": 2006,
+      "publisher": "Martins Fontes",
+      "note": "Second edition, named explicitly by 105 served citations."
+    }
+  ],
   "digitization_credit": "Internet Archive / Portal Catarina",
   "catalog_url": "https://archive.org/details/anchieta-poesisas",
   "archive_url": "https://archive.org/details/anchieta-poesisas",
@@ -29,61 +37,180 @@
   "images": {
     "extension": ".jpg",
     "filename_rule": "{zero_based_pdf_index}.jpg",
-    "first_index": 683,
-    "last_index": 683
+    "first_index": 655,
+    "last_index": 798,
+    "stored_image_count": 75,
+    "note": "Sparse set of documentary pages reached by the verified citation map."
   },
   "pagination": {
     "navigation": "explicit_map",
     "locator_unit": "printed page in Navarro's Teatro",
     "notes": [
       "This is a quotation-level cross-edition map, not a constant pagination offset.",
-      "Navarro page 176 corresponds here to Martins printed page 632, zero-based PDF index 683 and one-based PDF ordinal 684.",
-      "Martins printed page 176 is unrelated and must not be used for this citation."
+      "The cited Navarro page remains the URL locator; the image is a corresponding passage in Martins 1954.",
+      "When several cited passages span adjacent documentary pages, the target is the representative page on which the quoted wording was aligned."
     ]
   },
   "mapping": {
-    "targets": [
-      {
-        "locator": "176",
-        "cited_edition": "Navarro 1999",
-        "cited_printed_page": 176,
-        "attestation_edition": "Martins 1954",
-        "printed_page": 632,
-        "pdf_index": 683,
-        "pdf_ordinal": 684,
-        "image": "683.jpg",
-        "source_page_url": "https://archive.org/details/anchieta-poesisas/page/n683/mode/1up",
-        "label": "Navarro p. 176 · passagem correspondente em Martins 1954, p. 632 · PDF p. 684"
+    "locator_unit": "printed page in Navarro's Teatro",
+    "default_citation_year": "1999",
+    "source_page_url_pattern": "https://archive.org/details/anchieta-poesisas/page/n{pdf_index}/mode/1up",
+    "citation_editions": {
+      "1999": {
+        "label": "Navarro 1999",
+        "page_to_pdf_index": {
+          "4": 737,
+          "6": 738,
+          "8": 740,
+          "10": 741,
+          "12": 742,
+          "14": 743,
+          "16": 745,
+          "18": 746,
+          "20": 747,
+          "22": 749,
+          "24": 750,
+          "26": 751,
+          "28": 752,
+          "30": 753,
+          "32": 755,
+          "34": 756,
+          "36": 757,
+          "38": 758,
+          "40": 759,
+          "42": 760,
+          "44": 762,
+          "46": 763,
+          "48": 764,
+          "50": 765,
+          "52": 767,
+          "54": 768,
+          "56": 769,
+          "58": 770,
+          "60": 771,
+          "62": 772,
+          "64": 774,
+          "66": 775,
+          "74": 778,
+          "76": 779,
+          "88": 784,
+          "90": 784,
+          "92": 785,
+          "118": 796,
+          "120": 797,
+          "122": 798,
+          "126": 656,
+          "128": 657,
+          "130": 658,
+          "132": 659,
+          "134": 660,
+          "136": 661,
+          "138": 663,
+          "140": 664,
+          "142": 665,
+          "144": 666,
+          "146": 667,
+          "148": 668,
+          "150": 669,
+          "152": 671,
+          "154": 672,
+          "156": 673,
+          "158": 673,
+          "160": 674,
+          "162": 676,
+          "164": 677,
+          "166": 677,
+          "168": 679,
+          "170": 680,
+          "172": 681,
+          "174": 681,
+          "176": 683,
+          "178": 684,
+          "180": 685,
+          "182": 686,
+          "184": 687,
+          "186": 688,
+          "188": 689
+        }
+      },
+      "2006": {
+        "label": "Navarro 2006",
+        "page_to_pdf_index": {
+          "10": 739,
+          "14": 741,
+          "25": 749,
+          "30": 753,
+          "32": 754,
+          "42": 759,
+          "44": 762,
+          "122": 797,
+          "130": 655,
+          "138": 655,
+          "140": 670,
+          "142": 663,
+          "143": 663,
+          "144": 665,
+          "146": 666,
+          "148": 667,
+          "150": 668,
+          "154": 670,
+          "156": 672,
+          "158": 673,
+          "160": 674,
+          "162": 675,
+          "164": 676,
+          "166": 677,
+          "168": 678,
+          "170": 679,
+          "172": 680,
+          "174": 681,
+          "176": 682,
+          "178": 683,
+          "180": 684,
+          "182": 685,
+          "184": 686,
+          "186": 687,
+          "188": 688
+        }
       }
+    },
+    "notes": [
+      "1999 is the default for unsuffixed Anch., Teatro citations; citation_year=2006 selects the explicitly cited second edition.",
+      "The mappings were derived from served-dictionary quotation context, Internet Archive DjVu OCR candidates, and review of the documentary sequence.",
+      "The repeated Na festa do Natal adaptation later in Martins was not substituted for the São Lourenço sequence cited by Navarro."
     ]
   },
   "verification": {
-    "date": "2026-10-25",
+    "date": "2026-10-26",
     "served_dictionary": "../../dict-conjugated.json.gz",
-    "mapping_scope": "All nine served dictionary records with an unsuffixed Anch., Teatro, 176 citation were checked against this page. This does not establish mappings for any other Teatro page or for citations explicitly suffixed 2006.",
-    "citation_count": 9,
-    "record_count": 9,
-    "all_cited_pages": [176],
-    "attested_excerpt": "Tupansý, nde maenduá xe ri!",
-    "attested_translation": "Nossa Senhora, lembra-te de mim!",
+    "mapping_scope": "Every edition-and-locator key in the 1,431 current Anch., Teatro citations has a representative quotation or headword alignment to the Martins documentary sequence. This does not establish a general equivalence between the editions' page numbers.",
+    "citation_count": 1431,
+    "record_count": 882,
+    "default_edition_citation_count": 1326,
+    "second_edition_citation_count": 105,
+    "locator_count": 107,
+    "stored_image_count": 75,
     "contrasts_left_unlinked": [
-      "Anch., Teatro, 176, 2006",
-      "all other Anch., Teatro page locators"
+      "Anch., Teatro locators not present in the current served dictionary",
+      "citations carrying an edition year other than 2006"
     ]
   },
   "viewer": {
     "title": "José de Anchieta — Teatro (cotejo documentário)",
-    "edition_text": "Citação: Navarro 1999, p. 176 · imagem: Martins 1954, p. 632",
-    "notice": "A citação conserva a paginação de Navarro. A imagem é a passagem correspondente na edição documentária de Martins; não existe uma equivalência geral entre as paginações.",
+    "edition_text": "Citações: Navarro 1999/2006 · imagens: Martins 1954 · 75 páginas alinhadas",
+    "notice": "A citação conserva a edição e a paginação de Navarro. A imagem mostra a passagem correspondente na edição documentária de Martins; não existe uma equivalência geral entre as paginações.",
     "source_page_link_label": "Abrir esta página no Internet Archive"
   },
   "render": {
-    "method": "whole PDF page",
+    "method": "selected whole PDF pages",
     "target_width_px": 1400,
     "jpeg_quality": 88,
     "progressive": true,
     "colorspace": "RGB",
-    "renderer_versions": {"PyMuPDF": "2.0", "Pillow": "12.3.0"},
-    "note": "Only the explicitly aligned page is rendered. The Pages optimizer processes the deployment copy again."
+    "renderer_versions": {
+      "PyMuPDF": "2.0",
+      "Pillow": "12.3.0"
+    },
+    "note": "Only the 75 explicitly mapped documentary pages are rendered. The Pages optimizer processes the deployment copy again."
   }
 }

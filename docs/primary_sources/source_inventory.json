@@ -4,8 +4,8 @@
     "path": "docs/dict-conjugated.json.gz",
     "entries": 13922,
     "encoding": "gzip",
-    "sha256": "1625811b904caf1de3465724b817ff7592d78f9838f5e7aeba5bbb65833ea70d",
-    "uncompressed_sha256": "8906cb4ddd292db7d67901ec9fb3c288d94b9baf9ae9cb35cb1d8a4a30e8e02e"
+    "sha256": "d235a7961961b58fcfbb93362bc3acb9b7f7b7e823196dca5763ef3e7fd16f53",
+    "uncompressed_sha256": "b67a3642e5bb4486f30c462ec27a207861f4f62785dd199362a1bed191023d6a"
   },
   "alternate_input": {
     "path": "docs/dict-conjugated.json",
@@ -357,17 +357,17 @@
   "bibliography_entry_start": 13712,
   "counting": {
     "catalogue_name_in_prose": 204,
-    "catalogued": 15552,
+    "catalogued": 15554,
     "inherited_same_parenthesis": 138,
     "other_parenthetical": 22836,
     "unmatched_candidate": 705
   },
-  "linker_function_sha256": "fec11f50c2254317383f2b376a9d6635ab2aec7ee96620c0500e59adcfb279f2",
+  "linker_function_sha256": "e3eff4bd7a0115b6ce1649ed946316da4a4310cd042d6cdd1d4a3c56aaed612d",
   "works": [
     {
       "source": "VLB",
       "work": "Vocabulário na Língua Brasílica",
-      "explicit_occurrences": 5988,
+      "explicit_occurrences": 5990,
       "inherited_occurrences": 131,
       "entries": 4145,
       "bibliography_lines": [
@@ -375,9 +375,9 @@
       ],
       "source_spellings": {
         "VBL": 1,
-        "VLB": 5987
+        "VLB": 5989
       },
-      "citations_producing_links": 5986,
+      "citations_producing_links": 5988,
       "viewer_books": [
         "vlb"
       ],
@@ -1218,8 +1218,10 @@
       "source_spellings": {
         "Anch.": 1431
       },
-      "citations_producing_links": 0,
-      "viewer_books": [],
+      "citations_producing_links": 1431,
+      "viewer_books": [
+        "anchteatro1954"
+      ],
       "examples": [
         "Anch., Teatro, 32",
         "Anch., Teatro, 146, 2006",
@@ -1711,8 +1713,10 @@
       "source_spellings": {
         "Fig.": 622
       },
-      "citations_producing_links": 0,
-      "viewer_books": [],
+      "citations_producing_links": 622,
+      "viewer_books": [
+        "figueira1878"
+      ],
       "examples": [
         "Fig., Arte, 85",
         "Fig., Arte, 138",
@@ -2468,8 +2472,10 @@
       "source_spellings": {
         "Castilho": 215
       },
-      "citations_producing_links": 0,
-      "viewer_books": [],
+      "citations_producing_links": 215,
+      "viewer_books": [
+        "castilho1937"
+      ],
       "examples": [
         "Castilho, Nomes, 27",
         "Castilho, Nomes, 28",
@@ -3153,7 +3159,7 @@
       },
       "citations_producing_links": 90,
       "viewer_books": [
-        "arcat1618"
+        "arcat1686"
       ],
       "examples": [
         "Ar., Cat., 125, 1686",
@@ -5363,7 +5369,7 @@
     },
     {
       "source": "VLB",
-      "explicit_primary_occurrences": 5988,
+      "explicit_primary_occurrences": 5990,
       "secondary_name_mentions": 0,
       "prose_or_source_credit_mentions": 0,
       "bibliography_lines": [

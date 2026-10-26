@@ -5,11 +5,11 @@
   const NEO_PATH = '/nhe-enga/neologisms.csv';
 
   const MODES = ['indicativo', 'permissivo', 'circunstancial', 'gerundio', 'imperativo', 'conjuntivo'];
-  const TUPI_START_RE = /^[A-Za-zÀ-ÿ\u0176\u0177'’]/;
-  const TUPI_DIALOGUE_RE = /^-[A-Za-zÀ-ÿ\u0176\u0177'’]/;
-  const TUPI_DIALOGUE_LEAD_RE = /^-[A-Za-zÀ-ÿ\u0176\u0177'’]?\s*/;
-  const TUPI_LETTER_RE = /[A-Za-zÀ-ÿ\u0176\u0177'’]/;
-  const TUPI_HEAD_CHAR_RE = /[A-Za-zÀ-ÿ\u0176\u0177'’\\-]/;
+  const TUPI_START_RE = /^[\p{L}\p{M}'’]/u;
+  const TUPI_DIALOGUE_RE = /^-[\p{L}\p{M}'’]/u;
+  const TUPI_DIALOGUE_LEAD_RE = /^-\s*/;
+  const TUPI_LETTER_RE = /[\p{L}\p{M}'’]/u;
+  const TUPI_HEAD_CHAR_RE = /[\p{L}\p{M}'’?!-]/u;
 
   const SUBJ_PREF_MAP = {
     'ø': null,
@@ -985,14 +985,50 @@
       });
     });
 
-    // The cited Navarro page and the available Martins documentary edition
-    // have no general numeric offset. Page 176 is linked only because all nine
-    // unsuffixed quotations on that locator were explicitly aligned to
-    // Martins 1954, p. 632. The separately cited 2006 edition stays unlinked.
-    regex = /\bAnch\.,\s*Teatro,\s*176(?=\s*(?:\)|$))/g;
-    replacedString = replacedString.replace(regex, (match) => (
-      `<a href="/nhe-enga/docs/primary_sources/?book_name=anchteatro1954&page_number=176" target="_blank" rel="noopener">${match}</a>`
-    ));
+    // Castilho is intentionally a sparse set of verified cited-page crops.
+    // The viewer manifest supplies the non-linear spread/side mapping.
+    regex = /\b(Castilho,\s*Nomes,\s*(?:pp?\.\s*)?)(\d+(?:\s*[-–—,;]\s*\d+)*)(?![\dA-Za-zÀ-ÿ])/g;
+    replacedString = replacedString.replace(regex, (match, prefix, pages) => {
+      const availablePages = new Set([27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 45]);
+      const pageNumbers = pages.match(/\d+/g).map(Number);
+      if (pageNumbers.some((page) => !availablePages.has(page))) return match;
+      let firstPage = true;
+      return pages.replace(/\d+/g, (page) => {
+        const label = firstPage ? `${prefix}${page}` : page;
+        firstPage = false;
+        return `<a href="/nhe-enga/docs/primary_sources/?book_name=castilho1937&page_number=${Number(page)}" target="_blank" rel="noopener">${label}</a>`;
+      });
+    });
+
+    // Navarro's 1999 and 2006 Teatro pagination has no constant offset into
+    // Martins's documentary edition. These are the citation locators for which
+    // the source manifest records quotation-level OCR alignments.
+    const teatro1999Pages = new Set([
+      4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38,
+      40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 74, 76, 88, 90,
+      92, 118, 120, 122, 126, 128, 130, 132, 134, 136, 138, 140, 142, 144,
+      146, 148, 150, 152, 154, 156, 158, 160, 162, 164, 166, 168, 170, 172,
+      174, 176, 178, 180, 182, 184, 186, 188,
+    ]);
+    const teatro2006Pages = new Set([
+      10, 14, 25, 30, 32, 42, 44, 122, 130, 138, 140, 142, 143, 144, 146,
+      148, 150, 154, 156, 158, 160, 162, 164, 166, 168, 170, 172, 174, 176,
+      178, 180, 182, 184, 186, 188,
+    ]);
+    regex = /\b(Anch\.,?\s*Teatro,\s*)(\d{1,3}(?:\s*[-–—,;]\s*\d{1,3})*)(\s*,\s*(2006))?(?!\s*,\s*\d{4})(?![\dA-Za-zÀ-ÿ])/g;
+    replacedString = replacedString.replace(regex, (match, prefix, pages, yearSuffix, year) => {
+      const availablePages = year === '2006' ? teatro2006Pages : teatro1999Pages;
+      const pageNumbers = pages.match(/\d+/g).map(Number);
+      if (pageNumbers.some((page) => !availablePages.has(page))) return match;
+      let firstPage = true;
+      return pages.replace(/\d+/g, (page) => {
+        let label = firstPage ? `${prefix}${page}` : page;
+        if (year && pageNumbers.length === 1) label += yearSuffix;
+        firstPage = false;
+        const citationYear = year ? `&citation_year=${year}` : '';
+        return `<a href="/nhe-enga/docs/primary_sources/?book_name=anchteatro1954&page_number=${Number(page)}${citationYear}" target="_blank" rel="noopener">${label}</a>`;
+      });
+    });
 
     // VLB
     regex = /VLB, (I|II), (\d+)/g;
@@ -1043,6 +1079,7 @@
     const parts = [];
     let current = '';
     let parenDepth = 0;
+    let bracketDepth = 0;
 
     for (let idx = 0; idx < text.length; idx += 1) {
       const ch = text[idx];
@@ -1050,9 +1087,13 @@
         parenDepth += 1;
       } else if (ch === ')' && parenDepth > 0) {
         parenDepth -= 1;
+      } else if (ch === '[') {
+        bracketDepth += 1;
+      } else if (ch === ']' && bracketDepth > 0) {
+        bracketDepth -= 1;
       }
 
-      if (ch === '●' && parenDepth === 0) {
+      if (ch === '●' && parenDepth === 0 && bracketDepth === 0) {
         parts.push(current.trim());
         current = '';
         continue;
@@ -1070,6 +1111,7 @@
 
   function splitByNota(text) {
     let parenDepth = 0;
+    let bracketDepth = 0;
     const upper = text.toUpperCase();
     for (let i = 0; i < text.length; i += 1) {
       const char = text[i];
@@ -1077,9 +1119,13 @@
         parenDepth += 1;
       } else if (char === ')' && parenDepth > 0) {
         parenDepth -= 1;
+      } else if (char === '[') {
+        bracketDepth += 1;
+      } else if (char === ']' && bracketDepth > 0) {
+        bracketDepth -= 1;
       }
 
-      if (parenDepth === 0 && upper.startsWith('NOTA', i)) {
+      if (parenDepth === 0 && bracketDepth === 0 && upper.startsWith('NOTA', i)) {
         const prev = upper[i - 1] || '';
         const next = upper[i + 4] || '';
         const boundaryPrev = !/[A-ZÀ-Ý]/.test(prev);
@@ -1100,6 +1146,7 @@
     let output = '';
     let i = 0;
     let parenDepth = 0;
+    let bracketDepth = 0;
     let atEntryStart = true;
     const len = section.length;
 
@@ -1113,15 +1160,24 @@
         parenDepth += 1;
       } else if (char === ')' && parenDepth > 0) {
         parenDepth -= 1;
+      } else if (char === '[') {
+        bracketDepth += 1;
+      } else if (char === ']' && bracketDepth > 0) {
+        bracketDepth -= 1;
       }
 
-      if (parenDepth === 0 && atEntryStart) {
+      if (parenDepth === 0 && bracketDepth === 0 && atEntryStart) {
         let j = i;
         while (j < len && /\s/.test(section[j])) {
           j += 1;
         }
 
-        if (j < len && isLetterStart(section[j])) {
+        const startsWithMorphologicalHyphen = section[j] === '-'
+          && isLetterStart(section[j + 1]);
+        if (
+          j < len
+          && (isLetterStart(section[j]) || startsWithMorphologicalHyphen)
+        ) {
           let k = j + 1;
           while (k < len && isHeadChar(section[k])) {
             k += 1;
@@ -1197,7 +1253,7 @@
 
       output += char;
 
-      if (parenDepth === 0 && (char === ';' || char === '●')) {
+      if (parenDepth === 0 && bracketDepth === 0 && (char === ';' || char === '●')) {
         atEntryStart = true;
       } else if (!/\s/.test(char)) {
         atEntryStart = false;
@@ -1209,10 +1265,11 @@
     return output;
   }
 
-  function formatVerbeteSection(section) {
+  function formatVerbeteSection(section, allowInitialDefinition = true) {
     let output = '';
     let i = 0;
     let parenDepth = 0;
+    let bracketDepth = 0;
     let expectedNumber = 1;
     let expectedLetter = 'a';
     let seenNumber = false;
@@ -1224,6 +1281,213 @@
       'adj.': 'Adjetivo',
       'adv.': 'Advérbio',
     };
+    const balanceLabelMetadata = (metadata) => {
+      const trimmed = (metadata || '').trim();
+      const opens = (trimmed.match(/\(/g) || []).length;
+      const closes = (trimmed.match(/\)/g) || []).length;
+      return opens === closes + 1 ? `${trimmed})` : trimmed;
+    };
+    const matchSectionLabel = (value) => {
+      // Recover the occasional source typo that opens a parenthetical
+      // adjective/adverb label but closes it with `]`.
+      const bracketClosedParenthetical = value.match(
+        /^\(\s*(adj|adv)\.?\s*(?::|-)\s*([^\]]+)\]\s*(\([^)]*\)\s*)?-\s*/i
+      );
+      if (bracketClosedParenthetical) {
+        return {
+          length: bracketClosedParenthetical[0].length,
+          key: `${bracketClosedParenthetical[1].toLowerCase()}.`,
+          metadata: balanceLabelMetadata(bracketClosedParenthetical[2]),
+          definitionPrefix: (bracketClosedParenthetical[3] || '').trim(),
+        };
+      }
+
+      const parenthetical = value.match(
+        /^\(\s*(adj|adv)\.?\s*(?:(?::|-)\s*([^)]+))?\)\s*(\([^)]*\)\s*)?(?:([:–—-])\s*)?/i
+      );
+      if (parenthetical) {
+        return {
+          length: parenthetical[0].length,
+          key: `${parenthetical[1].toLowerCase()}.`,
+          metadata: balanceLabelMetadata(parenthetical[2]),
+          definitionPrefix: (parenthetical[3] || '').trim(),
+        };
+      }
+
+      const bracketed = value.match(
+        /^\[\s*(adj|adv)\.?\s*(?::|-)\s*([^\]]+)\]\s*;?\s*(\([^)]*\)\s*)?-\s*/i
+      );
+      if (!bracketed) return null;
+      return {
+        length: bracketed[0].length,
+        key: `${bracketed[1].toLowerCase()}.`,
+        metadata: balanceLabelMetadata(bracketed[2]),
+        definitionPrefix: (bracketed[3] || '').trim(),
+      };
+    };
+    const matchDefinitionLabel = (value) => {
+      if (!allowInitialDefinition) return null;
+      const matchAnnotatedPrefix = () => {
+        if (i !== 0) return null;
+        const start = value.search(/\S/);
+        if (start === -1 || !/[([/]/.test(value[start])) return null;
+
+        let localParenDepth = 0;
+        let localBracketDepth = 0;
+        for (let idx = start; idx < value.length; idx += 1) {
+          const ch = value[idx];
+          if (ch === '(') {
+            localParenDepth += 1;
+            continue;
+          }
+          if (ch === ')' && localParenDepth > 0) {
+            localParenDepth -= 1;
+            continue;
+          }
+          if (ch === ')' && localBracketDepth > 0) {
+            // A handful of source labels open with `[` but close with `)`.
+            // Treat that mismatched closer as the end of the annotation so
+            // the following gloss can still receive definition styling.
+            localBracketDepth -= 1;
+            continue;
+          }
+          if (ch === '[') {
+            localBracketDepth += 1;
+            continue;
+          }
+          if (ch === ']' && localBracketDepth > 0) {
+            localBracketDepth -= 1;
+            continue;
+          }
+          if (localParenDepth !== 0 || localBracketDepth !== 0) continue;
+
+          if (
+            /^\d+\)/.test(value.slice(idx))
+            && (idx === start || /\s/.test(value[idx - 1] || ''))
+          ) {
+            // This is a numbered entry whose first sense happens to begin
+            // with an annotation, not one unnumbered annotated gloss.  Let
+            // the regular numbered-sense parser retain the `1)` boundary.
+            return null;
+          }
+
+          const isColon = ch === ':';
+          const isDash = /[-–—]/.test(ch)
+            && /\s/.test(value[idx - 1] || '')
+            && /\s/.test(value[idx + 1] || '');
+          if (!isColon && !isDash) continue;
+
+          const prefix = value.slice(start, idx).trim();
+          if (!/[)\]]/.test(prefix)) return null;
+          if (/\((?:adj|adv)\.\)\s*$/i.test(prefix)) {
+            // Leave bare section labels to matchSectionLabel so they retain
+            // their visible `Adjetivo:` / `Advérbio:` headings.
+            return null;
+          }
+          let end = idx + 1;
+          while (end < value.length && /\s/.test(value[end])) end += 1;
+
+          let tailParenDepth = 0;
+          let tailBracketDepth = 0;
+          let glossColonFound = false;
+          for (let tailIndex = end; tailIndex < value.length; tailIndex += 1) {
+            const tailChar = value[tailIndex];
+            if (tailChar === '(') {
+              tailParenDepth += 1;
+              continue;
+            }
+            if (tailChar === ')' && tailParenDepth > 0) {
+              tailParenDepth -= 1;
+              continue;
+            }
+            if (tailChar === '[') {
+              tailBracketDepth += 1;
+              continue;
+            }
+            if (tailChar === ']' && tailBracketDepth > 0) {
+              tailBracketDepth -= 1;
+              continue;
+            }
+            if (tailParenDepth !== 0 || tailBracketDepth !== 0) continue;
+            if (tailChar === ':') {
+              glossColonFound = true;
+              break;
+            }
+            if (
+              /[-–—]/.test(tailChar)
+              && /\s/.test(value[tailIndex - 1] || '')
+              && /\s/.test(value[tailIndex + 1] || '')
+            ) {
+              break;
+            }
+          }
+          if (!glossColonFound) return null;
+
+          const match = [value.slice(0, end), isColon ? ':' : '-'];
+          match.requiresGlossColon = true;
+          return match;
+        }
+        return null;
+      };
+
+      const grammaticalLabel = value.match(
+        /^(?:\(\s*(?:(?:s|v)\.[^)]*|(?:s|v)(?=\s*\))|(?:dem\.\s*)?pron\.[^)]*|part\.[^)]*|conj\.[^)]*|interj\.[^)]*|interr\.[^)]*|(?:loc\.\s*)?posp\.[^)]*|num\.[^)]*|suf\.[^)]*|pref\.[^)]*)\)|\[\s*(?:(?:s|v)\.[^)]*|(?:s|v)(?=\s*\))|(?:dem\.\s*)?pron\.[^)]*|part\.[^)]*|conj\.[^)]*|interj\.[^)]*|interr\.[^)]*|(?:loc\.\s*)?posp\.[^)]*|num\.[^)]*|suf\.[^)]*|pref\.[^)]*)\))/i
+      );
+      if (!grammaticalLabel) return matchAnnotatedPrefix();
+      if (grammaticalLabel[0].startsWith('[') && value.includes(']')) {
+        // Do not mistake a parenthesis inside a well-formed bracketed label
+        // for the label's closer.  The `[` ... `)` branch exists only to
+        // recover genuinely mismatched source labels with no closing bracket.
+        return matchAnnotatedPrefix();
+      }
+
+      let cursor = grammaticalLabel[0].length;
+      while (cursor < value.length) {
+        let metadataStart = cursor;
+        while (metadataStart < value.length && /\s/.test(value[metadataStart])) {
+          metadataStart += 1;
+        }
+        if (value[metadataStart] !== '(') {
+          cursor = metadataStart;
+          break;
+        }
+
+        let depth = 0;
+        let metadataEnd = metadataStart;
+        for (; metadataEnd < value.length; metadataEnd += 1) {
+          if (value[metadataEnd] === '(') depth += 1;
+          if (value[metadataEnd] === ')') {
+            depth -= 1;
+            if (depth === 0) {
+              metadataEnd += 1;
+              break;
+            }
+          }
+        }
+        if (depth !== 0) return null;
+        cursor = metadataEnd;
+      }
+
+      const delimiter = value.slice(cursor).match(/^(-|:)\s*/);
+      if (!delimiter) {
+        // One conjunction entry omits the conventional separator after its
+        // grammatical label.  Let the normal top-level-colon check below
+        // decide whether the following lowercase text is a gloss; source
+        // examples with no such colon remain definitionless.
+        if (!/^[a-zà-ÿ]/.test(value.slice(cursor))) {
+          return matchAnnotatedPrefix();
+        }
+        return [value.slice(0, cursor), ':'];
+      }
+      const fullText = value.slice(0, cursor + delimiter[0].length);
+      // Preserve the array-shaped contract used below: [0] is the complete
+      // source label and [1] is the definition delimiter.
+      return [fullText, delimiter[1]];
+    };
+    const isBareSectionLabel = (value) => (
+      /^(?:\[\s*(?:adj|adv)\.?\s*(?::|-)[^\]]+\]|\(\s*(?:adj|adv)\.?\s*(?::|-)[^)\]]+[)\]])\s*$/i
+        .test(value.trim())
+    );
     const extractSectionLabel = () => {
       const match = output.match(/(\s*\((adj\.|adv\.)\)\s*-\s*)$/i);
       if (!match) return '';
@@ -1236,41 +1500,295 @@
       output = output.slice(0, -match[1].length);
       return `(${match[2]}) `;
     };
+    const RAW_SOURCE_LOCATOR_TAIL_RE = /(?:^|[,;]\s*)(?:(?:(?:p\.\s*)?\d+(?:[vr])?|[IVXLCDM]+|cap\.\s*[IVXLCDMivxlcdm]+|§\s*\d+[a-z]?)(?:\s*[-–]\s*(?:\d+(?:[vr])?|[IVXLCDM]+))?(?:\s*,\s*\d{4})?(?:\s*[,;]\s*adapt\.)?|(?:in\s+)?Ar\.,\s*Cat)\]?\s*\.?$/;
+    const hasRawTrailingSourceCitation = (value) => {
+      const citationMatch = value.trim().match(/(\([^()]+\))\s*\.?$/);
+      if (!citationMatch) return false;
+      const inner = citationMatch[1].slice(1, -1).trim();
+      return inner.includes(',') && RAW_SOURCE_LOCATOR_TAIL_RE.test(inner);
+    };
+    const nextTopLevelChunk = (startIndex) => {
+      let lookaheadParenDepth = 0;
+      let lookaheadBracketDepth = 0;
+      let endIndex = section.length;
+
+      for (let idx = startIndex; idx < section.length; idx += 1) {
+        const ch = section[idx];
+        if (ch === '(') {
+          lookaheadParenDepth += 1;
+          continue;
+        }
+        if (ch === ')' && lookaheadParenDepth > 0) {
+          lookaheadParenDepth -= 1;
+          continue;
+        }
+        if (ch === '[') {
+          lookaheadBracketDepth += 1;
+          continue;
+        }
+        if (ch === ']' && lookaheadBracketDepth > 0) {
+          lookaheadBracketDepth -= 1;
+          continue;
+        }
+        if (
+          lookaheadParenDepth === 0
+          && lookaheadBracketDepth === 0
+          && (ch === ';' || ch === '●')
+        ) {
+          endIndex = idx;
+          break;
+        }
+      }
+      return section.slice(startIndex, endIndex).trim();
+    };
+    const countTopLevelTranslationDashes = (value) => {
+      let dashCount = 0;
+      let lookaheadParenDepth = 0;
+      let lookaheadBracketDepth = 0;
+
+      for (let idx = 0; idx < value.length; idx += 1) {
+        const ch = value[idx];
+        if (ch === '(') {
+          lookaheadParenDepth += 1;
+          continue;
+        }
+        if (ch === ')' && lookaheadParenDepth > 0) {
+          lookaheadParenDepth -= 1;
+          continue;
+        }
+        if (ch === '[') {
+          lookaheadBracketDepth += 1;
+          continue;
+        }
+        if (ch === ']' && lookaheadBracketDepth > 0) {
+          lookaheadBracketDepth -= 1;
+          continue;
+        }
+        if (
+          ch === '-'
+          && lookaheadParenDepth === 0
+          && lookaheadBracketDepth === 0
+          && /[\s.!?…]/.test(value[idx - 1] || '')
+          && /\s/.test(value[idx + 1] || '')
+        ) {
+          dashCount += 1;
+        }
+      }
+      return dashCount;
+    };
+    const nextRawCitedTail = (startIndex) => {
+      let lookaheadParenDepth = 0;
+      let lookaheadBracketDepth = 0;
+
+      for (let idx = startIndex; idx < section.length; idx += 1) {
+        const ch = section[idx];
+        if (ch === '(') {
+          lookaheadParenDepth += 1;
+        } else if (ch === ')' && lookaheadParenDepth > 0) {
+          lookaheadParenDepth -= 1;
+          if (
+            lookaheadParenDepth === 0
+            && lookaheadBracketDepth === 0
+          ) {
+            const candidate = section.slice(startIndex, idx + 1);
+            if (hasRawTrailingSourceCitation(candidate)) return candidate;
+          }
+        } else if (ch === '[') {
+          lookaheadBracketDepth += 1;
+        } else if (ch === ']' && lookaheadBracketDepth > 0) {
+          lookaheadBracketDepth -= 1;
+        } else if (ch === ']' && lookaheadParenDepth > 0) {
+          lookaheadParenDepth -= 1;
+        } else if (
+          ch === '●'
+          && lookaheadParenDepth === 0
+          && lookaheadBracketDepth === 0
+        ) {
+          break;
+        }
+      }
+      return '';
+    };
+    const semicolonContinuesSingleCitedPair = (startIndex) => {
+      if (definitionOpen || hasRawTrailingSourceCitation(output)) return false;
+      const citedTail = nextRawCitedTail(startIndex);
+      if (!citedTail) return false;
+
+      const combined = `${output};${citedTail}`;
+      const lastDefinitionClose = combined.lastIndexOf('</span>');
+      const quotePortion = lastDefinitionClose === -1
+        ? combined
+        : combined.slice(lastDefinitionClose + '</span>'.length);
+      return countTopLevelTranslationDashes(quotePortion) === 1;
+    };
+    const semicolonContinuesPortugueseTranslation = (startIndex) => {
+      if (definitionOpen || hasRawTrailingSourceCitation(output)) return false;
+      const lastDefinitionClose = output.lastIndexOf('</span>');
+      const quotePortion = lastDefinitionClose === -1
+        ? output
+        : output.slice(lastDefinitionClose + '</span>'.length);
+      if (countTopLevelTranslationDashes(quotePortion) !== 1) return false;
+
+      const continuation = nextTopLevelChunk(startIndex)
+        .replace(/<\/?[A-Za-z][^>]*>/g, '')
+        .trim();
+      if (
+        !continuation
+        || countTopLevelTranslationDashes(continuation) > 0
+        || hasRawTrailingSourceCitation(continuation)
+      ) {
+        return false;
+      }
+      return /^[a-zà-ÿ]/.test(continuation)
+        && /\b(?:de|da|do|das|dos|na|no|nas|nos|meu|minha|seu|sua|dele|dela|é|são)\b/i.test(continuation)
+        && !/(?:[îûŷãẽĩõũ]|gû|kû|[aeiouáéíóú]['’])/i.test(continuation);
+    };
+    const firstTopLevelColon = (value) => {
+      let lookaheadParenDepth = 0;
+      let lookaheadBracketDepth = 0;
+      for (let idx = 0; idx < value.length; idx += 1) {
+        const ch = value[idx];
+        if (ch === '(') {
+          lookaheadParenDepth += 1;
+        } else if (ch === ')' && lookaheadParenDepth > 0) {
+          lookaheadParenDepth -= 1;
+        } else if (ch === '[') {
+          lookaheadBracketDepth += 1;
+        } else if (ch === ']' && lookaheadBracketDepth > 0) {
+          lookaheadBracketDepth -= 1;
+        } else if (
+          ch === ':'
+          && lookaheadParenDepth === 0
+          && lookaheadBracketDepth === 0
+        ) {
+          return idx;
+        }
+      }
+      return -1;
+    };
+    const definitionContinuesAfterSemicolon = (startIndex) => {
+      const chunk = nextTopLevelChunk(startIndex);
+      if (!chunk) return false;
+      if (/^(?:\d+|[a-z])\)/i.test(chunk)) return false;
+      if (matchSectionLabel(chunk)) return false;
+      if (isBareSectionLabel(chunk)) return false;
+      if (/^\([^)]{1,24}\)\s*-\s+/.test(chunk)) return true;
+
+      const dashCount = countTopLevelTranslationDashes(chunk);
+      const colonIndex = firstTopLevelColon(chunk);
+      if (colonIndex !== -1) {
+        const prefix = chunk.slice(0, colonIndex);
+        if (countTopLevelTranslationDashes(prefix) === 0) return true;
+      }
+      if (hasRawTrailingSourceCitation(chunk) && dashCount === 1) return false;
+      if (
+        hasRawTrailingSourceCitation(chunk)
+        && /^-\s*[A-Za-zÀ-ÿ\u0176\u0177'’]/.test(chunk)
+      ) {
+        return false;
+      }
+      return true;
+    };
     const segments = [];
 
     while (i < section.length) {
       const char = section[i];
+      const plainOutputBeforeChar = output.replace(/<\/?[A-Za-z][^>]*>/g, '').trim();
+      const looksLikeCompactTranslation = char === '-'
+        && !definitionOpen
+        && /[.!?…][\"'’”]?$/.test(plainOutputBeforeChar)
+        && /[A-ZÀ-ÖØ-ÞŶ]/.test(section[i + 1] || '');
 
-      if (parenDepth === 0) {
-        const labelMatch = section.slice(i).match(/^\((adj\.|adv\.)\)\s*-\s*/i);
+      if (parenDepth === 0 && bracketDepth === 0) {
+        const labelMatch = matchSectionLabel(section.slice(i));
         if (labelMatch) {
-          let lookahead = i + labelMatch[0].length;
+          if (definitionOpen) {
+            const emptyDefinition = output.match(/<span class="sense-definition">\s*$/i);
+            if (emptyDefinition) {
+              output = output.slice(0, -emptyDefinition[0].length);
+            } else {
+              output += '</span>';
+            }
+            definitionOpen = false;
+          }
+          let lookahead = i + labelMatch.length;
           while (lookahead < section.length && /\s/.test(section[lookahead])) {
             lookahead += 1;
           }
-          const nextChar = section[lookahead];
-          const hasNumberAhead = nextChar && /\d/.test(nextChar);
+          const hasNumberAhead = /^\d+\)/.test(section.slice(lookahead));
+          const startsDialogueAhead = /^-\s*[A-Za-zÀ-ÿ\u0176\u0177'’]/.test(
+            section.slice(lookahead)
+          );
 
-          if (!hasNumberAhead) {
-            if (definitionOpen) {
-              output += '</span>';
-              definitionOpen = false;
-            }
-            if (output.length && !output.endsWith('<br>')) {
-              output += '<br>';
-            }
-            const labelKey = labelMatch[1].toLowerCase();
-            if (sectionLabelMap[labelKey]) {
-              output += `<div class="sense-section-title">${sectionLabelMap[labelKey]}:</div>`;
-            }
-            output += '<span class="sense-definition">';
-            definitionOpen = true;
+          if (output.length && !output.endsWith('<br>')) {
+            output += '<br>';
+          }
+          if (sectionLabelMap[labelMatch.key]) {
+            const metadata = labelMatch.metadata ? ` ${labelMatch.metadata}` : '';
+            output += `<div class="sense-section-title">${sectionLabelMap[labelMatch.key]}:${metadata}</div>`;
+          }
+          if (hasNumberAhead) {
             expectedNumber = 1;
             expectedLetter = 'a';
             seenNumber = false;
-            i += labelMatch[0].length;
-            continue;
           }
+          if (!hasNumberAhead && !startsDialogueAhead) {
+            output += '<span class="sense-definition">';
+            if (labelMatch.definitionPrefix) {
+              output += `${labelMatch.definitionPrefix} `;
+            }
+            definitionOpen = true;
+            if (!seenNumber) {
+              expectedNumber = 1;
+              expectedLetter = 'a';
+            }
+          }
+          i += labelMatch.length;
+          continue;
+        }
+
+        const definitionLabelMatch = !definitionOpen
+          ? matchDefinitionLabel(section.slice(i))
+          : null;
+        if (definitionLabelMatch) {
+          let lookahead = i + definitionLabelMatch[0].length;
+          while (lookahead < section.length && /\s/.test(section[lookahead])) {
+            lookahead += 1;
+          }
+          const hasNumberAhead = /^\d+\)/.test(section.slice(lookahead))
+            || /(?:^|\s)1\)/.test(nextTopLevelChunk(lookahead));
+          const hasImplicitFirstSense = !hasNumberAhead
+            && /;\s*2\)/.test(section.slice(lookahead));
+          const startsDialogueAhead = /^-\s*[A-Za-zÀ-ÿ\u0176\u0177'’]/.test(
+            section.slice(lookahead)
+          );
+          const remaining = section.slice(lookahead);
+          const nextColon = firstTopLevelColon(remaining);
+          const hasGlossColon = nextColon !== -1
+            && countTopLevelTranslationDashes(remaining.slice(0, nextColon)) === 0;
+          const colonIntroducesGloss = definitionLabelMatch[1] === ':'
+            && hasGlossColon;
+          const dashIntroducesGloss = definitionLabelMatch[1] === '-'
+            && (
+              !definitionLabelMatch.requiresGlossColon
+              || hasGlossColon
+            );
+          output += definitionLabelMatch[0];
+          if (
+            !hasNumberAhead
+            && !startsDialogueAhead
+            && (dashIntroducesGloss || colonIntroducesGloss)
+          ) {
+            output += '<span class="sense-definition">';
+            definitionOpen = true;
+            if (hasImplicitFirstSense) {
+              expectedNumber = 2;
+              expectedLetter = 'a';
+              seenNumber = true;
+            }
+          }
+          i += definitionLabelMatch[0].length;
+          continue;
         }
 
         const prevChar = section[i - 1];
@@ -1312,7 +1830,11 @@
               expectedNumber += 1;
               expectedLetter = 'a';
               seenNumber = true;
-              i += numberMatch[0].length;
+              const separatorMatch = section
+                .slice(i + numberMatch[0].length)
+                .match(/^\s+[-–—]\s+/);
+              if (separatorMatch) output += ' ';
+              i += numberMatch[0].length + (separatorMatch ? separatorMatch[0].length : 0);
               continue;
             }
           }
@@ -1335,7 +1857,11 @@
               output += sensePrefix;
               definitionOpen = true;
               expectedLetter = String.fromCharCode(expectedLetter.charCodeAt(0) + 1);
-              i += letterMatch[0].length;
+              const separatorMatch = section
+                .slice(i + letterMatch[0].length)
+                .match(/^\s+[-–—]\s+/);
+              if (separatorMatch) output += ' ';
+              i += letterMatch[0].length + (separatorMatch ? separatorMatch[0].length : 0);
               continue;
             }
           }
@@ -1344,12 +1870,28 @@
 
       if (
         parenDepth === 0 &&
+        bracketDepth === 0 &&
         char === '-' &&
         TUPI_LETTER_RE.test(section[i + 1]) &&
-        /\s/.test(section[i - 1] || '')
+        /\s/.test(section[i - 1] || '') &&
+        (
+          plainOutputBeforeChar === ''
+          || /[:.!?…]["'’”)]?$/.test(plainOutputBeforeChar)
+          || /<\/div>\s*$/i.test(output)
+          || (definitionOpen && hasRawTrailingSourceCitation(output))
+        ) &&
+        !looksLikeCompactTranslation &&
+        !(
+          definitionOpen
+          && /<span class="sense-definition">\s*$/i.test(output)
+        )
       ) {
         if (!inDialogueSegment) {
           inDialogueSegment = true;
+          if (definitionOpen) {
+            output += '</span>';
+            definitionOpen = false;
+          }
           if (output.trim().length > 0) {
             segments.push(output);
             output = '';
@@ -1358,7 +1900,7 @@
         }
       }
 
-      if (definitionOpen && parenDepth === 0 && char === ':') {
+      if (definitionOpen && parenDepth === 0 && bracketDepth === 0 && char === ':') {
         output += '</span>';
         definitionOpen = false;
         output += char;
@@ -1366,7 +1908,27 @@
         continue;
       }
 
-      if (char === ';' && parenDepth === 0) {
+      if (char === ';' && parenDepth === 0 && bracketDepth === 0) {
+        if (inDialogueSegment && !hasRawTrailingSourceCitation(output)) {
+          output += char;
+          i += 1;
+          continue;
+        }
+        if (semicolonContinuesSingleCitedPair(i + 1)) {
+          output += char;
+          i += 1;
+          continue;
+        }
+        if (semicolonContinuesPortugueseTranslation(i + 1)) {
+          output += char;
+          i += 1;
+          continue;
+        }
+        if (definitionOpen && definitionContinuesAfterSemicolon(i + 1)) {
+          output += char;
+          i += 1;
+          continue;
+        }
         if (definitionOpen) {
           output += '</span>';
           definitionOpen = false;
@@ -1384,6 +1946,15 @@
         parenDepth += 1;
       } else if (char === ')' && parenDepth > 0) {
         parenDepth -= 1;
+      } else if (char === '[') {
+        bracketDepth += 1;
+      } else if (char === ']' && bracketDepth > 0) {
+        bracketDepth -= 1;
+      } else if (char === ']' && parenDepth > 0) {
+        // A few source records close a parenthetical valency note with `]`.
+        // Recover at the mismatched closer so the following example colon is
+        // still treated as a top-level boundary.
+        parenDepth -= 1;
       }
       i += 1;
     }
@@ -1398,13 +1969,26 @@
     }
 
     const normalizeQuoteText = (text) => text.trim().replace(/[;]+$/g, '').trim();
-    const quoteStartRe = /^(\"|“|”|'|‘|’|\\.\\.\\.|…)/;
-    const stripTags = (text) => text.replace(/<[^>]*>/g, '');
-    const countDash = (text) => (text.match(/\s-\s/g) || []).length;
-
-    const hasDash = (text) => /\s-\s/.test(normalizeQuoteText(text));
-    const hasCitation = (text) => /\([^()]*\)/.test(normalizeQuoteText(text));
-    const hasTrailingCitation = (text) => /\([^()]*\d[^()]*\)\s*$/.test(normalizeQuoteText(text));
+    const quoteStartRe = /^(\"|“|”|'|‘|’|\.\.\.|…)/;
+    const stripTags = (text) => text.replace(/<\/?[A-Za-z][^>]*>/g, '');
+    const looksLikeTupiText = (text) => (
+      /(?:[îûŷãẽĩõũ]|gû|kû|nh|mb|nd|[aeiouáéíóú]['’]|\b(?:xe|nde|oré|îandé|tupã)\b)/i.test(stripTags(text))
+    );
+    const looksDistinctivelyTupiText = (text) => (
+      /(?:[îûŷẽĩũ]|gû|kû|[aeiouáéíóú]['’]|['’][aeiouáéíóú]|\b(?:xe|nde|oré|îandé|tupã)\b)/i.test(stripTags(text))
+    );
+    const looksLikePortugueseText = (text) => (
+      /(?:^|[\s"“”([{])(?:a|as|o|os|um|uma|de|do|da|em|eu|tu|ele|ela|dele|dela|nós|vós|não|que|com|para|por|me|te|se|meu|minha|mas|estou|sou|será|são|eia|diante|disseste)(?=$|[\s.,;:!?…"“”)\]}])/iu.test(
+        stripTags(text)
+      )
+    );
+    const SOURCE_LOCATOR_TAIL_RE = /(?:^|[,;]\s*)(?:(?:(?:p\.\s*)?\d+(?:[vr])?|[IVXLCDM]+|cap\.\s*[IVXLCDMivxlcdm]+|§\s*\d+[a-z]?)(?:\s*[-–]\s*(?:\d+(?:[vr])?|[IVXLCDM]+))?(?:\s*,\s*\d{4})?(?:\s*[,;]\s*adapt\.)?|(?:in\s+)?Ar\.,\s*Cat)\]?\s*\.?$/;
+    const isSourceCitation = (text) => {
+      const plain = stripTags(text).trim();
+      if (!/^\([^()]+\)$/.test(plain)) return false;
+      const inner = plain.slice(1, -1).trim();
+      return inner.includes(',') && SOURCE_LOCATOR_TAIL_RE.test(inner);
+    };
 
     const extractTrailingCitation = (text) => {
       const trimmed = normalizeQuoteText(text);
@@ -1412,31 +1996,121 @@
         return { body: trimmed, citation: '' };
       }
 
-      let depth = 0;
-      for (let idx = trimmed.length - 1; idx >= 0; idx -= 1) {
-        const ch = trimmed[idx];
-        if (ch === ')') {
-          depth += 1;
-          continue;
-        }
-        if (ch === '(') {
+      let cursor = trimmed.length;
+      let citationStart = trimmed.length;
+      const citations = [];
+
+      while (cursor > 0) {
+        while (cursor > 0 && /\s/.test(trimmed[cursor - 1])) cursor -= 1;
+        if (trimmed[cursor - 1] !== ')') break;
+
+        let depth = 0;
+        let start = -1;
+        for (let idx = cursor - 1; idx >= 0; idx -= 1) {
+          if (trimmed[idx] === ')') depth += 1;
+          if (trimmed[idx] !== '(') continue;
           depth -= 1;
           if (depth === 0) {
-            return {
-              body: trimmed.slice(0, idx).trim(),
-              citation: trimmed.slice(idx).trim(),
-            };
+            start = idx;
+            break;
           }
         }
+
+        if (start === -1) break;
+        const candidate = trimmed.slice(start, cursor).trim();
+        if (!isSourceCitation(candidate)) break;
+        citations.unshift(candidate);
+        citationStart = start;
+        cursor = start;
       }
 
-      return { body: trimmed, citation: '' };
+      if (!citations.length) return { body: trimmed, citation: '' };
+      return {
+        body: trimmed.slice(0, citationStart).trim(),
+        citation: citations.join(' '),
+      };
     };
+
+    const findTranslationSeparators = (text) => {
+      const normalized = normalizeQuoteText(text);
+      const isTopLevelAt = (value, targetIndex) => {
+        let parenDepth = 0;
+        let bracketDepth = 0;
+        for (let idx = 0; idx < targetIndex; idx += 1) {
+          if (value[idx] === '<') {
+            const tagMatch = value.slice(idx).match(/^<\/?[A-Za-z][^>]*>/);
+            if (tagMatch) {
+              idx += tagMatch[0].length - 1;
+              continue;
+            }
+          }
+          if (value[idx] === '(') parenDepth += 1;
+          if (value[idx] === ')' && parenDepth > 0) parenDepth -= 1;
+          else if (value[idx] === ')' && bracketDepth > 0) bracketDepth -= 1;
+          if (value[idx] === '[') bracketDepth += 1;
+          if (value[idx] === ']' && bracketDepth > 0) bracketDepth -= 1;
+          else if (value[idx] === ']' && parenDepth > 0) parenDepth -= 1;
+        }
+        return parenDepth === 0 && bracketDepth === 0;
+      };
+      const isCategoryPrefix = (prefix) => (
+        /^\s*(?:\[\s*(?:adj|adv|s|v)\.?\s*(?::|-)[^\]]+\]|\(\s*(?:adj|adv|s|v)\.?[^)]*\))(?:\s*\([^)]*\))*\s*$/i.test(stripTags(prefix))
+      );
+      const ordinary = [...normalized.matchAll(/(?:\s|[.!?…])-\s+/g)]
+        .map((match) => {
+          const punctuationAdjacent = /[.!?…]/.test(match[0][0]);
+          return {
+            index: match.index + (punctuationAdjacent ? 1 : 0),
+            length: match[0].length - (punctuationAdjacent ? 1 : 0),
+            compact: false,
+          };
+        })
+        .filter((separator) => (
+          isTopLevelAt(normalized, separator.index)
+          && !isCategoryPrefix(normalized.slice(0, separator.index))
+        ));
+      if (ordinary.length) return ordinary;
+
+      // A handful of source dialogues omit the space after both turn dashes
+      // ("-Tupi. -Portuguese.").  Requiring that exact, cited shape avoids
+      // treating productive suffix notation such as "-usu" as a translation.
+      const { body, citation } = extractTrailingCitation(normalized);
+      if (!citation) return [];
+
+      // Recover citation-backed translations whose dash directly touches the
+      // Portuguese text after source-sentence punctuation.
+      const punctuationCompact = [...body.matchAll(/[.!?…]\s*-(?=(?:["“”]\s*)?[A-ZÀ-ÖØ-ÞŶ])/g)]
+        .filter((match) => isTopLevelAt(body, match.index))
+        .map((match) => ({
+          index: match.index + match[0].lastIndexOf('-'),
+          length: 1,
+          compact: true,
+        }));
+      if (punctuationCompact.length) return [punctuationCompact[0]];
+
+      const compactTurnStart = /^(?:[\"“”]\s*)?-[A-Za-zÀ-ÿ\u0176\u0177'’]/;
+      if (!compactTurnStart.test(body.trim())) return [];
+      const compact = [...body.matchAll(/\s-(?=\S)/g)]
+        .filter((match) => isTopLevelAt(body, match.index))
+        .map((match) => ({
+          index: match.index,
+          length: match[0].length,
+          compact: true,
+        }));
+      return compact.length ? [compact[0]] : [];
+    };
+
+    const countDash = (text) => findTranslationSeparators(text).length;
+    const hasDash = (text) => countDash(text) > 0;
+    const hasCitation = (text) => (
+      (normalizeQuoteText(text).match(/\([^()]*\)/g) || []).some(isSourceCitation)
+    );
+    const hasTrailingCitation = (text) => Boolean(extractTrailingCitation(text).citation);
 
     const splitQuoteLines = (text) => {
       const { body, citation } = extractTrailingCitation(text);
-      const dashIndex = body.indexOf(' - ');
-      if (dashIndex === -1) {
+      const separators = findTranslationSeparators(text);
+      if (!separators.length) {
         const trimmedBody = body.trim();
         if (quoteStartRe.test(trimmedBody)) {
           return { tupi: '', pt: body, citation };
@@ -1444,11 +2118,74 @@
         return { tupi: body, pt: '', citation };
       }
 
+      const separator = separators[0];
+
       return {
-        tupi: body.slice(0, dashIndex).trim(),
-        pt: body.slice(dashIndex + 3).trim(),
+        tupi: body.slice(0, separator.index).trim(),
+        pt: body.slice(separator.index + separator.length).trim(),
         citation,
       };
+    };
+
+    const splitCompoundCitedPair = (text) => {
+      const { body, citation } = extractTrailingCitation(text);
+      if (!citation) return null;
+      const separators = findTranslationSeparators(body);
+      if (separators.length !== 2 && separators.length !== 3) return null;
+
+      const parts = [];
+      let cursor = 0;
+      separators.forEach((separator) => {
+        parts.push(body.slice(cursor, separator.index).trim());
+        cursor = separator.index + separator.length;
+      });
+      parts.push(body.slice(cursor).trim());
+
+      if (
+        parts.length === 3
+        && /^(?:\.{3}|…)$/u.test(stripTags(parts[0]))
+        && looksLikeTupiText(parts[1])
+        && looksLikePortugueseText(parts[2])
+      ) {
+        return { tupi: parts[1], pt: parts[2], citation };
+      }
+
+      if (
+        parts.length === 3
+        && parts.slice(0, 2).every(looksLikeTupiText)
+        && looksDistinctivelyTupiText(parts[1])
+        && !looksLikePortugueseText(parts[1])
+        && looksLikePortugueseText(parts[2])
+      ) {
+        return {
+          tupi: parts.slice(0, 2).join(' - '),
+          pt: parts[2],
+          citation,
+        };
+      }
+
+      const midpoint = parts.length / 2;
+      const alignedCompound = Number.isInteger(midpoint)
+        && parts.slice(0, midpoint).every(looksDistinctivelyTupiText)
+        && parts.slice(midpoint).every((part) => !looksDistinctivelyTupiText(part))
+        && parts.slice(midpoint).some(looksLikePortugueseText);
+      if (
+        Number.isInteger(midpoint)
+        && (
+          (
+            parts.slice(0, midpoint).every(looksLikeTupiText)
+            && parts.slice(midpoint).every(looksLikePortugueseText)
+          )
+          || alignedCompound
+        )
+      ) {
+        return {
+          tupi: parts.slice(0, midpoint).join(' - '),
+          pt: parts.slice(midpoint).join(' - '),
+          citation,
+        };
+      }
+      return null;
     };
 
     const splitDialogueSegments = (text) => {
@@ -1458,11 +2195,23 @@
 
       for (let idx = 0; idx < len; idx += 1) {
         const char = text[idx];
-        const nextChar = text[idx + 1];
         const prevChar = text[idx - 1];
-        const isDialogueStart = char === '-' && TUPI_LETTER_RE.test(nextChar) && (idx === 0 || /\s/.test(prevChar));
+        const previousNonSpace = text.slice(0, idx).match(/\S(?=\s*$)/)?.[0] || '';
+        const isDialogueStart = char === '-'
+          && /^-\s*(?:\.{3}|…)?\s*(?:\([^)]{1,12}\)\s*)?[A-Za-zÀ-ÿ\u0176\u0177'’]/.test(text.slice(idx))
+          && (idx === 0 || /\s/.test(prevChar) || /[.!?…]/.test(prevChar))
+          // A dash immediately after a colon commonly opens a quotation
+          // inside a translated turn ("Dizem: -Meu compadre"), rather than a
+          // new aligned dialogue row.
+          && !(start !== -1 && previousNonSpace === ':');
         if (isDialogueStart) {
-          if (start !== -1) {
+          if (start === -1) {
+            const prefix = text
+              .slice(0, idx)
+              .replace(/^(?:\.{3}|…)\s*/, '')
+              .trim();
+            if (prefix) segments.push(prefix);
+          } else {
             const slice = text.slice(start, idx).trim();
             if (slice) segments.push(slice);
           }
@@ -1475,15 +2224,11 @@
         if (slice) segments.push(slice);
       }
 
-      return segments.map((segment) => segment.replace(TUPI_DIALOGUE_LEAD_RE, (match) => match.slice(1)).trim()).filter(Boolean);
+      return segments.map((segment) => segment.replace(TUPI_DIALOGUE_LEAD_RE, '').trim()).filter(Boolean);
     };
 
     const parseDialogue = (text) => {
       const normalized = normalizeQuoteText(text);
-      if (!TUPI_DIALOGUE_RE.test(normalized)) {
-        return null;
-      }
-
       const { body, citation } = extractTrailingCitation(normalized);
       const segments = splitDialogueSegments(body);
       if (segments.length < 4 || segments.length % 2 !== 0) {
@@ -1491,11 +2236,57 @@
       }
 
       const midpoint = segments.length / 2;
+      const tupiLines = segments.slice(0, midpoint);
+      const startsLikePortugueseTurn = /^(?:dói|moro|sou|estou|somos|tenho|temos|não|que|quem|como|por que|para|dizem|são|eles|elas|eu|nós|vós|meu|minha)\b/i;
+      if (!tupiLines.every((line) => (
+        /[.!?…]["'’”]?$/.test(line.trim())
+        && !startsLikePortugueseTurn.test(line.trim())
+      ))) {
+        return null;
+      }
       return {
-        tupiLines: segments.slice(0, midpoint),
+        tupiLines,
         ptLines: segments.slice(midpoint),
         citation,
       };
+    };
+
+    const splitImplicitCitedPair = (text) => {
+      const { body, citation } = extractTrailingCitation(text);
+      if (!citation || hasDash(body) || parseDialogue(body)) return null;
+
+      const boundaryRe = /[.!?…][\"'’”]?\s+(?=[A-ZÀ-ÖØ-ÞŶ])/g;
+      let boundary;
+      while ((boundary = boundaryRe.exec(body)) !== null) {
+        const source = body.slice(0, boundary.index + boundary[0].trimEnd().length).trim();
+        const portuguese = body.slice(boundary.index + boundary[0].length).trim();
+        const plainSource = stripTags(source);
+        const plainPortuguese = stripTags(portuguese);
+        const looksLikeSourceStart = /^(?:["'‘’“”]\s*)?(?:-|\.{3}|…|[A-ZÀ-ÖØ-ÞŶ])/.test(
+          plainSource
+        );
+        const looksTupi = /(?:[îûŷẽõ]|gû|kû|nh|mb|nd|[aeiouáéíóú]['’]|-[a-zà-ÿ])/i.test(plainSource);
+        const looksPortuguese = (
+          /\b(?:a|as|o|os|um|uma|de|do|da|em|eu|tu|ele|ela|nós|vós|não|que|com|para|por|me|te|se|meu|minha|mas|estou|sou|será|eia|diante|disseste)\b/i.test(
+            plainPortuguese
+          )
+          || /(?:^|\s)ó(?=\s|$)/i.test(plainPortuguese)
+        );
+        if (
+          source
+          && portuguese
+          && looksLikeSourceStart
+          && looksTupi
+          && looksPortuguese
+        ) {
+          return {
+            source,
+            portuguese,
+            quoteText: `${source} - ${portuguese} ${citation}`,
+          };
+        }
+      }
+      return null;
     };
 
     const buildDialogueBlock = (tupiLines, ptLines, citation) => {
@@ -1519,71 +2310,419 @@
       return `<div class="sense-quote dialogue">${rows.join('')}</div>`;
     };
 
-    const stripLeadingDashSpace = (value) => value.replace(/^\s*-\s+/, '');
+    const stripLeadingDashSpace = (value) => value.replace(/^\s*-\s*/, '');
 
-    const buildQuoteBlock = (text) => {
+    const buildQuoteBlock = (rawText) => {
+      const text = rawText.replace(
+        /<span class="related-entry-headword"><a\b[^>]*>([\s\S]*?)<\/a><\/span>/gi,
+        '$1'
+      );
       const dialogue = parseDialogue(text);
       if (dialogue) {
         return buildDialogueBlock(dialogue.tupiLines, dialogue.ptLines, dialogue.citation);
       }
 
-      let { tupi, pt, citation } = splitQuoteLines(text);
+      let { tupi, pt, citation } = splitCompoundCitedPair(text) || splitQuoteLines(text);
       tupi = stripLeadingDashSpace(tupi);
       pt = stripLeadingDashSpace(pt);
+      let editorialTail = '';
+      const editorialTailMatch = pt.match(
+        /\s+(\((?:o\s+mesmo\s+que|v\.\s*tb\.)[^()]*\))\s*$/i
+      );
+      if (editorialTailMatch) {
+        editorialTail = ` ${editorialTailMatch[1]}`;
+        pt = pt.slice(0, editorialTailMatch.index).trimEnd();
+      }
       const citationHtml = citation ? ` <span class="quote-citation">${citation}</span>` : '';
       const tupiLine = tupi ? `<div class="quote-tupi">${tupi}${!pt ? citationHtml : ''}</div>` : '';
       const ptLine = pt ? `<div class="quote-pt">${pt}${citationHtml}</div>` : '';
       const citationLine = !pt && !tupi && citation ? `<div class="quote-citation">${citation}</div>` : '';
 
-      return `<div class="sense-quote">${tupiLine}${ptLine}${citationLine}</div>`;
+      return `<div class="sense-quote">${tupiLine}${ptLine}${citationLine}</div>${editorialTail}`;
+    };
+
+    const splitCitedSourceVariants = (text) => {
+      const split = splitQuoteLines(text);
+      if (!split.tupi || !split.pt || !split.citation) return null;
+      const variants = split.tupi.match(/^([\s\S]+?)\s+(\([^()]+\))\s+ou\s+([\s\S]+)$/i);
+      if (!variants || !isSourceCitation(variants[2])) return null;
+      return [
+        { tupi: variants[1].trim(), pt: split.pt, citation: variants[2] },
+        { tupi: variants[3].trim(), pt: split.pt, citation: split.citation },
+      ];
+    };
+
+    const splitSharedCitationPairs = (text) => {
+      if (parseDialogue(text)) return null;
+      const { body, citation } = extractTrailingCitation(text);
+      const separators = findTranslationSeparators(text);
+      if (!citation || separators.length < 2) return null;
+
+      const pairs = [];
+      let pairStart = 0;
+      for (let idx = 0; idx < separators.length - 1; idx += 1) {
+        const translationStart = separators[idx].index + separators[idx].length;
+        const nextSeparator = separators[idx + 1].index;
+        const between = body.slice(translationStart, nextSeparator);
+        const sentenceBreaks = [...between.matchAll(/[.!?…][)\"'’”]?\s+/g)]
+          .filter((sentenceBreak) => {
+            const suffix = between
+              .slice(sentenceBreak.index + sentenceBreak[0].length)
+              .trim();
+            return suffix && !/^\(ou\b/i.test(suffix);
+          });
+        if (!sentenceBreaks.length) return null;
+        const boundary = translationStart
+          + sentenceBreaks[sentenceBreaks.length - 1].index
+          + sentenceBreaks[sentenceBreaks.length - 1][0].length;
+        pairs.push(body.slice(pairStart, boundary).trim());
+        pairStart = boundary;
+      }
+      pairs.push(body.slice(pairStart).trim());
+
+      if (pairs.length !== separators.length || pairs.some((pair) => {
+        const split = splitQuoteLines(pair);
+        return !split.tupi || !split.pt || findTranslationSeparators(pair).length !== 1;
+      })) {
+        return null;
+      }
+
+      return pairs.map((pair) => `${pair} ${citation}`);
+    };
+
+    const buildQuoteBlocks = (text) => {
+      const citedVariants = splitCitedSourceVariants(text);
+      if (citedVariants) {
+        return citedVariants.map((variant) => buildQuoteBlock(
+          `${variant.tupi} - ${variant.pt} ${variant.citation}`
+        )).join('<div class="quote-variant-separator">ou</div>');
+      }
+      const pairs = splitSharedCitationPairs(text);
+      return pairs
+        ? pairs.map((pair) => {
+          const editorialLead = pair.match(
+            /^((?:\.\s*)?\(\s*(?:seu|com\s+o\s+verbo|também|perguntando)\b[^)]*\)\s*:\s*)([\s\S]+)$/i
+          );
+          return editorialLead
+            ? `${editorialLead[1]}${buildQuoteBlock(editorialLead[2])}`
+            : buildQuoteBlock(pair);
+        }).join('')
+        : buildQuoteBlock(text);
+    };
+
+    const splitRelatedEntryTail = (text) => {
+      const { body, citation } = extractTrailingCitation(text);
+      if (!citation) return null;
+      const boundary = body.match(/;\s*(?=<span class="related-entry-headword">)/i);
+      if (!boundary) return null;
+      return {
+        before: body.slice(0, boundary.index).trim(),
+        tail: body.slice(boundary.index + boundary[0].length).trim(),
+        citation,
+      };
     };
 
     const findColonOutside = (text) => {
-      let inTag = false;
-      let depth = 0;
+      let elementDepth = 0;
+      let parenDepth = 0;
+      let bracketDepth = 0;
       for (let idx = 0; idx < text.length; idx += 1) {
         const ch = text[idx];
         if (ch === '<') {
-          inTag = true;
+          const tagMatch = text.slice(idx).match(/^<\/?[A-Za-z][^>]*>/);
+          if (!tagMatch) continue;
+          const tag = tagMatch[0];
+          if (/^<\//.test(tag)) {
+            elementDepth = Math.max(0, elementDepth - 1);
+          } else if (!/^<(?:br|hr|img|input|meta|link)\b/i.test(tag) && !/\/>$/.test(tag)) {
+            elementDepth += 1;
+          }
+          idx += tag.length - 1;
           continue;
         }
-        if (ch === '>' && inTag) {
-          inTag = false;
-          continue;
-        }
-        if (inTag) continue;
+        if (elementDepth > 0) continue;
         if (ch === '(') {
-          depth += 1;
+          parenDepth += 1;
           continue;
         }
-        if (ch === ')' && depth > 0) {
-          depth -= 1;
+        if (ch === ')' && parenDepth > 0) {
+          parenDepth -= 1;
           continue;
         }
-        if (ch === ':' && depth === 0) {
+        if (ch === ')' && bracketDepth > 0) {
+          bracketDepth -= 1;
+          continue;
+        }
+        if (ch === '[') {
+          bracketDepth += 1;
+          continue;
+        }
+        if (ch === ']' && bracketDepth > 0) {
+          bracketDepth -= 1;
+          continue;
+        }
+        if (ch === ']' && bracketDepth === 0 && parenDepth > 0) {
+          parenDepth -= 1;
+          continue;
+        }
+        if (ch === ':' && parenDepth === 0 && bracketDepth === 0) {
           return idx;
         }
       }
       return -1;
     };
 
+    const isColonInsideCitedSource = (text, colonIndex) => {
+      if (colonIndex === -1) return false;
+      const left = text.slice(0, colonIndex).trim();
+      const right = text.slice(colonIndex + 1).trim();
+      const separators = findTranslationSeparators(right);
+      if (separators.length !== 1 || !hasTrailingCitation(right)) return false;
+      const sourceBeforeTranslation = right.slice(0, separators[0].index).trim();
+      const plainLeft = stripTags(left).trim();
+      const looksLikeEditorialLead = (
+        /^(?:\.\s*)?(?:(?:\([^)]*\)\s*)*\[|(?:\([^)]*\)\s*)+-\s+|\(\s*xe\s*\)|\(\s*(?:seu|com\s+o\s+verbo|também|perguntando|faz)\b|-?\s*(?:o\s+mesmo\s+que|pode\b)|-\s*\d+[ªº]\s+p\.)/i.test(
+          plainLeft
+        )
+        || /^(?:\([^)]*\)\s*)+$/.test(plainLeft)
+      );
+      return (
+        !looksLikeEditorialLead
+        && !/class="sense-(?:section-title|number|letter|definition)"/i.test(left)
+        && findTranslationSeparators(left).length === 0
+        && looksDistinctivelyTupiText(left)
+        && (/[,.!?…]/.test(stripTags(left)) || stripTags(left).split(/\s+/).length >= 4)
+        && (
+          quoteStartRe.test(stripTags(sourceBeforeTranslation).trim())
+          || (
+            looksLikeTupiText(sourceBeforeTranslation)
+            && !looksLikePortugueseText(sourceBeforeTranslation)
+          )
+        )
+      );
+    };
+
+    const findCitedPairColonBoundary = (text) => {
+      let candidateIndex = -1;
+      let offset = 0;
+      while (offset < text.length) {
+        const relativeIndex = findColonOutside(text.slice(offset));
+        if (relativeIndex === -1) return candidateIndex;
+        const colonIndex = offset + relativeIndex;
+        const right = text.slice(colonIndex + 1).trim();
+        const separators = findTranslationSeparators(right);
+        const pair = splitQuoteLines(right);
+        const sourceBeforeTranslation = separators.length
+          ? right.slice(0, separators[0].index).trim()
+          : '';
+        const colonInsideSource = isColonInsideCitedSource(text, colonIndex)
+          || (
+            candidateIndex !== -1
+            && isColonInsideCitedSource(
+              text.slice(candidateIndex + 1),
+              colonIndex - candidateIndex - 1
+            )
+          );
+        const glossContinuesToLaterColon = findColonOutside(sourceBeforeTranslation) !== -1
+          && /^[a-zà-ÿ]/.test(stripTags(sourceBeforeTranslation).trim());
+        const sourceParts = stripTags(sourceBeforeTranslation)
+          .split(/;\s*/)
+          .map((part) => part.trim())
+          .filter(Boolean);
+        const isInlineGlossTail = sourceParts.length >= 2
+          && looksLikePortugueseText(sourceParts[0])
+          && !looksDistinctivelyTupiText(sourceParts[0])
+          && looksDistinctivelyTupiText(sourceParts[sourceParts.length - 1]);
+        if (
+          right
+          && !/class="sense-(?:section-title|number|letter|definition)"/i.test(right)
+          && hasTrailingCitation(right)
+          && separators.length === 1
+          && pair.tupi
+          && pair.pt
+          && !hasCitation(pair.tupi)
+          && !colonInsideSource
+          && !glossContinuesToLaterColon
+          && !isInlineGlossTail
+        ) {
+          candidateIndex = colonIndex;
+        }
+        offset = colonIndex + 1;
+      }
+      return candidateIndex;
+    };
+
+    const splitAtSourceCitationBoundaries = (segment) => {
+      const chunks = [];
+      let chunkStart = 0;
+      let parenStart = -1;
+      let depth = 0;
+
+      for (let idx = 0; idx < segment.length; idx += 1) {
+        const ch = segment[idx];
+        if (ch === '(') {
+          if (depth === 0) parenStart = idx;
+          depth += 1;
+          continue;
+        }
+        if (ch !== ')' || depth === 0) continue;
+        depth -= 1;
+        if (depth !== 0 || parenStart === -1) continue;
+
+        const citation = segment.slice(parenStart, idx + 1);
+        if (!isSourceCitation(citation)) continue;
+
+        const remainder = segment.slice(idx + 1);
+        const plainRemainder = stripTags(remainder).trim();
+        if (
+          !plainRemainder
+          || /^[;]+$/.test(plainRemainder)
+        ) {
+          continue;
+        }
+
+        // Consecutive bibliographic parentheses belong to the same example.
+        const nextParenthetical = plainRemainder.match(/^\([^()]+\)/);
+        if (nextParenthetical && isSourceCitation(nextParenthetical[0])) continue;
+
+        const candidate = segment.slice(chunkStart, idx + 1);
+        const colonIndex = findColonOutside(candidate);
+        const plainCandidate = stripTags(candidate);
+        const plainColonIndex = findColonOutside(plainCandidate);
+        const candidateSeparators = findTranslationSeparators(plainCandidate);
+        const colonBelongsToTranslation = plainColonIndex !== -1
+          && candidateSeparators.length
+          && candidateSeparators[0].index < plainColonIndex;
+        const quotePart = colonIndex === -1 || colonBelongsToTranslation
+          ? candidate
+          : candidate.slice(colonIndex + 1);
+        const plainQuotePart = stripTags(quotePart).trim();
+        const separators = findTranslationSeparators(plainQuotePart);
+        const dialogue = parseDialogue(plainQuotePart);
+        if (!separators.length && !dialogue) continue;
+
+        if (colonIndex === -1) {
+          const firstSeparator = separators[0];
+          const tupiSide = firstSeparator
+            ? plainQuotePart.slice(0, firstSeparator.index).trim()
+            : plainQuotePart;
+          const startsLikeQuote = TUPI_START_RE.test(tupiSide)
+            || quoteStartRe.test(tupiSide)
+            || Boolean(dialogue);
+          const linkedCandidatePair = /related-entry-headword/.test(candidate)
+            && separators.length === 1
+            && hasTrailingCitation(candidate);
+          if (
+            !startsLikeQuote
+            || /[\])}]$/.test(tupiSide)
+            || (
+              /related-entry-headword/.test(candidate)
+              && !linkedCandidatePair
+            )
+          ) {
+            continue;
+          }
+        }
+
+        chunks.push(candidate);
+        const separator = segment.slice(idx + 1).match(/^\s*[,;:]\s*/);
+        chunkStart = idx + 1 + (separator ? separator[0].length : 0);
+      }
+
+      if (!chunks.length) return [segment];
+      chunks.push(segment.slice(chunkStart));
+      return chunks.filter((chunk) => chunk.length > 0);
+    };
+
+    const splitAtGeneratedSenseBoundaries = (segment) => {
+      const chunks = [];
+      let chunkStart = 0;
+      const boundaryRe = /(?:<br>)+(?=<span class="sense-(?:number|letter)">)/gi;
+      let match;
+      while ((match = boundaryRe.exec(segment)) !== null) {
+        if (match.index > chunkStart) {
+          chunks.push(segment.slice(chunkStart, match.index));
+          chunkStart = match.index;
+        }
+        if (match.index === boundaryRe.lastIndex) boundaryRe.lastIndex += 1;
+      }
+      chunks.push(segment.slice(chunkStart));
+      return chunks.filter(Boolean);
+    };
+
+    const mergeSourceContinuationSegments = (items) => {
+      const merged = [];
+      for (let idx = 0; idx < items.length; idx += 1) {
+        const current = items[idx];
+        const next = items[idx + 1];
+        const plainCurrent = stripTags(current).trim();
+        const plainNext = next ? stripTags(next).trim() : '';
+        const containsSemanticMarkup = /class="sense-(?:section-title|number|letter|definition)"/i.test(
+          current
+        );
+        const semanticQuoteTail = current.match(/<\/span>\s*:\s*([\s\S]+)$/i);
+        const plainColonIndex = findColonOutside(plainCurrent);
+        const plainColonTail = plainColonIndex === -1
+          ? ''
+          : plainCurrent.slice(plainColonIndex + 1).trim();
+        const sourceCandidate = semanticQuoteTail
+          ? stripTags(semanticQuoteTail[1]).trim()
+          : (plainColonTail || plainCurrent);
+        if (
+          next
+          && /;\s*$/.test(plainCurrent)
+          && (!containsSemanticMarkup || semanticQuoteTail)
+          && !hasCitation(plainCurrent)
+          && countDash(sourceCandidate) === 0
+          && (
+            looksLikeTupiText(sourceCandidate)
+            || (
+              /^[A-ZÀ-ÖØ-ÞŶ]/.test(sourceCandidate)
+              && /^[a-zà-ÿ]/.test(plainNext)
+            )
+          )
+          && countDash(plainNext) === 1
+        ) {
+          merged.push(current + next);
+          idx += 1;
+          continue;
+        }
+        merged.push(current);
+      }
+      return merged;
+    };
+
     const mergeQuotedSegments = (items) => {
       const merged = [];
       let idx = 0;
+      const firstSourceCitation = (value) => {
+        const matches = [...value.matchAll(/\([^()]*\)/g)];
+        return matches.find((match) => isSourceCitation(match[0])) || null;
+      };
 
       while (idx < items.length) {
         const segment = items[idx];
         const trimmed = stripTags(segment).trim();
 
-        if (!hasTrailingCitation(trimmed)) {
+        if (!hasCitation(trimmed)) {
           let combined = segment;
           let j = idx + 1;
           let foundCitation = false;
 
           while (j < items.length) {
+            if (/class="sense-(?:section-title|number|letter|definition)"/i.test(items[j])) {
+              break;
+            }
+            const nextPlain = stripTags(items[j]).trim();
+            const nextCitation = firstSourceCitation(nextPlain);
+            const textBeforeCitation = nextCitation
+              ? nextPlain.slice(0, nextCitation.index)
+              : nextPlain;
+            if (countDash(textBeforeCitation) > 0 || parseDialogue(textBeforeCitation)) {
+              break;
+            }
             combined += items[j];
-            const combinedPlain = stripTags(combined).trim();
-            if (hasTrailingCitation(combinedPlain)) {
+            if (nextCitation) {
               foundCitation = true;
               break;
             }
@@ -1591,11 +2730,10 @@
           }
 
           if (foundCitation) {
-            const combinedPlain = stripTags(combined).trim();
-            const dashCount = countDash(combinedPlain);
+            const initialDashCount = countDash(trimmed);
             const startsWithQuote = quoteStartRe.test(trimmed);
-            const hasDash = dashCount > 0;
-            const shouldMerge = (startsWithQuote && dashCount <= 1) || (hasDash && dashCount === 1);
+            const shouldMerge = (startsWithQuote && initialDashCount <= 1)
+              || initialDashCount === 1;
 
             if (shouldMerge) {
               merged.push(combined);
@@ -1612,63 +2750,110 @@
       return merged;
     };
 
+    const splitSemanticDefinitionQuote = (core) => {
+      const match = core.match(
+        /^([\s\S]*?)<span class="sense-definition">([\s\S]+)<\/span>;?$/i
+      );
+      if (!match) return null;
+
+      const prefix = match[1];
+      const definitionAndQuote = match[2];
+      const { body, citation } = extractTrailingCitation(definitionAndQuote);
+
+      const separators = findTranslationSeparators(body);
+      let definition = '';
+      let quoteBody = '';
+
+      if (separators.length >= 2) {
+        const boundary = separators[separators.length - 2];
+        definition = body.slice(0, boundary.index).trim();
+        quoteBody = body.slice(boundary.index + boundary.length).trim();
+      } else if (separators.length === 1) {
+        const translationSeparator = separators[0];
+        const sourceSide = body.slice(0, translationSeparator.index).trim();
+        const translation = body
+          .slice(translationSeparator.index + translationSeparator.length)
+          .trim();
+        const mixedBoundary = sourceSide.match(
+          /^([\s\S]*(?:\.{3}|\)|\]))\s+((?:\.{3}|…)?[A-ZÀ-ÖØ-ÞŶ][\s\S]*[.!?…])$/
+        );
+        if (mixedBoundary) {
+          definition = mixedBoundary[1].trim();
+          quoteBody = `${mixedBoundary[2].trim()} - ${translation}`;
+        } else if (/[.!?…][\"'’”]?$/.test(sourceSide) && translation) {
+          quoteBody = body;
+        } else {
+          return null;
+        }
+      } else {
+        return null;
+      }
+
+      if (!quoteBody) return null;
+      const quoteText = citation ? `${quoteBody} ${citation}` : quoteBody;
+      const split = splitQuoteLines(quoteText);
+      if (!split.tupi || !split.pt) return null;
+      return { prefix, definition, quoteText };
+    };
+
     const parseSegment = (segment) => {
-      const brMatch = segment.match(/^((?:<br>)+)(.*)$/i);
-      const brPrefix = brMatch ? brMatch[1] : '';
-      const remainder = brMatch ? brMatch[2] : segment;
-      const spacingMatch = remainder.match(/^(\s*)(.*?)(\s*)$/s);
-      const leadingSpace = spacingMatch ? spacingMatch[1] : '';
-      const core = spacingMatch ? spacingMatch[2] : remainder;
-      const trailingSpace = spacingMatch ? spacingMatch[3] : '';
+      const spacingMatch = segment.match(/^(\s*)((?:<br>)+)?(\s*)(.*?)(\s*)$/is);
+      const brPrefix = spacingMatch
+        ? `${spacingMatch[1]}${spacingMatch[2] || ''}`
+        : '';
+      const leadingSpace = spacingMatch ? spacingMatch[3] : '';
+      const core = spacingMatch ? spacingMatch[4] : segment;
+      const trailingSpace = spacingMatch ? spacingMatch[5] : '';
       const plainCore = stripTags(core);
       const trimmedCore = core.trim();
-      const startsWithHeadwordLink = trimmedCore.startsWith('<span class="related-entry-headword">');
-      const startsWithDialogue = TUPI_DIALOGUE_RE.test(trimmedCore);
-
-      const colonIndex = findColonOutside(core);
-      if (colonIndex !== -1) {
-        let left = core.slice(0, colonIndex + 1);
-        let right = core.slice(colonIndex + 1).trim();
-        let plainRight = stripTags(right);
-
-        const startsWithSenseMarker = (() => {
-          if (plainRight.trim().match(/^(\d+|[a-z])\)/i)) {
-            return true;
-          }
-          return /<span class="sense-(number|letter)">/i.test(right);
-        })();
-
-        if (startsWithSenseMarker) {
-          const secondaryIndex = findColonOutside(right);
-          if (secondaryIndex !== -1) {
-            const newColonPos = colonIndex + 1 + secondaryIndex;
-            const candidateRight = core.slice(newColonPos + 1).trim();
-            const candidatePlainRight = stripTags(candidateRight);
-            const candidateStartsDialogue = TUPI_DIALOGUE_RE.test(candidatePlainRight.trim());
-            if (candidateRight && (hasDash(candidatePlainRight) || candidateStartsDialogue)) {
-              left = core.slice(0, newColonPos + 1);
-              right = candidateRight;
-              plainRight = candidatePlainRight;
-            }
-          }
+      const startsWithHeadwordLink = /^(?:;?\s*(?:<br>)?\s*)*<span class="related-entry-headword">/i.test(trimmedCore);
+      const containsSenseMarkup = /class="sense-(?:section-title|number|letter|definition)"/i.test(core);
+      const startsWithDialogue = !containsSenseMarkup
+        && Boolean(parseDialogue(trimmedCore));
+      const isWholeDelimited = (value, open, close) => {
+        if (!value.startsWith(open) || !value.endsWith(close)) return false;
+        let depth = 0;
+        for (let idx = 0; idx < value.length; idx += 1) {
+          if (value[idx] === open) depth += 1;
+          if (value[idx] === close) depth -= 1;
+          if (depth === 0 && idx < value.length - 1) return false;
         }
+        return depth === 0;
+      };
+      const plainTrimmed = plainCore.trim();
+      const bracketCandidate = plainTrimmed.replace(/^\.\s*/, '');
+      const bracketedProse = isWholeDelimited(bracketCandidate, '[', ']')
+        || isWholeDelimited(plainTrimmed, '(', ')');
+      const startsWithBracketedCategory = /^\[\s*(?:adj|adv)\.?\s*:/i.test(plainTrimmed);
 
-        const rightStartsDialogue = TUPI_DIALOGUE_RE.test(plainRight.trim());
-        if (right && (hasDash(plainRight) || rightStartsDialogue)) {
-          return {
-            segment,
-            brPrefix,
-            leadingSpace,
-            core,
-            trailingSpace,
-            plainCore,
-            startsWithHeadwordLink,
-            type: 'colonQuote',
-            left,
-            quoteText: right,
-            startsWithLetter: TUPI_START_RE.test(plainCore.trim()),
-          };
-        }
+      if (startsWithBracketedCategory && !hasDash(plainCore)) {
+        return {
+          segment,
+          brPrefix,
+          leadingSpace,
+          core,
+          trailingSpace,
+          plainCore,
+          startsWithHeadwordLink,
+          type: 'quoteListStart',
+          quoteText: '',
+          startsWithLetter: false,
+        };
+      }
+
+      if (bracketedProse) {
+        return {
+          segment,
+          brPrefix,
+          leadingSpace,
+          core,
+          trailingSpace,
+          plainCore,
+          startsWithHeadwordLink,
+          type: 'other',
+          quoteText: '',
+          startsWithLetter: false,
+        };
       }
 
       if (startsWithDialogue) {
@@ -1686,7 +2871,344 @@
         };
       }
 
-      if (hasDash(plainCore)) {
+      const citedPairColonIndex = findCitedPairColonBoundary(core);
+      if (citedPairColonIndex !== -1) {
+        return {
+          segment,
+          brPrefix,
+          leadingSpace,
+          core,
+          trailingSpace,
+          plainCore,
+          startsWithHeadwordLink,
+          type: 'colonQuote',
+          left: core.slice(0, citedPairColonIndex + 1),
+          quoteText: core.slice(citedPairColonIndex + 1).trim(),
+          startsWithLetter: TUPI_START_RE.test(plainCore.trim()),
+        };
+      }
+
+      // Recognize a complete multi-turn example before the more general
+      // definition/quote recovery.  Otherwise the several turn dashes can be
+      // mistaken for nested definition separators.
+      const earlyColonIndex = findColonOutside(core);
+      if (earlyColonIndex !== -1) {
+        const dialogueRight = core.slice(earlyColonIndex + 1).trim();
+        if (parseDialogue(dialogueRight)) {
+          return {
+            segment,
+            brPrefix,
+            leadingSpace,
+            core,
+            trailingSpace,
+            plainCore,
+            startsWithHeadwordLink,
+            type: 'colonQuote',
+            left: core.slice(0, earlyColonIndex + 1),
+            quoteText: dialogueRight,
+            startsWithLetter: TUPI_START_RE.test(plainCore.trim()),
+          };
+        }
+      }
+
+      const headingQuoteMatch = core.match(
+        /^(<div class="sense-section-title">[^<]+<\/div>)<span class="sense-definition">([\s\S]+)<\/span>;?$/i
+      );
+      if (headingQuoteMatch) {
+        const quoteText = headingQuoteMatch[2].trim();
+        const split = splitQuoteLines(quoteText);
+        if (
+          extractTrailingCitation(quoteText).citation
+          && findTranslationSeparators(quoteText).length === 1
+          && split.tupi
+          && split.pt
+          && !(
+            stripTags(split.tupi).includes(';')
+            && !/[.!?…]/.test(stripTags(split.tupi))
+          )
+        ) {
+          return {
+            segment,
+            brPrefix,
+            leadingSpace,
+            core,
+            trailingSpace,
+            plainCore,
+            startsWithHeadwordLink,
+            type: 'headingQuote',
+            left: headingQuoteMatch[1],
+            quoteText,
+            startsWithLetter: false,
+          };
+        }
+      }
+
+      const semanticDefinitionQuote = splitSemanticDefinitionQuote(core);
+      if (semanticDefinitionQuote) {
+        const definitionHtml = semanticDefinitionQuote.definition
+          ? `<span class="sense-definition">${semanticDefinitionQuote.definition}</span>`
+          : '';
+        return {
+          segment,
+          brPrefix,
+          leadingSpace,
+          core,
+          trailingSpace,
+          plainCore,
+          startsWithHeadwordLink,
+          type: 'definitionQuote',
+          left: `${semanticDefinitionQuote.prefix}${definitionHtml}`,
+          quoteText: semanticDefinitionQuote.quoteText,
+          startsWithLetter: false,
+        };
+      }
+
+      // Related-entry source occasionally uses
+      // "lemma - gloss - Tupi sentence - Portuguese translation (source)".
+      // Keep the lemma/gloss as prose and promote only the final cited pair.
+      if (startsWithHeadwordLink) {
+        const { body, citation } = extractTrailingCitation(core);
+        const separators = findTranslationSeparators(body);
+        if (citation && separators.length === 3) {
+          const sourceStart = separators[1].index + separators[1].length;
+          const source = body.slice(sourceStart, separators[2].index).trim();
+          const portuguese = body
+            .slice(separators[2].index + separators[2].length)
+            .trim();
+          if (
+            source
+            && portuguese
+            && /[.!?…][\"'’”]?$/.test(stripTags(source))
+            && !/^v\.\s*$/i.test(stripTags(portuguese))
+          ) {
+            const relatedPrefix = body.slice(0, separators[1].index).trim();
+            return {
+              segment,
+              brPrefix,
+              leadingSpace,
+              core,
+              trailingSpace,
+              plainCore,
+              startsWithHeadwordLink,
+              type: 'relatedDefinitionQuote',
+              left: /:\s*$/.test(stripTags(relatedPrefix))
+                ? relatedPrefix
+                : `${relatedPrefix}:`,
+              quoteText: `${source} - ${portuguese} ${citation}`,
+              startsWithLetter: false,
+            };
+          }
+        }
+      }
+
+      let colonIndex = findColonOutside(core);
+      if (isColonInsideCitedSource(core, colonIndex)) {
+        colonIndex = -1;
+      }
+      const coreSeparators = findTranslationSeparators(core);
+      const firstCoreSeparator = coreSeparators[0];
+      const explicitCitedPairBeforeColon = (() => {
+        if (
+          colonIndex === -1
+          || !firstCoreSeparator
+          || firstCoreSeparator.index >= colonIndex
+          || !hasTrailingCitation(core)
+        ) {
+          return false;
+        }
+        const source = stripTags(core.slice(0, firstCoreSeparator.index)).trim();
+        return TUPI_START_RE.test(source)
+          && /(?:[îûŷẽõ]|gû|kû|nh|mb|nd|[aeiouáéíóú]['’])/i.test(source);
+      })();
+      if (
+        colonIndex !== -1
+        && !core.includes('<')
+        && coreSeparators.length
+        && (firstCoreSeparator.compact || explicitCitedPairBeforeColon)
+        && coreSeparators[0].index < colonIndex
+      ) {
+        // A colon in the Portuguese half (for example "-Disseste:") is
+        // punctuation, not a definition/example boundary.
+        colonIndex = -1;
+      }
+      if (colonIndex !== -1) {
+        let left = core.slice(0, colonIndex + 1);
+        let rightStart = colonIndex + 1;
+        while (/\s/.test(core[rightStart] || '')) rightStart += 1;
+        let right = core.slice(rightStart).trimEnd();
+        let plainRight = stripTags(right);
+
+        const startsWithSenseMarker = (() => {
+          if (plainRight.trim().match(/^(\d+|[a-z])\)/i)) {
+            return true;
+          }
+          return /<span class="sense-(number|letter)">/i.test(right);
+        })();
+
+        const secondaryIndex = findColonOutside(right);
+        const firstRightSeparator = findTranslationSeparators(right)[0];
+        const hasDanglingGlossFragment = containsSenseMarkup
+          && /^[a-zà-ÿ][^:]*\)\s*:/.test(plainRight.trim());
+        const hasLeadingSemanticDefinition = containsSenseMarkup
+          && /<span class="sense-definition">[\s\S]*<\/span>\s*:/.test(
+            right.slice(0, secondaryIndex + 1)
+          );
+        const hasLeadingGlossBeforeExample = secondaryIndex !== -1
+          && /^[a-zà-ÿ]/.test(
+            stripTags(right.slice(0, secondaryIndex)).trim()
+          );
+        if (
+          secondaryIndex !== -1
+          && (
+            startsWithSenseMarker
+            || hasDanglingGlossFragment
+            || hasLeadingSemanticDefinition
+            || hasLeadingGlossBeforeExample
+          )
+          && (!firstRightSeparator || secondaryIndex < firstRightSeparator.index)
+        ) {
+            const newColonPos = rightStart + secondaryIndex;
+            const candidateRight = core.slice(newColonPos + 1).trim();
+            const candidatePlainRight = stripTags(candidateRight);
+            const candidateStartsDialogue = Boolean(parseDialogue(candidatePlainRight.trim()));
+            const candidatePair = splitQuoteLines(candidateRight);
+            const validatedGlossBoundary = !hasLeadingGlossBeforeExample || (
+              hasTrailingCitation(candidateRight)
+              && candidatePair.tupi
+              && candidatePair.pt
+              && /[.!?…][\"'’”]?$/.test(stripTags(candidatePair.tupi).trim())
+            );
+            if (
+              candidateRight
+              && validatedGlossBoundary
+              && (hasDash(candidatePlainRight) || candidateStartsDialogue)
+            ) {
+              left = core.slice(0, newColonPos + 1);
+              right = candidateRight;
+              plainRight = candidatePlainRight;
+            }
+        }
+
+        const implicitRightPair = splitImplicitCitedPair(right);
+        if (right && implicitRightPair) {
+          return {
+            segment,
+            brPrefix,
+            leadingSpace,
+            core,
+            trailingSpace,
+            plainCore,
+            startsWithHeadwordLink,
+            type: 'colonQuote',
+            left,
+            quoteText: implicitRightPair.quoteText,
+            startsWithLetter: TUPI_START_RE.test(plainCore.trim()),
+          };
+        }
+
+        const rightStartsDialogue = Boolean(parseDialogue(plainRight.trim()));
+        const rightPair = splitQuoteLines(right);
+        const rightSourceParts = stripTags(rightPair.tupi)
+          .split(/;\s*/)
+          .map((part) => part.trim())
+          .filter(Boolean);
+        const firstGlossColon = rightSourceParts.length
+          ? findColonOutside(rightSourceParts[0])
+          : -1;
+        const firstInlineGloss = firstGlossColon === -1
+          ? ''
+          : rightSourceParts[0].slice(firstGlossColon + 1).trim();
+        const isInlineGlossList = rightSourceParts.length === 2
+          && firstInlineGloss
+          && looksLikePortugueseText(firstInlineGloss)
+          && !looksDistinctivelyTupiText(firstInlineGloss)
+          && looksDistinctivelyTupiText(rightSourceParts[rightSourceParts.length - 1]);
+        if (isInlineGlossList) {
+          return {
+            segment,
+            brPrefix,
+            leadingSpace,
+            core,
+            trailingSpace,
+            plainCore,
+            startsWithHeadwordLink,
+            type: 'inlineGlossPairs',
+            left,
+            inlinePairs: [
+              {
+                source: rightSourceParts[0].slice(0, firstGlossColon).trim(),
+                portuguese: firstInlineGloss,
+                citation: rightPair.citation,
+              },
+              {
+                source: rightSourceParts[1],
+                portuguese: stripTags(rightPair.pt).trim(),
+                citation: rightPair.citation,
+              },
+            ],
+            quoteText: right,
+            startsWithLetter: false,
+          };
+        }
+        if (right && (hasDash(plainRight) || rightStartsDialogue)) {
+          return {
+            segment,
+            brPrefix,
+            leadingSpace,
+            core,
+            trailingSpace,
+            plainCore,
+            startsWithHeadwordLink,
+            type: 'colonQuote',
+            left,
+            quoteText: right,
+            startsWithLetter: TUPI_START_RE.test(plainCore.trim()),
+          };
+        }
+
+        if (!right && colonIndex === core.trimEnd().length - 1) {
+          return {
+            segment,
+            brPrefix,
+            leadingSpace,
+            core,
+            trailingSpace,
+            plainCore,
+            startsWithHeadwordLink,
+            type: 'quoteListStart',
+            quoteText: '',
+            startsWithLetter: false,
+          };
+        }
+      }
+
+      // One attested example omits the usual translation dash after an
+      // ellipsis ("Emonãnamo, xe ruri... Portanto, eu vim.").  Recover only
+      // that citation-backed shape so an ordinary ellipsis in prose remains
+      // prose rather than becoming a fabricated bilingual pair.
+      if (!containsSenseMarkup && !hasDash(plainCore)) {
+        const { body: uncitedBody, citation } = extractTrailingCitation(core);
+        const implicitPair = citation && uncitedBody.match(
+          /^([\s\S]+?(?:\.{3}|…))\s+([A-ZÀ-ÖØ-ÞŶ][\s\S]+)$/
+        );
+        if (implicitPair && TUPI_START_RE.test(stripTags(implicitPair[1]).trim())) {
+          const quoteText = `${implicitPair[1].trim()} - ${implicitPair[2].trim()} ${citation}`;
+          return {
+            segment,
+            brPrefix,
+            leadingSpace,
+            core,
+            trailingSpace,
+            plainCore,
+            startsWithHeadwordLink,
+            type: 'quote',
+            quoteText,
+            startsWithLetter: true,
+          };
+        }
+      }
+
+      if (hasDash(plainCore) && !containsSenseMarkup) {
         return {
           segment,
           brPrefix,
@@ -1701,7 +3223,29 @@
         };
       }
 
-      if (hasTrailingCitation(plainCore) && quoteStartRe.test(plainCore.trim())) {
+      const implicitPair = !containsSenseMarkup
+        ? splitImplicitCitedPair(core)
+        : null;
+      if (implicitPair) {
+        return {
+          segment,
+          brPrefix,
+          leadingSpace,
+          core,
+          trailingSpace,
+          plainCore,
+          startsWithHeadwordLink,
+          type: 'implicitQuote',
+          quoteText: implicitPair.quoteText,
+          startsWithLetter: TUPI_START_RE.test(plainCore.trim()),
+        };
+      }
+
+      if (
+        hasTrailingCitation(plainCore)
+        && quoteStartRe.test(plainCore.trim())
+        && !containsSenseMarkup
+      ) {
         return {
           segment,
           brPrefix,
@@ -1730,8 +3274,55 @@
       };
     };
 
-    const mergedSegments = mergeQuotedSegments(segments);
-    const parsedSegments = mergedSegments.map(parseSegment);
+    const senseDelimitedSegments = segments.flatMap(splitAtGeneratedSenseBoundaries);
+    const citationDelimitedSegments = senseDelimitedSegments.flatMap(splitAtSourceCitationBoundaries);
+    const sourceContinuationSegments = mergeSourceContinuationSegments(
+      citationDelimitedSegments
+    );
+    const mergedSegments = mergeQuotedSegments(sourceContinuationSegments);
+    const finalSegments = mergedSegments.flatMap(splitAtSourceCitationBoundaries);
+    const editorialDelimitedSegments = finalSegments.flatMap((segment) => {
+      const noteMatch = segment.match(
+        /(\s+\(\s*V\.\s*(?:tb\.\s*)?[^()]*\))\s*$/i
+      );
+      if (!noteMatch) return [segment];
+      const prefix = segment.slice(0, noteMatch.index).trimEnd();
+      return hasTrailingCitation(prefix)
+        ? [prefix, noteMatch[1]]
+        : [segment];
+    });
+    const parsedSegments = editorialDelimitedSegments.map(parseSegment);
+
+    // A source can give a second cited Portuguese gloss for the immediately
+    // preceding form without repeating that form (for example, "kóbo - nas
+    // roças (...); pelas roças (...)").  Duplicate the source side in the
+    // rendered card instead of leaving the second gloss orphaned.
+    for (let idx = 1; idx < parsedSegments.length; idx += 1) {
+      const current = parsedSegments[idx];
+      const previous = parsedSegments[idx - 1];
+      if (
+        current.type !== 'other'
+        || previous.startsWithHeadwordLink
+        || !previous.quoteText
+        || hasDash(current.core)
+        || !hasTrailingCitation(current.core)
+      ) {
+        continue;
+      }
+      const currentPlain = stripTags(current.core).trim();
+      const previousPair = splitQuoteLines(previous.quoteText);
+      if (
+        !/^[a-zà-ÿ]/.test(currentPlain)
+        || looksDistinctivelyTupiText(currentPlain)
+        || !previousPair.tupi
+        || !previousPair.pt
+      ) {
+        continue;
+      }
+      current.type = 'quote';
+      current.quoteText = `${previousPair.tupi} - ${normalizeQuoteText(current.core)}`;
+      current.startsWithLetter = true;
+    }
 
     parsedSegments.forEach((seg) => {
       const plain = (seg.plainCore || '').trim();
@@ -1748,6 +3339,9 @@
       const normalized = normalizeQuoteText(text);
       const { citation } = extractTrailingCitation(normalized);
       if (citation) {
+        return normalized;
+      }
+      if (/\([^()]+\)\s*$/.test(stripTags(normalized))) {
         return normalized;
       }
 
@@ -1778,21 +3372,133 @@
         inQuoteList = false;
       }
 
-      if (seg.type === 'colonQuote') {
+      if (seg.type === 'quoteListStart') {
         inQuoteList = true;
-        const quoteText = ensureCitation(seg.quoteText, idx + 1);
+        formattedSegments.push(seg.segment);
+        if (seg.plainCore.trim()) seenContent = true;
+        continue;
+      }
+
+      if (seg.type === 'inlineGlossPairs') {
+        inQuoteList = true;
         formattedSegments.push(
-          `${seg.brPrefix}${seg.leadingSpace}${seg.left}${buildQuoteBlock(quoteText)}${seg.trailingSpace}`
+          `${seg.brPrefix}${seg.leadingSpace}${seg.left}${seg.inlinePairs
+            .map((pair) =>
+              buildQuoteBlock(
+                `${pair.source} - ${pair.portuguese} ${pair.citation}`
+              )
+            )
+            .join('')}${seg.trailingSpace}`
         );
         seenContent = true;
         continue;
       }
 
+      if (seg.type === 'colonQuote') {
+        const quoteText = ensureCitation(seg.quoteText, idx + 1);
+        const relatedTail = splitRelatedEntryTail(quoteText);
+        if (relatedTail) {
+          const firstQuoteText = `${relatedTail.before} ${relatedTail.citation}`;
+          const firstPair = splitQuoteLines(firstQuoteText);
+          const tailText = `${relatedTail.tail} ${relatedTail.citation}`;
+          const tailPair = splitQuoteLines(tailText);
+          if (
+            firstPair.tupi
+            && !firstPair.pt
+            && tailPair.tupi
+            && tailPair.pt
+          ) {
+            formattedSegments.push(
+              `${seg.brPrefix}${seg.leadingSpace}${seg.left}${buildQuoteBlock(
+                `${firstPair.tupi} - ${tailPair.pt} ${relatedTail.citation}`
+              )}${buildQuoteBlock(tailText)}${seg.trailingSpace}`
+            );
+            inQuoteList = true;
+            seenContent = true;
+            continue;
+          }
+          const firstIsSentenceExample = /[.!?…]["'’”]?$/.test(
+            stripTags(firstPair.tupi).trim()
+          );
+          formattedSegments.push(
+            firstIsSentenceExample
+              ? `${seg.brPrefix}${seg.leadingSpace}${seg.left}${buildQuoteBlocks(firstQuoteText)} ${tailText}${seg.trailingSpace}`
+              : `${seg.brPrefix}${seg.leadingSpace}${seg.left}${buildQuoteBlocks(firstQuoteText)}${buildQuoteBlocks(tailText)}${seg.trailingSpace}`
+          );
+          inQuoteList = !firstIsSentenceExample;
+          seenContent = true;
+          continue;
+        }
+        inQuoteList = true;
+        formattedSegments.push(
+          `${seg.brPrefix}${seg.leadingSpace}${seg.left}${buildQuoteBlocks(quoteText)}${seg.trailingSpace}`
+        );
+        seenContent = true;
+        continue;
+      }
+
+      if (
+        seg.type === 'headingQuote'
+        || seg.type === 'definitionQuote'
+        || seg.type === 'relatedDefinitionQuote'
+      ) {
+        inQuoteList = true;
+        const quoteText = ensureCitation(seg.quoteText, idx + 1);
+        formattedSegments.push(
+          `${seg.brPrefix}${seg.leadingSpace}${seg.left}${buildQuoteBlocks(quoteText)}${seg.trailingSpace}`
+        );
+        seenContent = true;
+        continue;
+      }
+
+      // A complete, cited bilingual pair is an example regardless of whether
+      // a preceding colon survived the source's loose punctuation.  Requiring
+      // both sides plus a credible trailing citation keeps hyphenated prose
+      // and related-entry labels out of quote cards.
+      if (
+        seg.type === 'quote'
+        && hasTrailingCitation(seg.quoteText)
+      ) {
+        const pair = splitQuoteLines(seg.quoteText);
+        const source = stripTags(pair.tupi).replace(/^\s*-\s*/, '').trim();
+        const portuguese = stripTags(pair.pt).trim();
+        const relatedHeadwordCount = (
+          seg.quoteText.match(/class="related-entry-headword"/gi) || []
+        ).length;
+        const linkedPhraseLooksLikeExample = seg.startsWithHeadwordLink
+          && relatedHeadwordCount === 1
+          && !/;\s*<span class="related-entry-headword">/i.test(seg.quoteText)
+          && source.split(/\s+/).length >= 4
+          && /^[A-ZÀ-ÖØ-ÞŶ]/.test(portuguese);
+        if (
+          pair.tupi
+          && pair.pt
+          && (TUPI_START_RE.test(source) || quoteStartRe.test(source))
+          && !/^v\.\s*$/i.test(portuguese)
+          && (!relatedHeadwordCount || linkedPhraseLooksLikeExample)
+        ) {
+          const quoteText = normalizeQuoteText(seg.quoteText).replace(
+            /<span class="related-entry-headword"><a\b[^>]*>([\s\S]*?)<\/a><\/span>/i,
+            '$1'
+          );
+          formattedSegments.push(
+            `${seg.brPrefix}${seg.leadingSpace}${buildQuoteBlocks(quoteText)}${seg.trailingSpace}`
+          );
+          inQuoteList = true;
+          seenContent = true;
+          continue;
+        }
+      }
+
       if (inQuoteList) {
-        if ((seg.type === 'quote' || seg.type === 'dialogue') && !seg.startsWithHeadwordLink) {
+        if (
+          (seg.type === 'quote' || seg.type === 'dialogue' || seg.type === 'implicitQuote')
+          && !seg.startsWithHeadwordLink
+          && !/class="related-entry-headword"/i.test(seg.quoteText)
+        ) {
           const quoteText = ensureCitation(seg.quoteText, idx + 1);
           formattedSegments.push(
-            `${seg.brPrefix}${seg.leadingSpace}${buildQuoteBlock(quoteText)}${seg.trailingSpace}`
+            `${seg.brPrefix}${seg.leadingSpace}${buildQuoteBlocks(quoteText)}${seg.trailingSpace}`
           );
           continue;
         }
@@ -1801,20 +3507,27 @@
 
       if ((seg.type === 'dialogue' || seg.type === 'quote') && !seg.startsWithHeadwordLink) {
         const trimmedQuote = seg.quoteText.trim();
-        if (TUPI_DIALOGUE_RE.test(trimmedQuote)) {
+        if (parseDialogue(trimmedQuote)) {
           const quoteText = ensureCitation(seg.quoteText, idx + 1);
           formattedSegments.push(
-            `${seg.brPrefix}${seg.leadingSpace}${buildQuoteBlock(quoteText)}${seg.trailingSpace}`
+            `${seg.brPrefix}${seg.leadingSpace}${buildQuoteBlocks(quoteText)}${seg.trailingSpace}`
           );
           seenContent = true;
           continue;
         }
       }
 
-      if (!seenContent && seg.type === 'quote' && seg.startsWithLetter && hasCitation(seg.quoteText) && !seg.startsWithHeadwordLink) {
+      if (
+        !seenContent
+        && seg.type === 'quote'
+        && seg.startsWithLetter
+        && hasCitation(seg.quoteText)
+        && !seg.startsWithHeadwordLink
+        && !/class="related-entry-headword"/i.test(seg.quoteText)
+      ) {
         const quoteText = normalizeQuoteText(seg.quoteText);
         formattedSegments.push(
-          `${seg.brPrefix}${seg.leadingSpace}${buildQuoteBlock(quoteText)}${seg.trailingSpace}`
+          `${seg.brPrefix}${seg.leadingSpace}${buildQuoteBlocks(quoteText)}${seg.trailingSpace}`
         );
         seenContent = true;
         continue;
@@ -1833,7 +3546,7 @@
     const { before, nota } = splitByNota(definition);
     const sections = splitByBullet(before);
     if (sections.length <= 1) {
-      const formatted = formatVerbeteSection(before);
+      const formatted = formatVerbeteSection(before, true);
       return nota ? `${formatted}<br>${nota}` : formatted;
     }
 
@@ -1843,11 +3556,14 @@
         if (index !== 0) {
           sectionWithLinks = sectionWithLinks.replace(/^\s*(<br>\s*)+/, '');
         }
-        const formattedSection = formatVerbeteSection(sectionWithLinks);
+        const formattedSection = formatVerbeteSection(sectionWithLinks, index === 0);
         if (index === 0) {
           return formattedSection;
         }
-        const formattedWithBreaks = formattedSection.replace(/;\s*/g, ';<br>');
+        const formattedWithBreaks = formattedSection.replace(
+          /;\s*(?=<span class="related-entry-headword">)/g,
+          ';<br>'
+        );
         return `<div class="sense-section-title">Verbetes relacionados:</div>${formattedWithBreaks}`;
       })
       .join('');
