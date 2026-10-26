@@ -1,5 +1,17 @@
 # Current State
 
+## 2026-10-26 — Teatro/Castilho Pages deployment
+
+- Merged source revision `e78abbc8` was built from clean `main` and deployed as
+  `gh-pages` commit `d8b48140`.
+- GitHub Pages reported the exact commit `built` in 95.69 seconds. The live
+  custom domain serves the expanded Teatro linker, its 75-page manifest, the
+  page-36 to scan-757 mapping, the distinct 2006 page-176 to scan-682 mapping,
+  and the new Castilho source route.
+- The optimized artifact contains 2,300 primary-source images and 13 signed
+  offline packs. The raw source PDFs remain excluded. See the
+  [deployment handoff](session-handoffs/2026-10-26-teatro-pages-deployment.md).
+
 ## 2026-10-26 — All current Anchieta Teatro citations linked
 
 - All 1,431 current `Anch., Teatro` citations in 882 served dictionary records

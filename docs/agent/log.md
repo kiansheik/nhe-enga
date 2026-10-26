@@ -1,5 +1,13 @@
 # Agent Log
 
+## 2026-10-26 — Deployed merged Teatro and Castilho sources
+
+Fast-forwarded local `main` to merged PR #34 (`e78abbc8`), rebuilt the full
+optimized static site, and pushed Pages commit `d8b48140`. GitHub reported the
+deployment built successfully. Live checks confirmed the new Teatro linker,
+the 75-page manifest including page 36 to scan 757 and 2006 page 176 to scan
+682, the Castilho route, and a readable HTTP 200 page-36 JPEG.
+
 ## 2026-10-26 — Linked every current Anchieta Teatro citation
 
 Replaced the one-page Anchieta Teatro exception with separate Navarro 1999
