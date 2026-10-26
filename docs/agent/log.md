@@ -13,7 +13,8 @@ helper, edition-aware viewer navigation, sparse images, provenance, offline
 pack naming, refreshed source inventories, and corpus-wide regressions. All
 20 source/viewer tests, four formatter invariants, 53 Chromium tests, 11
 offline tests, the service-worker smoke test, JPEG verification, diff checks,
-and an 804 MiB no-PDF Pages build pass.
+and an 804 MiB no-PDF Pages build pass. Also repaired the Android CI setup by
+overriding its obsolete default `tools` package with `platform-tools`.
 
 ## 2026-10-25 — Repaired dictionary entry boundaries corpus-wide
 

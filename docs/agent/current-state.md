@@ -23,7 +23,9 @@
 - Validation passes: 20 source/viewer tests, four corpus formatting/link-token
   tests, 53 real-Chromium formatting tests, 11 offline-catalog tests, the
   service-worker smoke test, 75 JPEG decode checks, and an 804 MiB Pages build
-  containing all 75 optimized images and no raw Teatro PDF. See the
+  containing all 75 optimized images and no raw Teatro PDF. The Android CI
+  setup now requests `platform-tools` explicitly instead of the retired SDK
+  package `tools`. See the
   [handoff](session-handoffs/2026-10-26-anchieta-teatro-all-citations.md).
 
 ## 2026-10-25 — Dictionary-entry boundary repair

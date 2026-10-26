@@ -24,6 +24,7 @@ interchangeable.
 - Catalog/build: `scripts/build_offline.py`,
   `scripts/data/source_inventory.py`, and regenerated
   `docs/primary_sources/source_inventory.*` / citation audit
+- CI: `.github/workflows/offline.yml`
 - Tests: `tests/primary_sources.test.cjs`, `tests/offline/test_catalog.py`
 - Documentation: root `README.md`, agent state/map/assets/questions/log, and
   this handoff
@@ -71,6 +72,9 @@ changed. The raw 105 MB source PDF remains outside the Pages artifact.
   witnesses and makes no general pagination-equivalence claim.
 - The sandbox denied Chromium startup and localhost binding until the approved
   test command ran outside it.
+- The first PR Android job failed before checkout code ran because
+  `android-actions/setup-android` requested Google's retired SDK package
+  `tools`. The workflow now requests `platform-tools` explicitly.
 - One ad-hoc popup script subscribed after the new tab opened and missed its
   event; the exact anchor was still observed in the localhost DOM, while the
   source viewer and image selection are covered by focused executable tests.
