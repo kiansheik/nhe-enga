@@ -1,0 +1,2239 @@
+{
+  "schema_version": 1,
+  "id": "figueira_arte_1628_wikisource",
+  "title": "Arte da Lingua Brasilica",
+  "author": "Luís Figueira",
+  "edition": "Primeira edição, Lisboa, Manuel da Silva, cerca de 1628",
+  "source_work_url": "https://pt.wikisource.org/wiki/Arte_da_Lingua_Brasilica",
+  "source_print_url": "https://pt.wikisource.org/wiki/Anexo:Imprimir/Arte_da_Lingua_Brasilica",
+  "source_api_url": "https://pt.wikisource.org/w/api.php",
+  "print_wrapper_page_id": 256606,
+  "print_wrapper_revision_id": 560025,
+  "retrieved_at": "2026-10-26",
+  "license": {
+    "original": "public domain",
+    "transcription": "CC BY-SA 4.0 and GFDL",
+    "url": "https://creativecommons.org/licenses/by-sa/4.0/deed.pt-br"
+  },
+  "snapshot": {
+    "rendered_api_html_sha256": "57ec7b7282fdc95e512c56e23dcf25715f6e1240fca986abea209d22945943b6",
+    "transcription_html_sha256": "60369d4e4fdc01662a7307dd82a16979bdfd07e10c11aa2f606e9342930d6430",
+    "output_html_sha256": "12a7545ea0e2efe3ff00fb18660b8a8987564ffbf197fa9f34bd8a6624d2d7f2",
+    "output_bytes": 634726,
+    "leaf_page_count": 198,
+    "visible_page_marker_count": 189,
+    "embedded_image_count": 9
+  },
+  "edition_warning": "This transcription is the circa-1628 first edition. Navarro's Fig., Arte citations use the 1687 second edition through Platzmann's 1878 facsimile, so citation page numbers must not be mapped directly to this transcription.",
+  "embedded_images": [
+    {
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d5/EPUB_silk_icon.svg/20px-EPUB_silk_icon.svg.png?utm_source=pt.wikisource.org&utm_campaign=parser&utm_content=thumbnail",
+      "resolved_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d5/EPUB_silk_icon.svg/20px-EPUB_silk_icon.svg.png?utm_source=pt.wikisource.org&utm_campaign=parser&utm_content=thumbnail",
+      "content_type": "image/png",
+      "bytes": 1349,
+      "sha256": "073ff6178275800314aae4e0bc84d698276b4885d3e9db22ebff953c7cf89e20"
+    },
+    {
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ae/Mobi_icon.svg/40px-Mobi_icon.svg.png?utm_source=pt.wikisource.org&utm_campaign=parser&utm_content=thumbnail",
+      "resolved_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ae/Mobi_icon.svg/40px-Mobi_icon.svg.png?utm_source=pt.wikisource.org&utm_campaign=parser&utm_content=thumbnail",
+      "content_type": "image/png",
+      "bytes": 1683,
+      "sha256": "d0410efd73cc0da19671cc4e507b28681ed56cd9230cd6319339c693d3c4b222"
+    },
+    {
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/Pdf_by_mimooh.svg/20px-Pdf_by_mimooh.svg.png?utm_source=pt.wikisource.org&utm_campaign=parser&utm_content=thumbnail",
+      "resolved_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ec/Pdf_by_mimooh.svg/20px-Pdf_by_mimooh.svg.png?utm_source=pt.wikisource.org&utm_campaign=parser&utm_content=thumbnail",
+      "content_type": "image/png",
+      "bytes": 1230,
+      "sha256": "837fe76bfdb0a96a773e98375cf4e9997a82b813529c2982dd5fbb237d163d58"
+    },
+    {
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4e/Farm-Fresh_file_extension_rtf.png/20px-Farm-Fresh_file_extension_rtf.png?utm_source=pt.wikisource.org&utm_campaign=parser&utm_content=thumbnail",
+      "resolved_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4e/Farm-Fresh_file_extension_rtf.png/20px-Farm-Fresh_file_extension_rtf.png?utm_source=pt.wikisource.org&utm_campaign=parser&utm_content=thumbnail",
+      "content_type": "image/png",
+      "bytes": 1496,
+      "sha256": "eb101588f5ae070ff9587d19e1695db5f54e688c13c00ac4c961c7807ea05b05"
+    },
+    {
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/23/Text-txt.svg/40px-Text-txt.svg.png?utm_source=pt.wikisource.org&utm_campaign=parser&utm_content=thumbnail",
+      "resolved_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/23/Text-txt.svg/40px-Text-txt.svg.png?utm_source=pt.wikisource.org&utm_campaign=parser&utm_content=thumbnail",
+      "content_type": "image/png",
+      "bytes": 1691,
+      "sha256": "e0a6302bfc952f0b4ac6b999b11262f461310e9b3d3d9a5601014499e413d746"
+    },
+    {
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/40/Imagem_-_Arte_da_l%C3%ADngua_bras%C3%ADlica_p.5.jpg/250px-Imagem_-_Arte_da_l%C3%ADngua_bras%C3%ADlica_p.5.jpg?utm_source=pt.wikisource.org&utm_campaign=parser&utm_content=thumbnail",
+      "resolved_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/40/Imagem_-_Arte_da_l%C3%ADngua_bras%C3%ADlica_p.5.jpg/250px-Imagem_-_Arte_da_l%C3%ADngua_bras%C3%ADlica_p.5.jpg?utm_source=pt.wikisource.org&utm_campaign=parser&utm_content=thumbnail",
+      "content_type": "image/jpeg",
+      "bytes": 35709,
+      "sha256": "505a2f9502ee9cf08af25ff71cb39ac4bd825d63dd3e4bfe45ca8cf884c8d206"
+    },
+    {
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/90/COMC_V1_D043_Letter_A.jpg/60px-COMC_V1_D043_Letter_A.jpg?utm_source=pt.wikisource.org&utm_campaign=parser&utm_content=thumbnail",
+      "resolved_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/90/COMC_V1_D043_Letter_A.jpg/60px-COMC_V1_D043_Letter_A.jpg?utm_source=pt.wikisource.org&utm_campaign=parser&utm_content=thumbnail",
+      "content_type": "image/jpeg",
+      "bytes": 2574,
+      "sha256": "31eb26109af530d19136511b0b42ff2732e834c3de473169a9860bbd4dbc5a80"
+    },
+    {
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/Imagem_-_Arte_da_l%C3%ADngua_bras%C3%ADlica_p.192.jpg/250px-Imagem_-_Arte_da_l%C3%ADngua_bras%C3%ADlica_p.192.jpg?utm_source=pt.wikisource.org&utm_campaign=parser&utm_content=thumbnail",
+      "resolved_url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/Imagem_-_Arte_da_l%C3%ADngua_bras%C3%ADlica_p.192.jpg/250px-Imagem_-_Arte_da_l%C3%ADngua_bras%C3%ADlica_p.192.jpg?utm_source=pt.wikisource.org&utm_campaign=parser&utm_content=thumbnail",
+      "content_type": "image/jpeg",
+      "bytes": 34743,
+      "sha256": "94a38dec8e4b98e081f19572108f6f0c18bc446b8fce3cd758211eda9c54d7b6"
+    },
+    {
+      "url": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Imagem_-_Arte_da_l%C3%ADngua_bras%C3%ADlica_p.194.jpg?utm_source=pt.wikisource.org&utm_campaign=parser&utm_content=thumbnail_unscaled",
+      "resolved_url": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Imagem_-_Arte_da_l%C3%ADngua_bras%C3%ADlica_p.194.jpg?utm_source=pt.wikisource.org&utm_campaign=parser&utm_content=thumbnail_unscaled",
+      "content_type": "image/jpeg",
+      "bytes": 138303,
+      "sha256": "02b114117002ff8f02d3884702e8ebaf513dbeb7453ab5b93c9e650c0c888504"
+    }
+  ],
+  "page_markers": [
+    {
+      "id": "Folha_de_rosto",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/5"
+    },
+    {
+      "id": "i",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/7"
+    },
+    {
+      "id": "ii",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/8"
+    },
+    {
+      "id": "iii",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/9"
+    },
+    {
+      "id": "iv",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/10"
+    },
+    {
+      "id": "1r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/11"
+    },
+    {
+      "id": "1v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/12"
+    },
+    {
+      "id": "2r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/13"
+    },
+    {
+      "id": "2v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/14"
+    },
+    {
+      "id": "3r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/15"
+    },
+    {
+      "id": "3v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/16"
+    },
+    {
+      "id": "4r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/17"
+    },
+    {
+      "id": "4v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/18"
+    },
+    {
+      "id": "5r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/19"
+    },
+    {
+      "id": "5v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/20"
+    },
+    {
+      "id": "6r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/21"
+    },
+    {
+      "id": "6v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/22"
+    },
+    {
+      "id": "7r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/23"
+    },
+    {
+      "id": "7v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/24"
+    },
+    {
+      "id": "8r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/25"
+    },
+    {
+      "id": "8v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/26"
+    },
+    {
+      "id": "9r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/27"
+    },
+    {
+      "id": "9v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/28"
+    },
+    {
+      "id": "10r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/29"
+    },
+    {
+      "id": "10v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/30"
+    },
+    {
+      "id": "11r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/31"
+    },
+    {
+      "id": "11v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/32"
+    },
+    {
+      "id": "12r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/33"
+    },
+    {
+      "id": "12v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/34"
+    },
+    {
+      "id": "13r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/35"
+    },
+    {
+      "id": "13v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/36"
+    },
+    {
+      "id": "14r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/37"
+    },
+    {
+      "id": "14v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/38"
+    },
+    {
+      "id": "15r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/39"
+    },
+    {
+      "id": "15v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/40"
+    },
+    {
+      "id": "16r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/41"
+    },
+    {
+      "id": "16v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/42"
+    },
+    {
+      "id": "17r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/43"
+    },
+    {
+      "id": "17v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/44"
+    },
+    {
+      "id": "18r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/45"
+    },
+    {
+      "id": "18v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/46"
+    },
+    {
+      "id": "19r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/47"
+    },
+    {
+      "id": "19v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/48"
+    },
+    {
+      "id": "20r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/49"
+    },
+    {
+      "id": "20v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/50"
+    },
+    {
+      "id": "21r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/51"
+    },
+    {
+      "id": "21v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/52"
+    },
+    {
+      "id": "22r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/53"
+    },
+    {
+      "id": "22v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/54"
+    },
+    {
+      "id": "23r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/55"
+    },
+    {
+      "id": "23v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/56"
+    },
+    {
+      "id": "24r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/57"
+    },
+    {
+      "id": "24v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/58"
+    },
+    {
+      "id": "25r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/59"
+    },
+    {
+      "id": "25v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/60"
+    },
+    {
+      "id": "26r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/61"
+    },
+    {
+      "id": "26v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/62"
+    },
+    {
+      "id": "27r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/63"
+    },
+    {
+      "id": "27v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/64"
+    },
+    {
+      "id": "28r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/65"
+    },
+    {
+      "id": "28v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/66"
+    },
+    {
+      "id": "29r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/67"
+    },
+    {
+      "id": "29v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/68"
+    },
+    {
+      "id": "30r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/69"
+    },
+    {
+      "id": "30v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/70"
+    },
+    {
+      "id": "31r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/71"
+    },
+    {
+      "id": "31v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/72"
+    },
+    {
+      "id": "32r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/73"
+    },
+    {
+      "id": "32v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/74"
+    },
+    {
+      "id": "33r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/75"
+    },
+    {
+      "id": "33v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/76"
+    },
+    {
+      "id": "34r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/77"
+    },
+    {
+      "id": "34v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/78"
+    },
+    {
+      "id": "35r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/79"
+    },
+    {
+      "id": "35v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/80"
+    },
+    {
+      "id": "36r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/81"
+    },
+    {
+      "id": "36v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/82"
+    },
+    {
+      "id": "37r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/83"
+    },
+    {
+      "id": "37v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/84"
+    },
+    {
+      "id": "38r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/85"
+    },
+    {
+      "id": "38v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/86"
+    },
+    {
+      "id": "39r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/87"
+    },
+    {
+      "id": "39v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/88"
+    },
+    {
+      "id": "40r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/89"
+    },
+    {
+      "id": "40v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/90"
+    },
+    {
+      "id": "41r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/91"
+    },
+    {
+      "id": "41v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/92"
+    },
+    {
+      "id": "42r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/93"
+    },
+    {
+      "id": "42v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/94"
+    },
+    {
+      "id": "43r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/95"
+    },
+    {
+      "id": "43v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/96"
+    },
+    {
+      "id": "44r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/97"
+    },
+    {
+      "id": "44v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/98"
+    },
+    {
+      "id": "45r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/99"
+    },
+    {
+      "id": "45v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/100"
+    },
+    {
+      "id": "46r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/101"
+    },
+    {
+      "id": "46v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/102"
+    },
+    {
+      "id": "47r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/103"
+    },
+    {
+      "id": "47v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/104"
+    },
+    {
+      "id": "48r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/105"
+    },
+    {
+      "id": "48v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/106"
+    },
+    {
+      "id": "49r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/107"
+    },
+    {
+      "id": "49v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/108"
+    },
+    {
+      "id": "50r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/109"
+    },
+    {
+      "id": "50v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/110"
+    },
+    {
+      "id": "51r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/111"
+    },
+    {
+      "id": "51v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/112"
+    },
+    {
+      "id": "52r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/113"
+    },
+    {
+      "id": "52v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/114"
+    },
+    {
+      "id": "53r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/115"
+    },
+    {
+      "id": "53v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/116"
+    },
+    {
+      "id": "54r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/117"
+    },
+    {
+      "id": "54v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/118"
+    },
+    {
+      "id": "55r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/119"
+    },
+    {
+      "id": "55v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/120"
+    },
+    {
+      "id": "56r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/121"
+    },
+    {
+      "id": "56v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/122"
+    },
+    {
+      "id": "57r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/123"
+    },
+    {
+      "id": "57v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/124"
+    },
+    {
+      "id": "58r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/125"
+    },
+    {
+      "id": "58v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/126"
+    },
+    {
+      "id": "59r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/127"
+    },
+    {
+      "id": "59v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/128"
+    },
+    {
+      "id": "60r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/129"
+    },
+    {
+      "id": "60v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/130"
+    },
+    {
+      "id": "61r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/131"
+    },
+    {
+      "id": "61v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/132"
+    },
+    {
+      "id": "62r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/133"
+    },
+    {
+      "id": "62v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/134"
+    },
+    {
+      "id": "63r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/135"
+    },
+    {
+      "id": "63v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/136"
+    },
+    {
+      "id": "64r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/137"
+    },
+    {
+      "id": "64v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/138"
+    },
+    {
+      "id": "65r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/139"
+    },
+    {
+      "id": "65v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/140"
+    },
+    {
+      "id": "66r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/141"
+    },
+    {
+      "id": "66v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/142"
+    },
+    {
+      "id": "67r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/143"
+    },
+    {
+      "id": "67v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/144"
+    },
+    {
+      "id": "68r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/145"
+    },
+    {
+      "id": "68v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/146"
+    },
+    {
+      "id": "69r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/147"
+    },
+    {
+      "id": "69v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/148"
+    },
+    {
+      "id": "70r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/149"
+    },
+    {
+      "id": "70v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/150"
+    },
+    {
+      "id": "71r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/151"
+    },
+    {
+      "id": "71v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/152"
+    },
+    {
+      "id": "72r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/153"
+    },
+    {
+      "id": "72v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/154"
+    },
+    {
+      "id": "73r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/155"
+    },
+    {
+      "id": "73v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/156"
+    },
+    {
+      "id": "74r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/157"
+    },
+    {
+      "id": "74v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/158"
+    },
+    {
+      "id": "75r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/159"
+    },
+    {
+      "id": "75v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/160"
+    },
+    {
+      "id": "76r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/161"
+    },
+    {
+      "id": "76v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/162"
+    },
+    {
+      "id": "77r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/163"
+    },
+    {
+      "id": "77v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/164"
+    },
+    {
+      "id": "78r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/165"
+    },
+    {
+      "id": "78v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/166"
+    },
+    {
+      "id": "79r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/167"
+    },
+    {
+      "id": "79v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/168"
+    },
+    {
+      "id": "80r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/169"
+    },
+    {
+      "id": "80v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/170"
+    },
+    {
+      "id": "81r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/171"
+    },
+    {
+      "id": "81v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/172"
+    },
+    {
+      "id": "82r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/173"
+    },
+    {
+      "id": "82v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/174"
+    },
+    {
+      "id": "83r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/175"
+    },
+    {
+      "id": "83v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/176"
+    },
+    {
+      "id": "84r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/177"
+    },
+    {
+      "id": "84v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/178"
+    },
+    {
+      "id": "85r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/179"
+    },
+    {
+      "id": "85v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/180"
+    },
+    {
+      "id": "86r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/181"
+    },
+    {
+      "id": "86v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/182"
+    },
+    {
+      "id": "87r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/183"
+    },
+    {
+      "id": "87v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/184"
+    },
+    {
+      "id": "88r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/185"
+    },
+    {
+      "id": "88v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/186"
+    },
+    {
+      "id": "89r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/187"
+    },
+    {
+      "id": "89v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/188"
+    },
+    {
+      "id": "90r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/189"
+    },
+    {
+      "id": "90v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/190"
+    },
+    {
+      "id": "91r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/191"
+    },
+    {
+      "id": "91v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/192"
+    },
+    {
+      "id": "92r",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/193"
+    },
+    {
+      "id": "92v",
+      "source_title": "P%C3%A1gina:Arte_da_l%C3%ADngua_bras%C3%ADlica_(circa_1628).pdf/194"
+    }
+  ],
+  "leaf_pages": [
+    {
+      "scan_page": 1,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/1",
+      "page_id": 244981,
+      "revision_id": 528051,
+      "timestamp": "2025-02-14T18:21:59Z"
+    },
+    {
+      "scan_page": 2,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/2",
+      "page_id": 244982,
+      "revision_id": 528052,
+      "timestamp": "2025-02-14T18:22:09Z"
+    },
+    {
+      "scan_page": 3,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/3",
+      "page_id": 244983,
+      "revision_id": 560028,
+      "timestamp": "2026-08-21T15:26:17Z"
+    },
+    {
+      "scan_page": 4,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/4",
+      "page_id": 244984,
+      "revision_id": 528054,
+      "timestamp": "2025-02-14T18:22:32Z"
+    },
+    {
+      "scan_page": 5,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/5",
+      "page_id": 244990,
+      "revision_id": 528317,
+      "timestamp": "2025-02-15T17:09:02Z"
+    },
+    {
+      "scan_page": 6,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/6",
+      "page_id": 244985,
+      "revision_id": 534639,
+      "timestamp": "2025-04-28T22:24:42Z"
+    },
+    {
+      "scan_page": 7,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/7",
+      "page_id": 244991,
+      "revision_id": 534640,
+      "timestamp": "2025-04-28T22:27:41Z"
+    },
+    {
+      "scan_page": 8,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/8",
+      "page_id": 244992,
+      "revision_id": 528063,
+      "timestamp": "2025-02-14T18:58:35Z"
+    },
+    {
+      "scan_page": 9,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/9",
+      "page_id": 244993,
+      "revision_id": 528368,
+      "timestamp": "2025-02-15T19:35:08Z"
+    },
+    {
+      "scan_page": 10,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/10",
+      "page_id": 244994,
+      "revision_id": 528288,
+      "timestamp": "2025-02-15T16:35:12Z"
+    },
+    {
+      "scan_page": 11,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/11",
+      "page_id": 244995,
+      "revision_id": 528075,
+      "timestamp": "2025-02-14T20:07:23Z"
+    },
+    {
+      "scan_page": 12,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/12",
+      "page_id": 245004,
+      "revision_id": 534673,
+      "timestamp": "2025-04-30T13:00:18Z"
+    },
+    {
+      "scan_page": 13,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/13",
+      "page_id": 245005,
+      "revision_id": 528089,
+      "timestamp": "2025-02-14T20:49:41Z"
+    },
+    {
+      "scan_page": 14,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/14",
+      "page_id": 245010,
+      "revision_id": 528296,
+      "timestamp": "2025-02-15T16:48:27Z"
+    },
+    {
+      "scan_page": 15,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/15",
+      "page_id": 245020,
+      "revision_id": 528302,
+      "timestamp": "2025-02-15T16:53:17Z"
+    },
+    {
+      "scan_page": 16,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/16",
+      "page_id": 245021,
+      "revision_id": 528303,
+      "timestamp": "2025-02-15T16:53:44Z"
+    },
+    {
+      "scan_page": 17,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/17",
+      "page_id": 245023,
+      "revision_id": 538287,
+      "timestamp": "2025-07-06T19:18:11Z"
+    },
+    {
+      "scan_page": 18,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/18",
+      "page_id": 245038,
+      "revision_id": 528306,
+      "timestamp": "2025-02-15T16:55:25Z"
+    },
+    {
+      "scan_page": 19,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/19",
+      "page_id": 245043,
+      "revision_id": 528307,
+      "timestamp": "2025-02-15T16:55:36Z"
+    },
+    {
+      "scan_page": 20,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/20",
+      "page_id": 245048,
+      "revision_id": 528308,
+      "timestamp": "2025-02-15T16:55:51Z"
+    },
+    {
+      "scan_page": 21,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/21",
+      "page_id": 245049,
+      "revision_id": 528310,
+      "timestamp": "2025-02-15T16:56:51Z"
+    },
+    {
+      "scan_page": 22,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/22",
+      "page_id": 245060,
+      "revision_id": 528316,
+      "timestamp": "2025-02-15T17:05:40Z"
+    },
+    {
+      "scan_page": 23,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/23",
+      "page_id": 245061,
+      "revision_id": 533661,
+      "timestamp": "2025-04-01T22:25:07Z"
+    },
+    {
+      "scan_page": 24,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/24",
+      "page_id": 245074,
+      "revision_id": 533660,
+      "timestamp": "2025-04-01T22:18:36Z"
+    },
+    {
+      "scan_page": 25,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/25",
+      "page_id": 245075,
+      "revision_id": 528524,
+      "timestamp": "2025-02-16T18:13:24Z"
+    },
+    {
+      "scan_page": 26,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/26",
+      "page_id": 245076,
+      "revision_id": 533662,
+      "timestamp": "2025-04-01T22:29:22Z"
+    },
+    {
+      "scan_page": 27,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/27",
+      "page_id": 245125,
+      "revision_id": 533663,
+      "timestamp": "2025-04-01T22:35:44Z"
+    },
+    {
+      "scan_page": 28,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/28",
+      "page_id": 245126,
+      "revision_id": 533664,
+      "timestamp": "2025-04-01T22:46:29Z"
+    },
+    {
+      "scan_page": 29,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/29",
+      "page_id": 246749,
+      "revision_id": 533273,
+      "timestamp": "2025-03-27T04:08:13Z"
+    },
+    {
+      "scan_page": 30,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/30",
+      "page_id": 246780,
+      "revision_id": 533334,
+      "timestamp": "2025-03-28T03:06:16Z"
+    },
+    {
+      "scan_page": 31,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/31",
+      "page_id": 246793,
+      "revision_id": 533665,
+      "timestamp": "2025-04-01T22:50:02Z"
+    },
+    {
+      "scan_page": 32,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/32",
+      "page_id": 246794,
+      "revision_id": 533667,
+      "timestamp": "2025-04-01T22:51:36Z"
+    },
+    {
+      "scan_page": 33,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/33",
+      "page_id": 246795,
+      "revision_id": 533669,
+      "timestamp": "2025-04-01T22:52:16Z"
+    },
+    {
+      "scan_page": 34,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/34",
+      "page_id": 246796,
+      "revision_id": 533668,
+      "timestamp": "2025-04-01T22:52:12Z"
+    },
+    {
+      "scan_page": 35,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/35",
+      "page_id": 246797,
+      "revision_id": 533434,
+      "timestamp": "2025-03-28T21:32:40Z"
+    },
+    {
+      "scan_page": 36,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/36",
+      "page_id": 246798,
+      "revision_id": 533670,
+      "timestamp": "2025-04-01T22:52:55Z"
+    },
+    {
+      "scan_page": 37,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/37",
+      "page_id": 246809,
+      "revision_id": 533671,
+      "timestamp": "2025-04-01T22:53:17Z"
+    },
+    {
+      "scan_page": 38,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/38",
+      "page_id": 246813,
+      "revision_id": 533474,
+      "timestamp": "2025-03-30T04:38:04Z"
+    },
+    {
+      "scan_page": 39,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/39",
+      "page_id": 246816,
+      "revision_id": 533554,
+      "timestamp": "2025-03-30T22:21:19Z"
+    },
+    {
+      "scan_page": 40,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/40",
+      "page_id": 246817,
+      "revision_id": 533556,
+      "timestamp": "2025-03-30T22:47:32Z"
+    },
+    {
+      "scan_page": 41,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/41",
+      "page_id": 246820,
+      "revision_id": 533615,
+      "timestamp": "2025-03-31T23:43:11Z"
+    },
+    {
+      "scan_page": 42,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/42",
+      "page_id": 246821,
+      "revision_id": 533616,
+      "timestamp": "2025-03-31T23:55:09Z"
+    },
+    {
+      "scan_page": 43,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/43",
+      "page_id": 246822,
+      "revision_id": 533624,
+      "timestamp": "2025-04-01T00:28:35Z"
+    },
+    {
+      "scan_page": 44,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/44",
+      "page_id": 246823,
+      "revision_id": 533623,
+      "timestamp": "2025-04-01T00:27:04Z"
+    },
+    {
+      "scan_page": 45,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/45",
+      "page_id": 246824,
+      "revision_id": 533626,
+      "timestamp": "2025-04-01T00:34:27Z"
+    },
+    {
+      "scan_page": 46,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/46",
+      "page_id": 246828,
+      "revision_id": 533657,
+      "timestamp": "2025-04-01T22:05:44Z"
+    },
+    {
+      "scan_page": 47,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/47",
+      "page_id": 246829,
+      "revision_id": 533658,
+      "timestamp": "2025-04-01T22:09:02Z"
+    },
+    {
+      "scan_page": 48,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/48",
+      "page_id": 245101,
+      "revision_id": 533673,
+      "timestamp": "2025-04-01T22:56:08Z"
+    },
+    {
+      "scan_page": 49,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/49",
+      "page_id": 246609,
+      "revision_id": 533674,
+      "timestamp": "2025-04-01T22:57:16Z"
+    },
+    {
+      "scan_page": 50,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/50",
+      "page_id": 246856,
+      "revision_id": 534625,
+      "timestamp": "2025-04-28T18:21:40Z"
+    },
+    {
+      "scan_page": 51,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/51",
+      "page_id": 246898,
+      "revision_id": 533853,
+      "timestamp": "2025-04-03T21:23:22Z"
+    },
+    {
+      "scan_page": 52,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/52",
+      "page_id": 246912,
+      "revision_id": 533899,
+      "timestamp": "2025-04-04T20:03:46Z"
+    },
+    {
+      "scan_page": 53,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/53",
+      "page_id": 246913,
+      "revision_id": 533901,
+      "timestamp": "2025-04-04T23:41:35Z"
+    },
+    {
+      "scan_page": 54,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/54",
+      "page_id": 246914,
+      "revision_id": 533902,
+      "timestamp": "2025-04-04T23:51:33Z"
+    },
+    {
+      "scan_page": 55,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/55",
+      "page_id": 247097,
+      "revision_id": 534313,
+      "timestamp": "2025-04-11T21:13:42Z"
+    },
+    {
+      "scan_page": 56,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/56",
+      "page_id": 247099,
+      "revision_id": 534315,
+      "timestamp": "2025-04-11T21:18:20Z"
+    },
+    {
+      "scan_page": 57,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/57",
+      "page_id": 247098,
+      "revision_id": 534317,
+      "timestamp": "2025-04-11T21:36:44Z"
+    },
+    {
+      "scan_page": 58,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/58",
+      "page_id": 247130,
+      "revision_id": 534370,
+      "timestamp": "2025-04-13T14:44:49Z"
+    },
+    {
+      "scan_page": 59,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/59",
+      "page_id": 247142,
+      "revision_id": 534398,
+      "timestamp": "2025-04-15T00:25:49Z"
+    },
+    {
+      "scan_page": 60,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/60",
+      "page_id": 247480,
+      "revision_id": 535114,
+      "timestamp": "2025-05-12T15:16:55Z"
+    },
+    {
+      "scan_page": 61,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/61",
+      "page_id": 247518,
+      "revision_id": 535220,
+      "timestamp": "2025-05-16T19:00:46Z"
+    },
+    {
+      "scan_page": 62,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/62",
+      "page_id": 247523,
+      "revision_id": 535226,
+      "timestamp": "2025-05-17T04:29:25Z"
+    },
+    {
+      "scan_page": 63,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/63",
+      "page_id": 247522,
+      "revision_id": 535253,
+      "timestamp": "2025-05-17T18:32:01Z"
+    },
+    {
+      "scan_page": 64,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/64",
+      "page_id": 247524,
+      "revision_id": 535255,
+      "timestamp": "2025-05-17T19:46:01Z"
+    },
+    {
+      "scan_page": 65,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/65",
+      "page_id": 247525,
+      "revision_id": 535256,
+      "timestamp": "2025-05-17T19:51:28Z"
+    },
+    {
+      "scan_page": 66,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/66",
+      "page_id": 245100,
+      "revision_id": 535257,
+      "timestamp": "2025-05-17T19:52:20Z"
+    },
+    {
+      "scan_page": 67,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/67",
+      "page_id": 246915,
+      "revision_id": 535259,
+      "timestamp": "2025-05-17T20:02:53Z"
+    },
+    {
+      "scan_page": 68,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/68",
+      "page_id": 247535,
+      "revision_id": 535298,
+      "timestamp": "2025-05-18T03:54:48Z"
+    },
+    {
+      "scan_page": 69,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/69",
+      "page_id": 247536,
+      "revision_id": 535316,
+      "timestamp": "2025-05-18T13:26:59Z"
+    },
+    {
+      "scan_page": 70,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/70",
+      "page_id": 247537,
+      "revision_id": 535312,
+      "timestamp": "2025-05-18T13:16:09Z"
+    },
+    {
+      "scan_page": 71,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/71",
+      "page_id": 247541,
+      "revision_id": 535314,
+      "timestamp": "2025-05-18T13:24:44Z"
+    },
+    {
+      "scan_page": 72,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/72",
+      "page_id": 247542,
+      "revision_id": 535317,
+      "timestamp": "2025-05-18T13:42:55Z"
+    },
+    {
+      "scan_page": 73,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/73",
+      "page_id": 247543,
+      "revision_id": 535339,
+      "timestamp": "2025-05-18T23:30:52Z"
+    },
+    {
+      "scan_page": 74,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/74",
+      "page_id": 247554,
+      "revision_id": 535340,
+      "timestamp": "2025-05-18T23:33:17Z"
+    },
+    {
+      "scan_page": 75,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/75",
+      "page_id": 247562,
+      "revision_id": 535352,
+      "timestamp": "2025-05-19T18:44:24Z"
+    },
+    {
+      "scan_page": 76,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/76",
+      "page_id": 247563,
+      "revision_id": 535355,
+      "timestamp": "2025-05-19T20:15:07Z"
+    },
+    {
+      "scan_page": 77,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/77",
+      "page_id": 247564,
+      "revision_id": 535356,
+      "timestamp": "2025-05-19T20:22:42Z"
+    },
+    {
+      "scan_page": 78,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/78",
+      "page_id": 247565,
+      "revision_id": 535357,
+      "timestamp": "2025-05-19T20:29:42Z"
+    },
+    {
+      "scan_page": 79,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/79",
+      "page_id": 247555,
+      "revision_id": 535358,
+      "timestamp": "2025-05-19T20:47:09Z"
+    },
+    {
+      "scan_page": 80,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/80",
+      "page_id": 247556,
+      "revision_id": 535344,
+      "timestamp": "2025-05-19T01:01:36Z"
+    },
+    {
+      "scan_page": 81,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/81",
+      "page_id": 247557,
+      "revision_id": 535345,
+      "timestamp": "2025-05-19T01:07:34Z"
+    },
+    {
+      "scan_page": 82,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/82",
+      "page_id": 245082,
+      "revision_id": 528442,
+      "timestamp": "2025-02-15T22:46:44Z"
+    },
+    {
+      "scan_page": 83,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/83",
+      "page_id": 245127,
+      "revision_id": 528530,
+      "timestamp": "2025-02-16T19:15:49Z"
+    },
+    {
+      "scan_page": 84,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/84",
+      "page_id": 245128,
+      "revision_id": 528534,
+      "timestamp": "2025-02-16T19:36:57Z"
+    },
+    {
+      "scan_page": 85,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/85",
+      "page_id": 245129,
+      "revision_id": 534624,
+      "timestamp": "2025-04-28T17:17:31Z"
+    },
+    {
+      "scan_page": 86,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/86",
+      "page_id": 245130,
+      "revision_id": 528537,
+      "timestamp": "2025-02-16T19:48:38Z"
+    },
+    {
+      "scan_page": 87,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/87",
+      "page_id": 245136,
+      "revision_id": 528546,
+      "timestamp": "2025-02-16T20:27:28Z"
+    },
+    {
+      "scan_page": 88,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/88",
+      "page_id": 245137,
+      "revision_id": 528547,
+      "timestamp": "2025-02-16T20:33:19Z"
+    },
+    {
+      "scan_page": 89,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/89",
+      "page_id": 245138,
+      "revision_id": 535248,
+      "timestamp": "2025-05-17T17:50:30Z"
+    },
+    {
+      "scan_page": 90,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/90",
+      "page_id": 245139,
+      "revision_id": 535249,
+      "timestamp": "2025-05-17T17:56:09Z"
+    },
+    {
+      "scan_page": 91,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/91",
+      "page_id": 245140,
+      "revision_id": 535241,
+      "timestamp": "2025-05-17T15:16:14Z"
+    },
+    {
+      "scan_page": 92,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/92",
+      "page_id": 245141,
+      "revision_id": 535250,
+      "timestamp": "2025-05-17T18:08:53Z"
+    },
+    {
+      "scan_page": 93,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/93",
+      "page_id": 245142,
+      "revision_id": 528555,
+      "timestamp": "2025-02-16T23:59:26Z"
+    },
+    {
+      "scan_page": 94,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/94",
+      "page_id": 245143,
+      "revision_id": 539818,
+      "timestamp": "2025-07-26T18:40:13Z"
+    },
+    {
+      "scan_page": 95,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/95",
+      "page_id": 245144,
+      "revision_id": 528561,
+      "timestamp": "2025-02-17T01:05:24Z"
+    },
+    {
+      "scan_page": 96,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/96",
+      "page_id": 245146,
+      "revision_id": 528563,
+      "timestamp": "2025-02-17T01:11:08Z"
+    },
+    {
+      "scan_page": 97,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/97",
+      "page_id": 245149,
+      "revision_id": 528566,
+      "timestamp": "2025-02-17T01:18:01Z"
+    },
+    {
+      "scan_page": 98,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/98",
+      "page_id": 245161,
+      "revision_id": 528580,
+      "timestamp": "2025-02-17T01:54:18Z"
+    },
+    {
+      "scan_page": 99,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/99",
+      "page_id": 245162,
+      "revision_id": 528582,
+      "timestamp": "2025-02-17T02:01:34Z"
+    },
+    {
+      "scan_page": 100,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/100",
+      "page_id": 245163,
+      "revision_id": 528583,
+      "timestamp": "2025-02-17T02:08:31Z"
+    },
+    {
+      "scan_page": 101,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/101",
+      "page_id": 245098,
+      "revision_id": 528462,
+      "timestamp": "2025-02-16T03:45:03Z"
+    },
+    {
+      "scan_page": 102,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/102",
+      "page_id": 245123,
+      "revision_id": 529159,
+      "timestamp": "2025-02-19T13:15:15Z"
+    },
+    {
+      "scan_page": 103,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/103",
+      "page_id": 245385,
+      "revision_id": 529160,
+      "timestamp": "2025-02-19T13:22:21Z"
+    },
+    {
+      "scan_page": 104,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/104",
+      "page_id": 245386,
+      "revision_id": 529161,
+      "timestamp": "2025-02-19T13:36:31Z"
+    },
+    {
+      "scan_page": 105,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/105",
+      "page_id": 245390,
+      "revision_id": 529169,
+      "timestamp": "2025-02-19T17:06:44Z"
+    },
+    {
+      "scan_page": 106,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/106",
+      "page_id": 245411,
+      "revision_id": 529221,
+      "timestamp": "2025-02-20T00:01:54Z"
+    },
+    {
+      "scan_page": 107,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/107",
+      "page_id": 245424,
+      "revision_id": 529253,
+      "timestamp": "2025-02-20T00:17:00Z"
+    },
+    {
+      "scan_page": 108,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/108",
+      "page_id": 245425,
+      "revision_id": 529255,
+      "timestamp": "2025-02-20T00:22:56Z"
+    },
+    {
+      "scan_page": 109,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/109",
+      "page_id": 245454,
+      "revision_id": 529316,
+      "timestamp": "2025-02-20T15:29:50Z"
+    },
+    {
+      "scan_page": 110,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/110",
+      "page_id": 245455,
+      "revision_id": 529317,
+      "timestamp": "2025-02-20T15:38:26Z"
+    },
+    {
+      "scan_page": 111,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/111",
+      "page_id": 245456,
+      "revision_id": 529318,
+      "timestamp": "2025-02-20T15:55:55Z"
+    },
+    {
+      "scan_page": 112,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/112",
+      "page_id": 245618,
+      "revision_id": 529805,
+      "timestamp": "2025-02-23T17:47:24Z"
+    },
+    {
+      "scan_page": 113,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/113",
+      "page_id": 245619,
+      "revision_id": 529806,
+      "timestamp": "2025-02-23T17:53:07Z"
+    },
+    {
+      "scan_page": 114,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/114",
+      "page_id": 245620,
+      "revision_id": 529808,
+      "timestamp": "2025-02-23T18:07:53Z"
+    },
+    {
+      "scan_page": 115,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/115",
+      "page_id": 245621,
+      "revision_id": 529811,
+      "timestamp": "2025-02-23T18:32:40Z"
+    },
+    {
+      "scan_page": 116,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/116",
+      "page_id": 245622,
+      "revision_id": 529816,
+      "timestamp": "2025-02-23T19:38:58Z"
+    },
+    {
+      "scan_page": 117,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/117",
+      "page_id": 245623,
+      "revision_id": 529817,
+      "timestamp": "2025-02-23T20:14:23Z"
+    },
+    {
+      "scan_page": 118,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/118",
+      "page_id": 245624,
+      "revision_id": 529818,
+      "timestamp": "2025-02-23T20:29:13Z"
+    },
+    {
+      "scan_page": 119,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/119",
+      "page_id": 245625,
+      "revision_id": 529819,
+      "timestamp": "2025-02-23T20:47:18Z"
+    },
+    {
+      "scan_page": 120,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/120",
+      "page_id": 245627,
+      "revision_id": 529823,
+      "timestamp": "2025-02-23T21:11:24Z"
+    },
+    {
+      "scan_page": 121,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/121",
+      "page_id": 245638,
+      "revision_id": 529836,
+      "timestamp": "2025-02-23T21:38:32Z"
+    },
+    {
+      "scan_page": 122,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/122",
+      "page_id": 245711,
+      "revision_id": 529983,
+      "timestamp": "2025-02-26T04:42:50Z"
+    },
+    {
+      "scan_page": 123,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/123",
+      "page_id": 245712,
+      "revision_id": 529984,
+      "timestamp": "2025-02-26T04:52:44Z"
+    },
+    {
+      "scan_page": 124,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/124",
+      "page_id": 245834,
+      "revision_id": 530303,
+      "timestamp": "2025-03-02T19:26:08Z"
+    },
+    {
+      "scan_page": 125,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/125",
+      "page_id": 245835,
+      "revision_id": 530304,
+      "timestamp": "2025-03-02T21:24:50Z"
+    },
+    {
+      "scan_page": 126,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/126",
+      "page_id": 245844,
+      "revision_id": 530323,
+      "timestamp": "2025-03-03T17:28:07Z"
+    },
+    {
+      "scan_page": 127,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/127",
+      "page_id": 245845,
+      "revision_id": 530324,
+      "timestamp": "2025-03-03T17:36:16Z"
+    },
+    {
+      "scan_page": 128,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/128",
+      "page_id": 245846,
+      "revision_id": 530325,
+      "timestamp": "2025-03-03T17:50:27Z"
+    },
+    {
+      "scan_page": 129,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/129",
+      "page_id": 245847,
+      "revision_id": 530327,
+      "timestamp": "2025-03-04T00:42:18Z"
+    },
+    {
+      "scan_page": 130,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/130",
+      "page_id": 245848,
+      "revision_id": 530329,
+      "timestamp": "2025-03-04T00:56:00Z"
+    },
+    {
+      "scan_page": 131,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/131",
+      "page_id": 245849,
+      "revision_id": 530331,
+      "timestamp": "2025-03-04T01:06:47Z"
+    },
+    {
+      "scan_page": 132,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/132",
+      "page_id": 245851,
+      "revision_id": 530333,
+      "timestamp": "2025-03-04T01:13:43Z"
+    },
+    {
+      "scan_page": 133,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/133",
+      "page_id": 245090,
+      "revision_id": 528451,
+      "timestamp": "2025-02-16T01:07:08Z"
+    },
+    {
+      "scan_page": 134,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/134",
+      "page_id": 245091,
+      "revision_id": 528452,
+      "timestamp": "2025-02-16T01:13:08Z"
+    },
+    {
+      "scan_page": 135,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/135",
+      "page_id": 245092,
+      "revision_id": 528454,
+      "timestamp": "2025-02-16T01:18:35Z"
+    },
+    {
+      "scan_page": 136,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/136",
+      "page_id": 245093,
+      "revision_id": 528455,
+      "timestamp": "2025-02-16T01:24:11Z"
+    },
+    {
+      "scan_page": 137,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/137",
+      "page_id": 245094,
+      "revision_id": 528456,
+      "timestamp": "2025-02-16T01:30:23Z"
+    },
+    {
+      "scan_page": 138,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/138",
+      "page_id": 245095,
+      "revision_id": 528458,
+      "timestamp": "2025-02-16T02:02:40Z"
+    },
+    {
+      "scan_page": 139,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/139",
+      "page_id": 245096,
+      "revision_id": 528930,
+      "timestamp": "2025-02-18T14:37:34Z"
+    },
+    {
+      "scan_page": 140,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/140",
+      "page_id": 245336,
+      "revision_id": 528931,
+      "timestamp": "2025-02-18T14:39:32Z"
+    },
+    {
+      "scan_page": 141,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/141",
+      "page_id": 245337,
+      "revision_id": 538286,
+      "timestamp": "2025-07-06T19:15:00Z"
+    },
+    {
+      "scan_page": 142,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/142",
+      "page_id": 245338,
+      "revision_id": 528943,
+      "timestamp": "2025-02-18T15:14:10Z"
+    },
+    {
+      "scan_page": 143,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/143",
+      "page_id": 245339,
+      "revision_id": 528946,
+      "timestamp": "2025-02-18T15:19:02Z"
+    },
+    {
+      "scan_page": 144,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/144",
+      "page_id": 245340,
+      "revision_id": 528961,
+      "timestamp": "2025-02-18T15:34:49Z"
+    },
+    {
+      "scan_page": 145,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/145",
+      "page_id": 245347,
+      "revision_id": 528976,
+      "timestamp": "2025-02-18T15:51:45Z"
+    },
+    {
+      "scan_page": 146,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/146",
+      "page_id": 245124,
+      "revision_id": 528992,
+      "timestamp": "2025-02-18T15:55:16Z"
+    },
+    {
+      "scan_page": 147,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/147",
+      "page_id": 245860,
+      "revision_id": 530412,
+      "timestamp": "2025-03-04T16:29:39Z"
+    },
+    {
+      "scan_page": 148,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/148",
+      "page_id": 245862,
+      "revision_id": 530413,
+      "timestamp": "2025-03-04T16:29:50Z"
+    },
+    {
+      "scan_page": 149,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/149",
+      "page_id": 245863,
+      "revision_id": 530594,
+      "timestamp": "2025-03-06T15:22:31Z"
+    },
+    {
+      "scan_page": 150,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/150",
+      "page_id": 245891,
+      "revision_id": 531295,
+      "timestamp": "2025-03-09T23:42:09Z"
+    },
+    {
+      "scan_page": 151,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/151",
+      "page_id": 245892,
+      "revision_id": 531297,
+      "timestamp": "2025-03-09T23:43:07Z"
+    },
+    {
+      "scan_page": 152,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/152",
+      "page_id": 245893,
+      "revision_id": 531298,
+      "timestamp": "2025-03-09T23:43:20Z"
+    },
+    {
+      "scan_page": 153,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/153",
+      "page_id": 245895,
+      "revision_id": 531304,
+      "timestamp": "2025-03-09T23:46:52Z"
+    },
+    {
+      "scan_page": 154,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/154",
+      "page_id": 245952,
+      "revision_id": 531307,
+      "timestamp": "2025-03-09T23:47:42Z"
+    },
+    {
+      "scan_page": 155,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/155",
+      "page_id": 245953,
+      "revision_id": 531308,
+      "timestamp": "2025-03-09T23:48:00Z"
+    },
+    {
+      "scan_page": 156,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/156",
+      "page_id": 245954,
+      "revision_id": 531309,
+      "timestamp": "2025-03-09T23:48:21Z"
+    },
+    {
+      "scan_page": 157,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/157",
+      "page_id": 245955,
+      "revision_id": 531311,
+      "timestamp": "2025-03-09T23:49:43Z"
+    },
+    {
+      "scan_page": 158,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/158",
+      "page_id": 245956,
+      "revision_id": 531310,
+      "timestamp": "2025-03-09T23:49:23Z"
+    },
+    {
+      "scan_page": 159,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/159",
+      "page_id": 245957,
+      "revision_id": 531312,
+      "timestamp": "2025-03-09T23:50:12Z"
+    },
+    {
+      "scan_page": 160,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/160",
+      "page_id": 245958,
+      "revision_id": 531314,
+      "timestamp": "2025-03-09T23:51:13Z"
+    },
+    {
+      "scan_page": 161,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/161",
+      "page_id": 245959,
+      "revision_id": 531315,
+      "timestamp": "2025-03-09T23:52:12Z"
+    },
+    {
+      "scan_page": 162,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/162",
+      "page_id": 245960,
+      "revision_id": 531316,
+      "timestamp": "2025-03-09T23:52:37Z"
+    },
+    {
+      "scan_page": 163,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/163",
+      "page_id": 245961,
+      "revision_id": 530886,
+      "timestamp": "2025-03-08T00:34:47Z"
+    },
+    {
+      "scan_page": 164,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/164",
+      "page_id": 245962,
+      "revision_id": 530887,
+      "timestamp": "2025-03-08T00:39:59Z"
+    },
+    {
+      "scan_page": 165,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/165",
+      "page_id": 245963,
+      "revision_id": 530905,
+      "timestamp": "2025-03-08T03:19:16Z"
+    },
+    {
+      "scan_page": 166,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/166",
+      "page_id": 246181,
+      "revision_id": 531278,
+      "timestamp": "2025-03-09T23:27:30Z"
+    },
+    {
+      "scan_page": 167,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/167",
+      "page_id": 246191,
+      "revision_id": 531288,
+      "timestamp": "2025-03-09T23:31:47Z"
+    },
+    {
+      "scan_page": 168,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/168",
+      "page_id": 246194,
+      "revision_id": 531292,
+      "timestamp": "2025-03-09T23:40:16Z"
+    },
+    {
+      "scan_page": 169,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/169",
+      "page_id": 245084,
+      "revision_id": 529154,
+      "timestamp": "2025-02-19T13:01:21Z"
+    },
+    {
+      "scan_page": 170,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/170",
+      "page_id": 245085,
+      "revision_id": 529155,
+      "timestamp": "2025-02-19T13:02:58Z"
+    },
+    {
+      "scan_page": 171,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/171",
+      "page_id": 245088,
+      "revision_id": 529156,
+      "timestamp": "2025-02-19T13:04:53Z"
+    },
+    {
+      "scan_page": 172,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/172",
+      "page_id": 245083,
+      "revision_id": 533470,
+      "timestamp": "2025-03-30T02:12:27Z"
+    },
+    {
+      "scan_page": 173,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/173",
+      "page_id": 246810,
+      "revision_id": 533471,
+      "timestamp": "2025-03-30T02:16:35Z"
+    },
+    {
+      "scan_page": 174,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/174",
+      "page_id": 246811,
+      "revision_id": 533472,
+      "timestamp": "2025-03-30T04:10:27Z"
+    },
+    {
+      "scan_page": 175,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/175",
+      "page_id": 246812,
+      "revision_id": 533473,
+      "timestamp": "2025-03-30T04:26:00Z"
+    },
+    {
+      "scan_page": 176,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/176",
+      "page_id": 246916,
+      "revision_id": 533906,
+      "timestamp": "2025-04-05T00:13:50Z"
+    },
+    {
+      "scan_page": 177,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/177",
+      "page_id": 246917,
+      "revision_id": 533907,
+      "timestamp": "2025-04-05T00:27:48Z"
+    },
+    {
+      "scan_page": 178,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/178",
+      "page_id": 246918,
+      "revision_id": 534256,
+      "timestamp": "2025-04-10T22:55:00Z"
+    },
+    {
+      "scan_page": 179,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/179",
+      "page_id": 246924,
+      "revision_id": 534257,
+      "timestamp": "2025-04-10T22:55:22Z"
+    },
+    {
+      "scan_page": 180,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/180",
+      "page_id": 246925,
+      "revision_id": 534258,
+      "timestamp": "2025-04-10T22:55:51Z"
+    },
+    {
+      "scan_page": 181,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/181",
+      "page_id": 246983,
+      "revision_id": 534259,
+      "timestamp": "2025-04-10T22:56:06Z"
+    },
+    {
+      "scan_page": 182,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/182",
+      "page_id": 247001,
+      "revision_id": 534261,
+      "timestamp": "2025-04-10T23:18:00Z"
+    },
+    {
+      "scan_page": 183,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/183",
+      "page_id": 247003,
+      "revision_id": 534262,
+      "timestamp": "2025-04-10T23:18:15Z"
+    },
+    {
+      "scan_page": 184,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/184",
+      "page_id": 247004,
+      "revision_id": 534263,
+      "timestamp": "2025-04-10T23:18:30Z"
+    },
+    {
+      "scan_page": 185,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/185",
+      "page_id": 247005,
+      "revision_id": 534264,
+      "timestamp": "2025-04-10T23:18:40Z"
+    },
+    {
+      "scan_page": 186,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/186",
+      "page_id": 247060,
+      "revision_id": 534204,
+      "timestamp": "2025-04-09T20:48:56Z"
+    },
+    {
+      "scan_page": 187,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/187",
+      "page_id": 247061,
+      "revision_id": 534207,
+      "timestamp": "2025-04-09T20:55:24Z"
+    },
+    {
+      "scan_page": 188,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/188",
+      "page_id": 247062,
+      "revision_id": 534209,
+      "timestamp": "2025-04-09T21:01:11Z"
+    },
+    {
+      "scan_page": 189,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/189",
+      "page_id": 247079,
+      "revision_id": 534252,
+      "timestamp": "2025-04-10T21:32:49Z"
+    },
+    {
+      "scan_page": 190,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/190",
+      "page_id": 247080,
+      "revision_id": 534254,
+      "timestamp": "2025-04-10T22:49:41Z"
+    },
+    {
+      "scan_page": 191,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/191",
+      "page_id": 245077,
+      "revision_id": 528369,
+      "timestamp": "2025-02-15T19:41:13Z"
+    },
+    {
+      "scan_page": 192,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/192",
+      "page_id": 245080,
+      "revision_id": 528378,
+      "timestamp": "2025-02-15T19:59:00Z"
+    },
+    {
+      "scan_page": 193,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/193",
+      "page_id": 245041,
+      "revision_id": 528271,
+      "timestamp": "2025-02-15T14:58:56Z"
+    },
+    {
+      "scan_page": 194,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/194",
+      "page_id": 245040,
+      "revision_id": 528372,
+      "timestamp": "2025-02-15T19:46:26Z"
+    },
+    {
+      "scan_page": 195,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/195",
+      "page_id": 244986,
+      "revision_id": 528056,
+      "timestamp": "2025-02-14T18:23:03Z"
+    },
+    {
+      "scan_page": 196,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/196",
+      "page_id": 244987,
+      "revision_id": 528057,
+      "timestamp": "2025-02-14T18:23:13Z"
+    },
+    {
+      "scan_page": 197,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/197",
+      "page_id": 244988,
+      "revision_id": 528058,
+      "timestamp": "2025-02-14T18:23:21Z"
+    },
+    {
+      "scan_page": 198,
+      "title": "Página:Arte da língua brasílica (circa 1628).pdf/198",
+      "page_id": 244989,
+      "revision_id": 528059,
+      "timestamp": "2025-02-14T18:23:28Z"
+    }
+  ]
+}

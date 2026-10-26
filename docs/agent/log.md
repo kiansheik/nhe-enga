@@ -3,7 +3,8 @@
 ## 2026-10-26 — Refresh source-groundwork PR
 
 Merged current `main` into PR #26 and resolved its obsolete Figueira overlap
-in favor of the deployed implementation. Preserved the unique Castilho 1937
+in favor of the deployed implementation, then refreshed it again after PR #33
+merged the Figueira Wikisource snapshot. Preserved the unique Castilho 1937
 source: 16 verified page-side crops, all 215 current citation links, explicit
 mapping/navigation, reproducible crop rendering, Pages/offline inclusion, and
 focused regressions. The PR remains open for review and is not deployed.

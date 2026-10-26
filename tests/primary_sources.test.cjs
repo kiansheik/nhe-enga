@@ -2,6 +2,7 @@
 // Execute the actual vanilla-JS functions in a minimal DOM; no npm packages
 // or network access are needed. Real scan/edition checks are in source.json.
 const assert = require('node:assert/strict');
+const crypto = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
 const test = require('node:test');
@@ -21,6 +22,9 @@ const arcat1686Manifest = JSON.parse(fs.readFileSync(path.join(root, 'docs/prima
 const figueiraManifest = JSON.parse(fs.readFileSync(path.join(root, 'docs/primary_sources/figueira1878/source.json'), 'utf8'));
 const anchTeatroManifest = JSON.parse(fs.readFileSync(path.join(root, 'docs/primary_sources/anchteatro1954/source.json'), 'utf8'));
 const castilhoManifest = JSON.parse(fs.readFileSync(path.join(root, 'docs/primary_sources/castilho1937/source.json'), 'utf8'));
+const figueiraTranscriptionPath = path.join(root, 'docs/primary_sources/figueira_arte_1628.html');
+const figueiraTranscription = fs.readFileSync(figueiraTranscriptionPath, 'utf8');
+const figueiraTranscriptionMetadata = JSON.parse(fs.readFileSync(path.join(root, 'docs/primary_sources/figueira_arte_1628.json'), 'utf8'));
 const viewerManifests = {
   anchteatro1954: anchTeatroManifest,
   castilho1937: castilhoManifest,
@@ -356,6 +360,10 @@ test('Figueira resolves the requested printed pages through the verified complet
     assert.match(viewer.get('currentPage').textContent, new RegExp(`Página impressa ${printedPage}`));
     assert.equal(viewer.get('sourcePdf').href, `${figueiraManifest.pdf.url}#page=${pdfOrdinal}`);
     assert.equal(viewer.get('sourceNotice').hidden, true);
+    assert.equal(viewer.get('sourceTranscriptGroup').hidden, false);
+    assert.equal(viewer.get('sourceTranscript').href, figueiraManifest.viewer.transcription.url);
+    assert.equal(viewer.get('sourceTranscript').textContent, figueiraManifest.viewer.transcription.label);
+    assert.match(viewer.get('sourceTranscript').title, /paginação de 1628 não corresponde/);
   }
 
   const qualifiedHref = links(linkSources('(Fig., Arte, 1686, 64)'))[0].href;
@@ -405,6 +413,36 @@ test('Castilho uses its non-linear crop map and jumps only among available pages
   assert.equal(unavailable.get('imageError').hidden, false);
   assert.match(unavailable.get('imageError').textContent, /mapa desta fonte/);
   assert.equal(unavailable.window.location.searchParams.get('page_number'), '42');
+});
+
+test('Figueira Wikisource snapshot is complete, self-contained, attributed, and non-executable', () => {
+  const metadata = figueiraTranscriptionMetadata;
+  const snapshot = metadata.snapshot;
+  const bytes = fs.readFileSync(figueiraTranscriptionPath);
+  assert.equal(bytes.length, snapshot.output_bytes);
+  assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'), snapshot.output_html_sha256);
+
+  assert.equal(metadata.leaf_pages.length, 198);
+  assert.deepEqual(metadata.leaf_pages.map((page) => page.scan_page), Array.from({ length: 198 }, (_, index) => index + 1));
+  assert.ok(metadata.leaf_pages.every((page) => page.page_id && page.revision_id && page.timestamp));
+  assert.equal(metadata.page_markers.length, 189);
+  assert.equal(metadata.page_markers[0].id, 'Folha_de_rosto');
+  assert.equal(metadata.page_markers.at(-1).id, '92v');
+  assert.equal((figueiraTranscription.match(/class="pagenum ws-pagenum"/g) || []).length, 189);
+  assert.equal((figueiraTranscription.match(/<img\b/g) || []).length, snapshot.embedded_image_count);
+  assert.equal((figueiraTranscription.match(/<img\b[^>]*\bsrc="data:image\//g) || []).length, snapshot.embedded_image_count);
+
+  assert.match(figueiraTranscription, /Todo o texto transcrito está nesta página/);
+  assert.match(figueiraTranscription, /a paginação não é intercambiável/);
+  assert.match(figueiraTranscription, /Franciſco Fernãdes da Companhia de IESV/);
+  assert.match(figueiraTranscription, /id="92v"/);
+  assert.match(figueiraTranscription, /creativecommons\.org\/licenses\/by-sa\/4\.0/);
+  assert.doesNotMatch(figueiraTranscription, /<\s*(?:script|iframe|object|embed|form|input|button|textarea|select)\b/i);
+  assert.doesNotMatch(figueiraTranscription, /\son[a-z]+\s*=/i);
+  assert.doesNotMatch(figueiraTranscription, /javascript\s*:/i);
+  assert.doesNotMatch(figueiraTranscription, /\bsrcset\s*=/i);
+  assert.doesNotMatch(figueiraTranscription, /<link\b/i);
+  assert.doesNotMatch(figueiraTranscription, /<img\b[^>]*\bsrc="(?!data:image\/)/i);
 });
 
 test('Anchieta page 176 opens the explicit Martins witness and labels the edition boundary', async () => {

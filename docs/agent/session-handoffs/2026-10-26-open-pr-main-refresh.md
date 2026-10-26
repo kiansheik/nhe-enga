@@ -21,6 +21,9 @@ updated branches for review.
 - PR #26: conflict resolutions retain the current `main` implementations and
   add its unique Castilho manifest, 16 page crops, citation linking, explicit
   viewer map, crop renderer support, build integration, tests, and provenance.
+- PR #33 merged while the refresh was in progress. PR #26 was refreshed a
+  second time so its tests retain both the newly merged Figueira Wikisource
+  snapshot coverage and the branch's Castilho coverage.
 - Updated `docs/agent/current-state.md`, `docs/agent/log.md`,
   `docs/agent/repo-map.md`, and `docs/agent/served-assets.md` for the resolved
   Castilho scope.
@@ -39,8 +42,8 @@ updated branches for review.
 
 ## What worked
 
-- PRs #32 and #33 accepted current `main` without conflicts and their focused
-  test suites passed before push.
+- PRs #32 and #33 accepted the initial current `main` without conflicts and
+  their focused test suites passed before push; PR #33 then merged.
 - PR #26's obsolete Figueira overlap could be resolved in favor of `main`
   while retaining the distinct Castilho work.
 
@@ -54,12 +57,12 @@ updated branches for review.
 
 ## Remaining questions
 
-- PR #26 still needs human review of its source-plan scope and Castilho
+- PRs #26 and #32 still need human review. PR #26 includes source-plan scope and Castilho
   provenance before merge.
 - The broader Anchieta Teatro mapping remains separate work; current `main`
   intentionally links only the nine verified unsuffixed page-176 citations.
 
 ## Suggested next prompt
 
-Review PRs #26, #32, and #33, merge the desired changes, then ask for a fresh
+Review PRs #26 and #32, merge the desired changes, then ask for a fresh
 inventory of unlinked source citations or a broader Anchieta Teatro mapping.
