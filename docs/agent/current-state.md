@@ -1,35 +1,89 @@
 # Current State
 
-## 2026-10-06 — Figueira and Castilho primary sources
+## 2026-10-26 — PR #26 refreshed against main
 
-- The dependent implementation branch `feat/figueira-castilho-primary-sources`
-  is open as [PR #27](https://github.com/kiansheik/nhe-enga/pull/27) against
-  PR #26's research groundwork. It adds the complete 200-page 1878 Figueira
-  facsimile scan and 16 explicit crops from the 1937 Castilho edition.
-  The source PDFs remain outside Git; checksums, render settings, page maps and
-  provenance live in each source's `source.json` and `README.md`.
-- `linkSources()` now links all 622 explicit `Fig., Arte` citations in 455
-  dictionary records and all 215 `Castilho, Nomes` citations in 162 records.
-  Figueira covers 117 distinct printed pages; Castilho covers the 16 currently
-  cited pages 27–41 and 45 through a non-linear spread-side map. Citation text,
-  dictionary data, morphology and corpus ground truth are unchanged.
-- `Fig., Arte, 1686, 64` is no longer stranded. The citation stays verbatim,
-  links to the exact *çoába* passage on printed page 64, and displays a visible
-  warning that the bibliography/catalogs identify the edition as 1687. No
-  separate 1686 Figueira edition was found.
-- The shared viewer loads production manifests, provides complete-scan
-  navigation for Figueira and sparse cited-page navigation for Castilho, uses
-  accurate PDF ordinals, rejects unmapped locators, and remains usable at a
-  400-CSS-pixel Chromium viewport. D’Evreux and legacy-source regressions pass.
-- The renderer now supports target pixel widths and manifest-defined crop
-  boxes while retaining D’Evreux's fixed-DPI behavior. An independent rerender
-  matched all 216 new JPEGs byte for byte. The source images occupy about 55.1
-  MiB total.
-- The complete Pages artifact is 777,563,987 bytes, below the 900,000,000-byte
-  project budget by 122,436,013 bytes. It contains 2,229 files, no PDFs and no
-  oversized files. Nothing was deployed or merged; Sousa and D’Abbeville remain
-  pending until this implementation is reviewed. See the
-  [implementation handoff](session-handoffs/2026-10-06-figueira-castilho-primary-sources.md).
+- The older Figueira/Castilho source branch now incorporates current `main`.
+  Its duplicate Figueira implementation was resolved in favor of the deployed
+  October 25 implementation; the still-unique Castilho source remains in the
+  PR with 16 verified page-side crops covering 215 citations in 162 records.
+- Castilho is integrated with the current manifest viewer, Pages image
+  optimizer, offline source packs, and renderer. The renderer retains current
+  selected-page behavior while adding manifest-defined page-side crops.
+- This is still review work in PR #26. It has not been merged into `main` or
+  deployed.
+
+## 2026-10-25 — Figueira Arte and Anchieta Teatro source links
+
+- All 622 explicit `Fig., Arte` citations in 455 served dictionary records now
+  link to the complete 200-scan Platzmann 1878 facsimile of Figueira's 1687
+  edition. Printed pages 1–167 map to zero-based image indices 24–190; the
+  requested pages 95 and 40 open `118.jpg` and `63.jpg` respectively.
+- The nine unsuffixed `Anch., Teatro, 176` records now link to one explicitly
+  collated documentary witness: Navarro 1999 p. 176 corresponds to Martins
+  1954 *Poesias* p. 632, PDF index 683. The viewer labels this cross-edition
+  boundary. The two `176, 2006` records, every other Teatro locator, and any
+  range/list/year suffix remain unlinked because no general page offset is
+  valid.
+- Source provenance, checksums, page mappings, and reproduction commands live
+  beside the images in `figueira1878/` and `anchteatro1954/`. The raw PDFs stay
+  outside the Pages artifact.
+- Validation passes: 18 focused source/viewer tests, 11 offline catalog tests,
+  the service-worker smoke suite, lint/syntax/diff checks, and a full 791 MiB
+  local Pages build with no PDFs. The build publishes both manifests in core
+  plus separate 200-image Figueira and one-image Anchieta offline packs. Real
+  Chrome clicks from `ma'enduar` opened all three requested viewers and loaded
+  the expected images.
+- Source commit `31194fd4` is on `origin/main`. Pages commit `2333ed15` built
+  successfully and is live on the custom domain. The deployed JavaScript has
+  all three routes; the three deployed JPEGs match the artifact byte for byte,
+  and real Chrome loaded them at 1400 pixels wide. See the
+  [handoff](session-handoffs/2026-10-25-figueira-anchieta-source-links.md).
+
+## 2026-10-21 — Live citation cache refresh
+
+- The deployed citation formatter was correct, but browsers with an older
+  service-worker snapshot could keep serving the former `arcat1618` link on
+  ordinary online visits.
+- New document navigations now bypass the HTTP cache when revalidating the
+  signed offline catalog and prefer files from that pinned current catalog.
+  If the network or a new asset fails verification, the worker falls back to
+  the installed or previously saved verified copy.
+- Existing documents remain pinned to one catalog; this does not mix releases
+  mid-page or weaken corrupt-update rejection.
+- All 10 offline unit tests, the Node service-worker protocol smoke test, and
+  the real-Chromium offline/update suite pass, including a new stale-catalog
+  navigation regression.
+- Source commit `fda36aaf` is on `origin/main`; Pages commit `8460bbbf` built
+  successfully. The live worker matches the artifact byte for byte, and the
+  exact reported query now exposes an `arcat1686` page-241 link whose viewer
+  loads image `276.jpg` at 786 by 1261 pixels.
+
+## 2026-10-21 — Araújo 1686 citation pages
+
+- Explicit `Ar., Cat., {page}, 1686` citations now target a separate
+  `arcat1686` viewer instead of being misrouted through the 1618 folio map.
+- The served dictionary contains 90 explicit citations to 58 distinct printed
+  pages. The source directory contains those pages plus a two-page context
+  buffer: 158 JPEGs across 16 ranges, not the complete 420-page scan.
+- Printed page `p` maps to zero-based PDF/image index `p + 35`; page 241 is
+  image `276.jpg`, visually checked against the `emo'emyîara` quotation.
+- The production artifact builds successfully at about 741 MiB, contains the
+  158 optimized 1686 images as a separate offline pack, and contains no PDFs.
+  Focused tests, lint, image decoding, and real-Chromium local navigation pass.
+- Source commit `cb4b3b87` is on `origin/main`; Pages commit `99fb18f3` built
+  successfully and was verified live on the custom domain, including the
+  dictionary-generated page-241 link and the exact deployed JPEG bytes. See
+  the [handoff](session-handoffs/2026-10-21-araujo-1686-citations.md).
+
+## 2026-10-12 — Diffuse locative -bo and hyphenated postpositions
+
+- `bo` (`Diffusive`, `tupi.Noun.bo`) implements Navarro's -bo2 diffuse
+  locative; `Postposition("-bo")` and `Postposition("-pe")` from dictionary
+  headwords now realize through `Diffusive`/`Locative` instead of `oka -bo`.
+- 92 engine tests pass; all 160 historic plain/annotated renders unchanged.
+  Consonant-final `okybo` is inferred, not attested. Under review on branch
+  `feat/bound-postposition-bo`. See the
+  [handoff](session-handoffs/2026-10-12-bound-postposition-bo.md).
 
 ## 2026-10-06 — D’Evreux 1929 primary-source pilot
 
@@ -37,7 +91,7 @@
   444-page 1929 *Viagem ao Norte do Brasil* scan under
   `docs/primary_sources/evreux1929/`, with checksum-validated provenance and a
   reproducible whole-page renderer. The PDF itself remains outside Git. The
-  implementation was merged in
+  implementation is awaiting review in
   [PR #25](https://github.com/kiansheik/nhe-enga/pull/25).
 - `linkSources()` now links all 120 explicit `D'Evreux, Viagem` citations in
   113 dictionary records. The 121 anchors cover the 42 verified printed pages;
@@ -52,11 +106,11 @@
   and 444 pages. A clean PyMuPDF 1.26.6/Pillow 12.3.0 rerender matched all 444
   checked-in JPEGs byte for byte. Source images occupy 259.3 MiB; the Pages
   optimizer reduces the D’Evreux copy to 212.0 MiB.
-- `make pages-build` passed with the baseline generated dictionary assets
+- `make pages-build` passes with the baseline generated dictionary assets
   supplied locally. The resulting artifact is 691 MiB, includes all D’Evreux
   pages, metadata and `DTAbib.txt`, and contains no PDF. Real Chromium checks
-  passed on desktop and at about 500 CSS pixels wide. This pilot was merged;
-  its deployment remains a separate operation.
+  passed on desktop and at about 500 CSS pixels wide. Nothing was deployed or
+  merged; review is required before any other source is digitized.
 - The repeatable inventory currently reports 47 bibliography labels, 69
   work-family rows, and 11 rows without a resolved bibliography match. These
   are auditable parser groupings, not proof of edition or locator identity.
@@ -128,10 +182,13 @@
 - The Pages artifact intentionally copies only derived primary-source page images from citation folders, not raw PDFs, EPUBs, MOBIs, OPFs, TXT files, or extraction scripts.
 - `make pages-build` optimizes copied primary-source images inside `.pages-build` only. Source scans are left untouched; generated `image-formats.json` lets the citation viewer load optimized `.jpg` files.
 - `bettvulg` is excluded from the Pages artifact for now because no runtime references were found and it dominates artifact size.
-- Latest measured optimized `.pages-build` size with D’Evreux, Figueira and
-  Castilho is 777,563,987 bytes (about 741.5 MiB), leaving 122,436,013 bytes
-  under the 900 MB project budget. D’Evreux's 444 optimized pages account for
-  about 212 MiB; the prior artifact without D’Evreux measured about 477 MB.
+- Latest measured optimized local Pages artifact, including D’Evreux, sparse
+  Araújo 1686, complete Figueira, and the single Anchieta Teatro witness, is
+  about 791 MiB. The prior D’Evreux-only measurement was about 691 MiB.
+- The checked-in generated `source_inventory.*` snapshot predates the Figueira
+  and Anchieta link additions. A temporary regeneration verified 622 Figueira
+  and nine narrow Anchieta anchors, but the generated files were not edited
+  because generated-output refresh was not part of this request.
 - The failed 4.1 GB deployment history is preserved locally as `gh-pages-oversized-backup-20260912`; it is not reachable from the published `gh-pages` branch and must not be pushed.
 - Root-level PDFs, DOCX output, and Graphviz renderings removed in the 2026-09-12 cleanup were generated and unreferenced. They remain recoverable from Git history and are now covered by ignore rules where needed.
 - `make gen_data` is noisy and can take over a minute; it updates generated dictionary/conjugation data. Keep those outputs separate from source-only cleanup changes unless intentionally refreshing data.

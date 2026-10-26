@@ -8,10 +8,15 @@
 - Quiz: `quiz/index.html`, `quiz/quiz.js`, `quiz/styles.css`; loads `../docs/dict-conjugated.json.gz`.
 - Nheengatu and Mbya pages: `katu/index.html`, `mbya/index.html`; load `docs/extracted_entries_nheengatu.tar.gz` and `docs/dooley_2006_mbya_dic.json.gz`.
 - Citation viewer: `docs/primary_sources/index.html`; opens page images under
-  `docs/primary_sources/{vlb,ancharte,arcat1618,betcomp,evreux1929,figueira1878,castilho1937,lerhist}`.
-  D’Evreux, Figueira and Castilho provenance/page mapping live beside their
-  images in `source.json` and `README.md`. Figueira stores its complete scan;
-  Castilho stores only the 16 currently cited page-side crops. The
+  `docs/primary_sources/{vlb,ancharte,anchteatro1954,arcat1618,arcat1686,betcomp,castilho1937,evreux1929,figueira1878,lerhist}`.
+  The 1686 Araújo directory is intentionally sparse: all currently cited
+  printed pages plus a two-page context buffer, not the complete scan.
+  `figueira1878` is a complete scan with a constant printed-page map;
+  `anchteatro1954` is one explicit quotation-level cross-edition witness, not a
+  general pagination map. `castilho1937` stores 16 verified page-side crops
+  behind an explicit non-linear map. D’Evreux, Figueira, Anchieta, and
+  Castilho provenance and page mappings live beside their images in
+  `source.json` and `README.md`. The
   `cartas_portiguara` image folder is preserved in the Pages artifact for now;
   `bettvulg` is excluded because no runtime references were found.
 - Grammar site: source is `gramatica/docs/src`; built output belongs in the Pages artifact under `gramatica/`, not tracked on the source branch.
@@ -27,9 +32,8 @@
 - `scripts/data/`: maintained Navarro, conjugation, Nheengatu, Mbyá, and
   primary-source data pipelines. `source_inventory.py` audits the served
   dictionary and production citation linker; `render_source_pages.py` renders
-  checksum-verified source PDFs as complete pages or manifest-defined crops,
-  at fixed DPI or target pixel width. Run from the repository root because
-  their data paths are checkout-relative.
+  checksum-verified source PDFs. Run from the repository root because their
+  data paths are checkout-relative.
 - `scripts/media/`: optional PDF-bookmark and WAV-to-Opus utilities; generated outputs are not versioned.
 - `scripts/build_pages.sh`, `scripts/deploy_gh_pages.sh`, `scripts/optimize_pages_images.py`: maintained Pages build and deployment tooling.
 - `misc/experiments/`: retained historical research scratchpads, machine-local model experiments, and the manual Pydicate/Graphviz story harness. Nothing under `misc/` is a build or deployment dependency.

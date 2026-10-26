@@ -27,9 +27,9 @@ def int_from_env(name: str, default: int) -> int:
         raise SystemExit(f"{name} must be an integer, got {value!r}") from exc
 
 
-def iter_images(primary_sources_dir: Path):
+def iter_images(primary_sources_dir: Path, books: set[str] | None = None):
     for path in sorted(primary_sources_dir.iterdir()):
-        if not path.is_dir():
+        if not path.is_dir() or (books is not None and path.name not in books):
             continue
         for image_path in sorted(path.iterdir()):
             if image_path.is_file() and image_path.suffix.lower() in IMAGE_EXTENSIONS:
@@ -48,10 +48,16 @@ def as_rgb(image: Image.Image) -> Image.Image:
 
 
 def optimize_image(
-    image_path: Path, max_size: tuple[int, int], quality: int
+    image_path: Path,
+    max_size: tuple[int, int],
+    quality: int,
+    destination: Path | None = None,
 ) -> tuple[Path, int, int]:
     original_size = image_path.stat().st_size
-    output_path = image_path.with_suffix(".jpg")
+    output_path = (
+        destination if destination is not None else image_path.with_suffix(".jpg")
+    )
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     temp_path = output_path.with_name(f"{output_path.name}.tmp")
 
     with Image.open(image_path) as original:
@@ -65,7 +71,7 @@ def optimize_image(
             progressive=True,
         )
 
-    if output_path != image_path:
+    if destination is None and output_path != image_path:
         image_path.unlink()
     temp_path.replace(output_path)
     return output_path, original_size, output_path.stat().st_size
@@ -74,11 +80,21 @@ def optimize_image(
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("primary_sources_dir", type=Path)
+    parser.add_argument("--output-dir", type=Path)
+    parser.add_argument("--books", nargs="+")
     args = parser.parse_args()
 
     primary_sources_dir = args.primary_sources_dir
     if not primary_sources_dir.exists():
         raise SystemExit(f"Missing primary-source directory: {primary_sources_dir}")
+    output_dir = args.output_dir or primary_sources_dir
+    if args.output_dir and output_dir.resolve() == primary_sources_dir.resolve():
+        raise SystemExit("Output directory must differ from the source directory")
+    if args.books:
+        for book in args.books:
+            if Path(book).name != book or not (primary_sources_dir / book).is_dir():
+                raise SystemExit(f"Missing or invalid source book: {book}")
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     max_width = int_from_env("PAGES_IMAGE_MAX_WIDTH", DEFAULT_MAX_WIDTH)
     max_height = int_from_env("PAGES_IMAGE_MAX_HEIGHT", DEFAULT_MAX_HEIGHT)
@@ -95,9 +111,16 @@ def main() -> int:
     total_after = 0
     optimized_count = 0
 
-    for book_name, image_path in iter_images(primary_sources_dir):
+    for book_name, image_path in iter_images(
+        primary_sources_dir, set(args.books) if args.books else None
+    ):
+        destination = (
+            output_dir / book_name / image_path.with_suffix(".jpg").name
+            if args.output_dir
+            else None
+        )
         output_path, before, after = optimize_image(
-            image_path, (max_width, max_height), quality
+            image_path, (max_width, max_height), quality, destination
         )
         books[book_name] = output_path.suffix
         total_before += before
@@ -114,7 +137,7 @@ def main() -> int:
         "bytes_before": total_before,
         "bytes_after": total_after,
     }
-    (primary_sources_dir / "image-formats.json").write_text(
+    (output_dir / "image-formats.json").write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )

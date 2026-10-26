@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Render a verified source PDF as complete, numbered JPEG page images.
+"""Render verified source PDF pages as numbered JPEG images.
 
 Requires PyMuPDF and Pillow. Run from the repository root; see the source's
-README for the download URL, checksum, and printed-page mapping.
+README for the download URL, checksum, printed-page mapping, and whether the
+manifest selects a cited-page subset.
 """
 
 from __future__ import annotations
@@ -43,8 +44,12 @@ def render_image(page, settings: dict, crop_box=None) -> Image.Image:
         dpi = settings.get("dpi")
         if type(dpi) is not int or dpi < 1:
             raise ValueError("render.dpi must be a positive integer")
-        pixmap = page.get_pixmap(dpi=dpi, clip=clip, colorspace=fitz.csRGB, alpha=False)
-
+        pixmap = page.get_pixmap(
+            dpi=dpi,
+            clip=clip,
+            colorspace=fitz.csRGB,
+            alpha=False,
+        )
     image = Image.frombytes("RGB", (pixmap.width, pixmap.height), pixmap.samples)
     if target_width is not None and image.width != target_width:
         target_height = round(image.height * target_width / image.width)
@@ -75,7 +80,26 @@ def main() -> int:
     with fitz.open(args.pdf) as document:
         if len(document) != manifest["pdf"]["page_count"]:
             parser.error("PDF page count does not match the source manifest")
-        selected_pages = sorted(set(args.page)) if args.page is not None else None
+        if args.page is not None:
+            selected_pages = sorted(set(args.page))
+        elif selection := manifest.get("selection"):
+            pagination = manifest["pagination"]
+            offset = pagination["printed_page_to_image_offset"]
+            first_printed = pagination["first_printed_page"]
+            last_printed = pagination["last_printed_page"]
+            context = selection["context_pages_each_side"]
+            printed_pages = manifest["verification"]["all_cited_pages"]
+            selected_pages = sorted(
+                {
+                    printed_page + offset + delta
+                    for printed_page in printed_pages
+                    for delta in range(-context, context + 1)
+                    if first_printed <= printed_page + delta <= last_printed
+                    and 0 <= printed_page + offset + delta < len(document)
+                }
+            )
+        else:
+            selected_pages = None
         if selected_pages is not None and any(
             page < 0 or page >= len(document) for page in selected_pages
         ):
@@ -94,9 +118,7 @@ def main() -> int:
                 if selected_pages is None or target["pdf_index"] in selected_pages
             ]
         else:
-            pages = (
-                selected_pages if selected_pages is not None else range(len(document))
-            )
+            pages = selected_pages if selected_pages is not None else range(len(document))
             targets = [
                 {"pdf_index": index, "output": f"{index}.jpg", "crop_box": None}
                 for index in pages
@@ -110,8 +132,8 @@ def main() -> int:
             index = target["pdf_index"]
             if type(index) is not int or index < 0 or index >= len(document):
                 parser.error("render target has an invalid zero-based PDF index")
-            # Render the whole page, not just its embedded scan: some pages
-            # carry the digitizing library's credit as a visible PDF text layer.
+            # Render the composed PDF page or its manifest-defined crop, rather
+            # than extracting an embedded scan and losing visible PDF layers.
             try:
                 image = render_image(document[index], settings, target["crop_box"])
             except (TypeError, ValueError) as exc:

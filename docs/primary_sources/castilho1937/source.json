@@ -11,6 +11,11 @@
   "digitization_credit": "Biblioteca Digital Curt Nimuendajú",
   "catalog_url": "https://bibliotecadigital.mj.gov.br/handle/1/7907",
   "alternate_catalog_url": "https://www.etnolinguistica.org/biblio:ayrosa-1937-nomes",
+  "viewer": {
+    "title": "Pero de Castilho — Os Nomes das Partes do Corpo Humano",
+    "edition_text": "São Paulo, 1937 · somente as 16 páginas citadas estão armazenadas",
+    "source_page_link_label": "Abrir PDF nesta página"
+  },
   "pdf": {
     "url": "https://bibliotecadigital.mj.gov.br/bitstream/1/7907/1/ayrosa_1937_nomes.pdf",
     "filename": "ayrosa_1937_nomes.pdf",
@@ -23,6 +28,10 @@
     "extension": ".jpg",
     "filename_rule": "p{printed_page}.jpg",
     "navigation": "available_cited_pages"
+  },
+  "pagination": {
+    "navigation": "explicit_map",
+    "locator_unit": "printed_page"
   },
   "mapping": {
     "locator_unit": "printed_page",

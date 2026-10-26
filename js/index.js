@@ -124,6 +124,10 @@
   let searchIndex = [];
   let dataReady = false;
 
+  function normalizeApostrophes(str) {
+    return str.replace(/[\u2018\u2019\u201B\u02BB\u02BC\uFF07]/g, "'");
+  }
+
   function escapeRegExp(str) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
@@ -141,7 +145,7 @@
   }
 
   function normalizeExact(str) {
-    return removePunctuation(str).toLowerCase();
+    return removePunctuation(normalizeApostrophes(str)).toLowerCase();
   }
 
   function normalizeNoAccent(str) {
@@ -149,13 +153,21 @@
   }
 
   function buildSearchIndex(data) {
-    return data.map((item) => ({
-      item,
-      firstWordExact: normalizeExact(item.first_word || ''),
-      firstWordNoAccent: normalizeNoAccent(item.first_word || ''),
-      definitionLower: (item.definition || '').toLowerCase(),
-      definitionNoAccent: normalizeNoAccent(item.definition || ''),
-    }));
+    return data.map((item) => {
+      item.first_word = normalizeApostrophes(item.first_word || '');
+      item.definition = normalizeApostrophes(item.definition || '');
+      if (typeof item.con === 'string') {
+        item.con = normalizeApostrophes(item.con);
+      }
+
+      return {
+        item,
+        firstWordExact: normalizeExact(item.first_word),
+        firstWordNoAccent: normalizeNoAccent(item.first_word),
+        definitionLower: item.definition.toLowerCase(),
+        definitionNoAccent: normalizeNoAccent(item.definition),
+      };
+    });
   }
 
   const warnOnce = (() => {
@@ -952,15 +964,15 @@
 
     // Navarro's lone "1686" Figueira citation is a probable year typo. The
     // catalogued 1687 edition (in Platzmann's 1878 facsimile) has the exact
-    // cited çoába passage on p. 64. Preserve the raw year and let the viewer
-    // display the discrepancy rather than withholding the verified page.
+    // cited çoába passage on p. 64. Preserve the year and let the viewer
+    // explain the discrepancy.
     regex = /\b(Fig\.,?\s*Arte,\s*1686,\s*)(64)(?![\dA-Za-zÀ-ÿ])/g;
     replacedString = replacedString.replace(regex, (match) => (
       `<a href="/nhe-enga/docs/primary_sources/?book_name=figueira1878&page_number=64&citation_year=1686" target="_blank" rel="noopener">${match}</a>`
     ));
 
-    // Figueira's 1687 pagination is preserved by the 1878 facsimile. The
-    // viewer manifest owns the printed-page to PDF/image mapping.
+    // Figueira's 1687 pagination is preserved by the 1878 facsimile. Keep
+    // each page in inherited lists/ranges clickable without changing text.
     regex = /\b(Fig\.,?\s*Arte,\s*(?!1686\s*,)(?:pp?\.\s*)?)(\d+(?:\s*[-–—,;]\s*\d+)*)(?![\dA-Za-zÀ-ÿ])/g;
     replacedString = replacedString.replace(regex, (match, prefix, pages) => {
       const pageNumbers = pages.match(/\d+/g).map(Number);
@@ -988,6 +1000,15 @@
       });
     });
 
+    // The cited Navarro page and the available Martins documentary edition
+    // have no general numeric offset. Page 176 is linked only because all nine
+    // unsuffixed quotations on that locator were explicitly aligned to
+    // Martins 1954, p. 632. The separately cited 2006 edition stays unlinked.
+    regex = /\bAnch\.,\s*Teatro,\s*176(?=\s*(?:\)|$))/g;
+    replacedString = replacedString.replace(regex, (match) => (
+      `<a href="/nhe-enga/docs/primary_sources/?book_name=anchteatro1954&page_number=176" target="_blank" rel="noopener">${match}</a>`
+    ));
+
     // VLB
     regex = /VLB, (I|II), (\d+)/g;
     replacedString = replacedString.replace(regex, (match, p1, p2) => {
@@ -1003,11 +1024,20 @@
       `<a href="/nhe-enga/docs/primary_sources/?book_name=ancharte&page_number=${p1}" target="_blank" rel="noopener">${match}</a>`
     ));
 
-    // Araujo Cat 1618
-    regex = /Ar\., Cat\., (?!1686)(\d+v?)/g;
-    replacedString = replacedString.replace(regex, (match, p1) => (
-      `<a href="/nhe-enga/docs/primary_sources/?book_name=arcat1618&page_number=${p1}" target="_blank" rel="noopener">${match}</a>`
-    ));
+    // Araújo, Catecismo. An explicit 1686 suffix selects the second edition;
+    // citations without an edition retain the historic 1618 behavior.
+    regex = /Ar\., Cat\., (\d+(?:\s*[-–—]\s*\d+)?),\s*1686\b|Ar\., Cat\., (?!1686\b)(\d+v?)/g;
+    replacedString = replacedString.replace(regex, (match, pages1686, page1618) => {
+      if (!pages1686) {
+        return `<a href="/nhe-enga/docs/primary_sources/?book_name=arcat1618&page_number=${page1618}" target="_blank" rel="noopener">${match}</a>`;
+      }
+      let firstPage = true;
+      return pages1686.replace(/\d+/g, (page) => {
+        const label = firstPage ? `Ar., Cat., ${page}` : page;
+        firstPage = false;
+        return `<a href="/nhe-enga/docs/primary_sources/?book_name=arcat1686&page_number=${Number(page)}" target="_blank" rel="noopener">${label}</a>`;
+      }) + ', 1686';
+    });
 
     // Bettendorf compendio
     regex = /Bettendorff, Compêndio, (\d+v?)/g;
@@ -2073,7 +2103,8 @@
       return;
     }
 
-    const query = searchInput.value.trim();
+    const query = normalizeApostrophes(searchInput.value.trim());
+    searchInput.value = query;
     const queryLower = query.toLowerCase();
 
     if (!query) {

@@ -10,6 +10,8 @@ PYTHON_DEPS_STAMP ?= .venv/.requirements-installed
 GRAMMAR_DIR := gramatica/docs
 VUEPRESS_PUBLIC := $(GRAMMAR_DIR)/src/.vuepress/public
 PAGES_BUILD_DIR ?= .pages-build
+NHE_SIGNING_DIR ?= $(HOME)/.config/nhe-enga
+export OFFLINE_SIGNING_KEY ?= $(wildcard $(NHE_SIGNING_DIR)/content-private.pem)
 
 .PHONY: help setup lint format python-deps node-deps build-wheels grammar-build pages-build deploy-gh-pages push gen_data
 
@@ -25,6 +27,7 @@ help:
 	@printf '%s\n' 'Useful checks:'
 	@printf '%s\n' '  make lint                Run Black in check-only mode.'
 	@printf '%s\n' '  make format              Run Black and write formatting changes.'
+	@printf '%s\n' '  make offline-help        Android/offline build and verification commands.'
 	@printf '%s\n' ''
 	@printf '%s\n' 'Individual build targets:'
 	@printf '%s\n' '  make python-deps         Create/update .venv from requirements.txt.'
@@ -86,3 +89,5 @@ gen_data: python-deps
 	$(VENV_PYTHON) scripts/data/gen_data.py > docs/tupi_dict_navarro.js
 	$(VENV_PYTHON) scripts/data/verbs.py
 	cp docs/dict-conjugated.json.gz pydicate/pydicate/lang/tupilang/data/
+
+include offline/Makefile

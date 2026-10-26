@@ -43,8 +43,13 @@ These paths are referenced by source code or documented as public static pages. 
 - `/nhe-enga/docs/primary_sources/emerson_arte_anchieta.html`: standalone Anchieta transcription
 - `/nhe-enga/docs/primary_sources/vlb/*.png`
 - `/nhe-enga/docs/primary_sources/ancharte/*.png`
+- `/nhe-enga/docs/primary_sources/anchteatro1954/683.jpg`: explicit Martins 1954 witness for unsuffixed `Anch., Teatro, 176`
 - `/nhe-enga/docs/primary_sources/arcat1618/*.png`
+- `/nhe-enga/docs/primary_sources/arcat1686/*.jpg`: cited printed pages plus a two-page context buffer
 - `/nhe-enga/docs/primary_sources/betcomp/*.jpg`
+- `/nhe-enga/docs/primary_sources/castilho1937/*.jpg`: 16 cited printed-page crops selected by the explicit manifest map
+- `/nhe-enga/docs/primary_sources/evreux1929/*.jpg`: complete 1929 scan
+- `/nhe-enga/docs/primary_sources/figueira1878/*.jpg`: complete 1878 facsimile scan
 - `/nhe-enga/docs/primary_sources/lerhist/*.jpg`
 - `/nhe-enga/docs/primary_sources/cartas_portiguara/*.{png,jpg}`
 

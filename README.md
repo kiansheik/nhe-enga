@@ -215,12 +215,16 @@ Because many scripts operate on large PDFs and external APIs, there is no single
 - **Navarro dictionary**: Eduardo de Almeida Navarro, *Dicionário de Tupi Antigo*, 2007. The DOCX is not redistributed here; only derived JSON/JS needed for the UI.
 - **Anchieta/Artes, VLB, Bettendorff**: stored as PDFs/images under `docs/primary_sources/` solely for research and citation. Respect the copyrights of the original works.
 - **D’Evreux (1929)**: the complete 444-page scan is available through dictionary citations. The [edition and page-mapping notes](docs/primary_sources/evreux1929/README.md) document the original scan, its checksum, and how to reproduce the JPEGs.
-- **Figueira (1878 facsimile of 1687)**: the complete 200-image scan and the
-  verified citation map are documented in the
-  [Figueira source notes](docs/primary_sources/figueira1878/README.md).
-- **Castilho (1937)**: the 16 currently cited printed-page crops and their
-  explicit spread-side map are documented in the
-  [Castilho source notes](docs/primary_sources/castilho1937/README.md).
+- **Figueira, Arte**: all current citations open the complete 1878 facsimile of
+  the 1687 edition; [provenance and pagination](docs/primary_sources/figueira1878/README.md)
+  are recorded beside the 200 derived page images.
+- **Anchieta, Teatro p. 176**: the linked image is an explicitly collated
+  passage in Martins's 1954 documentary edition, not a general page-equivalent
+  scan of Navarro; the [mapping boundary](docs/primary_sources/anchteatro1954/README.md)
+  is kept visible in the viewer.
+- **Castilho (1937)**: all current citations open one of 16 verified
+  printed-page crops; the [non-linear spread-side map](docs/primary_sources/castilho1937/README.md)
+  is recorded beside the images.
 - **Nheengatu dataset**: parsed from Marcel Twardowsky Avila’s 2021 dissertation (*Proposta de dicionário nheengatu-português*).
 - **Mbyá dataset**: parsed from Robert A. Dooley’s *Léxico Guarani, Dialeto Mbyá* (SIL, 2006).
 - **Neologisms**: pulled from the Google Sheet referenced inside the Makefile (`neologisms.csv`).
@@ -236,13 +240,7 @@ viewer with `node --test tests/primary_sources.test.cjs`.
 
 ## Contributing and next steps
 
-The D’Evreux pilot is merged, and Figueira/Castilho are implemented for
-review. The [next-source groundwork](docs/primary_sources/plans/README.md)
-retains the pending Sousa and D’Abbeville mapping/storage work. Run
-`python3 scripts/check_pages_size.py .pages-build` on the complete optimized
-artifact before adding more source images. The
-[original D’Evreux handoff](docs/agent/session-handoffs/2026-10-06-devreux-primary-source.md)
-remains available as historical context.
+For the source-scan task, see the [D’Evreux pilot instructions for a local agent](docs/agent/session-handoffs/2026-10-06-devreux-primary-source.md). The handoff contains the verified edition and page mapping, implementation steps, source-inventory scope, and acceptance checks for an implementation PR.
 
 This codebase has grown organically; expect rough edges. Ideas that would add immediate value:
 

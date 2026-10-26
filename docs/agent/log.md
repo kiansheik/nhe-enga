@@ -1,21 +1,67 @@
 # Agent Log
 
-## 2026-10-06 — Figueira and Castilho primary-source implementation
+## 2026-10-26 — Refresh source-groundwork PR
 
-Implemented the first two books from PR #26's verified research plan in
-[PR #27](https://github.com/kiansheik/nhe-enga/pull/27), a dependent review
-branch. Added the complete 200-image Figueira scan and 16
-Castilho page-side crops, production manifests, reproducible target-width/crop
-rendering, citation links, manifest-driven viewer behavior, Pages inclusion,
-inventory coverage and regression tests. All 622 Figueira citations and 215
-Castilho citations link without changing displayed text. The lone
-`Fig., Arte, 1686, 64` label stays verbatim and now opens the exact *çoába*
-passage with a visible 1687-edition warning. Independent rerendering matched
-all 216 JPEGs byte for byte; 12 Node tests, six Pages-size tests, lint, syntax
-checks and the full 777,563,987-byte Pages build pass. Real Chromium desktop
-and 400px checks covered both books, mapping labels, sparse navigation and
-readability. PDFs remain outside Git; nothing was deployed or merged. Sousa
-and D’Abbeville remain explicitly deferred for mapping/content/storage review.
+Merged current `main` into PR #26 and resolved its obsolete Figueira overlap
+in favor of the deployed implementation. Preserved the unique Castilho 1937
+source: 16 verified page-side crops, all 215 current citation links, explicit
+mapping/navigation, reproducible crop rendering, Pages/offline inclusion, and
+focused regressions. The PR remains open for review and is not deployed.
+
+## 2026-10-25 — Figueira and Anchieta source click-throughs
+
+Restored the reviewed Figueira implementation from the unmerged prior work,
+including the complete 200-page 1878 facsimile, provenance, full-scan viewer,
+all 622 explicit served-dictionary links, inherited list/range handling, and
+the visible `1686` citation-discrepancy warning. Added a deliberately narrower
+Anchieta mapping: all nine unsuffixed `Anch., Teatro, 176` attestations were
+visually collated to Martins 1954 printed p. 632/PDF index 683, while `2006`,
+ranges, lists, other years, and all other Teatro pages remain unlinked. Wired
+both sources through Pages optimization and selective offline packs. All 18
+source/viewer tests, 11 offline tests, the service-worker smoke suite, lint,
+syntax, diff checks, a 791 MiB no-PDF Pages build, and real-Chrome clicks from
+the reported `ma'enduar` entry pass. Pushed source commit `31194fd4` to `main`
+and Pages commit `2333ed15` to `gh-pages`; GitHub reported the build successful.
+The live JavaScript exposes all three routes, the deployed JPEG hashes match
+the artifact, and real Chrome loaded each expected image from the custom
+domain.
+
+## 2026-10-21 — Refresh stale live citation snapshots
+
+Reproduced the reported `arcat1618` target as an offline-service-worker
+versioning problem: the origin and a clean browser already returned the fixed
+`arcat1686` anchor, while an older pinned catalog could continue serving the
+old JavaScript during online navigation. Changed new-document activation to
+revalidate the catalog with `no-store`, prefer the current catalog's verified
+file, and retain installed/saved files as failure fallbacks. Existing documents
+remain version-pinned. All offline unit/protocol checks and the real-Chromium
+offline/update suite pass, including immediate online activation without an
+explicit sync. Pushed source commit `fda36aaf` and deployed Pages commit
+`8460bbbf`; GitHub Pages built it successfully. The production worker matches
+the artifact byte for byte, and the exact reported query now links to the live
+1686 page-241 viewer and its loaded `276.jpg` scan.
+
+## 2026-10-21 — Araújo 1686 citations
+
+Separated explicit 1686 Araújo citations from the legacy 1618 folio route.
+Derived 58 cited printed pages from the served dictionary and rendered only
+those pages plus a two-page context buffer (158 JPEGs). Confirmed printed page
+241 at image/PDF index 276 contains the `emo'emyîara` quotation. Added sparse
+viewer navigation, range-citation handling, provenance, reproducible selected
+rendering, Pages/offline inclusion, and focused coverage. All 12 source-viewer
+tests, lint, image decoding, the 741 MiB Pages build, and a real-Chromium local
+click from the dictionary entry to the readable scan pass. Pushed source commit
+`cb4b3b87` to `main` and Pages commit `99fb18f3` to `gh-pages`; GitHub reported
+the Pages build successful, the live image bytes match the artifact, and a
+real-Chromium production click reaches the readable page-241 scan.
+
+## 2026-10-12 — Diffuse locative -bo
+
+Implemented `bo` (Navarro -bo2) beside `pe` and routed hyphenated dictionary
+`Postposition` values `-bo`/`-pe` through their bound classes. Rejected the
+`YFix` wrapper approach: it skips `Postposition.__mul__` and raises. 92 engine
+tests and 113 corpus tests pass; all 160 historic renders are byte-identical.
+The consonant-final `y` branch is an inference awaiting editorial confirmation.
 
 ## 2026-10-06 — D’Evreux 1929 primary-source pilot
 

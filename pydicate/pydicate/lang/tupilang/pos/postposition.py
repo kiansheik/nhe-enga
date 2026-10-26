@@ -26,7 +26,22 @@ class Postposition(Adverb):
     def n(self):
         return Noun(self.noun.verbete(True), definition=self.definition)
 
+    def _bound_delegate(self):
+        """A dictionary headword such as -bo names an implemented bound form."""
+        if type(self) is not Postposition or not self.verbete.startswith("-"):
+            return None
+        bound = BOUND_POSTPOSITIONS.get(self.verbete[1:])
+        if bound is None:
+            return None
+        delegate = bound(definition=self.definition)
+        delegate.arguments = self.arguments
+        delegate.arg0 = self.arg0
+        return delegate
+
     def morphology(self, annotated=False):
+        delegate = self._bound_delegate()
+        if delegate is not None:
+            return delegate.morphology(annotated=annotated)
         arg0_object = self.arg0
         arg0 = arg0_object.verbete
         found = False
@@ -109,6 +124,25 @@ class Locative(Postposition):
         tn = (
             TupiNoun(self.arg0.eval(annotated), self.arg0.definition)
             .pe()
+            .verbete(annotated)
+        )
+        return (tn + (self.tag if annotated else "")).strip()
+
+
+class Diffusive(Postposition):
+    def __init__(
+        self, definition="in, through, around (no specific place); according to"
+    ):
+        """Initialize the diffuse locative -bo (Navarro, -bo2)."""
+        super().__init__("bo", definition=definition, tag="[POSTPOSITION:DIFFUSIVE]")
+
+    def morphology(self, annotated=False):
+        """Attach -bo through TupiNoun.bo, which owns its allomorphy."""
+        if len(self.arguments) == 0:
+            return f"{self.verbete}{self.tag}"
+        tn = (
+            TupiNoun(self.arg0.eval(annotated), self.arg0.definition)
+            .bo()
             .verbete(annotated)
         )
         return (tn + (self.tag if annotated else "")).strip()
@@ -261,8 +295,10 @@ amo = Translational()
 iré = Beyond()
 iremen = SoonAfter()
 eme = Temporal()
-# TODO: implement -bo like -pe
 
 
 pe = Locative()
+bo = Diffusive()
+# Hyphenated Postposition values (dictionary headwords) realized by a bound class.
+BOUND_POSTPOSITIONS = {"pe": Locative, "bo": Diffusive}
 supé = Dative()

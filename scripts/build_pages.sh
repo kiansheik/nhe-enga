@@ -29,24 +29,6 @@ copy_optional_path() {
   fi
 }
 
-copy_primary_source_images() {
-  local path="$1"
-  local file rel
-
-  require_path "$path"
-  mkdir -p "$BUILD_DIR/$path"
-
-  while IFS= read -r -d '' file; do
-    rel="${file#$ROOT_DIR/}"
-    mkdir -p "$(dirname "$BUILD_DIR/$rel")"
-    cp "$file" "$BUILD_DIR/$rel"
-  done < <(
-    find "$ROOT_DIR/$path" -maxdepth 1 -type f \
-      \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' -o -iname '*.gif' \) \
-      -print0
-  )
-}
-
 rm -rf "$BUILD_DIR"
 mkdir -p "$BUILD_DIR"
 
@@ -106,26 +88,26 @@ done
 
 for path in \
   docs/primary_sources/ancharte \
+  docs/primary_sources/anchteatro1954 \
   docs/primary_sources/arcat1618 \
+  docs/primary_sources/arcat1686 \
   docs/primary_sources/betcomp \
-  docs/primary_sources/castilho1937 \
   docs/primary_sources/cartas_portiguara \
+  docs/primary_sources/castilho1937 \
   docs/primary_sources/evreux1929 \
   docs/primary_sources/figueira1878 \
   docs/primary_sources/lerhist \
   docs/primary_sources/vlb
 do
-  copy_primary_source_images "$path"
+  require_path "$path"
 done
 
-# Keep the new sources' provenance available beside their page images.
-for path in \
-  docs/primary_sources/castilho1937/source.json \
-  docs/primary_sources/evreux1929/source.json \
-  docs/primary_sources/figueira1878/source.json
-do
-  copy_path "$path"
-done
+# Keep the newer sources' provenance available beside their page images.
+copy_path "docs/primary_sources/anchteatro1954/source.json"
+copy_path "docs/primary_sources/evreux1929/source.json"
+copy_path "docs/primary_sources/arcat1686/source.json"
+copy_path "docs/primary_sources/castilho1937/source.json"
+copy_path "docs/primary_sources/figueira1878/source.json"
 copy_path "docs/primary_sources/DTAbib.txt"
 
 for path in \
@@ -137,12 +119,19 @@ do
   copy_optional_path "$path"
 done
 
-"$PYTHON_BIN" "$ROOT_DIR/scripts/optimize_pages_images.py" "$BUILD_DIR/docs/primary_sources"
+"$PYTHON_BIN" "$ROOT_DIR/scripts/optimize_pages_images.py" "$ROOT_DIR/docs/primary_sources" \
+  --output-dir "$BUILD_DIR/docs/primary_sources" \
+  --books ancharte anchteatro1954 arcat1618 arcat1686 betcomp cartas_portiguara castilho1937 evreux1929 figueira1878 lerhist vlb
 
 make -C "$ROOT_DIR" grammar-build
 mkdir -p "$BUILD_DIR/gramatica"
 cp -R "$GRAMMAR_DIST/." "$BUILD_DIR/gramatica/"
 rm -rf "$GRAMMAR_DIST"
+
+# Preserve the independently built installer; no Gradle/content embedding here.
+"$PYTHON_BIN" "$ROOT_DIR/scripts/stage_android.py" "$BUILD_DIR"
+# Hash final optimized/re-written bytes, never raw source scans or VuePress input.
+"$PYTHON_BIN" "$ROOT_DIR/scripts/build_offline.py" "$BUILD_DIR" --prepare
 
 touch "$BUILD_DIR/.nojekyll"
 if [[ -n "${SITE_CNAME:-kiansheik.io}" ]]; then
