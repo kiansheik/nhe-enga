@@ -1,0 +1,19 @@
+{
+  "source_url": "https://docs.google.com/document/d/1oNYyk0gHjtP4Rm_Auemt-63DYMXLY9GgFtQ2OE2H6Ek/edit?tab=t.0",
+  "landing_url": "https://sites.google.com/site/vocabularionalinguabrasilica/",
+  "retrieved_utc": "2026-11-02T17:21:23.716568+00:00",
+  "retrieval_method": "Unauthenticated HTTP GET to public edit URL; public document text decoded from DOCS_modelChunk inline JSON records of type is, in document order; all offsets contiguous. Public TXT/HTML export endpoints return HTTP 401.",
+  "text_sha256": "0be22fae2f181e344963590add1016670ba12706af675b51f21cf7571d974fb9",
+  "html_sha256": "c923d4b2cb52a9b567f6b94e13893ba5330690958ec7f6c13c273c70a69da1db",
+  "chunks": 115,
+  "insert_chunks": 115,
+  "characters": 464580,
+  "source_line_count": 7678,
+  "nonblank_lines": 7678,
+  "em_dash_lines": 7522,
+  "offset_discontinuities": [],
+  "first_line": "Vocabulário na Língua Brasílica",
+  "last_line": "Zurrar como o iumento, etc. — Anheeng.",
+  "document_revision": "568",
+  "document_id": "1oNYyk0gHjtP4Rm_Auemt-63DYMXLY9GgFtQ2OE2H6Ek"
+}

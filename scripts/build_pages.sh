@@ -57,6 +57,18 @@ done
 
 copy_path "translate/index.html"
 
+# Publish the VLB reader projection and its linked provenance, keeping the
+# offline rebuild script and pinned intermediate inputs on the source branch.
+for path in \
+  vlb/index.html \
+  vlb/app.js \
+  vlb/styles.css \
+  vlb/data \
+  vlb/source/pdf_source_metadata.json
+do
+  copy_path "$path"
+done
+
 # Preserve public URLs that were served directly when Pages published the
 # repository root. Keep these explicit so source-only directories do not become
 # part of the artifact by accident.

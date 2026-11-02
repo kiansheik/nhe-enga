@@ -264,6 +264,9 @@
       definition: item.d || '',
       con: item.c || '',
       is_tupi_portuguese: item.t === 1 || item.t === true,
+      // The VLB citation index uses the pinned dictionary row, including rows
+      // without a legacy `i` value. Keep it through search/result rendering.
+      dictionary_index: index,
     }));
   }
 
@@ -942,7 +945,7 @@
     createConjugateFunction(tableElement, conjugations);
   }
 
-  function linkSources(definition) {
+  function linkSources(definition, dictionaryIndex = null) {
     let replacedString = definition;
 
     // Navarro cites the 1929 Portuguese edition. Its printed page number is
@@ -1030,13 +1033,31 @@
       });
     });
 
-    // VLB
-    regex = /VLB, (I|II), (\d+)/g;
-    replacedString = replacedString.replace(regex, (match, p1, p2) => {
-      if (p1 === 'II') {
-        return `<a href="/nhe-enga/docs/primary_sources/?book_name=vlb&page_number=${parseInt(p2, 10) + 154}" target="_blank" rel="noopener">${match}</a>`;
-      }
-      return `<a href="/nhe-enga/docs/primary_sources/?book_name=vlb&page_number=${p2}" target="_blank" rel="noopener">${match}</a>`;
+    // Preserve the printed volume/page in the transcription reader's URL.
+    // It provides the original scan alongside Emerson's text. Page lists and
+    // inherited volumes stay clickable without rewriting citation wording;
+    // the historical VBL typo is preserved as displayed text. The known I,1390
+    // outlier and page-less references must not silently select another page.
+    regex = /\b((?:VLB|VBL),\s*(II|I),\s*)(\d+(?:\s*[-–—,;]\s*(?:(?:II|I)\s*,\s*)?\d+)*)(?![\dA-Za-zÀ-ÿ])/g;
+    replacedString = replacedString.replace(regex, (match, prefix, initialVolume, pages) => {
+      let volume = initialVolume;
+      let firstPage = true;
+      const entryQuery = Number.isInteger(dictionaryIndex) && dictionaryIndex >= 0
+        ? `&entry=${dictionaryIndex}` : '';
+      return pages.replace(/(II|I)(\s*,\s*)|(\d+)/g, (piece, nextVolume, _separator, page) => {
+        if (nextVolume) {
+          volume = nextVolume;
+          return piece;
+        }
+        const label = firstPage ? `${prefix}${page}` : page;
+        firstPage = false;
+        const printedPage = Number(page);
+        const available = volume === 'I'
+          ? printedPage >= 17 && printedPage <= 154 && printedPage !== 25 && printedPage !== 26
+          : printedPage >= 7 && printedPage <= 149;
+        if (!available) return label;
+        return `<a href="/nhe-enga/vlb/?volume=${volume}&page=${printedPage}${entryQuery}" target="_blank" rel="noopener">${label}</a>`;
+      });
     });
 
     // Anchieta Arte
@@ -3755,7 +3776,7 @@
       const baseDefinition = result.is_tupi_portuguese
         ? formatVerbeteDefinition(result.definition)
         : result.definition;
-      const linkedDefinition = linkSources(baseDefinition);
+      const linkedDefinition = linkSources(baseDefinition, result.dictionary_index);
 
       const link = document.createElement('a');
       link.href = `${window.location.pathname}?query=${encodeURIComponent(result.first_word)}`;

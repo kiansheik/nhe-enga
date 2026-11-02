@@ -243,7 +243,7 @@ def pack_for(path: str) -> str:
         return "source-" + p.parts[2]
     if (
         path in CORE
-        or path.startswith(("js/", "katu/", "mbya/", "quiz/", "neologisms/"))
+        or path.startswith(("js/", "katu/", "mbya/", "quiz/", "neologisms/", "vlb/"))
         or (
             path.startswith("docs/primary_sources/")
             and p.suffix in {".html", ".css", ".js", ".json", ".txt"}

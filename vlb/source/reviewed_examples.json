@@ -1,0 +1,674 @@
+{
+  "schema_version": 1,
+  "purpose": "Manually inspected pilot for source reconciliation; no dictionary changes applied.",
+  "dictionary_snapshot": {
+    "path": "docs/dict-conjugated.json.gz",
+    "sha256": "d235a7961961b58fcfbb93362bc3acb9b7f7b7e823196dca5763ef3e7fd16f53",
+    "repository_commit": "1d36bc8ebbb72806c6d6bd1773669481d5b910fd",
+    "identifier_note": "Every existing i equals current array position; these locators are only valid with this pinned snapshot."
+  },
+  "source_snapshot": {
+    "path": "vlb/source/emerson_vlb.txt",
+    "sha256": "0be22fae2f181e344963590add1016670ba12706af675b51f21cf7571d974fb9",
+    "source_line_note": "source_line identifies a paragraph in the frozen extraction, not a printed VLB page/line.",
+    "printed_page_verified": "partial; see case-level facsimile verification"
+  },
+  "limits": [
+    "Pilot cases were selected for diverse alignment issues, not sampled for estimating coverage percentages.",
+    "No claim of absence from the printed Navarro dictionary is made.",
+    "Original source spelling is preserved; suggested normalized relations remain reviewable.",
+    "The parent agent visually verified source paragraphs 3–30 against the pinned VLB scan image 17. Later paragraphs in this pilot have not been facsimile-checked. This verifies source text only, not normalization or semantic judgments."
+  ],
+  "cases": [
+    {
+      "case_id": "pilot-000006",
+      "source_lines": [
+        6
+      ],
+      "source_paragraphs": [
+        {
+          "source_line": 6,
+          "source_offset_utf16": 252,
+          "text": "Abade, ou Prelado. — Abarêguaçú."
+        }
+      ],
+      "review_status": "assistant_reviewed_candidate",
+      "coverage_assessment": "represented_sense_without_vlb_citation",
+      "targets": [
+        {
+          "legacy_array_index": 2376,
+          "legacy_i": 2376,
+          "headword": "abaregûasu",
+          "homonym": "",
+          "role": "same_lexeme_and_sense",
+          "note": "Source Abarêguaçú matches normalized abaregûasu; existing headword includes abade/prelado but cites Ar./Fig., not this VLB entry.",
+          "evidence_excerpt": "bispo, autoridade eclesiástica, provincial, abade, prelado",
+          "definition_span": {
+            "start_codepoints": 30,
+            "end_codepoints": 88
+          }
+        }
+      ],
+      "finding": "A citation-only matcher would miss material already represented. This supports a source attestation link, not a duplicate headword.",
+      "recommended_action": "Link the VLB attestation to abaregûasu; retain source spelling.",
+      "unresolved": [],
+      "facsimile_verification": {
+        "verified_by": "parent agent /root",
+        "verified_scope": "Source wording and paragraph sequence only; normalized hypotheses not adjudicated.",
+        "url": "https://github.com/kiansheik/nhe-enga/blob/1d36bc8ebbb72806c6d6bd1773669481d5b910fd/docs/primary_sources/vlb/17.png",
+        "viewer_image_number": 17,
+        "printed_page_label_visible": false,
+        "page_number_note": "17 is the site image number; printed pagination alignment relies on the existing viewer page map."
+      }
+    },
+    {
+      "case_id": "pilot-000008",
+      "source_lines": [
+        8
+      ],
+      "source_paragraphs": [
+        {
+          "source_line": 8,
+          "source_offset_utf16": 317,
+          "text": "Abaixar qualqr’ cousa. — Arogib, act."
+        }
+      ],
+      "review_status": "assistant_reviewed_candidate",
+      "coverage_assessment": "candidate_existing_lemma_with_scope_question",
+      "targets": [
+        {
+          "legacy_array_index": 4147,
+          "legacy_i": 4147,
+          "headword": "eroîyb",
+          "homonym": "",
+          "role": "candidate_lemma",
+          "note": "Arogib is plausibly the aroîyb form of eroîyb. Existing meanings include lowering with oneself and lowering sails/cargo.",
+          "evidence_excerpt": "fazer descer consigo, descer com, amainar",
+          "definition_span": {
+            "start_codepoints": 13,
+            "end_codepoints": 54
+          }
+        },
+        {
+          "legacy_array_index": 4137,
+          "legacy_i": 4137,
+          "headword": "erogûeîyb",
+          "homonym": "",
+          "role": "cross_referenced_variant",
+          "note": "The eroîyb entry explicitly cross-references erogûeîyb.",
+          "evidence_excerpt": "fazer descer consigo, descer com",
+          "definition_span": {
+            "start_codepoints": 10,
+            "end_codepoints": 42
+          }
+        }
+      ],
+      "finding": "The source broadly says lowering any thing; the dictionary emphasizes descent with the subject. This is a possible usage/sense addition, not established new-lemma evidence.",
+      "recommended_action": "Check Arogib against the printed VLB and annotate the relation to eroîyb/erogûeîyb before deciding whether a broader sense is missing.",
+      "unresolved": [
+        "The source text has been checked against the facsimile; interpretation of Arogib and its semantic relation to current headwords remains unconfirmed."
+      ],
+      "facsimile_verification": {
+        "verified_by": "parent agent /root",
+        "verified_scope": "Source wording and paragraph sequence only; normalized hypotheses not adjudicated.",
+        "url": "https://github.com/kiansheik/nhe-enga/blob/1d36bc8ebbb72806c6d6bd1773669481d5b910fd/docs/primary_sources/vlb/17.png",
+        "viewer_image_number": 17,
+        "printed_page_label_visible": false,
+        "page_number_note": "17 is the site image number; printed pagination alignment relies on the existing viewer page map."
+      }
+    },
+    {
+      "case_id": "pilot-000013",
+      "source_lines": [
+        13
+      ],
+      "source_paragraphs": [
+        {
+          "source_line": 13,
+          "source_offset_utf16": 544,
+          "text": "Abalar assi o fixo. — Aimõgue, Aimocanãy, Aimocanacanãy, actiuos."
+        }
+      ],
+      "review_status": "assistant_reviewed_candidate",
+      "coverage_assessment": "partially_represented_three_alternatives",
+      "targets": [
+        {
+          "legacy_array_index": 7380,
+          "legacy_i": 7380,
+          "headword": "mongué",
+          "homonym": "",
+          "role": "first_alternative",
+          "note": "Aimõgue corresponds to mongué; the abalar/afrouxar sense is present.",
+          "evidence_excerpt": "fazer menear, afrouxar, abalar",
+          "definition_span": {
+            "start_codepoints": 95,
+            "end_codepoints": 125
+          }
+        },
+        {
+          "legacy_array_index": 7210,
+          "legacy_i": 7210,
+          "headword": "mokanãî",
+          "homonym": "",
+          "role": "second_alternative",
+          "note": "Aimocanãy corresponds to mokanãî and has a matching VLB I 17 citation.",
+          "evidence_excerpt": "afrouxar, abalar",
+          "definition_span": {
+            "start_codepoints": 10,
+            "end_codepoints": 26
+          }
+        }
+      ],
+      "finding": "Two alternatives are represented; Aimocanacanãy is an additional reduplicated form whose normalized spellings were not found anywhere in the current JSON. Finding the first alternative must not mark the entire source paragraph covered.",
+      "recommended_action": "Add a reviewed attestation/variant to mokanãî if morphology and facsimile support it. Keep the reduplicated source form unresolved until then.",
+      "unresolved": [
+        "Full-JSON accentfold searches for mokanakanai, mokana-kanai, mocanacanay and kanakan returned no matches; this is not proof of absence from Navarro print."
+      ],
+      "facsimile_verification": {
+        "verified_by": "parent agent /root",
+        "verified_scope": "Source wording and paragraph sequence only; normalized hypotheses not adjudicated.",
+        "url": "https://github.com/kiansheik/nhe-enga/blob/1d36bc8ebbb72806c6d6bd1773669481d5b910fd/docs/primary_sources/vlb/17.png",
+        "viewer_image_number": 17,
+        "printed_page_label_visible": false,
+        "page_number_note": "17 is the site image number; printed pagination alignment relies on the existing viewer page map."
+      }
+    },
+    {
+      "case_id": "pilot-000019",
+      "source_lines": [
+        19
+      ],
+      "source_paragraphs": [
+        {
+          "source_line": 19,
+          "source_offset_utf16": 843,
+          "text": "Abanar como a aruore. Aimotumung."
+        }
+      ],
+      "review_status": "assistant_reviewed_candidate",
+      "coverage_assessment": "represented_with_source_context_to_link",
+      "targets": [
+        {
+          "legacy_array_index": 7574,
+          "legacy_i": 7574,
+          "headword": "motumung",
+          "homonym": "",
+          "role": "same_lexeme",
+          "note": "Aimotumung corresponds to motumung, cited to VLB I 17.",
+          "evidence_excerpt": "(v.tr.) - sacudir",
+          "definition_span": {
+            "start_codepoints": 27,
+            "end_codepoints": 44
+          }
+        }
+      ],
+      "finding": "The source gives the tree context and omits the usual em dash. A parser requiring a dash would silently discard this lexical entry.",
+      "recommended_action": "Retain and parse this no-dash paragraph; link tree-context attestation to motumung.",
+      "unresolved": [],
+      "facsimile_verification": {
+        "verified_by": "parent agent /root",
+        "verified_scope": "Source wording and paragraph sequence only; normalized hypotheses not adjudicated.",
+        "url": "https://github.com/kiansheik/nhe-enga/blob/1d36bc8ebbb72806c6d6bd1773669481d5b910fd/docs/primary_sources/vlb/17.png",
+        "viewer_image_number": 17,
+        "printed_page_label_visible": false,
+        "page_number_note": "17 is the site image number; printed pagination alignment relies on the existing viewer page map."
+      }
+    },
+    {
+      "case_id": "pilot-000022",
+      "source_lines": [
+        22
+      ],
+      "source_paragraphs": [
+        {
+          "source_line": 22,
+          "source_offset_utf16": 941,
+          "text": "Abanos da camisa. — Potigra."
+        }
+      ],
+      "review_status": "assistant_reviewed_candidate",
+      "coverage_assessment": "represented_homonym_sensitive",
+      "targets": [
+        {
+          "legacy_array_index": 9082,
+          "legacy_i": 9082,
+          "headword": "potyra",
+          "homonym": "1",
+          "role": "same_lexeme_and_sense",
+          "note": "Potigra is accounted for by potyra homonym 1, not by the flower sense.",
+          "evidence_excerpt": "abano da camisa",
+          "definition_span": {
+            "start_codepoints": 12,
+            "end_codepoints": 27
+          }
+        }
+      ],
+      "finding": "Headword identity must include the homonym number.",
+      "recommended_action": "Link to potyra¹; keep original Potigra as the source form.",
+      "unresolved": [],
+      "facsimile_verification": {
+        "verified_by": "parent agent /root",
+        "verified_scope": "Source wording and paragraph sequence only; normalized hypotheses not adjudicated.",
+        "url": "https://github.com/kiansheik/nhe-enga/blob/1d36bc8ebbb72806c6d6bd1773669481d5b910fd/docs/primary_sources/vlb/17.png",
+        "viewer_image_number": 17,
+        "printed_page_label_visible": false,
+        "page_number_note": "17 is the site image number; printed pagination alignment relies on the existing viewer page map."
+      }
+    },
+    {
+      "case_id": "pilot-000023",
+      "source_lines": [
+        23
+      ],
+      "source_paragraphs": [
+        {
+          "source_line": 23,
+          "source_offset_utf16": 970,
+          "text": "Abarcar com os braços. — Aicuamã, Aicuapigcigc, act."
+        }
+      ],
+      "review_status": "assistant_reviewed_candidate",
+      "coverage_assessment": "represented_one_source_to_two_targets",
+      "targets": [
+        {
+          "legacy_array_index": 6164,
+          "legacy_i": 6164,
+          "headword": "ku'aman",
+          "homonym": "",
+          "role": "first_alternative",
+          "note": "Aicuamã corresponds to ku'aman.",
+          "evidence_excerpt": "abarcar, agarrar cingindo, pegar (com os braços)",
+          "definition_span": {
+            "start_codepoints": 40,
+            "end_codepoints": 88
+          }
+        },
+        {
+          "legacy_array_index": 6184,
+          "legacy_i": 6184,
+          "headword": "ku'apysyk",
+          "homonym": "",
+          "role": "second_alternative",
+          "note": "Aicuapigcigc corresponds to ku'apysyk.",
+          "evidence_excerpt": "abarcar, agarrar (algo bojudo), pegar (com os braços)",
+          "definition_span": {
+            "start_codepoints": 38,
+            "end_codepoints": 91
+          }
+        }
+      ],
+      "finding": "One Portuguese entry gives two Tupi lexical alternatives, each represented by a separate Navarro headword.",
+      "recommended_action": "Create two component-level links within this VLB entry, not one blanket match.",
+      "unresolved": [],
+      "facsimile_verification": {
+        "verified_by": "parent agent /root",
+        "verified_scope": "Source wording and paragraph sequence only; normalized hypotheses not adjudicated.",
+        "url": "https://github.com/kiansheik/nhe-enga/blob/1d36bc8ebbb72806c6d6bd1773669481d5b910fd/docs/primary_sources/vlb/17.png",
+        "viewer_image_number": 17,
+        "printed_page_label_visible": false,
+        "page_number_note": "17 is the site image number; printed pagination alignment relies on the existing viewer page map."
+      }
+    },
+    {
+      "case_id": "pilot-000026",
+      "source_lines": [
+        26,
+        27,
+        28
+      ],
+      "source_paragraphs": [
+        {
+          "source_line": 26,
+          "source_offset_utf16": 1122,
+          "text": "Abastado estar de qualquer cousa. — Xerecemõ, vel Xepoecemõ, tal ou tal cousa."
+        },
+        {
+          "source_line": 27,
+          "source_offset_utf16": 1201,
+          "text": "Abastar assi. — Acecemõ. Aipoecemõ, actiuos."
+        },
+        {
+          "source_line": 28,
+          "source_offset_utf16": 1246,
+          "text": "Abastar, ou abastado estar assi sobeiamente — O mesmo com iepe no cabo, ut xerecemõ iepe itaiuba .i. tenho dinheiro de sobeio."
+        }
+      ],
+      "review_status": "assistant_reviewed_candidate",
+      "coverage_assessment": "represented_across_entries_with_interpretive_residue",
+      "targets": [
+        {
+          "legacy_array_index": 4241,
+          "legacy_i": 4241,
+          "headword": "esemõ",
+          "homonym": "1",
+          "role": "lemma_and_example",
+          "note": "esemõ homonym 1 contains the provision/abundance senses and the money example.",
+          "evidence_excerpt": "Xe resemõ îepé itaîuba. - Sobra-me dinheiro, certamente.",
+          "definition_span": {
+            "start_codepoints": 136,
+            "end_codepoints": 192
+          }
+        },
+        {
+          "legacy_array_index": 8841,
+          "legacy_i": 8841,
+          "headword": "poesemõ",
+          "homonym": "",
+          "role": "alternative_lemma",
+          "note": "poesemõ contains fill/stock semantics and cross-refers to esemõ; cited to VLB I 17.",
+          "evidence_excerpt": "encher, abarrotar, repletar",
+          "definition_span": {
+            "start_codepoints": 35,
+            "end_codepoints": 62
+          }
+        },
+        {
+          "legacy_array_index": 5056,
+          "legacy_i": 5056,
+          "headword": "îepé",
+          "homonym": "6",
+          "role": "particle_example",
+          "note": "îepé homonym 6 repeats the money example.",
+          "evidence_excerpt": "Xe resemõ îepé itaîuba. - Sobra-me dinheiro, certamente.",
+          "definition_span": {
+            "start_codepoints": 57,
+            "end_codepoints": 113
+          }
+        }
+      ],
+      "finding": "Three successive Portuguese entries spread across two lexical heads and a particle entry. Source instructions about adding iepe should be preserved separately from the modern interpretation of that particle.",
+      "recommended_action": "Link lexical forms and examples separately; keep the source usage statement available for review.",
+      "unresolved": [
+        "Do not infer that all grammatical interpretation is resolved merely because the words and example are present."
+      ],
+      "facsimile_verification": {
+        "verified_by": "parent agent /root",
+        "verified_scope": "Source wording and paragraph sequence only; normalized hypotheses not adjudicated.",
+        "url": "https://github.com/kiansheik/nhe-enga/blob/1d36bc8ebbb72806c6d6bd1773669481d5b910fd/docs/primary_sources/vlb/17.png",
+        "viewer_image_number": 17,
+        "printed_page_label_visible": false,
+        "page_number_note": "17 is the site image number; printed pagination alignment relies on the existing viewer page map."
+      }
+    },
+    {
+      "case_id": "pilot-000030",
+      "source_lines": [
+        30
+      ],
+      "source_paragraphs": [
+        {
+          "source_line": 30,
+          "source_offset_utf16": 1404,
+          "text": "Abater hũas resoens cõ outras. — Aiapigpigc, vel, Aiapigpigc iepe, quer se refira âs mesmas resões, quer ao que as diz, mas tambem dizemos. Ainheengapigpigc iepe. act."
+        }
+      ],
+      "review_status": "assistant_reviewed_candidate",
+      "coverage_assessment": "represented_with_internal_translation_conflict",
+      "targets": [
+        {
+          "legacy_array_index": 3255,
+          "legacy_i": 3255,
+          "headword": "apypyk",
+          "homonym": "",
+          "role": "lexeme_and_example",
+          "note": "apypyk sense 2 covers argumentation and gives the compound example.",
+          "evidence_excerpt": "Aînhe'engapypyk îepé. - Argumentei contra suas palavras, em vão.",
+          "definition_span": {
+            "start_codepoints": 538,
+            "end_codepoints": 602
+          }
+        },
+        {
+          "legacy_array_index": 5056,
+          "legacy_i": 5056,
+          "headword": "îepé",
+          "homonym": "6",
+          "role": "same_example_different_translation",
+          "note": "îepé homonym 6 has the identical Tupi example but translates the particle differently.",
+          "evidence_excerpt": "Aînhe'engapypyk îepé. - Argumentei contra suas palavras, com efeito.",
+          "definition_span": {
+            "start_codepoints": 128,
+            "end_codepoints": 196
+          }
+        }
+      ],
+      "finding": "The current JSON renders the same sentence and VLB I 17 citation with em vão under apypyk and com efeito under îepé⁶. This is an internal inconsistency requiring verification, not grounds for silently choosing a translation.",
+      "recommended_action": "Check the relevant printed Navarro entries and VLB paragraph; record a correction proposal separately from source matching.",
+      "unresolved": [],
+      "facsimile_verification": {
+        "verified_by": "parent agent /root",
+        "verified_scope": "Source wording and paragraph sequence only; normalized hypotheses not adjudicated.",
+        "url": "https://github.com/kiansheik/nhe-enga/blob/1d36bc8ebbb72806c6d6bd1773669481d5b910fd/docs/primary_sources/vlb/17.png",
+        "viewer_image_number": 17,
+        "printed_page_label_visible": false,
+        "page_number_note": "17 is the site image number; printed pagination alignment relies on the existing viewer page map."
+      }
+    },
+    {
+      "case_id": "pilot-000033",
+      "source_lines": [
+        33
+      ],
+      "source_paragraphs": [
+        {
+          "source_line": 33,
+          "source_offset_utf16": 1694,
+          "text": "Abelha, gnlr. — Eiruba, tem muitas especies. Ybiraigpig. jateî. Eiruçu. Eirapua."
+        }
+      ],
+      "review_status": "assistant_reviewed_candidate",
+      "coverage_assessment": "lexemes_present_generic_scope_question",
+      "targets": [
+        {
+          "legacy_array_index": 3815,
+          "legacy_i": 3815,
+          "headword": "eiruba",
+          "homonym": "",
+          "role": "general_term_in_source",
+          "note": "VLB says Abelha, gnlr. and lists Eiruba; Navarro labels eiruba a species of bee.",
+          "evidence_excerpt": "espécie de abelha",
+          "definition_span": {
+            "start_codepoints": 28,
+            "end_codepoints": 45
+          }
+        },
+        {
+          "legacy_array_index": 11206,
+          "legacy_i": 11206,
+          "headword": "ybyraypy",
+          "homonym": "",
+          "role": "listed_variety",
+          "note": "Ybiraigpig corresponds to ybyraypy.",
+          "evidence_excerpt": "variedade de abelha",
+          "definition_span": {
+            "start_codepoints": 34,
+            "end_codepoints": 53
+          }
+        },
+        {
+          "legacy_array_index": 4863,
+          "legacy_i": 4863,
+          "headword": "îate'i",
+          "homonym": "",
+          "role": "listed_variety",
+          "note": "jateî corresponds to îate'i.",
+          "evidence_excerpt": "JATAÍ, JATI",
+          "definition_span": {
+            "start_codepoints": 7,
+            "end_codepoints": 18
+          }
+        },
+        {
+          "legacy_array_index": 3816,
+          "legacy_i": 3816,
+          "headword": "eirusu",
+          "homonym": "",
+          "role": "listed_variety",
+          "note": "Eiruçu corresponds to eirusu.",
+          "evidence_excerpt": "URUÇU, IRUÇU, GUIRUÇU",
+          "definition_span": {
+            "start_codepoints": 7,
+            "end_codepoints": 28
+          }
+        },
+        {
+          "legacy_array_index": 3811,
+          "legacy_i": 3811,
+          "headword": "eirapu'a",
+          "homonym": "",
+          "role": "listed_variety",
+          "note": "Eirapua corresponds to eirapu'a.",
+          "evidence_excerpt": "IRAPUÁ, ARAPUÃ",
+          "definition_span": {
+            "start_codepoints": 32,
+            "end_codepoints": 46
+          }
+        }
+      ],
+      "finding": "All five named forms have dictionary targets, but the source explicitly presents Eiruba as general while the modern entry calls it a species. Lemma matching alone would conceal a semantic scope question.",
+      "recommended_action": "Preserve the general-versus-specific distinction for editorial review and link all four enumerated varieties.",
+      "unresolved": [
+        "No claim is made that modern zoological identifications in Navarro are refuted by this paragraph alone."
+      ]
+    },
+    {
+      "case_id": "pilot-000036",
+      "source_lines": [
+        36
+      ],
+      "source_paragraphs": [
+        {
+          "source_line": 36,
+          "source_offset_utf16": 1917,
+          "text": "Abil ser de mão. — Xepocarugoar, Xepocarugoacatu."
+        }
+      ],
+      "review_status": "assistant_reviewed_candidate",
+      "coverage_assessment": "base_present_variant_attestation_candidate",
+      "targets": [
+        {
+          "legacy_array_index": 8858,
+          "legacy_i": null,
+          "headword": "pokarugûara",
+          "homonym": "",
+          "role": "base_form",
+          "note": "Xepocarugoar corresponds to Xe pokarugûar, recorded under nominal headword pokarugûara.",
+          "evidence_excerpt": "hábil, destro, hábil de mãos",
+          "definition_span": {
+            "start_codepoints": 158,
+            "end_codepoints": 186
+          }
+        },
+        {
+          "legacy_array_index": 7913,
+          "legacy_i": null,
+          "headword": "nhe'ẽpokarugûara",
+          "homonym": "",
+          "role": "related_compound_only",
+          "note": "Contains a pokarugûá-katu sequence in a compound about words; this does not directly cover the hand-skill source variant.",
+          "evidence_excerpt": "Xe nhe'ẽpokarugûá-katu.",
+          "definition_span": {
+            "start_codepoints": 109,
+            "end_codepoints": 132
+          }
+        }
+      ],
+      "finding": "The base form is present; the additional Xepocarugoacatu source variant deserves an attestation link and morphological analysis rather than an automatically separate verbete.",
+      "recommended_action": "Record the source variant under the base after normalization review; do not substitute the speech compound as equivalent evidence.",
+      "unresolved": []
+    },
+    {
+      "case_id": "pilot-000045",
+      "source_lines": [
+        45
+      ],
+      "source_paragraphs": [
+        {
+          "source_line": 45,
+          "source_offset_utf16": 2397,
+          "text": "Abortar por nascer assi de aborto. — Xeaquîrar."
+        }
+      ],
+      "review_status": "assistant_reviewed_candidate",
+      "coverage_assessment": "possible_missing_usage_frame",
+      "targets": [
+        {
+          "legacy_array_index": 2778,
+          "legacy_i": null,
+          "headword": "akyrara",
+          "homonym": "",
+          "role": "existing_lexeme",
+          "note": "akyrara gives abortive and a mother/child-aborting example, but does not explicitly give Xeakyrar with the subject being the one born through abortion.",
+          "evidence_excerpt": "(adj.: akyrar) - abortivo",
+          "definition_span": {
+            "start_codepoints": 192,
+            "end_codepoints": 217
+          }
+        },
+        {
+          "legacy_array_index": 6858,
+          "legacy_i": 6858,
+          "headword": "membyrakyrara",
+          "homonym": "",
+          "role": "related_event_noun",
+          "note": "Related birth-event noun does not itself attest the participant frame of Xeaquîrar.",
+          "evidence_excerpt": "parto prematuro ou por aborto",
+          "definition_span": {
+            "start_codepoints": 43,
+            "end_codepoints": 72
+          }
+        }
+      ],
+      "finding": "The lexical family exists. The VLB distinction between a mother aborting (line 44) and the aborted offspring as subject (line 45) is not explicitly illustrated in this JSON. This is a possible usage-frame/attestation addition, not yet a proven missing sense.",
+      "recommended_action": "Review predication and participant structure against VLB/print; add the source usage under the existing lexical family if warranted.",
+      "unresolved": [
+        "The adjective abortivo may already license the reading compositionally; editorial choice determines whether to add a separate sense or usage note."
+      ]
+    },
+    {
+      "case_id": "pilot-000047",
+      "source_lines": [
+        47,
+        48,
+        49
+      ],
+      "source_paragraphs": [
+        {
+          "source_line": 47,
+          "source_offset_utf16": 2467,
+          "text": "Abraçado bailar com outro. — Jnhandaramo aicô."
+        },
+        {
+          "source_line": 48,
+          "source_offset_utf16": 2514,
+          "text": "Abraçado assi trazer em bailos. — Xeandaramo areco. act. vel Xeandar. Neutro; rece."
+        },
+        {
+          "source_line": 49,
+          "source_offset_utf16": 2598,
+          "text": "Abraçado assi trazido. — Andara."
+        }
+      ],
+      "review_status": "assistant_reviewed_candidate",
+      "coverage_assessment": "represented_many_sources_to_one_target",
+      "targets": [
+        {
+          "legacy_array_index": 2922,
+          "legacy_i": null,
+          "headword": "andara",
+          "homonym": "",
+          "role": "combined_lexeme_and_examples",
+          "note": "andara gathers the dance-partner noun and examples corresponding to all three consecutive VLB entries.",
+          "evidence_excerpt": "I nhandaramo aîkó. - Sou seu parceiro de dança.",
+          "definition_span": {
+            "start_codepoints": 83,
+            "end_codepoints": 130
+          }
+        }
+      ],
+      "finding": "Three separate Portuguese source entries are reorganized into one Tupi headword with examples. Counting source entries against lemma totals would mismeasure coverage.",
+      "recommended_action": "Create three source links to andara with distinct source forms/examples; do not create three duplicate lemmas.",
+      "unresolved": []
+    }
+  ]
+}

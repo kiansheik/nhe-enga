@@ -1,0 +1,38 @@
+[
+  {
+    "citation_id": "navarro-d235a7961961b58f-r07210-s00078-e00088",
+    "page_id": "I-017",
+    "source_id": "vlb-emerson-r568-p00013",
+    "source_form": "Aimocanãy",
+    "reviewer": "assistant",
+    "review_scope": "specific_citation_and_named_source_form",
+    "covers_entire_source_record": false,
+    "evidence": [
+      {
+        "type": "independent_visual_source_review",
+        "text": "Associação verificada entre esta ocorrência de VLB I, 17 e a alternativa Aimocanãy; as outras duas alternativas do parágrafo continuam independentes.",
+        "source_form": "Aimocanãy",
+        "scan_image_index": 17
+      }
+    ],
+    "verification": "Independent assistant review of original PDF page 17, exact dictionary citation offsets and source paragraph. No claim of complete paragraph coverage."
+  },
+  {
+    "citation_id": "navarro-d235a7961961b58f-r07574-s00046-e00056",
+    "page_id": "I-017",
+    "source_id": "vlb-emerson-r568-p00019",
+    "source_form": "Aimotumung",
+    "reviewer": "assistant",
+    "review_scope": "specific_citation_and_named_source_form",
+    "covers_entire_source_record": false,
+    "evidence": [
+      {
+        "type": "independent_visual_source_review",
+        "text": "Associação verificada entre esta ocorrência de VLB I, 17 e Aimotumung na entrada Abanar como a aruore. A citação herdada de II, 110 não foi verificada.",
+        "source_form": "Aimotumung",
+        "scan_image_index": 17
+      }
+    ],
+    "verification": "Independent assistant review of original PDF page 17, exact dictionary citation offsets and source paragraph. No claim of complete paragraph coverage."
+  }
+]

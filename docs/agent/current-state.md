@@ -1,5 +1,27 @@
 # Current State
 
+## 2026-11-02 — VLB transcription reader branch
+
+- Prepared `/nhe-enga/vlb/` for the main navigation, with Navarro VLB citations
+  preserving printed volume/page and their originating served-dictionary row.
+- The pinned Emerson transcription is aligned to 279 lexical printed pages;
+  the unnumbered manuscript plate and blank verso at scan positions 25 and 26
+  are retained as nontext scan material.
+  Page-boundary uncertainty remains explicit. Source-entry suggestions remain
+  distinct from reviewed associations.
+- All 6,124 VLB citation occurrences are retained, including the inherited
+  `II, 109, adapt.` citation in `nhe'ẽporangaíba` that the previous audit missed.
+  The data provides 6,164 valid page links; `VLB, I, 1390` and page-less `VLB, I`
+  remain unresolved. Existing citation wording and dictionary bytes are kept.
+- Pages includes the VLB frontend/data and linked provenance; existing PNG scans are reused through the image-format
+  manifest after JPEG/WebP conversion. Reader/data assets are in the core
+  offline pack; scans remain in `source-vlb`.
+- Real-browser checks passed for desktop/mobile layouts, OCR highlighting,
+  citation deep links, notes export/persistence, and split-page navigation.
+  The dictionary-formatting CI also runs the VLB data and browser regressions.
+- This is source-branch work; production deployment is a separate step. See
+  the [integration handoff](session-handoffs/2026-11-02-vlb-reader-integration.md).
+
 ## 2026-10-26 — Teatro/Castilho Pages deployment
 
 - Merged source revision `e78abbc8` was built from clean `main` and deployed as

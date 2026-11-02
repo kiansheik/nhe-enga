@@ -9,7 +9,15 @@ on:
       - 'offline/register.js'
       - 'docs/dict-conjugated.json.gz'
       - 'scripts/qa/sample_dictionary_entries.py'
+      - 'scripts/data/source_inventory.py'
+      - 'docs/primary_sources/DTAbib.txt'
+      - 'docs/primary_sources/vlb/*.png'
+      - 'vlb/**'
       - 'tests/dictionary_formatting.test.cjs'
+      - 'tests/vlb_dictionary_links.test.cjs'
+      - 'tests/test_vlb_citation_inventory.py'
+      - 'tests/test_vlb_viewer_data.py'
+      - 'tests/vlb_viewer_browser.cjs'
       - 'tests/dictionary_formatting_browser.py'
       - '.github/workflows/dictionary-formatting.yml'
   workflow_dispatch:
@@ -27,6 +35,14 @@ jobs:
           sparse-checkout: |
             /.github/workflows/dictionary-formatting.yml
             /docs/dict-conjugated.json.gz
+            /docs/primary_sources/DTAbib.txt
+            /docs/primary_sources/vlb/17.png
+            /docs/primary_sources/vlb/25.png
+            /docs/primary_sources/vlb/26.png
+            /docs/primary_sources/vlb/161.png
+            /docs/primary_sources/vlb/232.png
+            /docs/primary_sources/vlb/292.png
+            /docs/primary_sources/vlb/303.png
             /favicon.ico
             /index.html
             /js/index.js
@@ -35,9 +51,15 @@ jobs:
             /manifest.json
             /offline/register.js
             /scripts/qa/sample_dictionary_entries.py
+            /scripts/data/source_inventory.py
             /styles.css
             /tests/dictionary_formatting.test.cjs
+            /tests/vlb_dictionary_links.test.cjs
+            /tests/test_vlb_citation_inventory.py
+            /tests/test_vlb_viewer_data.py
+            /tests/vlb_viewer_browser.cjs
             /tests/dictionary_formatting_browser.py
+            /vlb/
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -45,6 +67,20 @@ jobs:
         with:
           python-version: '3.11'
       - run: node --test tests/dictionary_formatting.test.cjs
+      - run: node --test tests/vlb_dictionary_links.test.cjs
+      - run: python tests/test_vlb_citation_inventory.py
+      - run: python tests/test_vlb_viewer_data.py
       - run: python -m pip install playwright==1.55.0
+      - run: npm install --no-save --package-lock=false playwright@1.55.0
       - run: python -m playwright install --with-deps chromium
       - run: python tests/dictionary_formatting_browser.py
+      - name: Exercise VLB reader in Chromium
+        run: node tests/vlb_viewer_browser.cjs
+        env:
+          VLB_QA_DIR: ${{ runner.temp }}/vlb-browser-qa
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vlb-browser-qa
+          path: ${{ runner.temp }}/vlb-browser-qa
+          if-no-files-found: ignore

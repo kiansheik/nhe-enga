@@ -571,7 +571,6 @@ test('zoom controls, open-image URL, and load-error notice remain usable across 
 
 test('existing source URLs, folios, image formats, and source selection are preserved', async () => {
   for (const [citation, expectedImage] of [
-    ['VLB, I, 12', 'vlb/12.png'], ['VLB, II, 69', 'vlb/223.png'],
     ['Anch., Arte, 44', 'ancharte/43.png'], ['Anch., Arte, 12v', 'ancharte/12.png'],
     ['Ar., Cat., 12v', 'arcat1618/59.png'], ['Bettendorff, Compêndio, 93', 'betcomp/102.jpg'],
     ['Léry, Histoire, 287', 'lerhist/341.jpg'],
@@ -581,6 +580,12 @@ test('existing source URLs, folios, image formats, and source selection are pres
     assert.equal(viewer.image().src, `/nhe-enga/docs/primary_sources/${expectedImage}`);
     assert.equal(viewer.get('sourceDetails').hidden, true);
     assert.match(viewer.get('currentPage').textContent, /^Imagem /);
+  }
+  // The dictionary now opens the VLB transcription reader; established scan
+  // viewer links remain valid, including front matter outside its lexical body.
+  for (const [scan, expectedImage] of [[12, 'vlb/12.png'], [223, 'vlb/223.png']]) {
+    const viewer = await openViewer(`book_name=vlb&page_number=${scan}`);
+    assert.equal(viewer.image().src, `/nhe-enga/docs/primary_sources/${expectedImage}`);
   }
   const converted = await openViewer('book_name=vlb&page_number=223', { books: { vlb: '.webp' } });
   assert.match(converted.image().src, /vlb\/223\.webp$/);

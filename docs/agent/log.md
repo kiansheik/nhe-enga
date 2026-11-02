@@ -1,5 +1,21 @@
 # Agent Log
 
+## 2026-11-02 — Added VLB reader navigation and source integration
+
+Prepared the main VLB navigation link, Pages allowlist, offline asset grouping,
+and volume/page/entry query links from the dictionary. Kept every displayed
+citation token, added list/range/inherited-volume support and the preserved VBL
+spelling, and left malformed locators unresolved. Repaired the citation audit's
+adapted inherited-reference case at dictionary row 7915 and added focused
+regressions. The reproducible reader data now retains 6,124 occurrences and
+6,164 valid page links. Existing scan URLs still work and no scans are duplicated.
+Focused linker, formatter, apostrophe, audit, legacy-viewer, and shell checks
+passed. Reader browser checks also passed for responsive layouts, OCR,
+citation deep links, notes export/persistence, and split-page navigation.
+The existing formatter workflow now gates the VLB data/browser tests using
+the pinned shared Playwright browser and seven original scan fixtures.
+See the [handoff](session-handoffs/2026-11-02-vlb-reader-integration.md).
+
 ## 2026-10-26 — Deployed merged Teatro and Castilho sources
 
 Fast-forwarded local `main` to merged PR #34 (`e78abbc8`), rebuilt the full

@@ -1,0 +1,3240 @@
+[
+  {
+    "pdf_index0": 0,
+    "pdf_page1": 1,
+    "volume": "I",
+    "section": "front_matter",
+    "printed_page": null,
+    "printed_page_status": "front_matter_not_lexical",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 1,
+    "pdf_page1": 2,
+    "volume": "I",
+    "section": "front_matter",
+    "printed_page": null,
+    "printed_page_status": "front_matter_not_lexical",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 2,
+    "pdf_page1": 3,
+    "volume": "I",
+    "section": "front_matter",
+    "printed_page": null,
+    "printed_page_status": "front_matter_not_lexical",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 3,
+    "pdf_page1": 4,
+    "volume": "I",
+    "section": "front_matter",
+    "printed_page": null,
+    "printed_page_status": "front_matter_not_lexical",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 4,
+    "pdf_page1": 5,
+    "volume": "I",
+    "section": "front_matter",
+    "printed_page": null,
+    "printed_page_status": "front_matter_not_lexical",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 5,
+    "pdf_page1": 6,
+    "volume": "I",
+    "section": "front_matter",
+    "printed_page": null,
+    "printed_page_status": "front_matter_not_lexical",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 6,
+    "pdf_page1": 7,
+    "volume": "I",
+    "section": "front_matter",
+    "printed_page": null,
+    "printed_page_status": "front_matter_not_lexical",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 7,
+    "pdf_page1": 8,
+    "volume": "I",
+    "section": "front_matter",
+    "printed_page": null,
+    "printed_page_status": "front_matter_not_lexical",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 8,
+    "pdf_page1": 9,
+    "volume": "I",
+    "section": "front_matter",
+    "printed_page": null,
+    "printed_page_status": "front_matter_not_lexical",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 9,
+    "pdf_page1": 10,
+    "volume": "I",
+    "section": "front_matter",
+    "printed_page": null,
+    "printed_page_status": "front_matter_not_lexical",
+    "ocr_number_candidates": [
+      10
+    ]
+  },
+  {
+    "pdf_index0": 10,
+    "pdf_page1": 11,
+    "volume": "I",
+    "section": "front_matter",
+    "printed_page": null,
+    "printed_page_status": "front_matter_not_lexical",
+    "ocr_number_candidates": [
+      11
+    ]
+  },
+  {
+    "pdf_index0": 11,
+    "pdf_page1": 12,
+    "volume": "I",
+    "section": "front_matter",
+    "printed_page": null,
+    "printed_page_status": "front_matter_not_lexical",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 12,
+    "pdf_page1": 13,
+    "volume": "I",
+    "section": "front_matter",
+    "printed_page": null,
+    "printed_page_status": "front_matter_not_lexical",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 13,
+    "pdf_page1": 14,
+    "volume": "I",
+    "section": "front_matter",
+    "printed_page": null,
+    "printed_page_status": "front_matter_not_lexical",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 14,
+    "pdf_page1": 15,
+    "volume": "I",
+    "section": "front_matter",
+    "printed_page": null,
+    "printed_page_status": "front_matter_not_lexical",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 15,
+    "pdf_page1": 16,
+    "volume": "I",
+    "section": "front_matter",
+    "printed_page": null,
+    "printed_page_status": "front_matter_not_lexical",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 16,
+    "pdf_page1": 17,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 17,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": [],
+    "verification_note": "Section opening page omits a printed numeral; supplied number follows the volume pagination sequence."
+  },
+  {
+    "pdf_index0": 17,
+    "pdf_page1": 18,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 18,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      18
+    ]
+  },
+  {
+    "pdf_index0": 18,
+    "pdf_page1": 19,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 19,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      19
+    ]
+  },
+  {
+    "pdf_index0": 19,
+    "pdf_page1": 20,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 20,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      20
+    ]
+  },
+  {
+    "pdf_index0": 20,
+    "pdf_page1": 21,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 21,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      21
+    ]
+  },
+  {
+    "pdf_index0": 21,
+    "pdf_page1": 22,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 22,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      22
+    ]
+  },
+  {
+    "pdf_index0": 22,
+    "pdf_page1": 23,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 23,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      23
+    ]
+  },
+  {
+    "pdf_index0": 23,
+    "pdf_page1": 24,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 24,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      24
+    ]
+  },
+  {
+    "pdf_index0": 24,
+    "pdf_page1": 25,
+    "volume": "I",
+    "section": "manuscript_plate",
+    "printed_page": null,
+    "printed_page_status": "unnumbered_insert_visually_verified",
+    "ocr_number_candidates": [],
+    "sequence_page": 25,
+    "verification_note": "Visually checked: photographed manuscript page with caption Uma das páginas da Letra A do Vocabulário (Mss. Biblioteca Nacional de Lisboa); no running page number. Not part of the continuous printed lexical transcription."
+  },
+  {
+    "pdf_index0": 25,
+    "pdf_page1": 26,
+    "volume": "I",
+    "section": "blank_insert_verso",
+    "printed_page": null,
+    "printed_page_status": "unnumbered_insert_visually_verified",
+    "ocr_number_candidates": [],
+    "sequence_page": 26,
+    "verification_note": "Visually checked: blank verso after manuscript plate; no printed numeral and no lexical text."
+  },
+  {
+    "pdf_index0": 26,
+    "pdf_page1": 27,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 27,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      27
+    ]
+  },
+  {
+    "pdf_index0": 27,
+    "pdf_page1": 28,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 28,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      28
+    ]
+  },
+  {
+    "pdf_index0": 28,
+    "pdf_page1": 29,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 29,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      29
+    ]
+  },
+  {
+    "pdf_index0": 29,
+    "pdf_page1": 30,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 30,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      30
+    ]
+  },
+  {
+    "pdf_index0": 30,
+    "pdf_page1": 31,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 31,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      31
+    ]
+  },
+  {
+    "pdf_index0": 31,
+    "pdf_page1": 32,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 32,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      32
+    ]
+  },
+  {
+    "pdf_index0": 32,
+    "pdf_page1": 33,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 33,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      33
+    ]
+  },
+  {
+    "pdf_index0": 33,
+    "pdf_page1": 34,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 34,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      34
+    ]
+  },
+  {
+    "pdf_index0": 34,
+    "pdf_page1": 35,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 35,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      35
+    ]
+  },
+  {
+    "pdf_index0": 35,
+    "pdf_page1": 36,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 36,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      36
+    ]
+  },
+  {
+    "pdf_index0": 36,
+    "pdf_page1": 37,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 37,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      37
+    ]
+  },
+  {
+    "pdf_index0": 37,
+    "pdf_page1": 38,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 38,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      38
+    ]
+  },
+  {
+    "pdf_index0": 38,
+    "pdf_page1": 39,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 39,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      39
+    ]
+  },
+  {
+    "pdf_index0": 39,
+    "pdf_page1": 40,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 40,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      40
+    ]
+  },
+  {
+    "pdf_index0": 40,
+    "pdf_page1": 41,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 41,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      41
+    ]
+  },
+  {
+    "pdf_index0": 41,
+    "pdf_page1": 42,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 42,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      42
+    ]
+  },
+  {
+    "pdf_index0": 42,
+    "pdf_page1": 43,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 43,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      43
+    ]
+  },
+  {
+    "pdf_index0": 43,
+    "pdf_page1": 44,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 44,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      44
+    ]
+  },
+  {
+    "pdf_index0": 44,
+    "pdf_page1": 45,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 45,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      45
+    ]
+  },
+  {
+    "pdf_index0": 45,
+    "pdf_page1": 46,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 46,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      46
+    ]
+  },
+  {
+    "pdf_index0": 46,
+    "pdf_page1": 47,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 47,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      47
+    ]
+  },
+  {
+    "pdf_index0": 47,
+    "pdf_page1": 48,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 48,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      48
+    ]
+  },
+  {
+    "pdf_index0": 48,
+    "pdf_page1": 49,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 49,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      49
+    ]
+  },
+  {
+    "pdf_index0": 49,
+    "pdf_page1": 50,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 50,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 50,
+    "pdf_page1": 51,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 51,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      51
+    ]
+  },
+  {
+    "pdf_index0": 51,
+    "pdf_page1": 52,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 52,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      52
+    ]
+  },
+  {
+    "pdf_index0": 52,
+    "pdf_page1": 53,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 53,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      53
+    ]
+  },
+  {
+    "pdf_index0": 53,
+    "pdf_page1": 54,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 54,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      54
+    ]
+  },
+  {
+    "pdf_index0": 54,
+    "pdf_page1": 55,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 55,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      55
+    ]
+  },
+  {
+    "pdf_index0": 55,
+    "pdf_page1": 56,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 56,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      56
+    ]
+  },
+  {
+    "pdf_index0": 56,
+    "pdf_page1": 57,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 57,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      57
+    ]
+  },
+  {
+    "pdf_index0": 57,
+    "pdf_page1": 58,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 58,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      58
+    ]
+  },
+  {
+    "pdf_index0": 58,
+    "pdf_page1": 59,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 59,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      59
+    ]
+  },
+  {
+    "pdf_index0": 59,
+    "pdf_page1": 60,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 60,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      60
+    ]
+  },
+  {
+    "pdf_index0": 60,
+    "pdf_page1": 61,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 61,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 61,
+    "pdf_page1": 62,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 62,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      62
+    ]
+  },
+  {
+    "pdf_index0": 62,
+    "pdf_page1": 63,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 63,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      63
+    ]
+  },
+  {
+    "pdf_index0": 63,
+    "pdf_page1": 64,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 64,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      64
+    ]
+  },
+  {
+    "pdf_index0": 64,
+    "pdf_page1": 65,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 65,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      65
+    ]
+  },
+  {
+    "pdf_index0": 65,
+    "pdf_page1": 66,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 66,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      66
+    ]
+  },
+  {
+    "pdf_index0": 66,
+    "pdf_page1": 67,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 67,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      67
+    ]
+  },
+  {
+    "pdf_index0": 67,
+    "pdf_page1": 68,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 68,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      68
+    ]
+  },
+  {
+    "pdf_index0": 68,
+    "pdf_page1": 69,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 69,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      69
+    ]
+  },
+  {
+    "pdf_index0": 69,
+    "pdf_page1": 70,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 70,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      70
+    ]
+  },
+  {
+    "pdf_index0": 70,
+    "pdf_page1": 71,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 71,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      71
+    ]
+  },
+  {
+    "pdf_index0": 71,
+    "pdf_page1": 72,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 72,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      72
+    ]
+  },
+  {
+    "pdf_index0": 72,
+    "pdf_page1": 73,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 73,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      73
+    ]
+  },
+  {
+    "pdf_index0": 73,
+    "pdf_page1": 74,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 74,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      74
+    ]
+  },
+  {
+    "pdf_index0": 74,
+    "pdf_page1": 75,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 75,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      75
+    ]
+  },
+  {
+    "pdf_index0": 75,
+    "pdf_page1": 76,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 76,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      76
+    ]
+  },
+  {
+    "pdf_index0": 76,
+    "pdf_page1": 77,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 77,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      77
+    ]
+  },
+  {
+    "pdf_index0": 77,
+    "pdf_page1": 78,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 78,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      78
+    ]
+  },
+  {
+    "pdf_index0": 78,
+    "pdf_page1": 79,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 79,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      79
+    ]
+  },
+  {
+    "pdf_index0": 79,
+    "pdf_page1": 80,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 80,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      80
+    ]
+  },
+  {
+    "pdf_index0": 80,
+    "pdf_page1": 81,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 81,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      81
+    ]
+  },
+  {
+    "pdf_index0": 81,
+    "pdf_page1": 82,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 82,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      82
+    ]
+  },
+  {
+    "pdf_index0": 82,
+    "pdf_page1": 83,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 83,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      83
+    ]
+  },
+  {
+    "pdf_index0": 83,
+    "pdf_page1": 84,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 84,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      84
+    ]
+  },
+  {
+    "pdf_index0": 84,
+    "pdf_page1": 85,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 85,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      85
+    ]
+  },
+  {
+    "pdf_index0": 85,
+    "pdf_page1": 86,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 86,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      86
+    ]
+  },
+  {
+    "pdf_index0": 86,
+    "pdf_page1": 87,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 87,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      87
+    ]
+  },
+  {
+    "pdf_index0": 87,
+    "pdf_page1": 88,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 88,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      88
+    ]
+  },
+  {
+    "pdf_index0": 88,
+    "pdf_page1": 89,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 89,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 89,
+    "pdf_page1": 90,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 90,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      90
+    ]
+  },
+  {
+    "pdf_index0": 90,
+    "pdf_page1": 91,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 91,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      91
+    ]
+  },
+  {
+    "pdf_index0": 91,
+    "pdf_page1": 92,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 92,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      92
+    ]
+  },
+  {
+    "pdf_index0": 92,
+    "pdf_page1": 93,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 93,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      93
+    ]
+  },
+  {
+    "pdf_index0": 93,
+    "pdf_page1": 94,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 94,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      94
+    ]
+  },
+  {
+    "pdf_index0": 94,
+    "pdf_page1": 95,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 95,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      95
+    ]
+  },
+  {
+    "pdf_index0": 95,
+    "pdf_page1": 96,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 96,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      96
+    ]
+  },
+  {
+    "pdf_index0": 96,
+    "pdf_page1": 97,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 97,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      97
+    ]
+  },
+  {
+    "pdf_index0": 97,
+    "pdf_page1": 98,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 98,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      98
+    ]
+  },
+  {
+    "pdf_index0": 98,
+    "pdf_page1": 99,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 99,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      99
+    ]
+  },
+  {
+    "pdf_index0": 99,
+    "pdf_page1": 100,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 100,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      100
+    ]
+  },
+  {
+    "pdf_index0": 100,
+    "pdf_page1": 101,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 101,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      101
+    ]
+  },
+  {
+    "pdf_index0": 101,
+    "pdf_page1": 102,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 102,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      102
+    ]
+  },
+  {
+    "pdf_index0": 102,
+    "pdf_page1": 103,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 103,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      103
+    ]
+  },
+  {
+    "pdf_index0": 103,
+    "pdf_page1": 104,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 104,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      104
+    ]
+  },
+  {
+    "pdf_index0": 104,
+    "pdf_page1": 105,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 105,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      105
+    ]
+  },
+  {
+    "pdf_index0": 105,
+    "pdf_page1": 106,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 106,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      106
+    ]
+  },
+  {
+    "pdf_index0": 106,
+    "pdf_page1": 107,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 107,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 107,
+    "pdf_page1": 108,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 108,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 108,
+    "pdf_page1": 109,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 109,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      109
+    ]
+  },
+  {
+    "pdf_index0": 109,
+    "pdf_page1": 110,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 110,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      110
+    ]
+  },
+  {
+    "pdf_index0": 110,
+    "pdf_page1": 111,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 111,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      111
+    ]
+  },
+  {
+    "pdf_index0": 111,
+    "pdf_page1": 112,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 112,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      112
+    ]
+  },
+  {
+    "pdf_index0": 112,
+    "pdf_page1": 113,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 113,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      113
+    ]
+  },
+  {
+    "pdf_index0": 113,
+    "pdf_page1": 114,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 114,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      114
+    ]
+  },
+  {
+    "pdf_index0": 114,
+    "pdf_page1": 115,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 115,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      115
+    ]
+  },
+  {
+    "pdf_index0": 115,
+    "pdf_page1": 116,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 116,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      116
+    ]
+  },
+  {
+    "pdf_index0": 116,
+    "pdf_page1": 117,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 117,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      117
+    ]
+  },
+  {
+    "pdf_index0": 117,
+    "pdf_page1": 118,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 118,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      118
+    ]
+  },
+  {
+    "pdf_index0": 118,
+    "pdf_page1": 119,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 119,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      119
+    ]
+  },
+  {
+    "pdf_index0": 119,
+    "pdf_page1": 120,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 120,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      120
+    ]
+  },
+  {
+    "pdf_index0": 120,
+    "pdf_page1": 121,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 121,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      121
+    ]
+  },
+  {
+    "pdf_index0": 121,
+    "pdf_page1": 122,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 122,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      122
+    ]
+  },
+  {
+    "pdf_index0": 122,
+    "pdf_page1": 123,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 123,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      123
+    ]
+  },
+  {
+    "pdf_index0": 123,
+    "pdf_page1": 124,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 124,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      124
+    ]
+  },
+  {
+    "pdf_index0": 124,
+    "pdf_page1": 125,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 125,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      125
+    ]
+  },
+  {
+    "pdf_index0": 125,
+    "pdf_page1": 126,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 126,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      126
+    ]
+  },
+  {
+    "pdf_index0": 126,
+    "pdf_page1": 127,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 127,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      127
+    ]
+  },
+  {
+    "pdf_index0": 127,
+    "pdf_page1": 128,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 128,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      128
+    ]
+  },
+  {
+    "pdf_index0": 128,
+    "pdf_page1": 129,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 129,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      129
+    ]
+  },
+  {
+    "pdf_index0": 129,
+    "pdf_page1": 130,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 130,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      130
+    ]
+  },
+  {
+    "pdf_index0": 130,
+    "pdf_page1": 131,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 131,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      131
+    ]
+  },
+  {
+    "pdf_index0": 131,
+    "pdf_page1": 132,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 132,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      132
+    ]
+  },
+  {
+    "pdf_index0": 132,
+    "pdf_page1": 133,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 133,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 133,
+    "pdf_page1": 134,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 134,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      134
+    ]
+  },
+  {
+    "pdf_index0": 134,
+    "pdf_page1": 135,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 135,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      135
+    ]
+  },
+  {
+    "pdf_index0": 135,
+    "pdf_page1": 136,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 136,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      136
+    ]
+  },
+  {
+    "pdf_index0": 136,
+    "pdf_page1": 137,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 137,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      137
+    ]
+  },
+  {
+    "pdf_index0": 137,
+    "pdf_page1": 138,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 138,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      138
+    ]
+  },
+  {
+    "pdf_index0": 138,
+    "pdf_page1": 139,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 139,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      139
+    ]
+  },
+  {
+    "pdf_index0": 139,
+    "pdf_page1": 140,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 140,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      140
+    ]
+  },
+  {
+    "pdf_index0": 140,
+    "pdf_page1": 141,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 141,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      141
+    ]
+  },
+  {
+    "pdf_index0": 141,
+    "pdf_page1": 142,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 142,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      142
+    ]
+  },
+  {
+    "pdf_index0": 142,
+    "pdf_page1": 143,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 143,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      143
+    ]
+  },
+  {
+    "pdf_index0": 143,
+    "pdf_page1": 144,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 144,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      144
+    ]
+  },
+  {
+    "pdf_index0": 144,
+    "pdf_page1": 145,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 145,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      145
+    ]
+  },
+  {
+    "pdf_index0": 145,
+    "pdf_page1": 146,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 146,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 146,
+    "pdf_page1": 147,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 147,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      147
+    ]
+  },
+  {
+    "pdf_index0": 147,
+    "pdf_page1": 148,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 148,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      148
+    ]
+  },
+  {
+    "pdf_index0": 148,
+    "pdf_page1": 149,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 149,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      149
+    ]
+  },
+  {
+    "pdf_index0": 149,
+    "pdf_page1": 150,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 150,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      150
+    ]
+  },
+  {
+    "pdf_index0": 150,
+    "pdf_page1": 151,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 151,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      151
+    ]
+  },
+  {
+    "pdf_index0": 151,
+    "pdf_page1": 152,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 152,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      152
+    ]
+  },
+  {
+    "pdf_index0": 152,
+    "pdf_page1": 153,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 153,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 153,
+    "pdf_page1": 154,
+    "volume": "I",
+    "section": "lexical_body",
+    "printed_page": 154,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      154
+    ]
+  },
+  {
+    "pdf_index0": 154,
+    "pdf_page1": 155,
+    "volume": "II",
+    "section": "front_matter",
+    "printed_page": null,
+    "printed_page_status": "front_matter_not_lexical",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 155,
+    "pdf_page1": 156,
+    "volume": "II",
+    "section": "front_matter",
+    "printed_page": null,
+    "printed_page_status": "front_matter_not_lexical",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 156,
+    "pdf_page1": 157,
+    "volume": "II",
+    "section": "front_matter",
+    "printed_page": null,
+    "printed_page_status": "front_matter_not_lexical",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 157,
+    "pdf_page1": 158,
+    "volume": "II",
+    "section": "front_matter",
+    "printed_page": null,
+    "printed_page_status": "front_matter_not_lexical",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 158,
+    "pdf_page1": 159,
+    "volume": "II",
+    "section": "front_matter",
+    "printed_page": null,
+    "printed_page_status": "front_matter_not_lexical",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 159,
+    "pdf_page1": 160,
+    "volume": "II",
+    "section": "front_matter",
+    "printed_page": null,
+    "printed_page_status": "front_matter_not_lexical",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 160,
+    "pdf_page1": 161,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 7,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": [],
+    "verification_note": "Section opening page omits a printed numeral; supplied number follows the volume pagination sequence."
+  },
+  {
+    "pdf_index0": 161,
+    "pdf_page1": 162,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 8,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      8
+    ]
+  },
+  {
+    "pdf_index0": 162,
+    "pdf_page1": 163,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 9,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      9
+    ]
+  },
+  {
+    "pdf_index0": 163,
+    "pdf_page1": 164,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 10,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      10
+    ]
+  },
+  {
+    "pdf_index0": 164,
+    "pdf_page1": 165,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 11,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      11
+    ]
+  },
+  {
+    "pdf_index0": 165,
+    "pdf_page1": 166,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 12,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      12
+    ]
+  },
+  {
+    "pdf_index0": 166,
+    "pdf_page1": 167,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 13,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      13
+    ]
+  },
+  {
+    "pdf_index0": 167,
+    "pdf_page1": 168,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 14,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      14
+    ]
+  },
+  {
+    "pdf_index0": 168,
+    "pdf_page1": 169,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 15,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      15
+    ]
+  },
+  {
+    "pdf_index0": 169,
+    "pdf_page1": 170,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 16,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      16
+    ]
+  },
+  {
+    "pdf_index0": 170,
+    "pdf_page1": 171,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 17,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 171,
+    "pdf_page1": 172,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 18,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      18
+    ]
+  },
+  {
+    "pdf_index0": 172,
+    "pdf_page1": 173,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 19,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      19
+    ]
+  },
+  {
+    "pdf_index0": 173,
+    "pdf_page1": 174,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 20,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      20
+    ]
+  },
+  {
+    "pdf_index0": 174,
+    "pdf_page1": 175,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 21,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      21
+    ]
+  },
+  {
+    "pdf_index0": 175,
+    "pdf_page1": 176,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 22,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      22
+    ]
+  },
+  {
+    "pdf_index0": 176,
+    "pdf_page1": 177,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 23,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      23
+    ]
+  },
+  {
+    "pdf_index0": 177,
+    "pdf_page1": 178,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 24,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      24
+    ]
+  },
+  {
+    "pdf_index0": 178,
+    "pdf_page1": 179,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 25,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 179,
+    "pdf_page1": 180,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 26,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      26
+    ]
+  },
+  {
+    "pdf_index0": 180,
+    "pdf_page1": 181,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 27,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 181,
+    "pdf_page1": 182,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 28,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      28
+    ]
+  },
+  {
+    "pdf_index0": 182,
+    "pdf_page1": 183,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 29,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      29
+    ]
+  },
+  {
+    "pdf_index0": 183,
+    "pdf_page1": 184,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 30,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      30
+    ]
+  },
+  {
+    "pdf_index0": 184,
+    "pdf_page1": 185,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 31,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      31
+    ]
+  },
+  {
+    "pdf_index0": 185,
+    "pdf_page1": 186,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 32,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      32
+    ]
+  },
+  {
+    "pdf_index0": 186,
+    "pdf_page1": 187,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 33,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      33
+    ]
+  },
+  {
+    "pdf_index0": 187,
+    "pdf_page1": 188,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 34,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      34
+    ]
+  },
+  {
+    "pdf_index0": 188,
+    "pdf_page1": 189,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 35,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      35
+    ]
+  },
+  {
+    "pdf_index0": 189,
+    "pdf_page1": 190,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 36,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      36
+    ]
+  },
+  {
+    "pdf_index0": 190,
+    "pdf_page1": 191,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 37,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      37
+    ]
+  },
+  {
+    "pdf_index0": 191,
+    "pdf_page1": 192,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 38,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      38
+    ]
+  },
+  {
+    "pdf_index0": 192,
+    "pdf_page1": 193,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 39,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 193,
+    "pdf_page1": 194,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 40,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      40
+    ]
+  },
+  {
+    "pdf_index0": 194,
+    "pdf_page1": 195,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 41,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      41
+    ]
+  },
+  {
+    "pdf_index0": 195,
+    "pdf_page1": 196,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 42,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      42
+    ]
+  },
+  {
+    "pdf_index0": 196,
+    "pdf_page1": 197,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 43,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      43
+    ]
+  },
+  {
+    "pdf_index0": 197,
+    "pdf_page1": 198,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 44,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      44
+    ]
+  },
+  {
+    "pdf_index0": 198,
+    "pdf_page1": 199,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 45,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      45
+    ]
+  },
+  {
+    "pdf_index0": 199,
+    "pdf_page1": 200,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 46,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 200,
+    "pdf_page1": 201,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 47,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      47
+    ]
+  },
+  {
+    "pdf_index0": 201,
+    "pdf_page1": 202,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 48,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      48
+    ]
+  },
+  {
+    "pdf_index0": 202,
+    "pdf_page1": 203,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 49,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      49
+    ]
+  },
+  {
+    "pdf_index0": 203,
+    "pdf_page1": 204,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 50,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      50
+    ]
+  },
+  {
+    "pdf_index0": 204,
+    "pdf_page1": 205,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 51,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      51
+    ]
+  },
+  {
+    "pdf_index0": 205,
+    "pdf_page1": 206,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 52,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      52
+    ]
+  },
+  {
+    "pdf_index0": 206,
+    "pdf_page1": 207,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 53,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 207,
+    "pdf_page1": 208,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 54,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      54
+    ]
+  },
+  {
+    "pdf_index0": 208,
+    "pdf_page1": 209,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 55,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      55
+    ]
+  },
+  {
+    "pdf_index0": 209,
+    "pdf_page1": 210,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 56,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      56
+    ]
+  },
+  {
+    "pdf_index0": 210,
+    "pdf_page1": 211,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 57,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      57
+    ]
+  },
+  {
+    "pdf_index0": 211,
+    "pdf_page1": 212,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 58,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      58
+    ]
+  },
+  {
+    "pdf_index0": 212,
+    "pdf_page1": 213,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 59,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      59
+    ]
+  },
+  {
+    "pdf_index0": 213,
+    "pdf_page1": 214,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 60,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      60
+    ]
+  },
+  {
+    "pdf_index0": 214,
+    "pdf_page1": 215,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 61,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      61
+    ]
+  },
+  {
+    "pdf_index0": 215,
+    "pdf_page1": 216,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 62,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 216,
+    "pdf_page1": 217,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 63,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      63
+    ]
+  },
+  {
+    "pdf_index0": 217,
+    "pdf_page1": 218,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 64,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      64
+    ]
+  },
+  {
+    "pdf_index0": 218,
+    "pdf_page1": 219,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 65,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      65
+    ]
+  },
+  {
+    "pdf_index0": 219,
+    "pdf_page1": 220,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 66,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 220,
+    "pdf_page1": 221,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 67,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      67
+    ]
+  },
+  {
+    "pdf_index0": 221,
+    "pdf_page1": 222,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 68,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      68
+    ]
+  },
+  {
+    "pdf_index0": 222,
+    "pdf_page1": 223,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 69,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      69
+    ]
+  },
+  {
+    "pdf_index0": 223,
+    "pdf_page1": 224,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 70,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      70
+    ]
+  },
+  {
+    "pdf_index0": 224,
+    "pdf_page1": 225,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 71,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      71
+    ]
+  },
+  {
+    "pdf_index0": 225,
+    "pdf_page1": 226,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 72,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      72
+    ]
+  },
+  {
+    "pdf_index0": 226,
+    "pdf_page1": 227,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 73,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      73
+    ]
+  },
+  {
+    "pdf_index0": 227,
+    "pdf_page1": 228,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 74,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      74
+    ]
+  },
+  {
+    "pdf_index0": 228,
+    "pdf_page1": 229,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 75,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      75
+    ]
+  },
+  {
+    "pdf_index0": 229,
+    "pdf_page1": 230,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 76,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      76
+    ]
+  },
+  {
+    "pdf_index0": 230,
+    "pdf_page1": 231,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 77,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      77
+    ]
+  },
+  {
+    "pdf_index0": 231,
+    "pdf_page1": 232,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 78,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      78
+    ]
+  },
+  {
+    "pdf_index0": 232,
+    "pdf_page1": 233,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 79,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      79
+    ]
+  },
+  {
+    "pdf_index0": 233,
+    "pdf_page1": 234,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 80,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      80
+    ]
+  },
+  {
+    "pdf_index0": 234,
+    "pdf_page1": 235,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 81,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      81
+    ]
+  },
+  {
+    "pdf_index0": 235,
+    "pdf_page1": 236,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 82,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 236,
+    "pdf_page1": 237,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 83,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      83
+    ]
+  },
+  {
+    "pdf_index0": 237,
+    "pdf_page1": 238,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 84,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      84
+    ]
+  },
+  {
+    "pdf_index0": 238,
+    "pdf_page1": 239,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 85,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      85
+    ]
+  },
+  {
+    "pdf_index0": 239,
+    "pdf_page1": 240,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 86,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      86
+    ]
+  },
+  {
+    "pdf_index0": 240,
+    "pdf_page1": 241,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 87,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      87
+    ]
+  },
+  {
+    "pdf_index0": 241,
+    "pdf_page1": 242,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 88,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      88
+    ]
+  },
+  {
+    "pdf_index0": 242,
+    "pdf_page1": 243,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 89,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      89
+    ]
+  },
+  {
+    "pdf_index0": 243,
+    "pdf_page1": 244,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 90,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 244,
+    "pdf_page1": 245,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 91,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 245,
+    "pdf_page1": 246,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 92,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      92
+    ]
+  },
+  {
+    "pdf_index0": 246,
+    "pdf_page1": 247,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 93,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      93
+    ]
+  },
+  {
+    "pdf_index0": 247,
+    "pdf_page1": 248,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 94,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      94
+    ]
+  },
+  {
+    "pdf_index0": 248,
+    "pdf_page1": 249,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 95,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 249,
+    "pdf_page1": 250,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 96,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      96
+    ]
+  },
+  {
+    "pdf_index0": 250,
+    "pdf_page1": 251,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 97,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      97
+    ]
+  },
+  {
+    "pdf_index0": 251,
+    "pdf_page1": 252,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 98,
+    "printed_page_status": "visually_verified_ocr_correction",
+    "ocr_number_candidates": [
+      93
+    ],
+    "verification_note": "OCR returned 93; visual examination of PDF252 header reads98."
+  },
+  {
+    "pdf_index0": 252,
+    "pdf_page1": 253,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 99,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      99
+    ]
+  },
+  {
+    "pdf_index0": 253,
+    "pdf_page1": 254,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 100,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      100
+    ]
+  },
+  {
+    "pdf_index0": 254,
+    "pdf_page1": 255,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 101,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      101
+    ]
+  },
+  {
+    "pdf_index0": 255,
+    "pdf_page1": 256,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 102,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      102
+    ]
+  },
+  {
+    "pdf_index0": 256,
+    "pdf_page1": 257,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 103,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 257,
+    "pdf_page1": 258,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 104,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      104
+    ]
+  },
+  {
+    "pdf_index0": 258,
+    "pdf_page1": 259,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 105,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      105
+    ]
+  },
+  {
+    "pdf_index0": 259,
+    "pdf_page1": 260,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 106,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      106
+    ]
+  },
+  {
+    "pdf_index0": 260,
+    "pdf_page1": 261,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 107,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      107
+    ]
+  },
+  {
+    "pdf_index0": 261,
+    "pdf_page1": 262,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 108,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      108
+    ]
+  },
+  {
+    "pdf_index0": 262,
+    "pdf_page1": 263,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 109,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      109
+    ]
+  },
+  {
+    "pdf_index0": 263,
+    "pdf_page1": 264,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 110,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 264,
+    "pdf_page1": 265,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 111,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      111
+    ]
+  },
+  {
+    "pdf_index0": 265,
+    "pdf_page1": 266,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 112,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      112
+    ]
+  },
+  {
+    "pdf_index0": 266,
+    "pdf_page1": 267,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 113,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      113
+    ]
+  },
+  {
+    "pdf_index0": 267,
+    "pdf_page1": 268,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 114,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      114
+    ]
+  },
+  {
+    "pdf_index0": 268,
+    "pdf_page1": 269,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 115,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      115
+    ]
+  },
+  {
+    "pdf_index0": 269,
+    "pdf_page1": 270,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 116,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      116
+    ]
+  },
+  {
+    "pdf_index0": 270,
+    "pdf_page1": 271,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 117,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      117
+    ]
+  },
+  {
+    "pdf_index0": 271,
+    "pdf_page1": 272,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 118,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      118
+    ]
+  },
+  {
+    "pdf_index0": 272,
+    "pdf_page1": 273,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 119,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      119
+    ]
+  },
+  {
+    "pdf_index0": 273,
+    "pdf_page1": 274,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 120,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      120
+    ]
+  },
+  {
+    "pdf_index0": 274,
+    "pdf_page1": 275,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 121,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      121
+    ]
+  },
+  {
+    "pdf_index0": 275,
+    "pdf_page1": 276,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 122,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      122
+    ]
+  },
+  {
+    "pdf_index0": 276,
+    "pdf_page1": 277,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 123,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 277,
+    "pdf_page1": 278,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 124,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 278,
+    "pdf_page1": 279,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 125,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      125
+    ]
+  },
+  {
+    "pdf_index0": 279,
+    "pdf_page1": 280,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 126,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      126
+    ]
+  },
+  {
+    "pdf_index0": 280,
+    "pdf_page1": 281,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 127,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 281,
+    "pdf_page1": 282,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 128,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      128
+    ]
+  },
+  {
+    "pdf_index0": 282,
+    "pdf_page1": 283,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 129,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      129
+    ]
+  },
+  {
+    "pdf_index0": 283,
+    "pdf_page1": 284,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 130,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      130
+    ]
+  },
+  {
+    "pdf_index0": 284,
+    "pdf_page1": 285,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 131,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      131
+    ]
+  },
+  {
+    "pdf_index0": 285,
+    "pdf_page1": 286,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 132,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      132
+    ]
+  },
+  {
+    "pdf_index0": 286,
+    "pdf_page1": 287,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 133,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      133
+    ]
+  },
+  {
+    "pdf_index0": 287,
+    "pdf_page1": 288,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 134,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      134
+    ]
+  },
+  {
+    "pdf_index0": 288,
+    "pdf_page1": 289,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 135,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      135
+    ]
+  },
+  {
+    "pdf_index0": 289,
+    "pdf_page1": 290,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 136,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      136
+    ]
+  },
+  {
+    "pdf_index0": 290,
+    "pdf_page1": 291,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 137,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      137
+    ]
+  },
+  {
+    "pdf_index0": 291,
+    "pdf_page1": 292,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 138,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      138
+    ]
+  },
+  {
+    "pdf_index0": 292,
+    "pdf_page1": 293,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 139,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": []
+  },
+  {
+    "pdf_index0": 293,
+    "pdf_page1": 294,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 140,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      140
+    ]
+  },
+  {
+    "pdf_index0": 294,
+    "pdf_page1": 295,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 141,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      141
+    ]
+  },
+  {
+    "pdf_index0": 295,
+    "pdf_page1": 296,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 142,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      142
+    ]
+  },
+  {
+    "pdf_index0": 296,
+    "pdf_page1": 297,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 143,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      143
+    ]
+  },
+  {
+    "pdf_index0": 297,
+    "pdf_page1": 298,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 144,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      144
+    ]
+  },
+  {
+    "pdf_index0": 298,
+    "pdf_page1": 299,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 145,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      145
+    ]
+  },
+  {
+    "pdf_index0": 299,
+    "pdf_page1": 300,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 146,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      146
+    ]
+  },
+  {
+    "pdf_index0": 300,
+    "pdf_page1": 301,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 147,
+    "printed_page_status": "printed_number_ocr_observed",
+    "ocr_number_candidates": [
+      147
+    ]
+  },
+  {
+    "pdf_index0": 301,
+    "pdf_page1": 302,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 148,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": [],
+    "verification_note": "Section opening page omits a printed numeral; supplied number follows the volume pagination sequence."
+  },
+  {
+    "pdf_index0": 302,
+    "pdf_page1": 303,
+    "volume": "II",
+    "section": "lexical_body",
+    "printed_page": 149,
+    "printed_page_status": "inferred_from_verified_volume_sequence",
+    "ocr_number_candidates": [],
+    "verification_note": "Section opening page omits a printed numeral; supplied number follows the volume pagination sequence."
+  }
+]
