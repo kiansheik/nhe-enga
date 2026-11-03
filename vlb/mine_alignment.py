@@ -21,8 +21,8 @@ from mining.form_index import build_form_index
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=Path(__file__).resolve().parent / "mining/output-v2")
-    parser.add_argument("--benchmark", type=Path, default=Path(__file__).resolve().parent / "mining/benchmark-v2/preregistered_sample.json")
+    parser.add_argument("--output", type=Path, default=Path(__file__).resolve().parent / "mining/output-v3")
+    parser.add_argument("--benchmark", type=Path, default=Path(__file__).resolve().parent / "mining/benchmark-v3/preregistered_sample.json")
     parser.add_argument("--labels", type=Path, help="Optional independent labels. Never used by the ranker or trainer.")
     parser.add_argument("--subset", choices=["dev", "test", "benchmark", "all"], default="all")
     parser.add_argument("--model", choices=["uniform", "prior", "learned"], default="prior")
@@ -33,8 +33,9 @@ def main():
     corpus = Corpus(root)
     baseline = {(c["id"], p["id"]): existing_ranking(c) for p in corpus.pages for c in p["citations"]}
     output = args.output
-    if output.resolve() == (root / "vlb/mining/output").resolve():
-        parser.error("vlb/mining/output is the frozen V1 experiment; choose a separate output directory")
+    frozen_outputs = [root / "vlb/mining/output", root / "vlb/mining/output-v2"]
+    if output.resolve() in {path.resolve() for path in frozen_outputs}:
+        parser.error("V1 and V2 outputs are frozen experiments; choose a separate output directory")
     if args.freeze and (args.subset != "all" or args.labels or args.evaluate_only):
         parser.error("--freeze requires a full run without --labels or --evaluate-only")
     if args.evaluate_only:

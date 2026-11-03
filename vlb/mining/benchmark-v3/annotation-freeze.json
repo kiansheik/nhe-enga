@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "frozen_at": "2026-11-03T15:19:27Z",
+  "packet_path": "review_material.json",
+  "packet_sha256": "a64adf5225b2477773089c4b9543c1c92b070475d44c341831e3e2cfc0ba1d31",
+  "labels_path": "test_labels.json",
+  "labels_sha256": "ab73a469e445b722a4f55479daf513731a13b1d7cb5a30ec7988439eff422685",
+  "source_path": "../../source/emerson_vlb.txt",
+  "source_sha256": "0be22fae2f181e344963590add1016670ba12706af675b51f21cf7571d974fb9",
+  "dictionary_path": "../../../docs/dict-conjugated.json.gz",
+  "dictionary_sha256": "d235a7961961b58fcfbb93362bc3acb9b7f7b7e823196dca5763ef3e7fd16f53",
+  "case_count": 24,
+  "reviewer_type": "assistant",
+  "human_verified": false,
+  "reviewer_scope": "Independent review limited to the packet's citation context and supplied page fragments, the pinned Emerson source text for exact offsets, and the pinned dictionary row only when needed to preserve the cited sense.",
+  "rankings_inspected": false,
+  "mining_outputs_inspected": false,
+  "excluded_material": [
+    "all mining output directories, including output-v3",
+    "pipeline.py",
+    "model code and candidate rankings",
+    "form indexes and model freezes",
+    "prior prediction and evaluation files"
+  ]
+}

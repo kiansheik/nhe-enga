@@ -1,5 +1,18 @@
 # Agent Log
 
+## 2026-11-03 — Froze independent VLB benchmark V3 annotations
+
+Annotated the 24-case frozen review packet without reading mining outputs,
+rankings, pipeline/model/index/freeze material, or prior predictions and
+evaluations. Used only the packet's citation context and page fragments, the
+pinned Emerson text for exact Unicode code-point spans, and the pinned
+dictionary rows for sense context. Recorded 21 clear and three ambiguous
+cases, with zero not-found cases; every label is explicitly assistant-reviewed
+and not human-verified. Added a freeze manifest and a standalone validator that
+rechecks both file hashes, packet blindness, exact case coverage, fragment
+integrity, and all 27 source spans. Validation passes. See the
+[handoff](session-handoffs/2026-11-03-vlb-benchmark-v3-blind-annotation.md).
+
 ## 2026-11-02 — Scoped inline VLB links for continuous reading
 
 Branched from merged main `ef6a586c` for continuous reading. Removed the VLB

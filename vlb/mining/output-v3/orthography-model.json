@@ -1,0 +1,289 @@
+{
+  "default_costs": {
+    "edit": 1.0,
+    "nasal_mark_difference": 0.75,
+    "stress_mark_difference": 0.26
+  },
+  "direction": "Navarro modern surface -> Emerson historical surface",
+  "limitations": [
+    "A spelling alignment is retrieval evidence, not lexical identity or reviewed citation coverage.",
+    "Morphological prefixes, nominal -a and stem alternations require explicitly supplied surface forms.",
+    "Nasalization is retained and penalized separately; no global g or final-a deletion is learned."
+  ],
+  "normalization": "NFC, casefold, apostrophe typography; diacritics retained",
+  "rules": [
+    {
+      "context": {
+        "target_after_not_bases": "ei"
+      },
+      "cost": 0.16,
+      "description": "VLB Aiapigpigc and contextual c described by Navarro; exclude c before historical e/i",
+      "examples": [],
+      "from": "k",
+      "id": "velar-c",
+      "origin": "prior",
+      "support": {
+        "distinct_headwords": 0,
+        "distinct_pages": 0,
+        "seed_count": 0
+      },
+      "to": "c"
+    },
+    {
+      "context": {
+        "target_after_bases": "ei"
+      },
+      "cost": 0.16,
+      "description": "VLB Aquîrara; qu before historical e/i, including accented i",
+      "examples": [],
+      "from": "k",
+      "id": "velar-qu",
+      "origin": "prior",
+      "support": {
+        "distinct_headwords": 0,
+        "distinct_pages": 0,
+        "seed_count": 0
+      },
+      "to": "qu"
+    },
+    {
+      "context": {},
+      "cost": 0.16,
+      "description": "Navarro criterion f; VLB Xeputuçoc",
+      "examples": [],
+      "from": "s",
+      "id": "sibilant-cedilla",
+      "origin": "prior",
+      "support": {
+        "distinct_headwords": 0,
+        "distinct_pages": 0,
+        "seed_count": 0
+      },
+      "to": "ç"
+    },
+    {
+      "context": {
+        "target_after_bases": "ei"
+      },
+      "cost": 0.22,
+      "description": "Navarro criterion f; VLB Aicuapigcigc before ig",
+      "examples": [],
+      "from": "s",
+      "id": "sibilant-c",
+      "origin": "prior",
+      "support": {
+        "distinct_headwords": 0,
+        "distinct_pages": 0,
+        "seed_count": 0
+      },
+      "to": "c"
+    },
+    {
+      "context": {},
+      "cost": 0.18,
+      "description": "Navarro criterion a; VLB Potyra/Potigra; ig is a unit, never global g deletion",
+      "examples": [],
+      "from": "y",
+      "id": "central-vowel-ig",
+      "origin": "prior",
+      "support": {
+        "distinct_headwords": 0,
+        "distinct_pages": 0,
+        "seed_count": 0
+      },
+      "to": "ig"
+    },
+    {
+      "context": {},
+      "cost": 0.4,
+      "description": "Navarro criterion a; VLB moendypuk/Aimoendipuc",
+      "examples": [],
+      "from": "y",
+      "id": "central-vowel-i",
+      "origin": "prior",
+      "support": {
+        "distinct_headwords": 0,
+        "distinct_pages": 0,
+        "seed_count": 0
+      },
+      "to": "i"
+    },
+    {
+      "context": {},
+      "cost": 0.4,
+      "description": "VLB akyrara/Aquîrara; competing historical notation",
+      "examples": [],
+      "from": "y",
+      "id": "central-vowel-i-circumflex",
+      "origin": "prior",
+      "support": {
+        "distinct_headwords": 0,
+        "distinct_pages": 0,
+        "seed_count": 0
+      },
+      "to": "î"
+    },
+    {
+      "context": {},
+      "cost": 0.55,
+      "description": "Navarro criterion a, general colonial-document prior",
+      "examples": [],
+      "from": "y",
+      "id": "central-vowel-j",
+      "origin": "prior",
+      "support": {
+        "distinct_headwords": 0,
+        "distinct_pages": 0,
+        "seed_count": 0
+      },
+      "to": "j"
+    },
+    {
+      "context": {},
+      "cost": 0.14,
+      "description": "Navarro criterion e; VLB Aiacoc",
+      "examples": [],
+      "from": "î",
+      "id": "palatal-glide-i",
+      "origin": "prior",
+      "support": {
+        "distinct_headwords": 0,
+        "distinct_pages": 0,
+        "seed_count": 0
+      },
+      "to": "i"
+    },
+    {
+      "context": {},
+      "cost": 0.18,
+      "description": "Navarro criterion e; VLB Aimojepotar",
+      "examples": [],
+      "from": "î",
+      "id": "palatal-glide-j",
+      "origin": "prior",
+      "support": {
+        "distinct_headwords": 0,
+        "distinct_pages": 0,
+        "seed_count": 0
+      },
+      "to": "j"
+    },
+    {
+      "context": {},
+      "cost": 0.22,
+      "description": "Navarro criterion e; VLB Aimocanãy",
+      "examples": [],
+      "from": "î",
+      "id": "palatal-glide-y",
+      "origin": "prior",
+      "support": {
+        "distinct_headwords": 0,
+        "distinct_pages": 0,
+        "seed_count": 0
+      },
+      "to": "y"
+    },
+    {
+      "context": {},
+      "cost": 0.14,
+      "description": "Navarro criterion e; VLB Xeaguaçâ",
+      "examples": [],
+      "from": "û",
+      "id": "labial-glide-u",
+      "origin": "prior",
+      "support": {
+        "distinct_headwords": 0,
+        "distinct_pages": 0,
+        "seed_count": 0
+      },
+      "to": "u"
+    },
+    {
+      "context": {},
+      "cost": 0.18,
+      "description": "Navarro criterion e, general colonial-document prior",
+      "examples": [],
+      "from": "ŷ",
+      "id": "central-glide-y",
+      "origin": "prior",
+      "support": {
+        "distinct_headwords": 0,
+        "distinct_pages": 0,
+        "seed_count": 0
+      },
+      "to": "y"
+    },
+    {
+      "context": {},
+      "cost": 0.3,
+      "description": "VLB pokarugûar/Xepocarugoar; not global u/o interchange",
+      "examples": [],
+      "from": "gûa",
+      "id": "labialized-goa",
+      "origin": "prior",
+      "support": {
+        "distinct_headwords": 0,
+        "distinct_pages": 0,
+        "seed_count": 0
+      },
+      "to": "goa"
+    },
+    {
+      "context": {},
+      "cost": 0.4,
+      "description": "Navarro criterion c; VLB eirapu'a/Eirapua",
+      "examples": [],
+      "from": "'",
+      "id": "unwritten-glottal",
+      "origin": "prior",
+      "support": {
+        "distinct_headwords": 0,
+        "distinct_pages": 0,
+        "seed_count": 0
+      },
+      "to": ""
+    },
+    {
+      "context": {},
+      "cost": 0.3,
+      "description": "Editorial segmentation alternative, not a phonological deletion",
+      "examples": [],
+      "from": "-",
+      "id": "editorial-hyphen",
+      "origin": "prior",
+      "support": {
+        "distinct_headwords": 0,
+        "distinct_pages": 0,
+        "seed_count": 0
+      },
+      "to": ""
+    },
+    {
+      "context": {},
+      "cost": 0.35,
+      "description": "Token-joining alternative; actual surface form must be supplied",
+      "examples": [],
+      "from": " ",
+      "id": "word-joining",
+      "origin": "prior",
+      "support": {
+        "distinct_headwords": 0,
+        "distinct_pages": 0,
+        "seed_count": 0
+      },
+      "to": ""
+    }
+  ],
+  "schema_version": 1,
+  "sources": [
+    {
+      "attribution": "Eduardo de Almeida Navarro (2022), DOI 10.1590/2178-2547-BGOELDI-2021-0034; Critérios para a transcrição paleográfica, a/c/e/f/i; general colonial priors",
+      "url": "https://www.scielo.br/j/bgoeldi/a/vy7RnrNvd5B4rrCCX6vVx4d/?lang=pt"
+    },
+    {
+      "attribution": "Emerson José Silveira da Costa, VLB transcription; exact local pilot examples in rule descriptions; multiple spellings preserved",
+      "url": "https://sites.google.com/site/vocabularionalinguabrasilica/"
+    }
+  ],
+  "weights_are_probabilities": false
+}

@@ -1,5 +1,24 @@
 # Current State
 
+## 2026-11-03 — Frozen VLB benchmark V3 blind assistant annotation
+
+- Independently reviewed all 24 cases in
+  `vlb/mining/benchmark-v3/review_material.json` using only its citation
+  context/page fragments, the checksum-pinned Emerson transcription for exact
+  global offsets, and the matching pinned dictionary row when sense context
+  was needed.
+- Froze 21 `clear`, three `ambiguous`, and zero `not_found` labels. The three
+  ambiguous decisions preserve a form/sense conflict or an unsupported part
+  of the dictionary claim; none is presented as human-verified.
+- `annotation-freeze.json` pins packet hash `a64adf52...1d31` and labels hash
+  `ab73a469...2685`, records `reviewer_type: assistant`,
+  `human_verified: false`, and states that rankings and mining outputs were
+  not inspected.
+- The standalone validator checks blindness flags, pinned input hashes, exact
+  case coverage, reviewer metadata, source-fragment integrity, and every
+  global half-open target span. It passes with 24 labels and 27 targets. See
+  the [handoff](session-handoffs/2026-11-03-vlb-benchmark-v3-blind-annotation.md).
+
 ## 2026-11-02 — VLB continuous reader and inline entry points
 
 - Started `feat/vlb-continuous-reader` from current `main`

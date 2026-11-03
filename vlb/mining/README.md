@@ -161,6 +161,17 @@ location evidence for a candidate, not the correctness of its Navarro linkage.
 Boxes are not exact glyph boxes, and scan-line accuracy has not been measured
 by the paragraph benchmark.
 
+## Reverse source inventory
+
+`python3 vlb/build_reverse_concordance.py` builds the separate compressed
+`reverse-output/source-dictionary-concordance.json.gz`. It starts from all
+7,534 source records, inverts the frozen V2 citation proposals, and adds a
+bounded search over the pinned dictionary headwords. The reverse inventory is
+review material outside the browser payload; it does not alter the frozen
+V1/V2 artifacts or treat a matched word as coverage of its source paragraph.
+Current recomputed counts, artifact hash, and the exact reproduction command
+are recorded in `reverse-output/REPORT.md`.
+
 ## Credit
 
 Transcription: **Emerson José Silveira da Costa**, [VLB project][emerson] and

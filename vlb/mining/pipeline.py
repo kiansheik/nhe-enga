@@ -20,7 +20,7 @@ from .quotation import parse_quotations
 
 
 CONFIG = {
-    "version": "vlb-page-ranker-v2",
+    "version": "vlb-page-ranker-v3",
     "paragraph_span_shortlist": 6,
     "surface_shortlist": 2,
     "span_alternatives": 3,
@@ -29,7 +29,7 @@ CONFIG = {
     "portuguese_context_weight": 20.0,
     "quotation_context_weight": 18.0,
     "quoted_surface_weight": 8.0,
-    "whole_quotation_weight": 10.0,
+    "whole_quotation_weight": 15.0,
     "local_quotation_weight": 12.0,
     "suggestion_min_similarity": 0.84,
     "suggestion_min_margin": 5.0,
@@ -244,13 +244,25 @@ def make_surfaces(citation, definition, quotation_analysis=None):
                         context_end=quote["context_start"] + end,
                         quotation_detection=quote["kind"], quote_index=quote_index,
                         whole_quotation=whole)
+                # VLB questions can write a modern multiword interrogative as
+                # one historical construction and realize the question particle
+                # in the fused form. Keep this as an inspectable hypothesis,
+                # licensed only by a complete literal question; it is never a
+                # general spelling rewrite or an editorial acceptance.
+                if whole and citation["context"][quote["context_end"]:].lstrip().startswith("?"):
+                    fused = "".join(word for word, _, _ in required) + "pe"
+                    add(fused, "quoted_question_fusion_hypothesis", .035,
+                        context_start=quote["context_start"], context_end=quote["context_end"],
+                        quotation_detection=quote["kind"], quote_index=quote_index,
+                        whole_quotation=True, literal_quote=quote["text"],
+                        transformation="join literal words and append interrogative pe")
     # Keep the least speculative provenance when identical literal forms recur.
     unique = {}
     for surface in sorted(surfaces, key=lambda x: x["penalty"]):
         saved = unique.setdefault(canonical(surface["form"]), surface)
-        if surface["kind"] == "quoted_surface_hypothesis":
+        if surface["kind"] in ("quoted_surface_hypothesis", "quoted_question_fusion_hypothesis"):
             saved.setdefault("quotation_occurrences", []).append({
-                "text": surface["form"], "context_start": surface["context_start"],
+                "text": surface.get("literal_quote", surface["form"]), "context_start": surface["context_start"],
                 "context_end": surface["context_end"], "quote_index": surface["quote_index"],
                 "whole_quotation": surface["whole_quotation"]})
     # Apply the already licensed, bounded prefix search to an explicitly cited
@@ -623,10 +635,15 @@ def rank_citation(corpus, page, citation, model, config=None):
             reasons.append("source_zone_not_a_lexical_body")
         if quotes and not top["quoted_surface_evidence"]:
             reasons.append("explicit_quoted_surface_not_matched")
+        if (not top["quoted_surface_evidence"] and top["portuguese_context_score"] == 0 and
+                top["quotation_context_score"] == 0):
+            reasons.append("form_only_without_independent_context")
         if quotation_analysis["issues"]:
             reasons.append("quotation_parse_requires_review")
         if (top.get("query_surface") or {}).get("kind") == "quoted_compound_prefix_hypothesis":
             reasons.append("compound_prefix_hypothesis_requires_review")
+        if (top.get("query_surface") or {}).get("kind") == "quoted_question_fusion_hypothesis":
+            reasons.append("question_fusion_hypothesis_requires_review")
         if top["local_quotation_required_companions"] and top["local_quotation_score"] < 1:
             reasons.append("local_quotation_context_incomplete")
         if len(top["same_form_occurrences"]) > 1:
