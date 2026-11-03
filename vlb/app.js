@@ -3,16 +3,25 @@
 
 (() => {
   const $ = id => document.getElementById(id);
+  const narrowMedia = matchMedia("(max-width: 900px)");
   const state = {
     manifest: null, page: null, pageId: null, selectedSource: null,
     selectedCitation: null, entry: null, tab: "text", zoom: 100,
     imageExtension: ".png", sourceIndex: null, citationIndex: null,
-    notes: [], loadToken: 0, searchToken: 0, cache: new Map(), pending: new Map(),
+    notes: [], corrections: [], correctionDraft: null,
+    loadToken: 0, searchToken: 0, cache: new Map(), pending: new Map(),
     mode: "page", autoTarget: null, citationEntryFilter: null, imageFocus: null,
+    surface: "scan", surfaceExplicit: false, narrow: narrowMedia.matches,
+    surfaceScroll: {scan: 0, text: 0}, surfaceVisited: {scan: false, text: false},
   };
   const flow = {views: new Map(), ids: [], generation: 0, pending: new Map(),
     frames: {}, lockedUntil: {scan: 0, text: 0}, failed: new Set(), position: null};
   const NOTE_KEY = "nhe-enga-vlb-review-v1";
+  const CORRECTION_KEY = "nhe-enga-vlb-corrections-v1";
+  // GitHub can reject an oversized prefilled issue URL before its form loads.
+  // Leave headroom for browser/proxy limits and fall back to a downloaded
+  // payload that the reviewer can paste into the same token-free issue form.
+  const MAX_ISSUE_PREFILL_URL_LENGTH = 7000;
   const noteKinds = {transcription: "Transcrição", association: "Associação", pagination: "Paginação", other: "Observação"};
   let toastTimer;
 
@@ -98,6 +107,71 @@
     return {stage: $("scan-stage"), image: $("page-image"), overlay: $("ocr-overlay")};
   }
 
+  function paneVisible(pane) {
+    return !state.narrow || state.surface === pane;
+  }
+
+  function applySurfaceVisibility() {
+    document.body.classList.toggle("surface-text", state.surface === "text");
+    document.body.classList.toggle("surface-scan", state.surface === "scan");
+    for (const pane of ["text", "scan"]) {
+      const selected = state.surface === pane;
+      $(`surface-${pane}`).setAttribute("aria-pressed", String(selected));
+      const panel = $(pane === "text" ? "transcription-panel" : "scan-panel");
+      const hidden = state.narrow && !selected;
+      panel.inert = hidden;
+      if (hidden) panel.setAttribute("aria-hidden", "true");
+      else panel.removeAttribute("aria-hidden");
+    }
+  }
+
+  function setSurface(surface, options = {}) {
+    const next = surface === "text" ? "text" : "scan";
+    const previous = state.surface;
+    if (state.narrow && state.page && previous && $(previous === "text" ? "text-viewport" : "scan-viewport")) {
+      state.surfaceScroll[previous] = flowViewport(previous).scrollTop;
+      state.surfaceVisited[previous] = true;
+    }
+    state.surface = next;
+    if (options.explicit) state.surfaceExplicit = true;
+    applySurfaceVisibility();
+    if (state.narrow && state.page && options.restore !== false) {
+      const hadVisited = state.surfaceVisited[next];
+      requestAnimationFrame(() => {
+        const viewport = flowViewport(next);
+        if (next === "scan") hydrateScan();
+        const selected = state.page.fragments.find(fragment => fragment.id === state.selectedSource);
+        if (selected) {
+          if (next === "text") scrollTextToSource(selected.id);
+          else {
+            state.imageFocus = selected.id;
+            drawOverlay();
+            scrollToHighlight(selected);
+          }
+        } else if (state.mode === "continuous" && flow.position && !hadVisited) {
+          syncFlowPane(next, flow.position);
+        } else viewport.scrollTop = state.surfaceScroll[next] || 0;
+        state.surfaceScroll[next] = viewport.scrollTop;
+        state.surfaceVisited[next] = true;
+      });
+    } else if (!state.narrow && state.page) hydrateScan();
+    if (options.update !== false && state.page) updateURL();
+  }
+
+  function syncResponsiveUI(initial = false) {
+    const changed = state.narrow !== narrowMedia.matches;
+    state.narrow = narrowMedia.matches;
+    if (initial || changed) {
+      $("reader-options").open = !state.narrow;
+      $("scan-options").open = !state.narrow;
+    }
+    applySurfaceVisibility();
+    if (!state.page) return;
+    if (!state.narrow || state.surface === "scan") hydrateScan();
+    if (state.mode === "continuous") manageFlowImages();
+    if (changed && state.selectedSource) setSurface(state.surface, {update: false});
+  }
+
   function setMode(mode) {
     state.mode = mode === "continuous" ? "continuous" : "page";
     document.body.classList.toggle("continuous-mode", state.mode === "continuous");
@@ -129,7 +203,7 @@
   function preserveFlowAnchors(change) {
     // Native scroll anchoring is disabled for the stacks; preserve the same
     // visible page when earlier pages or image dimensions become available.
-    const anchors = ["scan", "text"].map(pane => {
+    const anchors = ["scan", "text"].filter(pane => paneVisible(pane)).map(pane => {
       const position = flowPosition(pane);
       const node = position && flowElement(flow.views.get(position.id), pane);
       return {pane, node, top: node?.getBoundingClientRect().top};
@@ -212,13 +286,15 @@
   function manageFlowImages() {
     allPages();
     const currentIndex = state.pageOrdinals.get(state.pageId) ?? 0;
+    const canHydrate = !state.narrow || state.surface === "scan";
+    const radius = state.narrow ? 1 : 3;
     for (const view of flow.views.values()) {
-      const near = Math.abs(state.pageOrdinals.get(view.page.id) - currentIndex) <= 3;
+      const near = canHydrate && Math.abs(state.pageOrdinals.get(view.page.id) - currentIndex) <= radius;
       if (near && !view.image.hasAttribute("src")) {
         view.message.hidden = false;
         view.message.textContent = "Carregando imagem…";
         view.image.src = view.imageURL;
-      } else if (!near && view.image.hasAttribute("src")) {
+      } else if (canHydrate && !near && view.image.hasAttribute("src")) {
         view.image.removeAttribute("src");
         view.message.hidden = true;
       }
@@ -266,7 +342,7 @@
   }
 
   function flowPosition(pane) {
-    if (!flow.ids.length || (pane === "text" && state.tab !== "text")) return null;
+    if (!flow.ids.length || !paneVisible(pane) || (pane === "text" && state.tab !== "text")) return null;
     const viewport = flowViewport(pane);
     const offset = Math.min(100, viewport.clientHeight * .2);
     const line = viewport.getBoundingClientRect().top + offset;
@@ -282,7 +358,7 @@
 
   function syncFlowPane(pane, position) {
     const view = flow.views.get(position.id);
-    if (!view || (pane === "text" && state.tab !== "text")) return;
+    if (!view || !paneVisible(pane) || (pane === "text" && state.tab !== "text")) return;
     const viewport = flowViewport(pane);
     const bounds = flowElement(view, pane).getBoundingClientRect();
     const top = bounds.top - viewport.getBoundingClientRect().top + viewport.scrollTop + bounds.height * position.fraction - Math.min(100, viewport.clientHeight * .2);
@@ -295,9 +371,11 @@
     if (state.pageId === id) return;
     const view = flow.views.get(id);
     if (!view) return;
+    if (state.correctionDraft) closeCorrection({restoreDetail: false});
     state.page = view.page;
     state.pageId = id;
     state.selectedSource = state.selectedCitation = state.autoTarget = state.imageFocus = null;
+    refreshSourceSpanMarks();
     state.entry = state.citationEntryFilter = null;
     $("citation-detail").hidden = true;
     $("citation-choice-notice").hidden = true;
@@ -316,17 +394,20 @@
   }
 
   function onFlowScroll(pane) {
-    if (state.mode !== "continuous" || performance.now() < flow.lockedUntil[pane] || (pane === "text" && state.tab !== "text")) return;
+    if (state.mode !== "continuous" || !paneVisible(pane) || performance.now() < flow.lockedUntil[pane] || (pane === "text" && state.tab !== "text")) return;
     if (flow.frames[pane]) return;
     flow.frames[pane] = requestAnimationFrame(() => {
       flow.frames[pane] = null;
-      if (state.mode !== "continuous" || performance.now() < flow.lockedUntil[pane]) return;
+      if (state.mode !== "continuous" || !paneVisible(pane) || performance.now() < flow.lockedUntil[pane]) return;
       const position = flowPosition(pane);
       if (!position) return;
       flow.position = position;
       activateFlowPage(position.id);
-      syncFlowPane(pane === "scan" ? "text" : "scan", position);
+      const other = pane === "scan" ? "text" : "scan";
+      if (paneVisible(other)) syncFlowPane(other, position);
       const viewport = flowViewport(pane);
+      state.surfaceScroll[pane] = viewport.scrollTop;
+      state.surfaceVisited[pane] = true;
       if (viewport.scrollTop < viewport.clientHeight * 1.5) extendFlow(-1);
       if (viewport.scrollHeight - viewport.scrollTop - viewport.clientHeight < viewport.clientHeight * 2) extendFlow(1);
     });
@@ -336,7 +417,7 @@
     const view = flow.views.get(id);
     if (!view) return;
     for (const pane of ["scan", "text"]) {
-      if (pane === "text" && state.tab !== "text") continue;
+      if (!paneVisible(pane) || (pane === "text" && state.tab !== "text")) continue;
       const viewport = flowViewport(pane);
       const node = flowElement(view, pane);
       lockFlow(pane, 450);
@@ -370,7 +451,12 @@
     if (state.selectedSource) url.searchParams.set("source", state.selectedSource);
     if (state.selectedCitation) url.searchParams.set("citation", state.selectedCitation);
     if (state.entry !== null) url.searchParams.set("entry", state.entry);
-    if (state.autoTarget && state.selectedCitation) url.searchParams.set("focus", "auto");
+    if (state.autoTarget && state.selectedCitation && !state.autoTarget.manual) url.searchParams.set("focus", "auto");
+    if (state.autoTarget?.manual && state.autoTarget.source_span) {
+      url.searchParams.set("target_start", state.autoTarget.source_span.start0);
+      url.searchParams.set("target_end", state.autoTarget.source_span.end0);
+    }
+    if (state.surfaceExplicit) url.searchParams.set("surface", state.surface);
     url.hash = "";
     history[push ? "pushState" : "replaceState"]({}, "", url);
   }
@@ -383,10 +469,19 @@
     const number = combined?.[2] || oldHash?.[2] || query.get("page") || (volume === "II" ? "7" : "17");
     const entry = query.get("entry");
     const position = query.get("citation_pos");
+    const targetStart = query.get("target_start");
+    const targetEnd = query.get("target_end");
+    const requestedSurface = query.get("surface");
+    const surfaceExplicit = requestedSurface === "scan" || requestedSurface === "text";
+    const hasTextTarget = query.has("source") || query.has("citation") || query.has("entry") ||
+      query.has("citation_pos") || query.get("focus") === "auto";
     return {id: pageId(volume, Number(number)), source: query.get("source"),
       citation: query.get("citation"), entry: entry !== null && /^\d+$/.test(entry) ? Number(entry) : null,
       citationPos: position !== null && /^\d+$/.test(position) ? Number(position) : null,
-      mode: query.get("mode") === "continuous" ? "continuous" : "page", focus: query.get("focus") === "auto"};
+      targetStart: targetStart !== null && /^\d+$/.test(targetStart) ? Number(targetStart) : null,
+      targetEnd: targetEnd !== null && /^\d+$/.test(targetEnd) ? Number(targetEnd) : null,
+      mode: query.get("mode") === "continuous" ? "continuous" : "page", focus: query.get("focus") === "auto",
+      surface: surfaceExplicit ? requestedSurface : hasTextTarget ? "text" : "scan", surfaceExplicit};
   }
 
   function setPageControls() {
@@ -408,6 +503,10 @@
 
   async function loadPage(id, options = {}) {
     const token = ++state.loadToken;
+    if (options.surface) {
+      state.surfaceExplicit = Boolean(options.surfaceExplicit);
+      setSurface(options.surface, {update: false, explicit: state.surfaceExplicit, restore: false});
+    }
     if (options.mode && options.mode !== state.mode) setMode(options.mode);
     const meta = metadata(id);
     if (!meta) {
@@ -415,6 +514,7 @@
       $("load-error").textContent = "Esta referência não corresponde a uma página disponível. Abrindo o início do volume I.";
       return loadPage("I-017", {...options, source: null, citation: null, preserveError: true});
     }
+    if (state.correctionDraft) closeCorrection({restoreDetail: false});
     $("page-status").textContent = `Carregando volume ${meta.volume}, página ${meta.page}…`;
     if (!options.preserveError) $("load-error").hidden = true;
     $("transcription-panel").setAttribute("aria-busy", "true");
@@ -423,9 +523,14 @@
       if (token !== state.loadToken) return;
       state.page = {...meta, ...data};
       state.pageId = id;
+      if (state.mode === "page") {
+        state.surfaceScroll = {scan: 0, text: 0};
+        state.surfaceVisited = {scan: false, text: false};
+      }
       state.selectedSource = null;
       state.selectedCitation = null;
       state.autoTarget = state.citationEntryFilter = state.imageFocus = null;
+      refreshSourceSpanMarks();
       state.entry = options.entry ?? null;
       $("citation-filter").value = "";
       $("citation-detail").hidden = true;
@@ -436,7 +541,8 @@
       }
       setPageControls();
       renderPage();
-      if (options.citation) selectCitation(options.citation, {update: false, showTab: !options.source, autoFocus: options.focus});
+      if (options.citation) selectCitation(options.citation, {update: false, showTab: !options.source, autoFocus: options.focus,
+        source: options.source, targetStart: options.targetStart, targetEnd: options.targetEnd});
       else if (state.entry !== null) {
         const candidates = state.page.citations.filter(c => c.entry_index === state.entry);
         const exact = options.citationPos !== null && options.citationPos !== undefined ?
@@ -500,7 +606,8 @@
       manageFlowImages();
       drawOverlay();
     } else {
-      setImage();
+      if (paneVisible("scan")) setImage();
+      else prepareImage();
       renderFragments();
       $("text-viewport").scrollTop = 0;
     }
@@ -509,9 +616,28 @@
     renderBoundaries();
   }
 
+  function prepareImage() {
+    const path = `../docs/primary_sources/vlb/${state.page.image_index}${state.imageExtension}`;
+    const img = $("page-image");
+    img.onload = null;
+    img.onerror = null;
+    img.removeAttribute("src");
+    img.dataset.pageId = state.pageId;
+    img.alt = state.page.fragments.length ? `Fac-símile do VLB, volume ${state.page.volume}, página ${state.page.page}` :
+      state.page.image_index === 25 ? "Prancha do manuscrito, entre as páginas 24 e 27 do volume I" : "Verso em branco da prancha, volume I";
+    $("open-scan").href = path;
+    $("image-message").hidden = false;
+    $("image-message").textContent = "Abra o fac-símile para carregar a imagem.";
+    $("scan-viewport").scrollTo({top: 0, left: 0, behavior: "instant"});
+    state.zoom = 100;
+    applyZoom();
+    drawOverlay();
+  }
+
   function setImage() {
     const path = `../docs/primary_sources/vlb/${state.page.image_index}`;
     const img = $("page-image");
+    img.dataset.pageId = state.pageId;
     $("image-message").hidden = false;
     $("image-message").textContent = "Carregando imagem…";
     img.alt = state.page.fragments.length ? `Fac-símile do VLB, volume ${state.page.volume}, página ${state.page.page}` :
@@ -542,6 +668,30 @@
     drawOverlay();
   }
 
+  function hydrateScan() {
+    if (!state.page) return;
+    if (state.mode === "continuous") {
+      manageFlowImages();
+      const selected = state.page.fragments.find(fragment => fragment.id === state.selectedSource);
+      if (selected) {
+        state.imageFocus = selected.id;
+        drawOverlay();
+        scrollToHighlight(selected);
+      }
+      return;
+    }
+    const image = $("page-image");
+    if (image.dataset.pageId !== state.pageId || !image.hasAttribute("src")) setImage();
+    else {
+      drawOverlay();
+      const selected = state.page.fragments.find(fragment => fragment.id === state.selectedSource);
+      if (selected) {
+        state.imageFocus = selected.id;
+        scrollToHighlight(selected);
+      }
+    }
+  }
+
   function renderBoundaries() {
     const notice = $("boundary-notice");
     const bounds = state.page.boundaries || {};
@@ -558,7 +708,54 @@
   }
 
   function associationLabel(association) {
-    return association.status === "reviewed" ? "conferência assistida" : "proposta";
+    if (association.suppressed_by_correction) return "proposta rejeitada";
+    if (association.status === "reviewed") return "conferência assistida";
+    if (association.status === "ambiguous") return "leitura ambígua";
+    return "proposta";
+  }
+
+  function associationTarget(association, span = association.span) {
+    const lineIds = span?.ocr_line_ids || association.ocr_line_ids || [];
+    return {status: association.status, source_id: association.source_id,
+      line_ids: lineIds, boxes: span?.ocr_boxes || [], source_span: span || null,
+      source_form: association.source_form || span?.text || null,
+      scope: span ? "form" : "fragment",
+      mechanism: association.correction_id ? "correction_ledger" : association.algorithm_version ? "model_review_choice" : "reviewed_association",
+      algorithm_version: association.algorithm_version || null, manual: true};
+  }
+
+  function paintSourceText(node) {
+    const original = node._vlbSourceText ?? node.textContent;
+    node._vlbSourceText = original;
+    node.replaceChildren();
+    const targets = (state.autoTarget?.source_spans || [state.autoTarget?.source_span]).filter(Boolean)
+      .filter(target => target.start0 >= Number(node.dataset.start0) && target.end0 <= Number(node.dataset.end0))
+      .sort((a, b) => a.start0 - b.start0);
+    const article = node.closest(".fragment");
+    const start0 = Number(node.dataset.start0);
+    const end0 = Number(node.dataset.end0);
+    if (!targets.length || article?.dataset.sourceId !== state.autoTarget.source_id ||
+        targets.some(target => original.slice(target.start0 - start0, target.end0 - start0) !== target.text)) {
+      node.textContent = original;
+      return;
+    }
+    let cursor = 0;
+    for (const target of targets) {
+      const left = target.start0 - start0;
+      const right = target.end0 - start0;
+      if (left < cursor) continue;
+      node.append(document.createTextNode(original.slice(cursor, left)));
+      const mark = element("mark", "match-span", target.text);
+      mark.title = state.autoTarget.status === "reviewed" ? "Expressão registrada na correção revisada." :
+        "Expressão proposta nesta ocorrência; confirme-a no fac-símile.";
+      node.append(mark);
+      cursor = right;
+    }
+    node.append(document.createTextNode(original.slice(cursor)));
+  }
+
+  function refreshSourceSpanMarks() {
+    for (const node of document.querySelectorAll(".source-text")) paintSourceText(node);
   }
 
   function renderFragments(page = state.page, list = $("fragment-list"), continuous = false) {
@@ -581,7 +778,12 @@
       });
       button.setAttribute("aria-label", `Selecionar parágrafo ${source.source_line}: ${compact(source.text, 110)}`);
       button.setAttribute("aria-pressed", "false");
-      button.append(element("span", "source-number", `§ ${source.source_line}`), element("span", "source-text", source.text));
+      const sourceText = element("span", "source-text", source.text);
+      sourceText.dataset.start0 = source.source_start0;
+      sourceText.dataset.end0 = source.source_end0;
+      sourceText._vlbSourceText = source.text;
+      button.append(element("span", "source-number", `§ ${source.source_line}`), sourceText);
+      paintSourceText(sourceText);
       article.append(button);
       if (source.continues_on_next) article.append(element("span", "continuation", "Continua na página seguinte ↗"));
       const meta = element("div", "source-meta");
@@ -591,7 +793,7 @@
         meta.append(action(`${cite.headword}${cite.homonym ? " " + cite.homonym : ""} · ${associationLabel(assoc)}${assoc.status === "reviewed" && assoc.source_form ? `: ${assoc.source_form}` : ""}`,
           `chip ${assoc.status === "reviewed" ? "reviewed" : "proposed"}`, () => {
             if (continuous) activateFlowPage(page.id, {update: false});
-            selectCitation(cite.id, {source: source.id});
+            selectCitation(cite.id, {source: source.id, target: associationTarget(assoc)});
           }));
       }
       article.append(meta);
@@ -620,6 +822,19 @@
     return (page.ocr_lines || []).filter(line => ids.has(line.id));
   }
 
+  function scrollTextToSource(id) {
+    if (!paneVisible("text")) return;
+    const article = fragmentContainer()?.querySelector(`[data-source-id="${CSS.escape(id)}"]`);
+    if (!article) return;
+    const viewport = $("text-viewport");
+    if (state.mode === "continuous") lockFlow("text", 700);
+    const view = state.mode === "continuous" ? flow.views.get(state.pageId) : null;
+    const headingHeight = view?.text.querySelector(".continuous-page-heading")?.offsetHeight || 0;
+    viewport.scrollTo({top: article.getBoundingClientRect().top - viewport.getBoundingClientRect().top + viewport.scrollTop - headingHeight - 12,
+      behavior: scrollBehavior()});
+    state.surfaceScroll.text = viewport.scrollTop;
+  }
+
   function selectSource(id, options = {}) {
     const source = state.page.fragments.find(f => f.id === id);
     if (!source) {
@@ -628,6 +843,7 @@
     }
     state.selectedSource = id;
     state.autoTarget = options.target || null;
+    refreshSourceSpanMarks();
     state.imageFocus = options.scroll === false ? null : id;
     for (const article of $("fragment-list").querySelectorAll(".fragment")) {
       const selected = article.dataset.sourceId === id && article.dataset.pageId === state.pageId;
@@ -645,22 +861,19 @@
     updateNoteTarget();
     if (options.update !== false) updateURL();
     if (options.scroll !== false) {
-      const article = fragmentContainer()?.querySelector(`[data-source-id="${CSS.escape(id)}"]`);
-      if (article) {
-        const viewport = $("text-viewport");
-        if (state.mode === "continuous") lockFlow("text", 700);
-        const headingHeight = state.mode === "continuous" ? flow.views.get(state.pageId).text.querySelector(".continuous-page-heading").offsetHeight : 0;
-        viewport.scrollTo({top: article.getBoundingClientRect().top - viewport.getBoundingClientRect().top + viewport.scrollTop - headingHeight - 12, behavior: scrollBehavior()});
-      }
+      scrollTextToSource(id);
       scrollToHighlight(source);
     }
   }
 
   function sourceBoxes(source) {
+    if (state.autoTarget?.source_id === source?.id && state.autoTarget.boxes?.length) return state.autoTarget.boxes;
     if (state.autoTarget?.source_id === source?.id && state.autoTarget.line_ids?.length) {
       const ids = new Set(state.autoTarget.line_ids);
       return state.page.ocr_lines.filter(line => ids.has(line.id)).map(line => line.box);
     }
+    if (state.autoTarget?.source_id === source?.id &&
+        (state.autoTarget.source_span || state.autoTarget.source_spans?.length)) return [];
     return source?.ocr?.boxes || ocrLinesFor(source).map(l => l.box);
   }
 
@@ -693,11 +906,16 @@
     const boxes = sourceBoxes(source);
     const viewport = $("scan-viewport");
     const scan = activeScan();
+    if (!paneVisible("scan")) {
+      state.imageFocus = source?.id || null;
+      return;
+    }
     if (!boxes.length || !scan?.image.complete || !scan.image.naturalWidth) return;
     const stageTop = state.mode === "continuous" ? scan.stage.getBoundingClientRect().top - viewport.getBoundingClientRect().top + viewport.scrollTop : 0;
     const top = stageTop + Math.min(...boxes.map(b => b[1])) * scan.stage.clientHeight;
     if (state.mode === "continuous") lockFlow("scan", 700);
     viewport.scrollTo({top: Math.max(0, top - viewport.clientHeight * .27), behavior: scrollBehavior()});
+    state.surfaceScroll.scan = viewport.scrollTop;
     state.imageFocus = null;
   }
 
@@ -727,23 +945,59 @@
 
   function addAssociationButtons(parent, cite) {
     const associations = cite.associations || [];
-    for (const assoc of associations) {
+    const correctionPrimary = ["accepted", "ambiguous"].includes(cite.correction?.disposition);
+    const primaryAssociations = correctionPrimary ?
+      associations.filter(association => association.correction_event_id === cite.correction.event_id) : associations;
+    const selectAssociation = (assoc, span = assoc.span) => {
+      const target = associationTarget(assoc, span);
+      state.selectedCitation = cite.id;
+      state.entry = cite.entry_index;
+      selectSource(assoc.source_id, {update: false, target});
+      showCitationDetail(cite, target);
+      renderCitations();
+      updateURL();
+    };
+    for (const assoc of primaryAssociations) {
       const source = state.page.fragments.find(f => f.id === assoc.source_id);
-      const text = `§ ${source?.source_line || assoc.source_line || "?"} · ${associationLabel(assoc)}${assoc.status === "reviewed" && assoc.source_form ? `: ${assoc.source_form}` : ""}`;
-      const button = action(text, `chip ${assoc.status === "reviewed" ? "reviewed" : "proposed"}`, () => {
-        state.selectedCitation = cite.id;
-        state.entry = cite.entry_index;
-        state.autoTarget = null;
-        showCitationDetail(cite);
-        selectSource(assoc.source_id);
-        renderCitations();
-      });
-      button.title = assoc.status === "reviewed" ? "Conferência por assistente, limitada à forma citada; revisão humana ainda disponível." :
+      const attested = assoc.span?.text || assoc.source_form;
+      const text = `§ ${source?.source_line || assoc.source_line || "?"} · ${associationLabel(assoc)}${attested ? `: ${compact(attested, 45)}` : ""}`;
+      const button = action(text, `chip ${assoc.status === "reviewed" ? "reviewed" : "proposed"}`, () => selectAssociation(assoc));
+      button.title = assoc.status === "reviewed" ?
+        (assoc.reviewer_type === "human" ? "Conferência humana, limitada à forma citada." :
+          assoc.reviewer_type === "assistant" ? "Conferência por assistente, limitada à forma citada; revisão humana ainda disponível." :
+            "Conferência registrada, limitada à forma citada; consulte a procedência da revisão.") :
         "Candidato automático: conferir a correspondência entre o trecho e a citação.";
       if (source) button.title += ` ${compact(source.text, 180)}`;
       parent.append(button);
     }
-    if (!associations.length) parent.append(element("span", "muted", "Página localizada · trecho ainda não associado"));
+    const modelAssociations = associations.filter(assoc => assoc.algorithm_version);
+    if (modelAssociations.length) {
+      const details = element("details", "candidate-evidence");
+      details.append(element("summary", "", "Ver alternativas e evidências"));
+      for (const assoc of modelAssociations) {
+        const evidence = assoc.evidence || {};
+        const block = element("div", "candidate-evidence-item");
+        block.append(element("strong", "", `Opção ${assoc.rank} · § ${assoc.source_line}`));
+        for (const span of [assoc.span, ...(assoc.span_alternatives || [])].filter(Boolean)) {
+          const button = action(`“${compact(span.text, 60)}”`, "quiet-button", () => selectAssociation(assoc, span));
+          button.title = span.ocr_status === "form_token_match" ? "Selecionar esta ocorrência e suas linhas de OCR." :
+            "Selecionar esta ocorrência; o OCR disponível é aproximado.";
+          block.append(button);
+        }
+        const signals = [];
+        if (evidence.quoted_surface) signals.push("expressão citada");
+        if (evidence.portuguese_context_score > 0) signals.push("contexto de sentido");
+        if (evidence.local_companion_count) signals.push("palavras acompanhantes");
+        const notes = [];
+        if (signals.length) notes.push(`apoio: ${signals.join(", ")}`);
+        if (Number.isFinite(assoc.score)) notes.push(`ordenação ${assoc.score.toFixed(2)} (não é probabilidade)`);
+        if (assoc.review_reasons?.length) notes.push(`revisão necessária: ${assoc.review_reasons.join(", ")}`);
+        if (notes.length) block.append(element("small", "muted", notes.join(" · ")));
+        details.append(block);
+      }
+      parent.append(details);
+    }
+    if (!primaryAssociations.length) parent.append(element("span", "muted", "Página localizada · trecho ainda não associado"));
   }
 
   function renderCitations() {
@@ -777,11 +1031,30 @@
     state.selectedCitation = id;
     state.entry = cite.entry_index;
     state.autoTarget = null;
-    const target = options.autoFocus !== false && !options.source ? window.VLBCitationTargets?.choose(cite, state.page) : null;
-    if (options.source) selectSource(options.source, {update: false});
+    let routedTarget = null;
+    if (options.source && Number.isInteger(options.targetStart) && Number.isInteger(options.targetEnd)) {
+      for (const association of cite.associations || []) {
+        if (association.source_id !== options.source) continue;
+        const span = [association.span, ...(association.span_alternatives || [])].filter(Boolean)
+          .find(candidate => candidate.start0 === options.targetStart && candidate.end0 === options.targetEnd);
+        if (span) { routedTarget = associationTarget(association, span); break; }
+      }
+    }
+    const shouldResolveAuto = options.autoFocus === true ||
+      (options.autoFocus !== false && !options.source);
+    const resolvedAuto = !options.target && !routedTarget && shouldResolveAuto ?
+      window.VLBCitationTargets?.choose(cite, state.page) : null;
+    // Shared automatic routes retain both source= and focus=auto. Recompute the
+    // current production decision after reload or a mode change, but never pin
+    // its exact span/OCR evidence to a different routed paragraph.
+    const compatibleAuto = !options.source || resolvedAuto?.source_id === options.source ? resolvedAuto : null;
+    const target = options.target || routedTarget || compatibleAuto;
+    if (options.source) selectSource(options.source, {update: false, target});
     else if (target?.source_id) selectSource(target.source_id, {update: false, target});
     else {
       state.selectedSource = null;
+      state.autoTarget = null;
+      refreshSourceSpanMarks();
       for (const article of $("fragment-list").querySelectorAll(".fragment.selected")) {
         article.classList.remove("selected");
         article.querySelector(".source-main")?.setAttribute("aria-pressed", "false");
@@ -803,22 +1076,34 @@
     const top = element("div", "detail-top");
     const title = element("h3", "");
     title.append(externalLink(citationTitle(cite) + " ↗", dictionaryLink(cite)));
-    top.append(title, action("Fechar ×", "quiet-button close-detail", () => {
+    const detailActions = element("div", "detail-actions");
+    detailActions.append(action("Corrigir correspondência", "quiet-button", () => startCorrection(cite)),
+      action("Fechar ×", "quiet-button close-detail", () => {
       state.selectedCitation = null;
       state.entry = null;
       state.autoTarget = null;
+      refreshSourceSpanMarks();
       detail.hidden = true;
       drawOverlay();
       renderCitations();
       updateNoteTarget();
       updateURL();
     }));
+    top.append(title, detailActions);
     detail.append(top, element("p", "citation-reference", `${cite.raw_citation} · ocorrência no dicionário${cite.adapted ? " · citação adaptada" : ""}`),
       element("p", "", cite.context));
+    if (cite.correction) {
+      const labels = {accepted:"aceita",rejected:"rejeitada",ambiguous:"ambígua",not_found:"não encontrada",unresolved:"não resolvida"};
+      detail.append(element("p", "auto-target-notice reviewed",
+        `Correção ${labels[cite.correction.disposition] || cite.correction.disposition}, revisão ${cite.correction.revision}, por ${cite.correction.reviewer}. ${cite.correction.notes}`));
+    }
     if (target?.source_id) {
-      detail.append(element("p", `auto-target-notice ${target.status === "reviewed" ? "reviewed" : "proposed"}`,
-        target.status === "reviewed" ? `Trecho localizado por conferência assistida${target.source_form ? `: ${target.source_form}` : ""}. O realce do OCR é aproximado.` :
-          "Associação proposta: trecho localizado automaticamente pela forma e pelo contexto disponíveis. Confira a leitura e o sentido no fac-símile."));
+      const reviewed = target.status === "reviewed";
+      const ambiguous = target.status === "ambiguous";
+      const message = reviewed ? `Trecho localizado por conferência assistida${target.source_form ? `: ${target.source_form}` : ""}. O realce do OCR é aproximado.` :
+        ambiguous ? "Leitura preservada como ambígua na correção: este é um dos trechos defensáveis, não uma associação aceita." :
+          "Associação proposta: trecho localizado automaticamente pela forma e pelo contexto disponíveis. Confira a leitura e o sentido no fac-símile.";
+      detail.append(element("p", `auto-target-notice ${reviewed ? "reviewed" : ambiguous ? "ambiguous" : "proposed"}`, message));
     } else if (target) detail.append(element("p", "muted", target.status === "ambiguous" ?
       "Mais de um trecho é possível. Escolha uma das propostas abaixo para conferir a linha." :
       "Não há evidência suficiente para localizar uma linha automaticamente. Confira as propostas e a página."));
@@ -894,6 +1179,255 @@
       $("search-heading").textContent = "A busca não pôde ser carregada";
       $("search-result-list").append(element("p", "", error.message));
     }
+  }
+
+  function readCorrections() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(CORRECTION_KEY) || "[]");
+      state.corrections = Array.isArray(saved) ? saved.filter(row => row?.schema_version === 1 && typeof row.event_id === "string") : [];
+    } catch { state.corrections = []; }
+  }
+
+  function closeCorrection({restoreDetail = true} = {}) {
+    state.correctionDraft = null;
+    $("correction-panel").hidden = true;
+    $("correction-feedback").textContent = "";
+    window.getSelection()?.removeAllRanges();
+    if (restoreDetail && state.selectedCitation) {
+      const cite = state.page?.citations.find(row => row.id === state.selectedCitation);
+      if (cite) showCitationDetail(cite, state.autoTarget);
+    }
+  }
+
+  function startCorrection(cite) {
+    const lineMap = new Map(state.page.ocr_lines.map(line => [line.id, line]));
+    const local = state.corrections
+      .filter(event => event.citation?.citation_id === cite.id && event.page?.page_id === state.pageId)
+      .sort((a, b) => b.revision - a.revision)[0];
+    const spans = local ? JSON.parse(JSON.stringify(local.selected_spans)) :
+      (cite.correction ? cite.associations || [] : [])
+        .filter(association => association.correction_event_id === cite.correction?.event_id && association.span)
+        .map(association => ({source_id:association.source_id,start0:association.span.start0,end0:association.span.end0,
+          text:association.span.text,ocr_targets:(association.span.ocr_line_ids || []).filter(id => lineMap.has(id)).map(id => ({
+            line_id:id,box:lineMap.get(id).box,box_source:"pinned_ocr",previous_box:null}))}));
+    state.correctionDraft = {citation_id: cite.id, page_id: state.pageId, spans};
+    $("citation-detail").hidden = true;
+    $("correction-panel").hidden = false;
+    $("correction-target").textContent = `${citationTitle(cite)} · ${cite.raw_citation} · VLB ${pageLabel()}`;
+    $("correction-disposition").value = local?.disposition || cite.correction?.disposition || "accepted";
+    $("correction-reviewer").value = local?.review?.reviewer || "Leitor do VLB";
+    $("correction-notes").value = local?.review?.notes || "";
+    $("correction-feedback").textContent = "Selecione a expressão exata na transcrição e use “Adicionar seleção atual”.";
+    renderCorrectionSpans();
+    setTab("text");
+    if (state.narrow) setSurface("text", {explicit: true});
+    $("correction-panel").scrollIntoView({block: "nearest"});
+    $("correction-heading").tabIndex = -1;
+    $("correction-heading").focus({preventScroll: true});
+  }
+
+  function renderCorrectionSpans() {
+    const list = $("correction-spans");
+    list.replaceChildren();
+    for (const [index, span] of (state.correctionDraft?.spans || []).entries()) {
+      const item = element("div", "correction-span");
+      item.append(element("span", "", `§ ${span.source_id.slice(-5).replace(/^0+/, "")} · “${span.text}”`),
+        action("Remover", "quiet-button", () => {
+          state.correctionDraft.spans.splice(index, 1);
+          renderCorrectionSpans();
+        }));
+      list.append(item);
+    }
+    if (!list.childElementCount) list.append(element("span", "muted", "Nenhuma passagem adicionada."));
+  }
+
+  function selectedCorrectionSpan() {
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount !== 1 || selection.isCollapsed) throw new Error("Selecione primeiro as palavras exatas em um único trecho da transcrição.");
+    const range = selection.getRangeAt(0);
+    const startElement = range.startContainer.nodeType === Node.ELEMENT_NODE ? range.startContainer : range.startContainer.parentElement;
+    const endElement = range.endContainer.nodeType === Node.ELEMENT_NODE ? range.endContainer : range.endContainer.parentElement;
+    const sourceText = startElement?.closest?.(".source-text");
+    if (!sourceText || sourceText !== endElement?.closest?.(".source-text") ||
+        !sourceText.contains(range.startContainer) || !sourceText.contains(range.endContainer)) {
+      throw new Error("A seleção deve ficar dentro de uma única passagem da transcrição.");
+    }
+    const article = sourceText.closest(".fragment");
+    if (article?.dataset.pageId !== state.pageId) throw new Error("Selecione primeiro o trecho da página atualmente ativa.");
+    const prefix = document.createRange();
+    prefix.selectNodeContents(sourceText);
+    prefix.setEnd(range.startContainer, range.startOffset);
+    const raw = range.toString();
+    const leading = raw.match(/^\s*/u)[0].length;
+    const trailing = raw.match(/\s*$/u)[0].length;
+    const text = raw.slice(leading, raw.length - trailing);
+    if (!text) throw new Error("A seleção contém apenas espaços.");
+    const fragmentStart = Number(sourceText.dataset.start0);
+    const start0 = fragmentStart + prefix.toString().length + leading;
+    const end0 = start0 + text.length;
+    const original = sourceText._vlbSourceText ?? sourceText.textContent;
+    if (original.slice(start0 - fragmentStart, end0 - fragmentStart) !== text) throw new Error("A seleção não corresponde mais ao texto preservado; recarregue a página.");
+    const matchedTarget = (state.autoTarget?.source_spans || [state.autoTarget?.source_span]).filter(Boolean)
+      .find(span => (span.source_id || state.autoTarget?.source_id) === article.dataset.sourceId &&
+        span.start0 === start0 && span.end0 === end0 && span.text === text);
+    const lineIds = matchedTarget?.ocr_line_ids || [];
+    const lineMap = new Map(state.page.ocr_lines.map(line => [line.id, line]));
+    const ocrTargets = lineIds.filter(id => lineMap.has(id)).map(id => ({line_id:id,
+      box:lineMap.get(id).box,box_source:"pinned_ocr",previous_box:null}));
+    return {source_id:article.dataset.sourceId,start0,end0,text,ocr_targets:ocrTargets};
+  }
+
+  function addCorrectionSpan() {
+    try {
+      if (!state.correctionDraft) throw new Error("Abra primeiro a correção de uma citação.");
+      const span = selectedCorrectionSpan();
+      if (!state.correctionDraft.spans.some(row => row.source_id === span.source_id && row.start0 === span.start0 && row.end0 === span.end0)) {
+        state.correctionDraft.spans.push(span);
+        state.correctionDraft.spans.sort((a, b) => a.start0 - b.start0);
+      }
+      renderCorrectionSpans();
+      $("correction-feedback").textContent = "Passagem adicionada à correção ainda local.";
+      window.getSelection()?.removeAllRanges();
+    } catch (error) { $("correction-feedback").textContent = error.message; }
+  }
+
+  async function correctionId(citationId, pageIdValue) {
+    const bytes = new TextEncoder().encode(`${citationId}\0${pageIdValue}`);
+    const digest = await crypto.subtle.digest("SHA-256", bytes);
+    return "vlb-correction-" + [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, "0")).join("").slice(0, 20);
+  }
+
+  function previousProposal(cite) {
+    const association = (cite.associations || []).filter(row => row.algorithm_version)
+      .sort((a, b) => (a.rank || 999) - (b.rank || 999))[0];
+    if (!association) return null;
+    const span = association.span;
+    return {algorithm_version:association.algorithm_version,
+      output_sha256:state.manifest.provenance.proposal_output_sha256,
+      status:association.proposal_status,source_id:span ? association.source_id : null,
+      start0:span?.start0 ?? null,end0:span?.end0 ?? null,text:span?.text ?? null};
+  }
+
+  async function buildCorrectionEvent() {
+    const draft = state.correctionDraft;
+    const cite = state.page?.citations.find(row => row.id === draft?.citation_id);
+    if (!draft || !cite || draft.page_id !== state.pageId) throw new Error("A citação ou a página da correção mudou; abra a correção novamente.");
+    const disposition = $("correction-disposition").value;
+    const spans = draft.spans.map(span => JSON.parse(JSON.stringify(span)));
+    if (disposition === "accepted" && !spans.length) throw new Error("Uma correção aceita precisa de pelo menos uma passagem exata.");
+    if (disposition === "ambiguous" && spans.length < 2) throw new Error("Uma decisão ambígua precisa preservar pelo menos duas passagens.");
+    if (["rejected", "not_found"].includes(disposition) && spans.length) throw new Error("Remova as passagens aceitas para registrar esta decisão.");
+    const proposal = previousProposal(cite);
+    if (disposition === "rejected" && !proposal) throw new Error("Não há proposta anterior identificada para rejeitar.");
+    const reviewer = $("correction-reviewer").value.trim();
+    const notes = $("correction-notes").value.trim();
+    if (!reviewer || !notes) throw new Error("Informe o revisor e uma nota explicando a conferência.");
+    const id = await correctionId(cite.id, state.pageId);
+    const histories = state.corrections.filter(row => row.correction_id === id);
+    const checked = cite.correction ? {revision:cite.correction.revision,event_id:cite.correction.event_id} : null;
+    const local = histories.sort((a, b) => b.revision - a.revision)[0];
+    const previous = local && (!checked || local.revision >= checked.revision) ? local : checked;
+    const revision = (previous?.revision || 0) + 1;
+    const provenance = state.manifest.provenance;
+    return {schema_version:1,event_id:`${id}-r${String(revision).padStart(4,"0")}`,correction_id:id,
+      revision,supersedes_event_id:previous?.event_id || null,recorded_at:new Date().toISOString(),
+      citation:{citation_id:cite.id,entry_index:cite.entry_index,legacy_id:cite.legacy_id ?? null,
+        headword:cite.headword,homonym:cite.homonym || "",definition_sha256:cite.definition_sha256,
+        citation_start0:cite.citation_start,citation_end0:cite.citation_end},
+      page:{page_id:state.pageId,volume:state.page.volume,printed_page:state.page.page},
+      selected_spans:spans,disposition,previous_proposal:proposal,
+      review:{reviewer_type:"human",reviewer,provenance:"Submitted through the static VLB reader; repository review pending.",notes,
+        approved_for_regression:false,approved_for_training:false},
+      snapshots:{source_text_sha256:provenance.source_text_sha256,dictionary_snapshot_sha256:provenance.dictionary_snapshot_sha256,
+        citation_links_sha256:provenance.citation_links_sha256,page_alignment_sha256:provenance.page_alignment_sha256,
+        ocr_layout_sha256:provenance.ocr_layout_sha256}};
+  }
+
+  function storeCorrection(event) {
+    const existing = state.corrections.find(row => row.event_id === event.event_id);
+    if (existing && JSON.stringify(existing) !== JSON.stringify(event)) throw new Error("Já existe uma correção local diferente com este identificador.");
+    const next = existing ? state.corrections : [...state.corrections, event];
+    localStorage.setItem(CORRECTION_KEY, JSON.stringify(next));
+    state.corrections = next;
+  }
+
+  function correctionContent(event) {
+    const {event_id, correction_id, revision, supersedes_event_id, recorded_at, ...content} = event;
+    return JSON.stringify(content);
+  }
+
+  async function saveCorrection() {
+    try {
+      const event = await buildCorrectionEvent();
+      storeCorrection(event);
+      $("correction-feedback").textContent = `Correção ${event.event_id} salva somente neste navegador. Exporte ou envie para torná-la durável no repositório.`;
+    } catch (error) { $("correction-feedback").textContent = error.message; }
+  }
+
+  function downloadJSON(value, filename) {
+    const url = URL.createObjectURL(new Blob([JSON.stringify(value, null, 2) + "\n"], {type:"application/json;charset=utf-8"}));
+    const link = element("a");
+    link.href = url; link.download = filename; document.body.append(link); link.click(); link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function exportCorrections() {
+    if (!state.corrections.length) { $("correction-feedback").textContent = "Não há correções locais para exportar."; return; }
+    downloadJSON({schema_version:"vlb-correction-submission-1",events:state.corrections},
+      `vlb-correcoes-${new Date().toISOString().slice(0,10)}.json`);
+    $("correction-feedback").textContent = "Arquivo exportado. Ele ainda precisa ser importado e revisado no repositório.";
+  }
+
+  async function submitCorrection() {
+    const issueWindow = window.open("about:blank", "_blank");
+    if (issueWindow) issueWindow.opener = null;
+    try {
+      let event = await buildCorrectionEvent();
+      const saved = state.corrections.find(row => row.event_id === event.supersedes_event_id);
+      if (saved && correctionContent(saved) === correctionContent(event)) event = saved;
+      storeCorrection(event);
+      const cite = state.page.citations.find(row => row.id === event.citation.citation_id);
+      const checkedRevision = cite?.correction?.revision || 0;
+      const pending = state.corrections
+        .filter(row => row.correction_id === event.correction_id && row.revision > checkedRevision)
+        .sort((a, b) => a.revision - b.revision);
+      const envelope = {schema_version:"vlb-correction-submission-1",events:pending};
+      const url = new URL("https://github.com/kiansheik/nhe-enga/issues/new");
+      url.searchParams.set("template", "vlb-correction.yml");
+      url.searchParams.set("title", `[VLB] ${event.citation.headword} · ${event.page.page_id}`);
+      url.searchParams.set("payload", JSON.stringify(envelope, null, 2));
+      url.searchParams.set("notes", event.review.notes);
+      if (!issueWindow) {
+        downloadJSON(envelope, `vlb-correcao-${event.correction_id}.json`);
+        $("correction-feedback").textContent = "O navegador bloqueou a nova aba. A correção foi baixada para envio manual; ela ainda não chegou ao repositório.";
+      } else if (url.toString().length > MAX_ISSUE_PREFILL_URL_LENGTH) {
+        downloadJSON(envelope, `vlb-correcao-${event.correction_id}.json`);
+        url.searchParams.delete("payload");
+        url.searchParams.delete("notes");
+        issueWindow.location.replace(url.toString());
+        $("correction-feedback").textContent = "A correção é grande demais para preencher a issue pela URL. O arquivo foi baixado: cole seu JSON no formulário aberto. Ela ainda não chegou ao repositório.";
+      } else {
+        issueWindow.location.replace(url.toString());
+        $("correction-feedback").textContent = "A página da issue foi aberta. Conclua o envio no GitHub; abrir a página não confirma submissão nem importação.";
+      }
+    } catch (error) {
+      issueWindow?.close();
+      $("correction-feedback").textContent = error.message;
+    }
+  }
+
+  async function importCorrections(file) {
+    try {
+      const value = JSON.parse(await file.text());
+      if (value?.schema_version !== "vlb-correction-submission-1" || !Array.isArray(value.events)) throw new Error("Arquivo sem o envelope vlb-correction-submission-1.");
+      const provenance = state.manifest.provenance;
+      for (const event of value.events) {
+        if (event?.schema_version !== 1 || event.snapshots?.source_text_sha256 !== provenance.source_text_sha256 ||
+            event.snapshots?.dictionary_snapshot_sha256 !== provenance.dictionary_snapshot_sha256) throw new Error("A correção importada pertence a outra versão das fontes.");
+        storeCorrection(event);
+      }
+      $("correction-feedback").textContent = `${value.events.length} correção(ões) importada(s) somente neste navegador; a validação rigorosa ocorre no repositório.`;
+    } catch (error) { $("correction-feedback").textContent = error.message; }
   }
 
   function readNotes() {
@@ -994,18 +1528,27 @@
   }
 
   function bindEvents() {
+    $("surface-text").addEventListener("click", () => setSurface("text", {explicit: true}));
+    $("surface-scan").addEventListener("click", () => setSurface("scan", {explicit: true}));
     $("previous-page").addEventListener("click", () => navigate(-1));
     $("next-page").addEventListener("click", () => navigate(1));
     $("page-select").addEventListener("change", event => loadPage(event.target.value, {push: true}));
     $("volume-select").addEventListener("change", event => loadPage(pageId(event.target.value, event.target.value === "I" ? 17 : 7), {push: true}));
     $("mode-select").addEventListener("change", event => {
       if (!state.page) return;
+      const manualSpan = state.autoTarget?.manual ? state.autoTarget.source_span : null;
       loadPage(state.pageId, {push: true, mode: event.target.value, source: state.selectedSource,
-        citation: state.selectedCitation, entry: state.entry, focus: Boolean(state.autoTarget)});
+        citation: state.selectedCitation, entry: state.entry,
+        focus: Boolean(state.autoTarget && !state.autoTarget.manual),
+        targetStart: manualSpan?.start0, targetEnd: manualSpan?.end0});
     });
     for (const pane of ["scan", "text"]) {
       const viewport = flowViewport(pane);
-      viewport.addEventListener("scroll", () => onFlowScroll(pane), {passive: true});
+      viewport.addEventListener("scroll", () => {
+        state.surfaceScroll[pane] = viewport.scrollTop;
+        state.surfaceVisited[pane] = true;
+        onFlowScroll(pane);
+      }, {passive: true});
       for (const event of ["wheel", "touchstart", "pointerdown", "keydown"]) {
         viewport.addEventListener(event, () => { flow.lockedUntil[pane] = 0; state.imageFocus = null; }, {passive: true});
       }
@@ -1031,6 +1574,16 @@
     });
     $("note-form").addEventListener("submit", saveNote);
     $("export-notes").addEventListener("click", exportNotes);
+    $("close-correction").addEventListener("click", () => closeCorrection());
+    $("add-correction-span").addEventListener("click", addCorrectionSpan);
+    $("save-correction").addEventListener("click", saveCorrection);
+    $("submit-correction").addEventListener("click", submitCorrection);
+    $("export-corrections").addEventListener("click", exportCorrections);
+    $("import-corrections").addEventListener("change", event => {
+      const file = event.target.files?.[0];
+      if (file) importCorrections(file);
+      event.target.value = "";
+    });
     $("about-button").addEventListener("click", showAbout);
     $("close-about").addEventListener("click", () => $("about-dialog").close());
     $("about-dialog").addEventListener("click", event => {
@@ -1044,6 +1597,7 @@
       catch { announce("Copie o endereço da barra do navegador; ele contém a seleção atual."); }
     });
     window.addEventListener("popstate", () => { const route = routeFromURL(); loadPage(route.id, route); });
+    narrowMedia.addEventListener("change", () => syncResponsiveUI());
     let resizeTimer;
     window.addEventListener("resize", () => {
       clearTimeout(resizeTimer);
@@ -1065,7 +1619,9 @@
 
   async function init() {
     bindEvents();
+    syncResponsiveUI(true);
     readNotes();
+    readCorrections();
     try {
       const [manifest, formats] = await Promise.allSettled([readJSON("data/manifest.json"), readJSON("../docs/primary_sources/image-formats.json")]);
       if (manifest.status === "rejected") throw manifest.reason;

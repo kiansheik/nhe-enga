@@ -1,5 +1,41 @@
 # Current State
 
+## 2026-11-03 — VLB V3 alignment, durable corrections, and mobile review
+
+- Continued `feat/vlb-review-learning` from frozen V2 commit `b5df369a`.
+  No unpublished interrupted implementation was recoverable, so the requested
+  work was reconstructed and preserved in reviewable milestones
+  `d1eea0c4` and `5ce484c3` before the live-reader integration.
+- Frozen V3 against a fresh 24-case blind assistant review: 20/21 clear cases
+  rank the correct paragraph first, 21/21 within three, and 19/21 offer the
+  exact source span. The release-time navigation policy also targeted one
+  ambiguous case; the subsequent development-only prefix-hypothesis gate is
+  explicitly not a new held-out result. Labels are not human-verified, and
+  OCR-line availability is not exact glyph-box accuracy.
+- Added an append-only, hash-pinned correction ledger and untrusted issue-import
+  workflow. Its eight assistant-reviewed first revisions contain six accepted,
+  one ambiguous, and one not-found decision; none is training-approved. The
+  static reader saves locally, imports/exports the same schema, and opens a
+  prefilled GitHub issue without frontend credentials.
+- The correction loop now regenerates both reader data and a checked
+  ledger-versus-V3 development report. All six accepted regressions retrieve
+  the right first paragraph and exact span, all seven accepted spans are
+  offered, and the production policy has 2/2 exact automatic targets with zero
+  false positives while abstaining on the ambiguous and not-found records.
+  Public issue payloads cannot self-grant regression or training approval.
+- The reader now loads compact page-scoped V3 candidates, marks exact source
+  spans, preserves manual alternatives in shared URLs, and exposes a bounded
+  correction editor. Phones and portrait tablets use one switchable text/scan
+  surface with independent scroll state, deferred scans, and a sticky mobile
+  correction action bar; desktop remains side by side.
+- A separate offline reverse concordance covers all 7,534 VLB records: 3,771
+  have a separated candidate, 2,949 remain ambiguous, and 814 are unmatched.
+  It claims zero fully covered records and is excluded from browser/offline
+  payloads. Fresh Chromium QA passed all functional checks with no JavaScript
+  errors, including automatic/manual target persistence across reload and mode
+  changes; this branch has not been merged or deployed. See the
+  [handoff](session-handoffs/2026-11-03-vlb-v3-corrections-mobile.md).
+
 ## 2026-11-03 — Frozen VLB benchmark V3 blind assistant annotation
 
 - Independently reviewed all 24 cases in

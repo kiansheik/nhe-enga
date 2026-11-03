@@ -536,6 +536,8 @@
     "labels_sha256": "ab73a469e445b722a4f55479daf513731a13b1d7cb5a30ec7988439eff422685",
     "model_freeze_sha256": "83f55bd1805cd40b95530c61f10bab1ab3419b556f13180ee23e334ad0eb3676",
     "packet_sha256": "a64adf5225b2477773089c4b9543c1c92b070475d44c341831e3e2cfc0ba1d31",
+    "pre_v3_reader_ranking_sha256": "2a962643459153a91fd2a0c9d06139844a177becfae80a9c82bcc7d42133456f",
+    "pre_v3_reader_source_commit": "b5df369af6a7d2db72f933746ca6b5c13a44310d",
     "prediction_sha256": "98cde030318d3e2131b0c6df38f3aa77fd1b80444445d4bedc833843461e4928"
   },
   "ranker": {

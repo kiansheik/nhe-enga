@@ -28,6 +28,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - name: Validate issue number
         env:
           ISSUE_NUMBER: ${{ inputs.issue_number }}
@@ -52,6 +55,15 @@ jobs:
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
+      - name: Rebuild and test the reader projection
+        if: steps.change.outputs.changed == 'true'
+        run: |
+          python3 vlb/build_data.py
+          node vlb/evaluate_corrections.cjs --write
+          python3 tests/test_vlb_viewer_data.py
+          node --test tests/vlb_citation_targets.test.cjs
+          node --test tests/vlb_correction_regressions.test.cjs
+          node vlb/evaluate_corrections.cjs --check
       - name: Create the review branch
         if: steps.change.outputs.changed == 'true'
         env:
@@ -62,7 +74,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git switch -c "$branch"
-          git add vlb/corrections/ledger.jsonl
+          git add vlb/corrections/ledger.jsonl vlb/data vlb/mining/correction-regressions
           git commit -m "Import VLB correction from issue #${ISSUE_NUMBER}"
           git push --set-upstream origin "$branch"
           echo "BRANCH=$branch" >> "$GITHUB_ENV"

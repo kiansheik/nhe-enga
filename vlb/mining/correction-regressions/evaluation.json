@@ -1,0 +1,410 @@
+{
+  "schema_version": 1,
+  "evaluation_role": "Development regression from approved correction-ledger decisions; not held-out evaluation or a corpus-wide accuracy estimate.",
+  "human_verified": false,
+  "score_interpretation": "Model ranking scores are not probabilities.",
+  "inputs": {
+    "proposal_algorithm_version": "vlb-page-ranker-v3",
+    "navigation_policy_version": "vlb-navigation-policy-v3.1",
+    "proposal_output_sha256": "98cde030318d3e2131b0c6df38f3aa77fd1b80444445d4bedc833843461e4928",
+    "correction_ledger_sha256": "00f640fccc830bee301b023cd3dee0915679b9a945846466d3f2951b39d23866",
+    "citation_target_policy_sha256": "f9b86b24fe0c397dd10eb66fb47aba3656536bf8ecd93490da8219134a1bb438",
+    "viewer_manifest_sha256": "269f75bffa9b98a446f9c02f0ee6b41db11b5d6ff14a87751b776e3d3db394ab",
+    "selection": "Latest correction revision with review.approved_for_regression=true"
+  },
+  "reviewer_types": {
+    "assistant": 8
+  },
+  "counts": {
+    "regression_records": 8,
+    "accepted_records": 6,
+    "ambiguous_records": 1,
+    "not_found_records": 1,
+    "rejected_records": 0,
+    "unresolved_records": 0,
+    "paragraph_top1_correct": 6,
+    "paragraph_top3_correct": 6,
+    "exact_span_top1_correct": 6,
+    "exact_span_offered_correct": 6,
+    "accepted_spans": 7,
+    "accepted_spans_offered": 7,
+    "automatic_targets": 2,
+    "accepted_automatic_targets": 2,
+    "automatic_correct_paragraph": 2,
+    "automatic_exact_span": 2,
+    "false_positive_automatic_targets": 0,
+    "abstentions": 6,
+    "uncertain_abstentions": 2,
+    "ambiguous_abstentions": 1,
+    "not_found_abstentions": 1
+  },
+  "rates": {
+    "paragraph_top1_recall": 1,
+    "paragraph_top3_recall": 1,
+    "exact_span_top1_recall": 1,
+    "exact_span_offered_recall": 1,
+    "accepted_span_offered_recall": 1,
+    "automatic_coverage_all": 0.25,
+    "automatic_coverage_accepted": 0.333333,
+    "automatic_paragraph_precision": 1,
+    "automatic_exact_span_precision": 1,
+    "uncertain_abstention_rate": 1,
+    "ambiguity_abstention_rate": 1,
+    "not_found_abstention_rate": 1
+  },
+  "high_precision_gate": {
+    "passed": true,
+    "requirement": "No automatic target on an approved regression may miss its accepted exact span or assert a target for ambiguous/not-found evidence."
+  },
+  "records": [
+    {
+      "event_id": "vlb-correction-791ddae535bd4963a064-r0001",
+      "correction_id": "vlb-correction-791ddae535bd4963a064",
+      "citation_id": "navarro-d235a7961961b58f-r02435-s00178-e00188",
+      "entry_index": 2435,
+      "headword": "aembé",
+      "page_id": "I-083",
+      "disposition": "ambiguous",
+      "reviewer_type": "assistant",
+      "selected_spans": [
+        {
+          "source_id": "vlb-emerson-r568-p02047",
+          "start0": 110127,
+          "end0": 110135,
+          "text": "Xeraembê"
+        },
+        {
+          "source_id": "vlb-emerson-r568-p02051",
+          "start0": 110727,
+          "end0": 110732,
+          "text": "Çaẽbê"
+        }
+      ],
+      "retrieval": {
+        "candidates": 3,
+        "top1_source_id": "vlb-emerson-r568-p02047",
+        "top1_span": {
+          "start0": 110127,
+          "end0": 110135,
+          "text": "Xeraembê"
+        },
+        "top1_paragraph_correct": false,
+        "top3_paragraph_correct": false,
+        "top1_exact_span_correct": false,
+        "offered_exact_span_correct": false,
+        "accepted_spans_offered": 2
+      },
+      "production_policy": {
+        "automatic_target": false,
+        "status": "ambiguous",
+        "reason": "model_requires_review",
+        "source_id": null,
+        "source_span": null,
+        "paragraph_correct": false,
+        "exact_span_correct": false,
+        "false_positive": false
+      }
+    },
+    {
+      "event_id": "vlb-correction-77eb71202e027510b7c1-r0001",
+      "correction_id": "vlb-correction-77eb71202e027510b7c1",
+      "citation_id": "navarro-d235a7961961b58f-r04237-s02909-e02920",
+      "entry_index": 4237,
+      "headword": "esé",
+      "page_id": "II-082",
+      "disposition": "accepted",
+      "reviewer_type": "assistant",
+      "selected_spans": [
+        {
+          "source_id": "vlb-emerson-r568-p05968",
+          "start0": 352758,
+          "end0": 352767,
+          "text": "Baerecepe"
+        }
+      ],
+      "retrieval": {
+        "candidates": 3,
+        "top1_source_id": "vlb-emerson-r568-p05968",
+        "top1_span": {
+          "start0": 352758,
+          "end0": 352767,
+          "text": "Baerecepe"
+        },
+        "top1_paragraph_correct": true,
+        "top3_paragraph_correct": true,
+        "top1_exact_span_correct": true,
+        "offered_exact_span_correct": true,
+        "accepted_spans_offered": 1
+      },
+      "production_policy": {
+        "automatic_target": false,
+        "status": "ambiguous",
+        "reason": "model_requires_review",
+        "source_id": null,
+        "source_span": null,
+        "paragraph_correct": false,
+        "exact_span_correct": false,
+        "false_positive": false
+      }
+    },
+    {
+      "event_id": "vlb-correction-042ba3d348e9f512e14c-r0001",
+      "correction_id": "vlb-correction-042ba3d348e9f512e14c",
+      "citation_id": "navarro-d235a7961961b58f-r05202-s02222-e02232",
+      "entry_index": 5202,
+      "headword": "ikó",
+      "page_id": "I-099",
+      "disposition": "accepted",
+      "reviewer_type": "assistant",
+      "selected_spans": [
+        {
+          "source_id": "vlb-emerson-r568-p02506",
+          "start0": 138459,
+          "end0": 138477,
+          "text": "Naicoŷ cece coigte"
+        }
+      ],
+      "retrieval": {
+        "candidates": 3,
+        "top1_source_id": "vlb-emerson-r568-p02506",
+        "top1_span": {
+          "start0": 138459,
+          "end0": 138477,
+          "text": "Naicoŷ cece coigte"
+        },
+        "top1_paragraph_correct": true,
+        "top3_paragraph_correct": true,
+        "top1_exact_span_correct": true,
+        "offered_exact_span_correct": true,
+        "accepted_spans_offered": 1
+      },
+      "production_policy": {
+        "automatic_target": false,
+        "status": "ambiguous",
+        "reason": "model_requires_review",
+        "source_id": null,
+        "source_span": null,
+        "paragraph_correct": false,
+        "exact_span_correct": false,
+        "false_positive": false
+      }
+    },
+    {
+      "event_id": "vlb-correction-91e2dcecb830aa991048-r0001",
+      "correction_id": "vlb-correction-91e2dcecb830aa991048",
+      "citation_id": "navarro-d235a7961961b58f-r07210-s00078-e00088",
+      "entry_index": 7210,
+      "headword": "mokanãî",
+      "page_id": "I-017",
+      "disposition": "accepted",
+      "reviewer_type": "assistant",
+      "selected_spans": [
+        {
+          "source_id": "vlb-emerson-r568-p00013",
+          "start0": 574,
+          "end0": 583,
+          "text": "Aimocanãy"
+        }
+      ],
+      "retrieval": {
+        "candidates": 3,
+        "top1_source_id": "vlb-emerson-r568-p00013",
+        "top1_span": {
+          "start0": 574,
+          "end0": 583,
+          "text": "Aimocanãy"
+        },
+        "top1_paragraph_correct": true,
+        "top3_paragraph_correct": true,
+        "top1_exact_span_correct": true,
+        "offered_exact_span_correct": true,
+        "accepted_spans_offered": 1
+      },
+      "production_policy": {
+        "automatic_target": true,
+        "status": "proposed",
+        "reason": "model_form_quotation_and_context",
+        "source_id": "vlb-emerson-r568-p00013",
+        "source_span": {
+          "start0": 574,
+          "end0": 583,
+          "text": "Aimocanãy"
+        },
+        "paragraph_correct": true,
+        "exact_span_correct": true,
+        "false_positive": false
+      }
+    },
+    {
+      "event_id": "vlb-correction-5832f39a3422b9709015-r0001",
+      "correction_id": "vlb-correction-5832f39a3422b9709015",
+      "citation_id": "navarro-d235a7961961b58f-r07574-s00046-e00056",
+      "entry_index": 7574,
+      "headword": "motumung",
+      "page_id": "I-017",
+      "disposition": "accepted",
+      "reviewer_type": "assistant",
+      "selected_spans": [
+        {
+          "source_id": "vlb-emerson-r568-p00019",
+          "start0": 864,
+          "end0": 874,
+          "text": "Aimotumung"
+        }
+      ],
+      "retrieval": {
+        "candidates": 3,
+        "top1_source_id": "vlb-emerson-r568-p00019",
+        "top1_span": {
+          "start0": 864,
+          "end0": 874,
+          "text": "Aimotumung"
+        },
+        "top1_paragraph_correct": true,
+        "top3_paragraph_correct": true,
+        "top1_exact_span_correct": true,
+        "offered_exact_span_correct": true,
+        "accepted_spans_offered": 1
+      },
+      "production_policy": {
+        "automatic_target": false,
+        "status": "ambiguous",
+        "reason": "model_requires_review",
+        "source_id": null,
+        "source_span": null,
+        "paragraph_correct": false,
+        "exact_span_correct": false,
+        "false_positive": false
+      }
+    },
+    {
+      "event_id": "vlb-correction-9eba4de54e9551520e28-r0001",
+      "correction_id": "vlb-correction-9eba4de54e9551520e28",
+      "citation_id": "navarro-d235a7961961b58f-r09199-s00955-e00966",
+      "entry_index": 9199,
+      "headword": "putuna",
+      "page_id": "II-050",
+      "disposition": "accepted",
+      "reviewer_type": "assistant",
+      "selected_spans": [
+        {
+          "source_id": "vlb-emerson-r568-p05224",
+          "start0": 299743,
+          "end0": 299749,
+          "text": "Pigtuã"
+        },
+        {
+          "source_id": "vlb-emerson-r568-p05224",
+          "start0": 299751,
+          "end0": 299759,
+          "text": "Pigtuniã"
+        }
+      ],
+      "retrieval": {
+        "candidates": 3,
+        "top1_source_id": "vlb-emerson-r568-p05224",
+        "top1_span": {
+          "start0": 299751,
+          "end0": 299759,
+          "text": "Pigtuniã"
+        },
+        "top1_paragraph_correct": true,
+        "top3_paragraph_correct": true,
+        "top1_exact_span_correct": true,
+        "offered_exact_span_correct": true,
+        "accepted_spans_offered": 2
+      },
+      "production_policy": {
+        "automatic_target": true,
+        "status": "proposed",
+        "reason": "model_form_quotation_and_context",
+        "source_id": "vlb-emerson-r568-p05224",
+        "source_span": {
+          "start0": 299751,
+          "end0": 299759,
+          "text": "Pigtuniã"
+        },
+        "paragraph_correct": true,
+        "exact_span_correct": true,
+        "false_positive": false
+      }
+    },
+    {
+      "event_id": "vlb-correction-b1047ede2d9d93974112-r0001",
+      "correction_id": "vlb-correction-b1047ede2d9d93974112",
+      "citation_id": "navarro-d235a7961961b58f-r09680-s00619-e00630",
+      "entry_index": 9680,
+      "headword": "sosé",
+      "page_id": "II-067",
+      "disposition": "accepted",
+      "reviewer_type": "assistant",
+      "selected_spans": [
+        {
+          "source_id": "vlb-emerson-r568-p05589",
+          "start0": 325040,
+          "end0": 325050,
+          "text": "Uinte çoce"
+        }
+      ],
+      "retrieval": {
+        "candidates": 3,
+        "top1_source_id": "vlb-emerson-r568-p05589",
+        "top1_span": {
+          "start0": 325040,
+          "end0": 325050,
+          "text": "Uinte çoce"
+        },
+        "top1_paragraph_correct": true,
+        "top3_paragraph_correct": true,
+        "top1_exact_span_correct": true,
+        "offered_exact_span_correct": true,
+        "accepted_spans_offered": 1
+      },
+      "production_policy": {
+        "automatic_target": false,
+        "status": "ambiguous",
+        "reason": "model_requires_review",
+        "source_id": null,
+        "source_span": null,
+        "paragraph_correct": false,
+        "exact_span_correct": false,
+        "false_positive": false
+      }
+    },
+    {
+      "event_id": "vlb-correction-6475d2e1ea8ae4764b40-r0001",
+      "correction_id": "vlb-correction-6475d2e1ea8ae4764b40",
+      "citation_id": "navarro-d235a7961961b58f-r11055-s00159-e00170",
+      "entry_index": 11055,
+      "headword": "'ybapekanga",
+      "page_id": "II-062",
+      "disposition": "not_found",
+      "reviewer_type": "assistant",
+      "selected_spans": [],
+      "retrieval": {
+        "candidates": 3,
+        "top1_source_id": "vlb-emerson-r568-p05464",
+        "top1_span": {
+          "start0": 315827,
+          "end0": 315839,
+          "text": "Gigbapecanga"
+        },
+        "top1_paragraph_correct": false,
+        "top3_paragraph_correct": false,
+        "top1_exact_span_correct": false,
+        "offered_exact_span_correct": false,
+        "accepted_spans_offered": 0
+      },
+      "production_policy": {
+        "automatic_target": false,
+        "status": "ambiguous",
+        "reason": "model_requires_review",
+        "source_id": null,
+        "source_span": null,
+        "paragraph_correct": false,
+        "exact_span_correct": false,
+        "false_positive": false
+      }
+    }
+  ]
+}

@@ -3,7 +3,6 @@
 from copy import deepcopy
 import json
 from pathlib import Path
-import shutil
 import sys
 import tempfile
 import unittest
@@ -14,6 +13,7 @@ sys.path.insert(0, str(ROOT / "vlb"))
 from corrections.ledger import (  # noqa: E402
     CorrectionContext,
     LedgerError,
+    canonical_json,
     correction_id_for,
     export_feedback,
     import_events,
@@ -25,6 +25,16 @@ from corrections.ledger import (  # noqa: E402
 
 
 LEDGER = ROOT / "vlb/corrections/ledger.jsonl"
+SEED_EVENT_IDS = (
+    "vlb-correction-91e2dcecb830aa991048-r0001",
+    "vlb-correction-5832f39a3422b9709015-r0001",
+    "vlb-correction-9eba4de54e9551520e28-r0001",
+    "vlb-correction-b1047ede2d9d93974112-r0001",
+    "vlb-correction-77eb71202e027510b7c1-r0001",
+    "vlb-correction-6475d2e1ea8ae4764b40-r0001",
+    "vlb-correction-042ba3d348e9f512e14c-r0001",
+    "vlb-correction-791ddae535bd4963a064-r0001",
+)
 
 
 class CorrectionLedgerTest(unittest.TestCase):
@@ -32,19 +42,55 @@ class CorrectionLedgerTest(unittest.TestCase):
     def setUpClass(cls):
         cls.context = CorrectionContext(ROOT)
         cls.events = load_ledger(LEDGER)
+        by_event_id = {row["event_id"]: row for row in cls.events}
+        try:
+            cls.seed_events = [by_event_id[event_id] for event_id in SEED_EVENT_IDS]
+        except KeyError as exc:
+            raise AssertionError(f"Missing historical seed event {exc.args[0]}") from exc
 
     def event(self, headword):
         return deepcopy(
-            next(row for row in self.events if row["citation"]["headword"] == headword)
+            next(
+                row
+                for row in self.seed_events
+                if row["citation"]["headword"] == headword
+            )
+        )
+
+    def write_seed_ledger(self, target):
+        target.write_text(
+            "\n".join(canonical_json(row) for row in self.seed_events) + "\n",
+            encoding="utf-8",
         )
 
     def test_seeded_reviews_are_exact_and_keep_uncertainty(self):
         summary = validate_events(self.context, self.events)
-        self.assertEqual(summary["events"], 8)
-        self.assertEqual(summary["corrections"], 8)
+        self.assertEqual(summary["events"], len(self.events))
         self.assertEqual(
-            summary["current_dispositions"],
-            {"accepted": 6, "ambiguous": 1, "not_found": 1},
+            summary["corrections"],
+            len({row["correction_id"] for row in self.events}),
+        )
+        self.assertEqual(
+            sum(summary["current_dispositions"].values()), summary["corrections"]
+        )
+        self.assertEqual(
+            [row["event_id"] for row in self.seed_events], list(SEED_EVENT_IDS)
+        )
+        self.assertEqual(
+            {
+                row["citation"]["headword"]: row["disposition"]
+                for row in self.seed_events
+            },
+            {
+                "mokanãî": "accepted",
+                "motumung": "accepted",
+                "putuna": "accepted",
+                "sosé": "accepted",
+                "esé": "accepted",
+                "'ybapekanga": "not_found",
+                "ikó": "accepted",
+                "aembé": "ambiguous",
+            },
         )
         putuna = self.event("putuna")
         self.assertEqual(
@@ -57,10 +103,16 @@ class CorrectionLedgerTest(unittest.TestCase):
         self.assertEqual(self.event("aembé")["disposition"], "ambiguous")
         self.assertEqual(self.event("'ybapekanga")["disposition"], "not_found")
         self.assertTrue(
-            all(row["review"]["reviewer_type"] == "assistant" for row in self.events)
+            all(
+                row["review"]["reviewer_type"] == "assistant"
+                for row in self.seed_events
+            )
         )
         self.assertTrue(
-            all(not row["review"]["approved_for_training"] for row in self.events)
+            all(
+                not row["review"]["approved_for_training"]
+                for row in self.seed_events
+            )
         )
 
     def test_exact_source_text_offsets_and_page_membership_are_required(self):
@@ -116,21 +168,25 @@ class CorrectionLedgerTest(unittest.TestCase):
     def test_idempotent_import_skips_identical_event(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory) / "ledger.jsonl"
-            shutil.copyfile(LEDGER, target)
+            self.write_seed_ledger(target)
             before = target.read_bytes()
-            result = import_events(self.context, target, [self.events[0]])
+            event = self.seed_events[0]
+            result = import_events(self.context, target, [event])
             self.assertEqual(result["appended"], [])
-            self.assertEqual(result["skipped"], [self.events[0]["event_id"]])
+            self.assertEqual(result["skipped"], [event["event_id"]])
             self.assertEqual(target.read_bytes(), before)
 
     def test_revision_appends_history_and_preserves_multiple_spans(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory) / "ledger.jsonl"
-            shutil.copyfile(LEDGER, target)
+            self.write_seed_ledger(target)
             revision = self.event("putuna")
-            revision["revision"] = 2
-            revision["event_id"] = revision["correction_id"] + "-r0002"
-            revision["supersedes_event_id"] = revision["correction_id"] + "-r0001"
+            previous_event_id = revision["event_id"]
+            revision["revision"] += 1
+            revision["event_id"] = (
+                f'{revision["correction_id"]}-r{revision["revision"]:04d}'
+            )
+            revision["supersedes_event_id"] = previous_event_id
             revision["recorded_at"] = "2026-11-03T12:30:00-03:00"
             revision["review"][
                 "notes"
@@ -138,7 +194,7 @@ class CorrectionLedgerTest(unittest.TestCase):
             result = import_events(self.context, target, [revision])
             self.assertEqual(result["appended"], [revision["event_id"]])
             rows = load_ledger(target)
-            self.assertEqual(len(rows), 9)
+            self.assertEqual(len(rows), len(self.seed_events) + 1)
             self.assertEqual(len(rows[-1]["selected_spans"]), 2)
             self.assertEqual(
                 rows[-1]["supersedes_event_id"], self.event("putuna")["event_id"]
@@ -150,11 +206,13 @@ class CorrectionLedgerTest(unittest.TestCase):
     def test_conflicting_or_stale_revision_is_rejected_before_write(self):
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory) / "ledger.jsonl"
-            shutil.copyfile(LEDGER, target)
+            self.write_seed_ledger(target)
             before = target.read_bytes()
             revision = self.event("sosé")
-            revision["revision"] = 2
-            revision["event_id"] = revision["correction_id"] + "-r0002"
+            revision["revision"] += 1
+            revision["event_id"] = (
+                f'{revision["correction_id"]}-r{revision["revision"]:04d}'
+            )
             revision["supersedes_event_id"] = (
                 "vlb-correction-00000000000000000000-r0001"
             )
@@ -171,19 +229,42 @@ class CorrectionLedgerTest(unittest.TestCase):
             self.assertEqual(target.read_bytes(), before)
 
     def test_issue_payload_and_feedback_exports_are_explicit(self):
+        issue_event = deepcopy(self.seed_events[0])
+        issue_event["review"]["approved_for_regression"] = False
         envelope = {
             "schema_version": "vlb-correction-submission-1",
-            "events": [self.events[0]],
+            "events": [issue_event],
         }
         body = (
             "## Correção estruturada\n\n```json\n"
             + json.dumps(envelope, ensure_ascii=False)
             + "\n```\n"
         )
-        self.assertEqual(parse_issue_body(body), [self.events[0]])
-        regression = export_feedback(self.events, "regression")
-        training = export_feedback(self.events, "training")
-        self.assertEqual(len(regression["records"]), 8)
+        self.assertEqual(parse_issue_body(body), [issue_event])
+        issue_event["review"]["approved_for_regression"] = True
+        unsafe_body = (
+            "```json\n"
+            + json.dumps(envelope, ensure_ascii=False)
+            + "\n```\n"
+        )
+        with self.assertRaisesRegex(LedgerError, "approvals must be false"):
+            parse_issue_body(unsafe_body)
+        latest = validate_events(self.context, self.events)["latest"].values()
+        for kind, flag in (
+            ("regression", "approved_for_regression"),
+            ("training", "approved_for_training"),
+        ):
+            exported = export_feedback(self.events, kind)
+            self.assertEqual(
+                {row["event_id"] for row in exported["records"]},
+                {row["event_id"] for row in latest if row["review"][flag]},
+            )
+
+        regression = export_feedback(self.seed_events, "regression")
+        training = export_feedback(self.seed_events, "training")
+        self.assertEqual(
+            {row["event_id"] for row in regression["records"]}, set(SEED_EVENT_IDS)
+        )
         self.assertEqual(training["records"], [])
         putuna = next(
             row

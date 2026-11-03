@@ -9,11 +9,14 @@ text is never normalized or rewritten. Generated gzip files use mtime=0.
 from pathlib import Path
 import argparse, bisect, collections, difflib, gzip, hashlib, json, re, unicodedata
 
+from corrections.ledger import CorrectionContext, load_ledger, validate_events
+
 P=argparse.ArgumentParser(description=__doc__)
 P.add_argument('--output',type=Path,help='Output folder; defaults to data beside this script.')
 args=P.parse_args()
 ROOT=Path(__file__).resolve().parent
 SOURCE=ROOT/'source'
+MINING=ROOT/'mining'/'output-v3'
 OUT=args.output or ROOT/'data'
 (OUT/'pages').mkdir(parents=True,exist_ok=True)
 
@@ -22,6 +25,10 @@ def read(name):
     if p.suffix=='.gz':
         with gzip.open(p,'rt',encoding='utf-8') as f:return json.load(f)
     return json.loads(p.read_text(encoding='utf-8'))
+def read_path(path):
+    if path.suffix=='.gz':
+        with gzip.open(path,'rt',encoding='utf-8') as f:return json.load(f)
+    return json.loads(path.read_text(encoding='utf-8'))
 def write(name,obj,gz=False):
     data=json.dumps(obj,ensure_ascii=False,separators=(',',':')).encode('utf-8')
     path=OUT/name
@@ -61,6 +68,82 @@ for number,raw in enumerate(text.split('\n'),1):
 assert '\n'.join(u['text'] for u in units)==text
 units_by_id={u['id']:u for u in units}
 
+# V3 is a frozen audit artifact. The reader receives only this compact,
+# page-scoped projection; it never downloads the multi-megabyte candidate file.
+proposal_output=read_path(MINING/'candidates.json.gz')
+proposal_freeze=read_path(MINING/'model-freeze.json')
+assert proposal_output['schema_version']==1
+assert proposal_output['scores_are_probabilities'] is False
+assert hashlib.sha256((MINING/'candidates.json.gz').read_bytes()).hexdigest()==proposal_freeze['output_sha256']['candidates.json.gz']
+proposal_by={(r['citation_id'],r['page_id']):r for r in proposal_output['records']}
+assert len(proposal_by)==len(proposal_output['records'])==6164
+proposal_seen=set()
+
+correction_path=ROOT/'corrections'/'ledger.jsonl'
+correction_rows=load_ledger(correction_path)
+correction_summary=validate_events(CorrectionContext(ROOT.parent),correction_rows)
+corrections_by={(row['citation']['citation_id'],row['page']['page_id']):row
+                for row in correction_summary['latest'].values()}
+
+def compact_span(candidate):
+    span=candidate.get('attested_span')
+    if not span:return None
+    start,end=span['start0'],span['end0']
+    source=units_by_id[candidate['source_id']]
+    assert source['start']<=start<end<=source['end']
+    assert text[start:end]==span['text']
+    ocr=candidate.get('ocr_target') or {}
+    return {
+        'text':span['text'],'start0':start,'end0':end,'role':span.get('role'),
+        'word_count':span.get('word_count'),'common_token':bool(span.get('common_portuguese_or_grammar_token')),
+        'ocr_status':ocr.get('status','unavailable'),'ocr_scope':ocr.get('scope'),
+        'ocr_line_ids':list(dict.fromkeys(ocr.get('line_ids') or [])),
+        'ocr_diacritic_folded':bool(ocr.get('diacritic_folding_needed')),
+        'ocr_is_exact_glyph_box':False,
+    }
+
+def compact_proposal(candidate,rank,prediction):
+    query=candidate.get('query_surface') or {}
+    return {
+        'source_id':candidate['source_id'],'source_line':candidate['source_line'],
+        'status':'proposed','review_status':'unreviewed','rank':rank,
+        'algorithm_version':proposal_freeze['config']['version'],
+        'proposal_status':prediction['status'],'score':candidate.get('ranking_score'),
+        'score_is_probability':False,'margin':prediction.get('margin') if rank==1 else None,
+        'review_reasons':prediction.get('review_reasons') or [],
+        'span':compact_span(candidate),
+        'span_alternatives':[span for a in candidate.get('span_alternatives') or [] if (span:=compact_span(a))],
+        'query':{'form':query.get('form'),'kind':query.get('kind'),'whole_quotation':bool(query.get('whole_quotation'))},
+        'evidence':{
+            'form_similarity':candidate.get('form_similarity'),
+            'portuguese_context_score':candidate.get('portuguese_context_score',0),
+            'quotation_context_score':candidate.get('quotation_context_score',0),
+            'quoted_surface':bool(candidate.get('quoted_surface_evidence')),
+            'whole_quotation':bool(candidate.get('whole_quotation_evidence')),
+            'local_companion_count':len(candidate.get('local_quotation_matches') or []),
+            'page_boundary_uncertain':bool(candidate.get('page_boundary_uncertain')),
+        },
+    }
+
+def reviewed_span(event,span):
+    targets=span.get('ocr_targets') or []
+    return {
+        'source_id':span['source_id'],'source_line':units_by_id[span['source_id']]['line'],
+        'status':'reviewed' if event['disposition']=='accepted' else 'ambiguous',
+        'reviewer':event['review']['reviewer'],'reviewer_type':event['review']['reviewer_type'],
+        'review_provenance':event['review']['provenance'],'source_form':span['text'],
+        'review_scope':'specific_citation_and_exact_source_span','covers_entire_source_record':False,
+        'correction_id':event['correction_id'],'correction_event_id':event['event_id'],
+        'correction_revision':event['revision'],'disposition':event['disposition'],
+        'span':{'text':span['text'],'start0':span['start0'],'end0':span['end0'],
+                'role':'reviewed_exact_span','word_count':len(token_spans(span['text'])),'common_token':False,
+                'ocr_status':'reviewed_line_targets' if targets else 'unavailable','ocr_scope':'reviewed_lines',
+                'ocr_line_ids':[target['line_id'] for target in targets],
+                'ocr_boxes':[target['box'] for target in targets],
+                'ocr_diacritic_folded':False,'ocr_is_exact_glyph_box':False},
+        'span_alternatives':[],
+    }
+
 # Per-page citations retain occurrence identity. Candidate associations are proposals.
 citations_by_page=collections.defaultdict(list)
 unresolved=[];citation_index=[]
@@ -69,29 +152,36 @@ for c in citations:
     for p in c.get('page_links',[]):
         if p.get('link_status')!='page_range_linked':continue
         pid=page_id(p['volume'],p['printed_page']);linked.append(pid)
-        associations=[]
-        for a in p.get('paragraph_candidates',[]):
-            reasons=[]
-            for reason in a.get('reasons',[]):
-                tokens=reason.get('tokens') or []
-                if tokens:reasons.append({'type':reason.get('type'),'tokens':tokens})
-                elif reason.get('type'):reasons.append({'type':reason['type']})
-            associations.append({'source_id':a['source_id'],'source_line':a['source_line'],'status':'proposed','score':a.get('retrieval_score'), 'score_is_probability':False,'evidence':reasons})
-        for a in reviewed_by.get((c['citation_id'],pid),[]):
+        prediction=proposal_by[(c['citation_id'],pid)];proposal_seen.add((c['citation_id'],pid))
+        associations=[compact_proposal(a,i,prediction) for i,a in enumerate(prediction.get('candidates') or [],1)]
+        correction=corrections_by.get((c['citation_id'],pid))
+        if correction:
+            reviewed_spans=[reviewed_span(correction,span) for span in correction['selected_spans']]
+            associations=reviewed_spans+associations
+            if correction['disposition'] in ('not_found','rejected'):
+                for association in associations:association['suppressed_by_correction']=True
+        for a in [] if correction else reviewed_by.get((c['citation_id'],pid),[]):
             associations=[x for x in associations if x['source_id']!=a['source_id']]
             associations.insert(0,{'source_id':a['source_id'],'source_line':units_by_id[a['source_id']]['line'],'status':'reviewed','reviewer':a.get('reviewer','assistant'),'source_form':a.get('source_form'),'review_scope':a.get('review_scope','specific_citation_and_source_attestation'),'covers_entire_source_record':False,'evidence':a.get('evidence',[])})
         citations_by_page[pid].append({
             'id':c['citation_id'],'entry_index':c['entry_index'],'legacy_id':c.get('legacy_id'),
             'headword':c['headword'],'homonym':c.get('homonym',''),
+            'definition_sha256':c['definition_sha256'],
             'raw_citation':c['raw_citation'],'context':c.get('local_context_text',''),
             'context_start':c.get('local_context_start'),'context_end':c.get('local_context_end_exclusive'),
             'citation_start':c.get('citation_start'),'citation_end':c.get('citation_end_exclusive'),
             'citation_type':c.get('citation_type'),'adapted':bool(c.get('adapted_citation')),
-            'inherits_from':c.get('inherits_source_from_citation_id'),'associations':associations})
+            'inherits_from':c.get('inherits_source_from_citation_id'),'associations':associations,
+            'correction':({'event_id':correction['event_id'],'correction_id':correction['correction_id'],
+                           'revision':correction['revision'],'disposition':correction['disposition'],
+                           'reviewer_type':correction['review']['reviewer_type'],
+                           'reviewer':correction['review']['reviewer'],'notes':correction['review']['notes']}
+                          if correction else None)})
     if not linked:unresolved.append(c)
     citation_index.append({'id':c['citation_id'],'entry_index':c['entry_index'],'legacy_id':c.get('legacy_id'),'headword':c['headword'],'homonym':c.get('homonym',''),'pages':linked,'raw_citation':c['raw_citation']})
 assert len({c['id'] for c in citation_index})==len(citations), 'Duplicate or omitted citation occurrence identity.'
 assert len(unresolved)==2
+assert proposal_seen==set(proposal_by), 'Every proposal citation/page prediction must project into exactly one reader page.'
 
 # Monotonic within-page token alignment maps source fragments to OCR line boxes.
 # It is orthographic transcription evidence, not a semantic Navarro judgment.
@@ -149,11 +239,20 @@ for page in alignment['pages']:
         fragments.append(fragment);source_pages[u['id']].append(pid)
         source_page_fragments[u['id']].append({'page_id':pid,'text':fragment['text']})
     lines,layout_ratio=align_layout(page,fragments)
-    available={f['id'] for f in fragments}
+    available={f['id'] for f in fragments};fragments_by_id={f['id']:f for f in fragments}
+    line_ids={line['id'] for line in lines}
     page_citations=citations_by_page.get(pid,[])
     for c in page_citations:
         for link in c['associations']:
             link['fragment_available']=link['source_id'] in available
+            assert link['fragment_available']
+            if link['status']=='proposed':
+                for span in [link['span'],*link.get('span_alternatives',[])]:
+                    if not span:continue
+                    fragment=fragments_by_id[link['source_id']]
+                    assert fragment['source_start0']<=span['start0']<span['end0']<=fragment['source_end0']
+                    assert text[span['start0']:span['end0']]==span['text']
+                    assert set(span['ocr_line_ids'])<=line_ids
             total_associations+=1
             reviewed_count+=link['status']=='reviewed'
     boundary_data={}
@@ -191,6 +290,9 @@ provenance={
  'source_retrieved_utc':source_meta.get('retrieved_utc'),
  'dictionary_repository_commit':'1d36bc8ebbb72806c6d6bd1773669481d5b910fd',
  'dictionary_snapshot_sha256':citations[0]['dictionary_snapshot_sha256'],
+ 'citation_links_sha256':hashlib.sha256((SOURCE/'citation_links.json.gz').read_bytes()).hexdigest(),
+ 'page_alignment_sha256':hashlib.sha256((SOURCE/'page_alignment.json.gz').read_bytes()).hexdigest(),
+ 'ocr_layout_sha256':hashlib.sha256((SOURCE/'ocr_layout.json.gz').read_bytes()).hexdigest(),
  'dictionary_path':'docs/dict-conjugated.json.gz',
  'dictionary_row_identity':'entry_index and legacy_id are snapshot row locators, not permanent lexical IDs.',
  'source_identity':'source_line identifies a paragraph in this saved transcription, not a printed line number.',
@@ -198,10 +300,17 @@ provenance={
  'box_convention':'OCR boxes are normalized [left,top,right,bottom] relative to original PDF page extent.',
  'ocr_method':'Monotonic normalized token alignment of the page transcription to OCR lines; boxes are approximate. Score is matched source-token fraction, not probability.',
  'association_method':'Navarro-to-source paragraph links marked proposed are retrieval candidates. Page citations and OCR spelling alignment do not themselves confirm lexical equivalence.',
+ 'proposal_algorithm_version':proposal_freeze['config']['version'],
+ 'navigation_policy_version':'vlb-navigation-policy-v3.1',
+ 'proposal_output_sha256':proposal_freeze['output_sha256']['candidates.json.gz'],
+ 'proposal_projection':'Compact page-scoped V3 candidates with exact Emerson spans and OCR line IDs; full audit data remains outside the browser build.',
+ 'correction_ledger':'../corrections/ledger.jsonl',
+ 'correction_ledger_sha256':hashlib.sha256(correction_path.read_bytes()).hexdigest(),
+ 'correction_policy':'Latest validated append-only decision overrides automatic navigation without rewriting Navarro or Emerson.',
  'reviewed_association_scope':'Only explicitly reviewed specific citation associations can carry reviewed status; no source paragraph is marked fully covered by these links.',
  'pdf_source_metadata_file':'../source/pdf_source_metadata.json'
 }
-counts={'text_pages':len(manifest_pages),'scan_slots':len(scan_slots),'source_paragraphs':len(units),'lexicographic_records':sum(u['kind']=='entry' for u in units),'source_fragments':total_fragments,'citation_occurrences':len(citations),'unresolved_citations':len(unresolved),'page_citation_memberships':sum(len(v) for v in citations_by_page.values()),'proposed_associations':total_associations-reviewed_count,'reviewed_associations':reviewed_count,'ocr_fragment_status':dict(fragment_status)}
+counts={'text_pages':len(manifest_pages),'scan_slots':len(scan_slots),'source_paragraphs':len(units),'lexicographic_records':sum(u['kind']=='entry' for u in units),'source_fragments':total_fragments,'citation_occurrences':len(citations),'unresolved_citations':len(unresolved),'page_citation_memberships':sum(len(v) for v in citations_by_page.values()),'proposed_associations':total_associations-reviewed_count,'reviewed_associations':reviewed_count,'correction_events':correction_summary['events'],'correction_decisions':correction_summary['corrections'],'correction_dispositions':correction_summary['current_dispositions'],'ocr_fragment_status':dict(fragment_status)}
 manifest={'schema_version':1,'provenance':provenance,'counts':counts,'page_order':[p['id'] for p in manifest_pages],'pages':manifest_pages,'scan_slots':scan_slots,'source_index_file':'source-index.json.gz','citation_index_file':'citation-index.json.gz','unresolved_citations_file':'unresolved-citations.json'}
 write('manifest.json',manifest)
 print(json.dumps({'counts':counts,'data_bytes':sum(p.stat().st_size for p in OUT.rglob('*') if p.is_file()),'source_bytes':sum(p.stat().st_size for p in SOURCE.rglob('*') if p.is_file())},ensure_ascii=False,indent=2))

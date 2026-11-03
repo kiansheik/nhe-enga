@@ -575,7 +575,21 @@ def parse_issue_body(body: str) -> list[dict]:
         raise LedgerError(
             "Issue body must contain exactly one fenced VLB correction submission"
         )
-    return parse_submission(matches[0])
+    events = parse_submission(matches[0])
+    # Issue authors are untrusted submitters.  Approval for regression or
+    # training is a repository-review decision and must never be self-granted
+    # through a public issue payload.  Direct local imports remain available
+    # to maintainers for already-reviewed records.
+    for index, event in enumerate(events):
+        review = event.get("review") if isinstance(event, dict) else None
+        if isinstance(review, dict) and (
+            review.get("approved_for_regression") is not False
+            or review.get("approved_for_training") is not False
+        ):
+            raise LedgerError(
+                f"Issue event {index + 1}: regression and training approvals must be false"
+            )
+    return events
 
 
 def import_events(

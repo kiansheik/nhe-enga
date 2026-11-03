@@ -40,6 +40,12 @@ class V3EvaluationTest(unittest.TestCase):
         self.assertEqual(counts["top1_correct"], 20)
         self.assertEqual(counts["top1_exact_attested_span"], 15)
         self.assertEqual(counts["offered_exact_attested_span"], 19)
+        self.assertEqual(counts["existing_top1_correct"], 15)
+        self.assertEqual(counts["existing_top3_contains_gold"], 18)
+        self.assertEqual(
+            self.result["provenance"]["pre_v3_reader_source_commit"],
+            "b5df369af6a7d2db72f933746ca6b5c13a44310d",
+        )
         self.assertFalse(self.result["human_verified"])
         self.assertFalse(self.result["corpus_wide_accuracy"])
 

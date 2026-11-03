@@ -60,12 +60,16 @@ python3 vlb/manage_corrections.py import --input correction.json
 python3 vlb/manage_corrections.py import --input issue-body.md --issue-body
 ```
 
-The static reader needs no GitHub credential. It can download the same JSON
-envelope and, when the user chooses to submit, open the repository's VLB issue
-form for copy/paste. A maintainer then runs the manually dispatched
+The static reader needs no GitHub credential. It can download/import the same
+JSON envelope and, when the user chooses to submit, open the repository's VLB
+issue form with the structured fields prefilled. If a popup is blocked, the
+reader downloads the envelope for manual submission instead. Oversized prefill
+URLs use the same download fallback and open an empty issue form so the JSON is
+not truncated. A maintainer then runs the manually dispatched
 `VLB correction import` workflow with the issue number. The workflow treats
-the issue body as untrusted data, runs this validator, appends only the ledger,
-and opens a reviewable pull request. It does not execute issue content.
+the issue body as untrusted data, rejects self-granted regression or training
+approval, runs this validator, regenerates the reader data and regression
+report, and opens a reviewable pull request. It does not execute issue content.
 
 ## Feedback exports
 
@@ -80,3 +84,10 @@ python3 vlb/manage_corrections.py export --kind training --output /tmp/vlb-train
 The regression export currently includes all eight decisions. The training
 export is deliberately empty until a reviewer explicitly approves a later
 revision for that use.
+
+`node vlb/evaluate_corrections.cjs --write` regenerates the development
+regression snapshot from the latest approved revisions while removing their
+reviewed reader overrides before invoking the production targeting policy.
+Use `--check` in CI. The report measures retrieval, exact spans, automatic
+coverage, abstentions, and false positives; it is neither held-out nor
+human-verified evidence.

@@ -11,6 +11,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[2]
+POST_REGISTRATION_CITATION_KEYS = {"correction", "definition_sha256"}
 
 
 def read(path: Path):
@@ -30,11 +31,43 @@ def load_selector():
     return module
 
 
+def frozen_citation_projection(citation: dict) -> dict:
+    """Return only fields that existed in the sealed blind-review packet.
+
+    Associations were excluded by the selector from the outset.  Correction
+    decisions and the definition hash were added later to the live reader
+    projection; neither was available to the annotator or participates in case
+    selection, so their later evolution must not rewrite the frozen packet.
+    """
+    return {
+        key: value
+        for key, value in citation.items()
+        if key not in {"associations", *POST_REGISTRATION_CITATION_KEYS}
+    }
+
+
 def main() -> None:
     selector = load_selector()
     registration = read(HERE / "preregistered_sample.json")
     packet = read(HERE / "review_material.json")
     rebuilt_registration, rebuilt_packet = selector.build()
+
+    # The reader manifest is a mutable deployment projection.  Confirm that
+    # the selector observed the current file, then normalize only this one
+    # input hash for comparison with the sealed preregistration.  The selected
+    # cases, holdouts, source/dictionary hashes, fixed correction snapshot, and
+    # every packet field below must still match exactly.
+    current_manifest_sha256 = digest(ROOT / "vlb/data/manifest.json")
+    assert rebuilt_registration["inputs"]["manifest_sha256"] == current_manifest_sha256
+    frozen_manifest_sha256 = registration["inputs"]["manifest_sha256"]
+    assert len(frozen_manifest_sha256) == 64
+    rebuilt_registration["inputs"]["manifest_sha256"] = frozen_manifest_sha256
+
+    # `select_sample.py` deliberately remains byte-identical to its registered
+    # version.  Strip only live citation fields introduced after registration
+    # before comparing its rebuilt review material with the sealed packet.
+    for case in rebuilt_packet["cases"]:
+        case["citation"] = frozen_citation_projection(case["citation"])
     assert registration == rebuilt_registration
     assert packet == rebuilt_packet
 
@@ -80,7 +113,9 @@ def main() -> None:
     source = (ROOT / "vlb/source/emerson_vlb.txt").read_text()
     dictionary = json.loads(gzip.decompress((ROOT / "docs/dict-conjugated.json.gz").read_bytes()))
     packet_by_id = {case["case_id"]: case for case in packet["cases"]}
-    forbidden_case_keys = {"associations", "ocr", "candidates", "prediction", "ranking", "score"}
+    forbidden_case_keys = {
+        "associations", "correction", "ocr", "candidates", "prediction", "ranking", "score"
+    }
     selected_sources = set()
     for case in cases:
         material = packet_by_id[case["case_id"]]
@@ -89,9 +124,7 @@ def main() -> None:
         assert dictionary[case["entry_index"]]["f"] == case["headword"]
         page = read(ROOT / f"vlb/data/pages/{case['page_id']}.json.gz")
         citation = next(item for item in page["citations"] if item["id"] == case["citation_id"])
-        assert material["citation"] == {
-            key: value for key, value in citation.items() if key != "associations"
-        }
+        assert material["citation"] == frozen_citation_projection(citation)
         assert not (forbidden_case_keys & set(material["citation"]))
         expected_fragments = [
             {key: value for key, value in fragment.items() if key not in ("associations", "ocr")}
@@ -112,6 +145,9 @@ def main() -> None:
     result = {
         "cases": len(cases),
         "correction_decisions_excluded": len(ledger_events),
+        "frozen_manifest_sha256": frozen_manifest_sha256,
+        "live_manifest_sha256": current_manifest_sha256,
+        "normalized_live_citation_fields": sorted(POST_REGISTRATION_CITATION_KEYS),
         "preregistered_sample_sha256": digest(HERE / "preregistered_sample.json"),
         "review_material_sha256": digest(HERE / "review_material.json"),
         "seed": registration["seed"],

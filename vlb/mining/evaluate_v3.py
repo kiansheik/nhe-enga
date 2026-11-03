@@ -15,7 +15,7 @@ DEFAULT_OUTPUT = HERE / "output-v3"
 DEFAULT_BENCHMARK = HERE / "benchmark-v3"
 sys.path.insert(0, str(HERE.parent))
 
-from mining.pipeline import Corpus, evaluate, existing_ranking  # noqa: E402
+from mining.pipeline import evaluate  # noqa: E402
 
 
 def read_json(path: Path):
@@ -191,6 +191,7 @@ def render_report(result: dict) -> str:
         f"- Prediction SHA-256: `{result['provenance']['prediction_sha256']}`",
         f"- Blind packet SHA-256: `{result['provenance']['packet_sha256']}`",
         f"- Labels SHA-256: `{result['provenance']['labels_sha256']}`",
+        f"- Pre-V3 reader ranking SHA-256: `{result['provenance']['pre_v3_reader_ranking_sha256']}` (commit `{result['provenance']['pre_v3_reader_source_commit']}`).",
         "",
         "Reproduce with `python3 vlb/mining/benchmark-v3/validate_annotations.py` and `python3 vlb/mining/evaluate_v3.py`.",
         "",
@@ -207,8 +208,22 @@ def main() -> None:
     joined = join_labels(provenance["labels_path"], provenance["packet_path"])
     frozen = read_json(args.output / "candidates.json.gz")
     predictions = {(row["citation_id"], row["page_id"]): row for row in frozen["records"]}
-    corpus = Corpus(ROOT)
-    baseline = {(citation["id"], page["id"]): existing_ranking(citation) for page in corpus.pages for citation in page["citations"]}
+    # The live reader projection is intentionally mutable: V3 candidates and
+    # later correction decisions are regenerated into it.  Comparing V3 to
+    # that current projection would make the historical "previous reader"
+    # baseline silently become V3 itself.  Keep the pre-integration ranking
+    # captured from the verified recovery commit as evaluation-only evidence.
+    baseline_path = args.benchmark / "pre-v3-reader-ranking.json"
+    frozen_baseline = read_json(baseline_path)
+    if frozen_baseline.get("schema_version") != 1:
+        raise ValueError("Unsupported pre-V3 reader baseline schema")
+    case_ids = {case["case_id"] for case in joined["cases"]}
+    if set(frozen_baseline.get("rankings", {})) != case_ids:
+        raise ValueError("Pre-V3 reader baseline does not cover the blind packet exactly")
+    baseline = {
+        (case["citation_id"], case["page_id"]): frozen_baseline["rankings"][case["case_id"]]
+        for case in joined["cases"]
+    }
     ranker = evaluate(joined, predictions, baseline)
     ranker_rows = {row["case_id"]: row for row in ranker["cases"]}
     result = {
@@ -225,7 +240,11 @@ def main() -> None:
             "policy_version": "vlb-navigation-policy-v3.1",
         },
         "not_measured": ["human-verified lexical equivalence", "exact scan glyph-box accuracy", "corpus-wide accuracy"],
-        "provenance": {key: value for key, value in provenance.items() if not key.endswith("_path")},
+        "provenance": {
+            **{key: value for key, value in provenance.items() if not key.endswith("_path")},
+            "pre_v3_reader_ranking_sha256": sha256(baseline_path),
+            "pre_v3_reader_source_commit": frozen_baseline["source_commit"],
+        },
     }
     (args.output / "test_labels-evaluation.json").write_text(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     (args.output / "REPORT.md").write_text(render_report(result), encoding="utf-8")

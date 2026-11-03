@@ -34,4 +34,4 @@ python3 vlb/build_reverse_concordance.py
 python3 -m unittest tests.test_vlb_reverse_concordance
 ```
 
-Artifact SHA-256: `2828377b18046f494021e4eb000d6ad33d7575104e71bde761160c3a6a13a598`.
+Artifact SHA-256: `62ef0dccae2c70e61bc65b4af8b7ca9adc304e9058d35385106cd6edd9baed51`.
