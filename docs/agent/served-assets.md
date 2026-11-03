@@ -43,7 +43,8 @@ These paths are referenced by source code or documented as public static pages. 
 - `/nhe-enga/docs/primary_sources/emerson_arte_anchieta.html`: standalone Anchieta transcription
 - `/nhe-enga/docs/primary_sources/vlb/*.png`
 - `/nhe-enga/docs/primary_sources/ancharte/*.png`
-- `/nhe-enga/docs/primary_sources/anchteatro1954/*.jpg`: 75 sparse Martins 1954 pages aligned to all current 1999/2006 `Anch., Teatro` locators
+- `/nhe-enga/docs/primary_sources/anchteatro1954/[0-9]*.jpg`: 74 sparse Martins 1954 critical-edition pages aligned to all current 1999/2006 `Anch., Teatro` locators
+- `/nhe-enga/docs/primary_sources/anchteatro1954/diplomatic-*.jpg`: 61 matched pages from Martins's diplomatic section, each preserving its manuscript facsimile
 - `/nhe-enga/docs/primary_sources/arcat1618/*.png`
 - `/nhe-enga/docs/primary_sources/arcat1686/*.jpg`: cited printed pages plus a two-page context buffer
 - `/nhe-enga/docs/primary_sources/betcomp/*.jpg`

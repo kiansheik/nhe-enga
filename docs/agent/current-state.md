@@ -1,5 +1,30 @@
 # Current State
 
+## 2026-10-26 — Anchieta Teatro manuscript facsimiles (local branch)
+
+- The Teatro viewer now stacks the matching page(s) from Martins's first,
+  diplomatic section below each critical/translated witness. A visible
+  **Ver manuscrito** link jumps to the section; each page links to the newer
+  higher-resolution searchable Internet Archive upload.
+- The explicit critical-to-diplomatic map covers all 74 currently selected
+  critical pages with 61 diplomatic pages. Lists are intentional: a critical
+  page can cross a manuscript folio boundary. The São Lourenço sequence is
+  kept separate from its repeated Natal adaptation.
+- Navarro 1999 p. 16 was corrected from critical PDF index 745 to 746, where
+  `Nasatangatúi Maíra!` occurs; its diplomatic witnesses are indices 151–152.
+  The obsolete unreferenced `745.jpg` was removed.
+- The newer searchable source is a higher-resolution digitization of Martins
+  1954, not a direct modern scan of the physical manuscript. Complete
+  diplomatic pages are retained so transcription, line numbers, folio label,
+  and printed manuscript photograph remain together. Credit now identifies
+  Farias-Sabiá, with hosting by Internet Archive.
+- Verification passes: 23 source/viewer tests, 11 offline-catalog tests,
+  service-worker smoke checks, Python/JSON syntax, 61 JPEG decode/dimension
+  checks, and real Chrome at desktop and 390-pixel widths. The production
+  Pages build is 854.8 MB, contains 2,557 files and all 61 new witnesses,
+  contains no PDFs, and passes the 900 MB project budget with 45.2 MB left.
+  Nothing has been committed, pushed, deployed, or user-browser confirmed.
+
 ## 2026-10-26 — Teatro/Castilho Pages deployment
 
 - Merged source revision `e78abbc8` was built from clean `main` and deployed as

@@ -12,8 +12,10 @@
   The 1686 Araújo directory is intentionally sparse: all currently cited
   printed pages plus a two-page context buffer, not the complete scan.
   `figueira1878` is a complete scan with a constant printed-page map;
-  `anchteatro1954` is a sparse 75-page quotation-level cross-edition map for
-  every current 1999/2006 citation locator, not a general pagination map.
+  `anchteatro1954` is a sparse 74-page quotation-level cross-edition map for
+  every current 1999/2006 citation locator, not a general pagination map. Its
+  61 `diplomatic-*.jpg` companions preserve Martins's diplomatic transcription
+  and manuscript facsimile below the corresponding critical page.
   `castilho1937` stores 16 verified page-side crops behind an explicit
   non-linear map. D’Evreux, Figueira, Anchieta, and
   Castilho provenance and page mappings live beside their images in

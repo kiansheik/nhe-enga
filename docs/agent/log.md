@@ -1,5 +1,18 @@
 # Agent Log
 
+## 2026-10-26 — Matched Teatro manuscript facsimiles
+
+Added an explicit 74-critical-page to 61-diplomatic-page crosswalk for the
+current Teatro witnesses. The citation viewer now stacks Martins's diplomatic
+transcription and reduced manuscript facsimile below the critical/translated
+page, with a direct jump and full-resolution Internet Archive links. Switched
+provenance to Farias-Sabiá's newer higher-resolution searchable upload and
+added a reproducible page fetcher. Corrected Navarro 1999 p. 16 from critical
+index 745 to the exact `Maíra` line on 746 and removed the orphaned image.
+All focused source/offline tests, JPEG checks, desktop/mobile Chrome review,
+and the 854.8 MB no-PDF Pages build pass. Work remains local on
+`feat/anchieta-manuscript-facsimiles`.
+
 ## 2026-10-26 — Deployed merged Teatro and Castilho sources
 
 Fast-forwarded local `main` to merged PR #34 (`e78abbc8`), rebuilt the full

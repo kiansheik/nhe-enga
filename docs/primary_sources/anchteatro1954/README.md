@@ -9,9 +9,12 @@ de Paula Martins's 1954 documentary and critical *Poesias*.
 
 The map retains Navarro's cited page in the URL and selects a corresponding
 Martins page by quotation or headword context. It covers 107 edition-and-page
-keys with 75 stored scan pages. It is an explicit cross-edition alignment, not
-a page offset; the same Navarro page may map differently in 1999 and 2006, and
-nearby locators can share one documentary page.
+keys with 74 stored critical-edition pages. It is an explicit cross-edition
+alignment, not a page offset; the same Navarro page may map differently in
+1999 and 2006, and nearby locators can share one documentary page. The viewer
+also stacks 61 higher-resolution pages from Martins's first, diplomatic
+section, where each transcription remains paired with its manuscript
+facsimile.
 
 ## Alignment method and boundary
 
@@ -29,6 +32,23 @@ not a claim that all content on a Navarro page is identical to one Martins
 page. Unknown locators and edition years other than the explicit 2006 form
 stay unlinked.
 
+## Diplomatic pages and manuscript facsimiles
+
+Martins's first section reproduces the diplomatic transcription page by page
+beside a reduced photographic facsimile of the sixteenth-century manuscript.
+The viewer keeps those complete pages intact below the corresponding critical
+page. A critical page can cross a manuscript folio boundary, so
+`critical_page_to_diplomatic_pdf_indices` stores a list rather than assuming a
+single page or a constant offset. The São Lourenço and Guaraparim sequences
+were checked separately so repeated text in *Na festa do Natal* cannot attract
+the map to the wrong dramatic work.
+
+The diplomatic assets come from the newer, higher-resolution searchable
+Internet Archive upload recorded under `manuscript_facsimiles` in
+`source.json`. It is a digitization of Martins's printed edition: the embedded
+facsimiles reproduce the manuscript, but these files are not independent
+modern scans of the physical manuscript in Rome.
+
 ## Reproduction
 
 The 105,331,955-byte source PDF is not copied into the Pages artifact. Its
@@ -42,6 +62,13 @@ python scripts/data/render_source_pages.py \
   --pdf docs/primary_sources/anchieta_teatro_1954.pdf \
   --manifest docs/primary_sources/anchteatro1954/source.json \
   --page 655 --page 656 # ...all unique mapped indices
+```
+
+Reproduce the 61 higher-resolution diplomatic/facsimile pages directly from
+their recorded Internet Archive derivatives:
+
+```bash
+python scripts/data/fetch_anchieta_manuscripts.py
 ```
 
 Review URLs:

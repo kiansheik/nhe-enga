@@ -38,8 +38,17 @@
         #imageError {
             grid-row: 3;
         }
-        #pageImage {
+        #pageContent {
             grid-row: 4;
+            min-width: 0;
+            min-height: 0;
+            overflow: auto;
+        }
+        #criticalImageContainer {
+            min-height: 100%;
+            display: grid;
+        }
+        #pageImage {
             align-self: start;
             justify-self: center;
             display: block;
@@ -52,11 +61,46 @@
             margin: 0 auto;
             cursor: zoom-in;
         }
+        #manuscriptSection {
+            max-width: 72rem;
+            margin: 2rem auto 0;
+            padding-top: 1.25rem;
+            border-top: 1px solid #bbb;
+        }
+        #manuscriptSection h2 {
+            margin: 0 0 0.4rem;
+            font-size: 1.1rem;
+        }
+        #manuscriptSection > p {
+            margin: 0 0 1rem;
+            line-height: 1.45;
+        }
+        .manuscript-page {
+            margin: 0 0 2rem;
+        }
+        .manuscript-page figcaption {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        .manuscript-page img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 0 auto;
+            cursor: zoom-in;
+        }
+        .manuscript-page a {
+            display: inline-block;
+            margin-top: 0.5rem;
+        }
         body.zoomed {
             display: block;
             height: auto;
         }
-        body.zoomed #pageImage {
+        body.zoomed #pageContent {
+            overflow: visible;
+        }
+        body.zoomed #pageContent img {
             max-width: none;
             max-height: none;
             cursor: zoom-out;
@@ -80,8 +124,17 @@
         <button id="nextPage">Próxima</button>
         <button id="zoomPage" aria-pressed="false">Ampliar</button>
         <a id="openImage" target="_blank" rel="noopener">Abrir imagem</a>
+        <a id="jumpManuscript" href="#manuscriptSection" hidden>Ver manuscrito</a>
     </div>
     <p id="imageError" role="status" hidden>Não foi possível carregar esta página. Tente abrir a imagem ou o PDF.</p>
+    <main id="pageContent">
+        <div id="criticalImageContainer"></div>
+        <section id="manuscriptSection" hidden>
+            <h2>Transcrição diplomática e fac-símile do manuscrito</h2>
+            <p>Martins reproduz abaixo a transcrição diplomática junto à fotografia reduzida do fólio manuscrito correspondente.</p>
+            <div id="manuscriptImages"></div>
+        </section>
+    </main>
     <script>
         const sourceEditions = {
             arcat1686: {
@@ -415,6 +468,39 @@
             button.textContent = isZoomed ? 'Ajustar à tela' : 'Ampliar';
             button.setAttribute('aria-pressed', String(isZoomed));
         }
+        function updateManuscriptImages(manifestTarget) {
+            const section = document.getElementById('manuscriptSection');
+            const container = document.getElementById('manuscriptImages');
+            while (container.children.length) {
+                container.removeChild(container.children[0]);
+            }
+            const facsimiles = sourceManifest?.manuscript_facsimiles;
+            const indices = facsimiles?.critical_page_to_diplomatic_pdf_indices?.[String(manifestTarget?.pdf_index)] || [];
+            section.hidden = indices.length === 0;
+            document.getElementById('jumpManuscript').hidden = indices.length === 0;
+            if (!indices.length) return;
+
+            for (const index of indices) {
+                const figure = document.createElement('figure');
+                figure.className = 'manuscript-page';
+                const caption = document.createElement('figcaption');
+                caption.textContent = `Reprodução diplomática · PDF página ${index + 1}`;
+                const image = document.createElement('img');
+                image.src = `/nhe-enga/docs/primary_sources/${bookName}/diplomatic-${index}.jpg`;
+                image.alt = `Transcrição diplomática e fac-símile do manuscrito · PDF página ${index + 1}`;
+                image.loading = 'lazy';
+                image.addEventListener('click', toggleZoom);
+                const sourceLink = document.createElement('a');
+                sourceLink.href = facsimiles.source_page_url_pattern.replace('{pdf_index}', index);
+                sourceLink.target = '_blank';
+                sourceLink.rel = 'noopener';
+                sourceLink.textContent = 'Abrir esta página diplomática no Internet Archive';
+                figure.appendChild(caption);
+                figure.appendChild(image);
+                figure.appendChild(sourceLink);
+                container.appendChild(figure);
+            }
+        }
         // Function to update the image based on the current page number
         function updateImage() {
             const body = document.body;
@@ -467,13 +553,14 @@
                 document.title = `${edition.title} (${edition.year}) — ${pageLabel()}`;
                 document.getElementById('sourcePdf').href = `${edition.pdfUrl}#page=${imageNumber + 1}`;
             }
-            // Remove the existing image if any
-            const existingImage = document.querySelector('img');
+            // Remove the existing critical-edition image if any.
+            const existingImage = document.getElementById('pageImage');
             if (existingImage) {
-                body.removeChild(existingImage);
-            }            
+                existingImage.parentNode.removeChild(existingImage);
+            }
 
-            body.appendChild(image);
+            document.getElementById('criticalImageContainer').appendChild(image);
+            updateManuscriptImages(manifestTarget);
         }
 
         initializeLegacyViewer();

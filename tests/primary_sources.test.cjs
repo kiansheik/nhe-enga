@@ -272,7 +272,7 @@ test('Castilho links all 215 current Nomes citations to the 16 explicit crop tar
 
 test('new source assets match their declared scan bounds and explicit targets', () => {
   const imageIndices = (book) => fs.readdirSync(path.join(root, 'docs/primary_sources', book))
-    .filter((name) => name.endsWith('.jpg'))
+    .filter((name) => /^\d+\.jpg$/.test(name))
     .map((name) => Number.parseInt(name, 10))
     .sort((a, b) => a - b);
   const figueiraExpected = Array.from(
@@ -288,6 +288,23 @@ test('new source assets match their declared scan bounds and explicit targets', 
   );
   assert.equal(anchTeatroExpected.length, anchTeatroManifest.images.stored_image_count);
   assert.equal(anchTeatroExpected.length, anchTeatroManifest.verification.stored_image_count);
+  const manuscript = anchTeatroManifest.manuscript_facsimiles;
+  const manuscriptExpected = [...new Set(
+    Object.values(manuscript.critical_page_to_diplomatic_pdf_indices).flat(),
+  )].sort((a, b) => a - b);
+  assert.deepEqual(
+    fs.readdirSync(path.join(root, 'docs/primary_sources/anchteatro1954'))
+      .filter((name) => /^diplomatic-\d+\.jpg$/.test(name))
+      .map((name) => Number.parseInt(name.match(/\d+/)[0], 10))
+      .sort((a, b) => a - b),
+    manuscriptExpected,
+  );
+  assert.equal(manuscriptExpected.length, manuscript.images.stored_image_count);
+  assert.deepEqual(
+    [...new Set(anchTeatroTargets().map((target) => target.pdfIndex))]
+      .filter((index) => !manuscript.critical_page_to_diplomatic_pdf_indices[String(index)]),
+    [],
+  );
   assert.deepEqual(
     fs.readdirSync(path.join(root, 'docs/primary_sources/castilho1937'))
       .filter((name) => name.endsWith('.jpg'))
@@ -514,13 +531,41 @@ test('Anchieta viewer selects the mapped witness and keeps 1999/2006 distinct', 
     assert.equal(viewer.get('sourcePdf').href, target.sourcePageUrl);
     assert.equal(viewer.get('sourcePdf').textContent, anchTeatroManifest.viewer.source_page_link_label);
     assert.equal(viewer.get('sourceNotice').hidden, false);
-    assert.match(viewer.get('sourceNotice').textContent, /paginação de Navarro.*Martins.*não existe uma equivalência geral/);
+    assert.match(viewer.get('sourceNotice').textContent, /paginação de Navarro.*fac-símile fotográfico.*não existe uma equivalência geral/i);
+    assert.equal(viewer.get('manuscriptSection').hidden, false);
+    assert.equal(viewer.get('jumpManuscript').hidden, false);
+    const expectedDiplomatic = anchTeatroManifest.manuscript_facsimiles
+      .critical_page_to_diplomatic_pdf_indices[String(expectedIndex)];
+    const manuscriptFigures = viewer.get('manuscriptImages').children;
+    assert.equal(manuscriptFigures.length, expectedDiplomatic.length);
+    assert.deepEqual(
+      manuscriptFigures.map((figure) => figure.children[1].src),
+      expectedDiplomatic.map((index) => `/nhe-enga/docs/primary_sources/anchteatro1954/diplomatic-${index}.jpg`),
+    );
+    assert.deepEqual(
+      manuscriptFigures.map((figure) => figure.children[2].href),
+      expectedDiplomatic.map((index) => anchTeatroManifest.manuscript_facsimiles
+        .source_page_url_pattern.replace('{pdf_index}', index)),
+    );
     assert.equal(viewer.window.location.searchParams.get('citation_year'), expectedYear);
   }
 
   const unavailable = await openViewer('book_name=anchteatro1954&page_number=177');
   assert.equal(unavailable.image(), null);
   assert.equal(unavailable.get('imageError').hidden, false);
+});
+
+test('the maíra locator opens its exact critical line and diplomatic folio', async () => {
+  const viewer = await openViewer('book_name=anchteatro1954&page_number=16');
+  assert.equal(viewer.image().src, '/nhe-enga/docs/primary_sources/anchteatro1954/746.jpg');
+  const figures = viewer.get('manuscriptImages').children;
+  assert.deepEqual(
+    figures.map((figure) => figure.children[1].src),
+    [
+      '/nhe-enga/docs/primary_sources/anchteatro1954/diplomatic-151.jpg',
+      '/nhe-enga/docs/primary_sources/anchteatro1954/diplomatic-152.jpg',
+    ],
+  );
 });
 
 test('cover, unnumbered preliminaries, and final blank have bounded navigation and honest labels', async () => {
