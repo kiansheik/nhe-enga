@@ -118,6 +118,10 @@ must require an explicit request.
 - The first direct browser-regression run inside the restricted sandbox could
   not bind its loopback server (`listen EPERM`). The same documented command
   passed with the required local-browser permission.
+- The first hosted Linux browser run raced the responsive `matchMedia` change:
+  its assertion inspected the search disclosure before the mobile state event
+  ran. The regression now waits for the mobile search ARIA state rather than an
+  already-true desktop transcription attribute; the complete local rerun passes.
 - Adding the model pointer changed the whole-manifest checksum and initially
   made the checked correction evaluation stale. Regeneration changed only its
   `viewer_manifest_sha256`; no correction metric or policy outcome moved.

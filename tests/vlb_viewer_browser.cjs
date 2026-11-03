@@ -527,7 +527,7 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator("#unresolved-list p").count(), 2);
     await page.locator("#close-about").click();
     await page.setViewportSize({width:390,height:844});
-    await page.locator('#toggle-transcription[aria-expanded="true"]').waitFor();
+    await page.locator('#toggle-search[aria-expanded="false"]').waitFor();
     const expanded390 = await assertMobileUnifiedReader("390px unified reader");
     const compactNavigationHeight = await page.locator(".navigation").evaluate(node => node.getBoundingClientRect().height);
     assert.ok(compactNavigationHeight <= 44, "collapsed mobile navigation uses one low-profile control row");
