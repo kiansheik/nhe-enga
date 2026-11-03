@@ -1,0 +1,403 @@
+{
+  "audit_kind": "frozen_v2_metric_recomputation",
+  "cases": [
+    {
+      "case_id": "v2-0002251b2046",
+      "exact_first": true,
+      "exact_offered": true,
+      "exact_paragraph_best_top_three": true,
+      "headword": "mba'epapasaba",
+      "label_status": "clear",
+      "page_id": "I-080",
+      "paragraph_first": true,
+      "paragraph_top_three": true,
+      "proposal_status": "suggested",
+      "suggested": true
+    },
+    {
+      "case_id": "v2-0021dc59a269",
+      "exact_first": true,
+      "exact_offered": true,
+      "exact_paragraph_best_top_three": true,
+      "headword": "mou'um",
+      "label_status": "clear",
+      "page_id": "I-034",
+      "paragraph_first": true,
+      "paragraph_top_three": true,
+      "proposal_status": "suggested",
+      "suggested": true
+    },
+    {
+      "case_id": "v2-0039a36c0441",
+      "exact_first": true,
+      "exact_offered": true,
+      "exact_paragraph_best_top_three": true,
+      "headword": "kunumĩ",
+      "label_status": "clear",
+      "page_id": "II-096",
+      "paragraph_first": true,
+      "paragraph_top_three": true,
+      "proposal_status": "suggested",
+      "suggested": true
+    },
+    {
+      "case_id": "v2-004fc0b474d2",
+      "exact_first": true,
+      "exact_offered": true,
+      "exact_paragraph_best_top_three": true,
+      "headword": "ysykapûangatu",
+      "label_status": "clear",
+      "page_id": "I-114",
+      "paragraph_first": true,
+      "paragraph_top_three": true,
+      "proposal_status": "needs_review",
+      "suggested": false
+    },
+    {
+      "case_id": "v2-0051e529ae82",
+      "exact_first": true,
+      "exact_offered": true,
+      "exact_paragraph_best_top_three": true,
+      "headword": "nhe'ẽkurukuruka",
+      "label_status": "clear",
+      "page_id": "II-101",
+      "paragraph_first": true,
+      "paragraph_top_three": true,
+      "proposal_status": "suggested",
+      "suggested": true
+    },
+    {
+      "case_id": "v2-005469ccb40b",
+      "exact_first": true,
+      "exact_offered": true,
+      "exact_paragraph_best_top_three": true,
+      "headword": "Itapeipu",
+      "label_status": "clear",
+      "page_id": "I-119",
+      "paragraph_first": true,
+      "paragraph_top_three": true,
+      "proposal_status": "needs_review",
+      "suggested": false
+    },
+    {
+      "case_id": "v2-005f55216378",
+      "exact_first": false,
+      "exact_offered": false,
+      "exact_paragraph_best_top_three": false,
+      "headword": "esé",
+      "label_status": "clear",
+      "page_id": "II-082",
+      "paragraph_first": false,
+      "paragraph_top_three": false,
+      "proposal_status": "needs_review",
+      "suggested": false
+    },
+    {
+      "case_id": "v2-0073d5f44ec0",
+      "exact_first": true,
+      "exact_offered": true,
+      "exact_paragraph_best_top_three": true,
+      "headword": "kapir",
+      "label_status": "clear",
+      "page_id": "II-041",
+      "paragraph_first": true,
+      "paragraph_top_three": true,
+      "proposal_status": "suggested",
+      "suggested": true
+    },
+    {
+      "case_id": "v2-007779f6a63d",
+      "exact_first": true,
+      "exact_offered": true,
+      "exact_paragraph_best_top_three": true,
+      "headword": "ybyokamonhangara",
+      "label_status": "clear",
+      "page_id": "II-123",
+      "paragraph_first": true,
+      "paragraph_top_three": true,
+      "proposal_status": "suggested",
+      "suggested": true
+    },
+    {
+      "case_id": "v2-008233c2a86a",
+      "exact_first": true,
+      "exact_offered": true,
+      "exact_paragraph_best_top_three": true,
+      "headword": "sasura",
+      "label_status": "clear",
+      "page_id": "I-060",
+      "paragraph_first": true,
+      "paragraph_top_three": true,
+      "proposal_status": "needs_review",
+      "suggested": false
+    },
+    {
+      "case_id": "v2-00b5002ce9aa",
+      "exact_first": true,
+      "exact_offered": true,
+      "exact_paragraph_best_top_three": true,
+      "headword": "aembé",
+      "label_status": "ambiguous",
+      "page_id": "I-083",
+      "paragraph_first": true,
+      "paragraph_top_three": true,
+      "proposal_status": "needs_review",
+      "suggested": false
+    },
+    {
+      "case_id": "v2-00b99c31225f",
+      "exact_first": true,
+      "exact_offered": true,
+      "exact_paragraph_best_top_three": true,
+      "headword": "kyba",
+      "label_status": "clear",
+      "page_id": "II-078",
+      "paragraph_first": true,
+      "paragraph_top_three": true,
+      "proposal_status": "suggested",
+      "suggested": true
+    },
+    {
+      "case_id": "v2-00bf24d0d24b",
+      "exact_first": true,
+      "exact_offered": true,
+      "exact_paragraph_best_top_three": true,
+      "headword": "kamusi",
+      "label_status": "clear",
+      "page_id": "I-142",
+      "paragraph_first": true,
+      "paragraph_top_three": true,
+      "proposal_status": "needs_review",
+      "suggested": false
+    },
+    {
+      "case_id": "v2-00d8fbf2f01c",
+      "exact_first": true,
+      "exact_offered": true,
+      "exact_paragraph_best_top_three": true,
+      "headword": "pe'ĩ",
+      "label_status": "clear",
+      "page_id": "II-030",
+      "paragraph_first": true,
+      "paragraph_top_three": true,
+      "proposal_status": "needs_review",
+      "suggested": false
+    },
+    {
+      "case_id": "v2-00ea3883542b",
+      "exact_first": true,
+      "exact_offered": true,
+      "exact_paragraph_best_top_three": true,
+      "headword": "esakûanhyrõ",
+      "label_status": "clear",
+      "page_id": "II-115",
+      "paragraph_first": true,
+      "paragraph_top_three": true,
+      "proposal_status": "suggested",
+      "suggested": true
+    },
+    {
+      "case_id": "v2-01128bb54596",
+      "exact_first": true,
+      "exact_offered": true,
+      "exact_paragraph_best_top_three": true,
+      "headword": "anong",
+      "label_status": "clear",
+      "page_id": "II-087",
+      "paragraph_first": true,
+      "paragraph_top_three": true,
+      "proposal_status": "suggested",
+      "suggested": true
+    },
+    {
+      "case_id": "v2-013aad3c430e",
+      "exact_first": true,
+      "exact_offered": true,
+      "exact_paragraph_best_top_three": true,
+      "headword": "tatau'uba",
+      "label_status": "clear",
+      "page_id": "I-141",
+      "paragraph_first": true,
+      "paragraph_top_three": true,
+      "proposal_status": "suggested",
+      "suggested": true
+    },
+    {
+      "case_id": "v2-013dc5157428",
+      "exact_first": true,
+      "exact_offered": true,
+      "exact_paragraph_best_top_three": true,
+      "headword": "'anga",
+      "label_status": "clear",
+      "page_id": "II-144",
+      "paragraph_first": true,
+      "paragraph_top_three": true,
+      "proposal_status": "suggested",
+      "suggested": true
+    },
+    {
+      "case_id": "v2-014a12945372",
+      "exact_first": true,
+      "exact_offered": true,
+      "exact_paragraph_best_top_three": true,
+      "headword": "a'ang",
+      "label_status": "clear",
+      "page_id": "II-121",
+      "paragraph_first": true,
+      "paragraph_top_three": true,
+      "proposal_status": "suggested",
+      "suggested": true
+    },
+    {
+      "case_id": "v2-014d0cfbb3f0",
+      "exact_first": false,
+      "exact_offered": false,
+      "exact_paragraph_best_top_three": false,
+      "headword": "'ybapekanga",
+      "label_status": "not_found",
+      "page_id": "II-062",
+      "paragraph_first": false,
+      "paragraph_top_three": false,
+      "proposal_status": "suggested",
+      "suggested": true
+    },
+    {
+      "case_id": "v2-01553bf6f25d",
+      "exact_first": true,
+      "exact_offered": true,
+      "exact_paragraph_best_top_three": true,
+      "headword": "îeapûapyk",
+      "label_status": "clear",
+      "page_id": "I-117",
+      "paragraph_first": true,
+      "paragraph_top_three": true,
+      "proposal_status": "suggested",
+      "suggested": true
+    },
+    {
+      "case_id": "v2-0158e76bacd6",
+      "exact_first": true,
+      "exact_offered": true,
+      "exact_paragraph_best_top_three": true,
+      "headword": "nhemoerapûan",
+      "label_status": "clear",
+      "page_id": "II-012",
+      "paragraph_first": true,
+      "paragraph_top_three": true,
+      "proposal_status": "suggested",
+      "suggested": true
+    },
+    {
+      "case_id": "v2-01743b20a6df",
+      "exact_first": false,
+      "exact_offered": true,
+      "exact_paragraph_best_top_three": false,
+      "headword": "ikó",
+      "label_status": "clear",
+      "page_id": "I-099",
+      "paragraph_first": true,
+      "paragraph_top_three": true,
+      "proposal_status": "needs_review",
+      "suggested": false
+    },
+    {
+      "case_id": "v2-017f16a24e17",
+      "exact_first": true,
+      "exact_offered": true,
+      "exact_paragraph_best_top_three": true,
+      "headword": "pyti'u",
+      "label_status": "clear",
+      "page_id": "I-073",
+      "paragraph_first": true,
+      "paragraph_top_three": true,
+      "proposal_status": "suggested",
+      "suggested": true
+    }
+  ],
+  "freeze_checks": {
+    "algorithm_files": {
+      "vlb/mine_alignment.py": true,
+      "vlb/mining/form_index.py": true,
+      "vlb/mining/orthography.py": true,
+      "vlb/mining/pipeline.py": true,
+      "vlb/mining/quotation.py": true,
+      "vlb/mining/seeds.py": true
+    },
+    "output_files": {
+      "candidates.json.gz": true,
+      "headword-form-index.json.gz": true,
+      "orthography-model.json": true,
+      "seeds.json.gz": true,
+      "summary.json": true
+    }
+  },
+  "human_verified": false,
+  "interpretation": [
+    "The 24-case sample is deliberately selected across retrieval difficulty; these rates are not corpus-wide accuracy estimates.",
+    "15/15 correct among clear suggested cases excludes one suggested not-found case. Across all 16 suggestions, only 15 are supported by the independent labels.",
+    "These test cases become released development evidence for any subsequent model tuned from them.",
+    "Physical scan/OCR-box accuracy and human philological equivalence remain unmeasured."
+  ],
+  "labels_sha256": "6e7a04b9e44d432edd574cc516d7cdb17285ac7d003fba46696efa7cbad3645b",
+  "method": "Direct comparison of frozen JSON predictions and independently withheld assistant labels; does not import the matcher or its evaluator. Recomputed by the implementation agent, not an additional human review.",
+  "metrics": {
+    "all_cases": 24,
+    "clear_cases": 22,
+    "exact_first": 20,
+    "exact_offered": 21,
+    "exact_paragraph_best_top_three": 20,
+    "paragraph_first": 21,
+    "paragraph_top_three": 21,
+    "suggested_clear_supported": 15,
+    "suggested_total": 16,
+    "suggested_uncertain_or_not_found": 1
+  },
+  "model_tuned_after_test_release": false,
+  "predictions_sha256": "84046e637fc7752f7866d4cbd75774516a3197972cc426af6d2ff71ddf3e8b8a",
+  "schema_version": 1,
+  "seed_exclusion_audit": {
+    "finding": "Five unused silver rows with apostrophized headword anga survive the accent/apostrophe-folded holdout name. The legacy selector preserves phonological marks in its headword exclusion key. No heldout page or paragraph overlap exists; the chosen prior model uses no silver observations, so model predictions are unaffected. A future learned run must fix exclusion normalization.",
+    "heldout_headwords": 72,
+    "heldout_pages": 69,
+    "heldout_source_paragraphs": 2048,
+    "model_kind": "prior",
+    "overlap": {
+      "headword": [
+        {
+          "headword": "'anga",
+          "page_id": "I-018",
+          "seed_id": "silver-0327862b0c8cf970",
+          "source_id": "vlb-emerson-r568-p00056"
+        },
+        {
+          "headword": "'anga",
+          "page_id": "II-119",
+          "seed_id": "silver-5056ac32342ce9d6",
+          "source_id": "vlb-emerson-r568-p06907"
+        },
+        {
+          "headword": "'anga",
+          "page_id": "I-032",
+          "seed_id": "silver-6f68a64204bcbaa6",
+          "source_id": "vlb-emerson-r568-p00401"
+        },
+        {
+          "headword": "'anga",
+          "page_id": "I-102",
+          "seed_id": "silver-a761fa3c2a45366e",
+          "source_id": "vlb-emerson-r568-p02595"
+        },
+        {
+          "headword": "'anga",
+          "page_id": "II-129",
+          "seed_id": "silver-f3317fb55a94e538",
+          "source_id": "vlb-emerson-r568-p07187"
+        }
+      ],
+      "page": [],
+      "source": []
+    },
+    "records": 540,
+    "silver_observations_used_by_frozen_model": false
+  }
+}

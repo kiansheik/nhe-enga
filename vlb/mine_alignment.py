@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 from collections import Counter
+from datetime import datetime, timezone
 from pathlib import Path
 import time
 
@@ -20,17 +21,22 @@ from mining.form_index import build_form_index
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=Path(__file__).resolve().parent / "mining/output")
-    parser.add_argument("--benchmark", type=Path, default=Path(__file__).resolve().parent / "mining/benchmark/preregistered_sample.json")
+    parser.add_argument("--output", type=Path, default=Path(__file__).resolve().parent / "mining/output-v2")
+    parser.add_argument("--benchmark", type=Path, default=Path(__file__).resolve().parent / "mining/benchmark-v2/preregistered_sample.json")
     parser.add_argument("--labels", type=Path, help="Optional independent labels. Never used by the ranker or trainer.")
     parser.add_argument("--subset", choices=["dev", "test", "benchmark", "all"], default="all")
-    parser.add_argument("--model", choices=["uniform", "prior", "learned"], default="learned")
+    parser.add_argument("--model", choices=["uniform", "prior", "learned"], default="prior")
     parser.add_argument("--evaluate-only", action="store_true", help="Evaluate already-frozen candidates; requires --labels.")
+    parser.add_argument("--freeze", action="store_true", help="Record code/config/output hashes after a full run without labels. The caller must separately enforce blind label release.")
     args = parser.parse_args()
     root = Path(__file__).resolve().parent.parent
     corpus = Corpus(root)
     baseline = {(c["id"], p["id"]): existing_ranking(c) for p in corpus.pages for c in p["citations"]}
     output = args.output
+    if output.resolve() == (root / "vlb/mining/output").resolve():
+        parser.error("vlb/mining/output is the frozen V1 experiment; choose a separate output directory")
+    if args.freeze and (args.subset != "all" or args.labels or args.evaluate_only):
+        parser.error("--freeze requires a full run without --labels or --evaluate-only")
     if args.evaluate_only:
         if not args.labels:
             parser.error("--evaluate-only requires --labels")
@@ -80,6 +86,7 @@ def main():
                           "top_candidate_ocr": dict(Counter(r["candidates"][0]["ocr_target"]["status"] for r in records if r["candidates"]))},
                "source_modified": False, "production_targets_modified": False,
                "review_status": "all newly mined associations are unreviewed",
+               "span_alternative_scope": "Up to three additional exact source spans per candidate paragraph, with independent evidence; never editorial verification",
                "scores_are_probabilities": False,
                "unresolved_citations": read_json(root / "vlb/data/unresolved-citations.json")}
     write_json(output / "candidates.json.gz", {**summary, "records": records})
@@ -89,6 +96,20 @@ def main():
     summary["headword_form_index_sha256"] = sha(output / "headword-form-index.json.gz")
     summary["headword_form_index_entries"] = form_index["entry_count"]
     write_json(output / "summary.json", summary, pretty=True)
+    if args.freeze:
+        paths = ["vlb/mine_alignment.py", "vlb/mining/pipeline.py", "vlb/mining/quotation.py",
+                 "vlb/mining/orthography.py", "vlb/mining/seeds.py", "vlb/mining/form_index.py"]
+        write_json(output / "model-freeze.json", {
+            "schema_version": 1, "frozen_at_utc": datetime.now(timezone.utc).isoformat(),
+            "algorithm_sha256": {path: sha(root / path) for path in paths},
+            "config": CONFIG, "config_sha256": digest(CONFIG),
+            "benchmark_sha256": sha(args.benchmark), "model_kind": args.model,
+            "output_sha256": {name: sha(output / name) for name in
+                              ["candidates.json.gz", "headword-form-index.json.gz",
+                               "orthography-model.json", "seeds.json.gz", "summary.json"]},
+            "labels_supplied_to_run": False,
+            "protocol": "Immutable prediction/code snapshot. Independent label withholding and release are recorded separately by the reviewer.",
+        }, pretty=True)
     if args.labels:
         result = evaluate(read_json(args.labels), {(r["citation_id"], r["page_id"]): r for r in records}, baseline)
         result["prediction_sha256"] = summary["candidates_sha256"]
