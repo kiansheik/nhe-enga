@@ -1,0 +1,120 @@
+{
+  "benchmark_sha256": "f5a71f90a73e48710b984179b693e3b70a20f3c57b7b93109bcd786d2ff597fc",
+  "candidates_sha256": "84e9928cca755c6d78a4d4cb201555549ddbc80f0f5cbfb9506953e8bafd368e",
+  "config": {
+    "form_weight": 70.0,
+    "paragraph_span_shortlist": 3,
+    "portuguese_context_weight": 20.0,
+    "quotation_context_weight": 18.0,
+    "quoted_surface_weight": 4.0,
+    "scores_are_probabilities": false,
+    "short_form_min_context": 0.34,
+    "suggestion_min_margin": 5.0,
+    "suggestion_min_similarity": 0.84,
+    "surface_shortlist": 2,
+    "top_k": 3,
+    "version": "vlb-page-ranker-v1"
+  },
+  "counts": {
+    "page_memberships": 6164,
+    "silver_training_pairs": 613,
+    "status": {
+      "needs_review": 3136,
+      "no_candidate": 5,
+      "suggested": 2885,
+      "weak_candidates": 138
+    },
+    "top_candidate_ocr": {
+      "form_token_match": 5305,
+      "paragraph_only": 815,
+      "unavailable": 39
+    }
+  },
+  "headword_form_index_entries": 4146,
+  "headword_form_index_sha256": "03af3fef01a19d8e60725ab313bf7dda1bfcd0375b31cd69f6e08c0c2abdcd1a",
+  "model_kind": "learned",
+  "model_sha256": "eeb6a88beccade28b0def9d3edd0589277fe81a026d0604b18ffdba493246afe",
+  "production_targets_modified": false,
+  "provenance": {
+    "citation_links_sha256": "a531ca21ef2bb8f2bbaa1257b882dbdc82b91894b9c823ba8710688bfdb5ff93",
+    "dictionary_sha256": "d235a7961961b58fcfbb93362bc3acb9b7f7b7e823196dca5763ef3e7fd16f53",
+    "document_revision": "568",
+    "ocr_layout_sha256": "0f8368047b4c297a771127a97c7be93f93cf9336fda532221f7b95956448fd35",
+    "offsets": "zero-based Unicode character offsets, half-open; in this snapshot characters are all BMP",
+    "page_alignment_sha256": "1fc799dc65f5506da10cc101fc1434ef859cb4a75ce3b0252f06a6f282395a02",
+    "source_text_sha256": "0be22fae2f181e344963590add1016670ba12706af675b51f21cf7571d974fb9",
+    "viewer_manifest_sha256": "1997138681315925778f543bc14c764bac9a204be5b52a85dd54cf1b84ff0d67"
+  },
+  "review_status": "all newly mined associations are unreviewed",
+  "schema_version": 1,
+  "scores_are_probabilities": false,
+  "seed_sha256": "37380a5c4e52f33cd53de0be612f998a7a83af789362eebf5bb695000b0df1e8",
+  "source_modified": false,
+  "unresolved_citations": [
+    {
+      "adapted_citation": false,
+      "citation_end_exclusive": 160,
+      "citation_id": "navarro-d235a7961961b58f-r02451-s00148-e00160",
+      "citation_page_link_status": "no_cited_page_range_linked",
+      "citation_start": 148,
+      "citation_type": "explicit",
+      "definition_sha256": "145bb466903b698f129a85c468811e90d1393cccffb884cfe8a9c1e873cfba68",
+      "dictionary_snapshot_sha256": "d235a7961961b58fcfbb93362bc3acb9b7f7b7e823196dca5763ef3e7fd16f53",
+      "entry_index": 2451,
+      "headword": "aeté",
+      "homonym": "",
+      "inherits_source_from_citation_id": null,
+      "inherits_volume_from_citation_id": null,
+      "legacy_id": 2451,
+      "local_context_end_exclusive": 148,
+      "local_context_start": 0,
+      "local_context_text": "(s.) - fineza (em bondade ou maldade); cousa fina; (adj.) - fino, aprimorado, bem feito, muito bom: Iî aeté. - Ele é fino. Xe aeté. - Eu sou fino. (",
+      "local_context_truncated": false,
+      "locator_flags": [
+        "page_number_outlier_requires_review"
+      ],
+      "locator_status": "needs_review",
+      "page_links": [
+        {
+          "link_status": "locator_not_in_verified_printed_page_map",
+          "paragraph_candidates": [],
+          "printed_page": 1390,
+          "volume": "I"
+        }
+      ],
+      "raw_citation": "VLB, I, 1390",
+      "reference_group_start": 148,
+      "shared_reference_group_context": false,
+      "source_spelling": "VLB"
+    },
+    {
+      "adapted_citation": false,
+      "citation_end_exclusive": 228,
+      "citation_id": "navarro-d235a7961961b58f-r04595-s00222-e00228",
+      "citation_page_link_status": "missing_parseable_page_locator",
+      "citation_start": 222,
+      "citation_type": "explicit",
+      "definition_sha256": "47b22731321ab7851d56821b6a9e3d98e1bd85cc3d661e8f2b7cac703583a085",
+      "dictionary_snapshot_sha256": "d235a7961961b58fcfbb93362bc3acb9b7f7b7e823196dca5763ef3e7fd16f53",
+      "entry_index": 4595,
+      "headword": "hegûy",
+      "homonym": "",
+      "inherits_source_from_citation_id": null,
+      "inherits_volume_from_citation_id": null,
+      "legacy_id": 4595,
+      "local_context_end_exclusive": 222,
+      "local_context_start": 124,
+      "local_context_text": "); 2) ah! (como que entendendo, afinal, alguma coisa ou lembrando-se dela): Eẽ hegûy! - Ah, sim! (",
+      "local_context_truncated": false,
+      "locator_flags": [
+        "missing_page"
+      ],
+      "locator_status": "incomplete",
+      "page_links": [],
+      "raw_citation": "VLB, I",
+      "reference_group_start": 222,
+      "shared_reference_group_context": false,
+      "source_spelling": "VLB"
+    }
+  ]
+}

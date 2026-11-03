@@ -1,0 +1,1109 @@
+{
+  "schema_version": 1,
+  "purpose": "Frozen held-out test evaluation only; exclude these headwords and pages from orthographic rule seed training. Assistant-reviewed, not human-verified.",
+  "dictionary_sha256": "d235a7961961b58fcfbb93362bc3acb9b7f7b7e823196dca5763ef3e7fd16f53",
+  "source_sha256": "0be22fae2f181e344963590add1016670ba12706af675b51f21cf7571d974fb9",
+  "sample_preregistration": "preregistered_sample.json",
+  "review_method": "Read citation context and Emerson page fragments without future model rankings. Identify a form using both historical spelling and the Portuguese sense or quoted example. Do not force uncertain locations.",
+  "status_definitions": {
+    "clear": "Assistant identifies a particular Emerson source paragraph and literal form corresponding to this citation occurrence.",
+    "ambiguous": "Assistant identifies possible locations but cannot establish a unique correspondence; do not count these as confirmed positive labels.",
+    "not_found": "Assistant did not identify a correspondence on the cited page; not proof that the VLB or dictionary lacks the lexeme."
+  },
+  "limitations": [
+    "No human or specialist verification is claimed.",
+    "Source IDs and source_line values identify Emerson transcription paragraphs, not physical printed scan lines.",
+    "Character offsets are zero-based, half-open Unicode code-point offsets in the pinned Emerson text snapshot.",
+    "Citation-page boundaries are existing estimated boundaries; a not_found case may reflect a citation or boundary error.",
+    "The sample deliberately balances baseline difficulty strata; its raw accuracy is not a corpus-wide prevalence estimate.",
+    "A clear paragraph match does not validate every dictionary gloss, etymology, or morphological analysis."
+  ],
+  "cases": [
+    {
+      "case_id": "eval-01936492a5c4",
+      "citation_id": "navarro-d235a7961961b58f-r09662-s00866-e00876",
+      "page_id": "I-062",
+      "headword": "so'o",
+      "entry_index": 9662,
+      "homonym": "1",
+      "volume": "I",
+      "baseline_stratum": "baseline_target",
+      "adapted": false,
+      "ordinal": 3,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p01349"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p01349",
+          "source_line": 1349,
+          "form": "Xeçoocuguab",
+          "form_start0": 73097,
+          "form_end0": 73108,
+          "fragment_start0": 21,
+          "fragment_end0": 32,
+          "role": "inflected_compound",
+          "source_excerpt": "Caçar saber o cão. — Xeçoocuguab. Tambem dizem. Ymbae potar jaguara, he bõ de caça."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 62",
+        "citation_context": "); so'o-kugûaba - conhecedor de animais, bom de caça (fal. de cão) (",
+        "reason": "This particular citation follows the compound so'o-kugûaba and the gloss bom de caça (fal. de cão), matching Caçar saber o cão, Xeçoocuguab. The nearby standalone Çoo under Caça is not the location of this cited compound."
+      },
+      "limitations": [],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-00e3e438faac",
+      "citation_id": "navarro-d235a7961961b58f-r07566-s00052-e00062",
+      "page_id": "I-067",
+      "headword": "moti'apeba",
+      "entry_index": 7566,
+      "homonym": "",
+      "volume": "I",
+      "baseline_stratum": "baseline_target",
+      "adapted": false,
+      "ordinal": 4,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p01521"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p01521",
+          "source_line": 1521,
+          "form": "Motiapeba",
+          "form_start0": 81502,
+          "form_end0": 81511,
+          "fragment_start0": 394,
+          "fragment_end0": 403,
+          "role": "headword_form",
+          "source_excerpt": "Caranguejo não tem gro. — Os grãdes do mato. Guanhumyg. Os dos mangues Uçâ. As femeas destes. Cunduru. Os vermelhos também dos mangues. Aratû. Os do mar que estão debaixo das pedras. Guajâ. Este tem debaixo de si muitas especies. Os largos de duas pontas agudas que sẽpre andão polo fundo. Ciry, E tem muitas especies. Ciriguaçu. Cirinema. Os piquininos que sobem polas arvores. Çararâ. Outros Motiapeba. Os menores de todos e das bocas mayores que o corpo. Maracoanŷ. E Çiécie. hũs da agoa doce. Goararu. Hũs q. andão pla praya. Aguarãuçâ. Cirimiri. andão nas õdas do mar."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 67",
+        "citation_context": "(etim. - peito achatado) (s.) - var. de caranguejo (",
+        "reason": "The crab species paragraph explicitly lists Outros Motiapeba; this matches Navarro's moti'apeba, var. de caranguejo. No claim is made about the separate etymology gloss."
+      },
+      "limitations": [],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-01f1903ea53b",
+      "citation_id": "navarro-d235a7961961b58f-r07892-s00021-e00031",
+      "page_id": "I-066",
+      "headword": "nhe'engaraíb",
+      "entry_index": 7892,
+      "homonym": "",
+      "volume": "I",
+      "baseline_stratum": "baseline_target",
+      "adapted": false,
+      "ordinal": 5,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p01484"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p01484",
+          "source_line": 1484,
+          "form": "Anheengaraib",
+          "form_start0": 79575,
+          "form_end0": 79587,
+          "fragment_start0": 20,
+          "fragment_end0": 32,
+          "role": "inflected_form",
+          "source_excerpt": "Cantar. — Anheẽgar. Anheengaraib."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 66",
+        "citation_context": "(v. intr.) - cantar (",
+        "reason": "The VLB Cantar entry gives Anheengaraib, corresponding to Navarro nhe'engaraíb, cantar, with the first-person a- prefix."
+      },
+      "limitations": [],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-00f6e3c454f0",
+      "citation_id": "navarro-d235a7961961b58f-r07205-s00079-e00089",
+      "page_id": "I-033",
+      "headword": "mokambu",
+      "entry_index": 7205,
+      "homonym": "",
+      "volume": "I",
+      "baseline_stratum": "baseline_target",
+      "adapted": false,
+      "ordinal": 7,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p00447"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p00447",
+          "source_line": 447,
+          "form": "Aimocambû",
+          "form_start0": 25613,
+          "form_end0": 25622,
+          "fragment_start0": 13,
+          "fragment_end0": 22,
+          "role": "inflected_form",
+          "source_excerpt": "Amamentar. — Aimocambû. act."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 33",
+        "citation_context": "(ou mokamby) (etim. - fazer beber leite) (v.tr.) - amamentar, aleitar, lactar (",
+        "reason": "Amamentar — Aimocambû directly matches mokambu, amamentar/aleitar. The historical first-person form and c/k spelling account for the surface difference."
+      },
+      "limitations": [],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-01b72ce03083",
+      "citation_id": "navarro-d235a7961961b58f-r08244-s00029-e00039",
+      "page_id": "I-089",
+      "headword": "oîobaîbé",
+      "entry_index": 8244,
+      "homonym": "",
+      "volume": "I",
+      "baseline_stratum": "baseline_target",
+      "adapted": false,
+      "ordinal": 8,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p02201"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p02201",
+          "source_line": 2201,
+          "form": "Ojobaibê",
+          "form_start0": 119940,
+          "form_end0": 119948,
+          "fragment_start0": 20,
+          "fragment_end0": 28,
+          "role": "headword_form",
+          "source_excerpt": "Damba las partes. — Ojobaibê. Ojoiabenhe."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 89",
+        "citation_context": "(adv.) - de ambas as partes (",
+        "reason": "Damba las partes — Ojobaibê matches oîobaîbé, de ambas as partes, in both form and gloss."
+      },
+      "limitations": [],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-0b0cab613373",
+      "citation_id": "navarro-d235a7961961b58f-r03826-s00117-e00135",
+      "page_id": "I-022",
+      "headword": "eîyî",
+      "entry_index": 3826,
+      "homonym": "",
+      "volume": "I",
+      "baseline_stratum": "candidate_unresolved",
+      "adapted": true,
+      "ordinal": 9,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p00176"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p00176",
+          "source_line": 176,
+          "form": "Aceigj",
+          "form_start0": 9709,
+          "form_end0": 9715,
+          "fragment_start0": 27,
+          "fragment_end0": 33,
+          "role": "inflected_form",
+          "source_excerpt": "Afastar de lugar. — Aipeâ. Aceigj."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 22, adapt.",
+        "citation_context": "(s) (v.tr.) - 1) afastar (de lugar), desviar, tirar de um lugar para outro: Aseîyî (abá) suí. - Afastei-o do homem. (",
+        "reason": "Afastar de lugar — Aceigj corresponds to Navarro's transitive eîyî (s) and adapted Aseîyî example. The reflexive Aieigj under Afastar-se in paragraph 180 is a different grammatical construction."
+      },
+      "limitations": [
+        "The added abá phrase in the adapted dictionary example is not reproduced in this Emerson paragraph."
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-001634319ffd",
+      "citation_id": "navarro-d235a7961961b58f-r02314-s00265-e00276",
+      "page_id": "I-137",
+      "headword": "'a",
+      "entry_index": 2314,
+      "homonym": "1",
+      "volume": "I",
+      "baseline_stratum": "candidate_unresolved",
+      "adapted": false,
+      "ordinal": 10,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p03612"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p03612",
+          "source_line": 3612,
+          "form": "Apixapaba",
+          "form_start0": 204084,
+          "form_end0": 204093,
+          "fragment_start0": 51,
+          "fragment_end0": 60,
+          "role": "compound_form",
+          "source_excerpt": "Ferida não tem genero. — A da cabeça propriamente. Apixapaba ainda q. algũas uezes se usa deste nome nas feridas q. se dão por outras partes fora da cabeça, mas improprie."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 137",
+        "citation_context": ") ● 'a-pixapaba - ferida da cabeça \"Às vezes se usa deste nome nas feridas que se dão por outras partes, fora da cabeça, mas impropriamente.\" (",
+        "reason": "The citation is attached to the compound 'a-pixapaba, not the isolated one-letter lemma. VLB Apixapaba and its explanation that the term is sometimes extended beyond head wounds match both the compound and Navarro's quoted prose."
+      },
+      "limitations": [],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-01103f52d3c5",
+      "citation_id": "navarro-d235a7961961b58f-r11383-s00495-e00505",
+      "page_id": "I-051",
+      "headword": "ypy",
+      "entry_index": 11383,
+      "homonym": "6",
+      "volume": "I",
+      "baseline_stratum": "candidate_unresolved",
+      "adapted": false,
+      "ordinal": 11,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p00995"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p00995",
+          "source_line": 995,
+          "form": "natigpîj",
+          "form_start0": 54294,
+          "form_end0": 54302,
+          "fragment_start0": 61,
+          "fragment_end0": 69,
+          "role": "quoted_example",
+          "source_excerpt": "Baixo ser assi o mar ou qualquer agoa. — Naxerigpîj Et in 3ª natigpîj."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 51",
+        "citation_context": "); Na typyî. - Ele (isto é, o mar, o rio) não é fundo. (",
+        "reason": "The cited third-person negative Na typyî matches natigpîj, explicitly marked in 3ª under Baixo ser assi o mar ou qualquer agoa. The alternative first-person Naxerigpîj is in the same paragraph."
+      },
+      "limitations": [],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-0129a03fb901",
+      "citation_id": "navarro-d235a7961961b58f-r04538-s00208-e00219",
+      "page_id": "I-048",
+      "headword": "gûyragûasu",
+      "entry_index": 4538,
+      "homonym": "",
+      "volume": "I",
+      "baseline_stratum": "candidate_unresolved",
+      "adapted": false,
+      "ordinal": 13,
+      "status": "ambiguous",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p00924"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p00924",
+          "source_line": 924,
+          "form": "Guirâguaçu",
+          "form_start0": 51098,
+          "form_end0": 51108,
+          "fragment_start0": 22,
+          "fragment_end0": 32,
+          "role": "related_headword",
+          "source_excerpt": "Aue de rapina gnlr. — Guirâguaçu."
+        }
+      ],
+      "evidence": {
+        "raw_citation": " VLB, I, 48",
+        "citation_context": "(etim. - ave grande) (s.) - nome comum a diferentes espécies de aves de rapina das famílias dos falconídeos e dos accipitrídeos; gavião (v. tb. ûyraûasu): gûyragûasu-aba - pena de gavião (",
+        "reason": "The page directly supports the parent lemma gûyragûasu, bird of prey, as Guirâguaçu. However this citation occurrence follows the compound gûyragûasu-aba, pena de gavião, which does not occur in the inspected page. The parent lemma paragraph is plausible but does not establish the compound citation."
+      },
+      "limitations": [
+        "Do not score this as a uniquely confirmed citation occurrence."
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-00a304c94a15",
+      "citation_id": "navarro-d235a7961961b58f-r05672-s00097-e00107",
+      "page_id": "I-062",
+      "headword": "ka'apîasó",
+      "entry_index": 5672,
+      "homonym": "",
+      "volume": "I",
+      "baseline_stratum": "candidate_unresolved",
+      "adapted": false,
+      "ordinal": 14,
+      "status": "ambiguous",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p01369",
+        "vlb-emerson-r568-p01370"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p01369",
+          "source_line": 1369,
+          "form": "Acaapiaço",
+          "form_start0": 74128,
+          "form_end0": 74137,
+          "fragment_start0": 32,
+          "fragment_end0": 41,
+          "role": "inflected_form",
+          "source_excerpt": "Cag., purgare uentrem. — Apoty. Acaapiaço. Acaab."
+        },
+        {
+          "source_id": "vlb-emerson-r568-p01370",
+          "source_line": 1370,
+          "form": "Acaapiaço",
+          "form_start0": 74178,
+          "form_end0": 74187,
+          "fragment_start0": 32,
+          "fragment_end0": 41,
+          "role": "inflected_form",
+          "source_excerpt": "Cag., ir a isso. — Caapeaço, l, Acaapiaço."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 62",
+        "citation_context": "(etim. - ir ao mato) (v. intr.) - defecar, ir defecar: Aka'apîasó. - Defequei (ou fui defecar). (",
+        "reason": "Acaapiaço occurs in two adjacent source paragraphs: defecating generally and going to defecate. Navarro gives both senses and the same finite form, so either paragraph fits and the citation alone does not determine which one."
+      },
+      "limitations": [
+        "Both paragraph IDs are plausible; there is no unique target."
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-499a8b233df1",
+      "citation_id": "navarro-d235a7961961b58f-r04230-s00221-e00240",
+      "page_id": "I-127",
+      "headword": "esaraî",
+      "entry_index": 4230,
+      "homonym": "",
+      "volume": "I",
+      "baseline_stratum": "no_candidate",
+      "adapted": true,
+      "ordinal": 17,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p03340"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p03340",
+          "source_line": 3340,
+          "form": "Xereçaray",
+          "form_start0": 187678,
+          "form_end0": 187687,
+          "fragment_start0": 61,
+          "fragment_end0": 70,
+          "role": "quoted_example",
+          "source_excerpt": "Esquecer-me algũa cousa passada, ou esquecido estar della. — Xereçaray. çuî."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 127, adapt.",
+        "citation_context": "); Xe resaraî (mba'e) suí. - Eu me esqueci de algo. (",
+        "reason": "The adapted Xe resaraî ... suí example matches Xereçaray with çuî under forgetting something past. The previous paragraph uses rece and a different forgetting construction; the quoted postposition identifies this paragraph."
+      },
+      "limitations": [],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-0092af1f2eff",
+      "citation_id": "navarro-d235a7961961b58f-r10913-s00170-e00180",
+      "page_id": "I-066",
+      "headword": "usá",
+      "entry_index": 10913,
+      "homonym": "",
+      "volume": "I",
+      "baseline_stratum": "no_candidate",
+      "adapted": false,
+      "ordinal": 18,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p01520"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p01520",
+          "source_line": 1520,
+          "form": "Auçaoc",
+          "form_start0": 81100,
+          "form_end0": 81106,
+          "fragment_start0": 15,
+          "fragment_end0": 21,
+          "role": "quoted_compound",
+          "source_excerpt": "Caranguejar. — Auçaoc."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 66",
+        "citation_context": "): Ausá-'ok. - Apanho caranguejos. (",
+        "reason": "The citation follows the finite compound Ausá-'ok, apanhar caranguejos. Caranguejar — Auçaoc supplies precisely that compound; the standalone crab noun on the next printed page is not needed to identify this occurrence."
+      },
+      "limitations": [],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-00f23561fd3f",
+      "citation_id": "navarro-d235a7961961b58f-r10751-s00543-e00553",
+      "page_id": "I-084",
+      "headword": "ugûy",
+      "entry_index": 10751,
+      "homonym": "",
+      "volume": "I",
+      "baseline_stratum": "no_candidate",
+      "adapted": false,
+      "ordinal": 22,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p02071"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p02071",
+          "source_line": 2071,
+          "form": "Xeruguig",
+          "form_start0": 112382,
+          "form_end0": 112390,
+          "fragment_start0": 103,
+          "fragment_end0": 111,
+          "role": "quoted_example",
+          "source_excerpt": "Custume uir-lhe assi a primeira vez. — Anhemõdigar. a 2ª Aieporeroipoc. dali por deante. Aicoaib, vel, Xeruguig."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 84",
+        "citation_context": ")]; [adj.: ugûy (r, s)] - sangrado; (xe) ter sangue; estar menstruada: Xe rugûy. - Eu estou menstruada. (",
+        "reason": "Xe rugûy, estou menstruada, matches Xeruguig under the entry for the woman's recurring purgação. The preceding Tuguig noun paragraph has related vocabulary, but the citation specifically quotes the predicate."
+      },
+      "limitations": [],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-015bba239e1a",
+      "citation_id": "navarro-d235a7961961b58f-r03464-s00091-e00101",
+      "page_id": "I-059",
+      "headword": "asema",
+      "entry_index": 3464,
+      "homonym": "",
+      "volume": "I",
+      "baseline_stratum": "no_candidate",
+      "adapted": false,
+      "ordinal": 23,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p01242"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p01242",
+          "source_line": 1242,
+          "form": "Tacẽma",
+          "form_start0": 68026,
+          "form_end0": 68032,
+          "fragment_start0": 15,
+          "fragment_end0": 21,
+          "role": "headword_form",
+          "source_excerpt": "Brados assi. — Tacẽma; Tacẽtacema."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 59",
+        "citation_context": "); clamor, brado (de dor, de pedido de socorro, etc.) (",
+        "reason": "Brados assi — Tacẽma directly follows the explanation of cries for help or in pain, matching Navarro's clamor/brado (de dor, de pedido de socorro). The preceding Xeraceracem is the associated verb, not the cited noun."
+      },
+      "limitations": [],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-011840243751",
+      "citation_id": "navarro-d235a7961961b58f-r09735-s00048-e00059",
+      "page_id": "II-024",
+      "headword": "sura",
+      "entry_index": 9735,
+      "homonym": "",
+      "volume": "II",
+      "baseline_stratum": "baseline_target",
+      "adapted": false,
+      "ordinal": 26,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p04544"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p04544",
+          "source_line": 4544,
+          "form": "Çura",
+          "form_start0": 257929,
+          "form_end0": 257933,
+          "fragment_start0": 102,
+          "fragment_end0": 106,
+          "role": "headword_form",
+          "source_excerpt": "Lombo como o q. as uezes tem a faca, ou uara acepilhada e o mais q. ouuera de ser direito ou igual. — Çura. Açura. Candura."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, II, 24",
+        "citation_context": "); lombada; lombo (",
+        "reason": "Lombo on an otherwise straight object — Çura directly supplies the cited sura sense. The following Xeaçur/Xeçur forms are predicates, while the noun Çura is explicit here."
+      },
+      "limitations": [],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-04f3e4119a68",
+      "citation_id": "navarro-d235a7961961b58f-r09434-s00059-e00070",
+      "page_id": "II-040",
+      "headword": "ri'a",
+      "entry_index": 9434,
+      "homonym": "",
+      "volume": "II",
+      "baseline_stratum": "baseline_target",
+      "adapted": false,
+      "ordinal": 27,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p04982"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p04982",
+          "source_line": 4982,
+          "form": "Ria",
+          "form_start0": 284346,
+          "form_end0": 284349,
+          "fragment_start0": 29,
+          "fragment_end0": 32,
+          "role": "headword_form",
+          "source_excerpt": "Molher que tem testiculos. — Ria."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, II, 40",
+        "citation_context": "(s.) - homem que parece mulher; mulher que tem testículos (",
+        "reason": "Molher que tem testiculos — Ria exactly matches the second historical dictionary gloss and ri'a form. The annotation identifies the textual correspondence without modernizing or endorsing the source terminology."
+      },
+      "limitations": [],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-014f734db1aa",
+      "citation_id": "navarro-d235a7961961b58f-r10377-s00052-e00064",
+      "page_id": "II-145",
+      "headword": "timbopeba",
+      "entry_index": 10377,
+      "homonym": "",
+      "volume": "II",
+      "baseline_stratum": "baseline_target",
+      "adapted": false,
+      "ordinal": 28,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p07593"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p07593",
+          "source_line": 7593,
+          "form": "Timbopeba",
+          "form_start0": 460090,
+          "form_end0": 460099,
+          "fragment_start0": 69,
+          "fragment_end0": 78,
+          "role": "headword_form",
+          "source_excerpt": "Uime, ou semelhante pera atar. — Igcîpo. Especies: Timbô. Timborana. Timbopeba."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, II, 145",
+        "citation_context": "(etim. - timbó achatado) (s.) - var. de timbó (v.) (",
+        "reason": "The source lists Timbopeba among species of tying vines under Uime, alongside Timbô and Timborana. The distinctive literal form matches the dictionary headword and its timbó-variety identification."
+      },
+      "limitations": [],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-0152779c79f8",
+      "citation_id": "navarro-d235a7961961b58f-r04492-s00032-e00043",
+      "page_id": "II-023",
+      "headword": "gûe'esamuku",
+      "entry_index": 4492,
+      "homonym": "",
+      "volume": "II",
+      "baseline_stratum": "baseline_target",
+      "adapted": false,
+      "ordinal": 29,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p04519"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p04519",
+          "source_line": 4519,
+          "form": "Gueeçãmucû",
+          "form_start0": 255816,
+          "form_end0": 255826,
+          "fragment_start0": 44,
+          "fragment_end0": 54,
+          "role": "headword_form",
+          "source_excerpt": "Linha assi delgada. — Pindaçapoî. Gueeçãma. Gueeçãmucû."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, II, 23",
+        "citation_context": "(s.) - linha delgada de pescar (",
+        "reason": "Linha assi delgada, immediately following Linha de pescar, explicitly gives Gueeçãmucû. This matches gûe'esamuku, linha delgada de pescar, and distinguishes the shorter Gueeçãma alternative."
+      },
+      "limitations": [],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-00d52cbb1cfa",
+      "citation_id": "navarro-d235a7961961b58f-r09199-s00955-e00966",
+      "page_id": "II-050",
+      "headword": "putuna",
+      "entry_index": 9199,
+      "homonym": "",
+      "volume": "II",
+      "baseline_stratum": "baseline_target",
+      "adapted": false,
+      "ordinal": 30,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p05224"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p05224",
+          "source_line": 5224,
+          "form": "Pigtuã",
+          "form_start0": 299743,
+          "form_end0": 299749,
+          "fragment_start0": 21,
+          "fragment_end0": 27,
+          "role": "quoted_example",
+          "source_excerpt": "Noite ser. — Pigtun. Pigtuã. Pigtuniã."
+        },
+        {
+          "source_id": "vlb-emerson-r568-p05224",
+          "source_line": 5224,
+          "form": "Pigtuniã",
+          "form_start0": 299751,
+          "form_end0": 299759,
+          "fragment_start0": 29,
+          "fragment_end0": 37,
+          "role": "quoted_example",
+          "source_excerpt": "Noite ser. — Pigtun. Pigtuã. Pigtuniã."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, II, 50",
+        "citation_context": "); Pytũ 'ã (ou Pytun iã). - Eis que é noite. (",
+        "reason": "The cited variants Pytũ 'ã and Pytun iã correspond to Pigtuã and Pigtuniã under Noite ser. The standalone noun Putuna is in the preceding paragraph; this citation belongs to the predicate examples."
+      },
+      "limitations": [],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-001bd169767d",
+      "citation_id": "navarro-d235a7961961b58f-r05490-s00304-e00315",
+      "page_id": "II-033",
+      "headword": "îuká",
+      "entry_index": 5490,
+      "homonym": "1",
+      "volume": "II",
+      "baseline_stratum": "candidate_unresolved",
+      "adapted": false,
+      "ordinal": 34,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p04778"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p04778",
+          "source_line": 4778,
+          "form": "Ajucamatutenhe",
+          "form_start0": 271655,
+          "form_end0": 271669,
+          "fragment_start0": 50,
+          "fragment_end0": 64,
+          "role": "quoted_compound",
+          "source_excerpt": "Matança fazer. — Aimõbab. act. O mesmo quer dizer Ajucamatutenhe item Aporomõbab, absolut. Mas este não serue senão quando os mortos são pessoas."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, II, 33",
+        "citation_context": "); Aîuká-matutenhẽ. - Matei-os muito, fiz matança. (",
+        "reason": "Aîuká-matutenhẽ, fiz matança, matches Ajucamatutenhe under Matança fazer. The more general Ajuca under Matar is nearby but does not contain the cited intensifying compound."
+      },
+      "limitations": [],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-0096e996e6b9",
+      "citation_id": "navarro-d235a7961961b58f-r10924-s00103-e00115",
+      "page_id": "II-146",
+      "headword": "-usu",
+      "entry_index": 10924,
+      "homonym": "2",
+      "volume": "II",
+      "baseline_stratum": "candidate_unresolved",
+      "adapted": false,
+      "ordinal": 35,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p07603"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p07603",
+          "source_line": 7603,
+          "form": "Orojuruç",
+          "form_start0": 460782,
+          "form_end0": 460790,
+          "fragment_start0": 21,
+          "fragment_end0": 29,
+          "role": "quoted_example",
+          "source_excerpt": "Uir muitos iuntos. — Orojuruç. Orogoacẽ."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, II, 146",
+        "citation_context": "(suf. de temas terminados em consoante) - muito, muitos; (com o sujeito): Oroîurusu. - Viemos muitos. (",
+        "reason": "Uir muitos iuntos — Orojuruç is the identifiable counterpart of Oroîurusu, viemos muitos. The suffix is represented within a finite plural example, not as a standalone -usu headword."
+      },
+      "limitations": [
+        "The literal Emerson form ends in ç; preserve that text and do not silently emend it to the normalized dictionary spelling."
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-00317104a5ee",
+      "citation_id": "navarro-d235a7961961b58f-r08983-s00064-e00075",
+      "page_id": "II-018",
+      "headword": "porogûykutukaba",
+      "entry_index": 8983,
+      "homonym": "",
+      "volume": "II",
+      "baseline_stratum": "candidate_unresolved",
+      "adapted": false,
+      "ordinal": 36,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p04380"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p04380",
+          "source_line": 4380,
+          "form": "Moroguigcutucaba",
+          "form_start0": 247953,
+          "form_end0": 247969,
+          "fragment_start0": 25,
+          "fragment_end0": 41,
+          "role": "headword_form",
+          "source_excerpt": "Lanceta. — Morocutucaba. Moroguigcutucaba. vel. Moruguigmombucâba."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, II, 18",
+        "citation_context": "(m) (etim. - instrumento de sangrar as pessoas) (s.) - lanceta (",
+        "reason": "Lanceta explicitly lists Moroguigcutucaba, matching porogûykutukaba (m) and its lanceta gloss. The blood-related medial guig distinguishes it from the shorter Morocutucaba alternative."
+      },
+      "limitations": [],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-001358967670",
+      "citation_id": "navarro-d235a7961961b58f-r10935-s00097-e00108",
+      "page_id": "II-072",
+      "headword": "u'ubapé",
+      "entry_index": 10935,
+      "homonym": "",
+      "volume": "II",
+      "baseline_stratum": "candidate_unresolved",
+      "adapted": false,
+      "ordinal": 38,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p05723"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p05723",
+          "source_line": 5723,
+          "form": "Çuubapê",
+          "form_start0": 333381,
+          "form_end0": 333388,
+          "fragment_start0": 23,
+          "fragment_end0": 30,
+          "role": "headword_form",
+          "source_excerpt": "Penca como da palma. — Çuubapê. mas isto não nomea todo o ramo senão aquella parte donde a folha começa ate a mesma palmeira .s. o pe do ramo sem folha; e o mesmo se diz daquella casca grossa q. cobre os pes dos mesmos ramos e toma toda a palmeira â roda, senão q. pera diferẽça lhe acrecentão guaçû. ut. Çuubapêguaçû. Tambem se diz Çuubape, ao pê da folha da couue com a mesma declaração q. arriba, etc."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, II, 72",
+        "citation_context": "(r, s) (s.) - talo (p.ex., de folha de palmeira, de couve, etc.); o pé de um ramo sem as folhas (",
+        "reason": "Penca como da palma — Çuubapê includes the distinctive explanation o pe do ramo sem folha and extends it to cabbage leaf stalks. Both the literal form and that explanation match u'ubapé (r,s) and its cited definition."
+      },
+      "limitations": [],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-9e3e8f6982f1",
+      "citation_id": "navarro-d235a7961961b58f-r07915-s00260-e00276",
+      "page_id": "II-109",
+      "headword": "nhe'ẽporangaíba",
+      "entry_index": 7915,
+      "homonym": "",
+      "volume": "II",
+      "baseline_stratum": "no_candidate",
+      "adapted": true,
+      "ordinal": 41,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p06641"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p06641",
+          "source_line": 6641,
+          "form": "Xenheẽporãggoaib",
+          "form_start0": 398660,
+          "form_end0": 398676,
+          "fragment_start0": 58,
+          "fragment_end0": 74,
+          "role": "quoted_example",
+          "source_excerpt": "Rufiar com palauras. — Xearũaib (çupe). Xenheẽgarũaib, l, Xenheẽporãggoaib (çupe)."
+        }
+      ],
+      "evidence": {
+        "raw_citation": " II, 109, adapt.",
+        "citation_context": "(etim. - palavras bonitas ruins) (s.) - palavras de rufianice, palavras de sexo, de coisas sensuais; (adj.: nhe'ẽporangaíb) (xe) - ter palavras de sexo, de coisas sensuais: Xe nhe'ẽporangaíb (abá) supé. - Eu tenho palavras de sexo para as pessoas. (",
+        "reason": "Rufiar com palauras gives Xenheẽporãggoaib with çupe, matching the adapted Xe nhe'ẽporangaíb ... supé construction. The separate synonym Xenheẽgarũaib is not the same form."
+      },
+      "limitations": [
+        "Preserve the literal porãggoaib transcription; do not silently replace it with Navarro’s porangaíb spelling."
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-036aebfa11a4",
+      "citation_id": "navarro-d235a7961961b58f-r10587-s00268-e00279",
+      "page_id": "II-084",
+      "headword": "tyba",
+      "entry_index": 10587,
+      "homonym": "2",
+      "volume": "II",
+      "baseline_stratum": "no_candidate",
+      "adapted": false,
+      "ordinal": 42,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p06012"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p06012",
+          "source_line": 6012,
+          "form": "Tatigba",
+          "form_start0": 355678,
+          "form_end0": 355685,
+          "fragment_start0": 34,
+          "fragment_end0": 41,
+          "role": "quoted_compound",
+          "source_excerpt": "Pouado de muitos lugares. — Taba. Tatigba."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, II, 84",
+        "citation_context": "); tá-tyba - ajuntamento de aldeias (",
+        "reason": "The citation follows tá-tyba, ajuntamento de aldeias. Pouado de muitos lugares — Tatigba supplies that compound, while the preceding standalone Taba entry is not the cited derivation."
+      },
+      "limitations": [],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-037e9e490463",
+      "citation_id": "navarro-d235a7961961b58f-r08146-s00013-e00025",
+      "page_id": "II-109",
+      "headword": "nhynhynga",
+      "entry_index": 8146,
+      "homonym": "",
+      "volume": "II",
+      "baseline_stratum": "no_candidate",
+      "adapted": false,
+      "ordinal": 44,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p06643"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p06643",
+          "source_line": 6643,
+          "form": "Nhignhinga",
+          "form_start0": 398726,
+          "form_end0": 398736,
+          "fragment_start0": 9,
+          "fragment_end0": 19,
+          "role": "headword_form",
+          "source_excerpt": "Rugas. — Nhignhinga."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, II, 109",
+        "citation_context": "(s.) - ruga (",
+        "reason": "Rugas — Nhignhinga directly matches nhynhynga, ruga. The following Anhignhing is the finite predicate for having wrinkles and is distinguishable from the noun."
+      },
+      "limitations": [],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-01cc1ce0c33a",
+      "citation_id": "navarro-d235a7961961b58f-r03025-s00090-e00097",
+      "page_id": "II-093",
+      "headword": "anõîa",
+      "entry_index": 3025,
+      "homonym": "",
+      "volume": "II",
+      "baseline_stratum": "no_candidate",
+      "adapted": false,
+      "ordinal": 46,
+      "status": "not_found",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [],
+      "targets": [],
+      "evidence": {
+        "raw_citation": " II, 93",
+        "citation_context": "(adv.) - outra parte; acolá; anõîa suí - de lá, daquela parte; de acolá, dali (",
+        "reason": "No corresponding anõîa/anõîa suí form or de lá/acolá sense was identified in the complete II-093 transcription, which runs from Quebrar to Queixo. The page's PDF OCR independently contains the same entry sequence. Adjacent pages II-092 and II-094 also do not show an obvious continuation for this citation."
+      },
+      "limitations": [
+        "This is a page-specific unresolved citation, not proof that the lexeme is absent from the VLB. The same dictionary entry separately cites I-89, where a corresponding adverb form exists; no correction of II-93 is asserted."
+      ],
+      "split": "test"
+    },
+    {
+      "case_id": "eval-038ad8345194",
+      "citation_id": "navarro-d235a7961961b58f-r09680-s00619-e00630",
+      "page_id": "II-067",
+      "headword": "sosé",
+      "entry_index": 9680,
+      "homonym": "",
+      "volume": "II",
+      "baseline_stratum": "no_candidate",
+      "adapted": false,
+      "ordinal": 48,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p05589"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p05589",
+          "source_line": 5589,
+          "form": "Uinte çoce",
+          "form_start0": 325040,
+          "form_end0": 325050,
+          "fragment_start0": 47,
+          "fragment_end0": 57,
+          "role": "quoted_example",
+          "source_excerpt": "Passante de tantos ou mais de. ec. — Çoce. ut. Uinte çoce .i. passante de uinte."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, II, 67",
+        "citation_context": "); vinte sosé - mais de vinte (",
+        "reason": "Uinte çoce, passante de uinte, exactly corresponds to the dictionary's vinte sosé, mais de vinte. The cited occurrence is the example phrase under Passante de tantos, not a standalone isolated sosé."
+      },
+      "limitations": [],
+      "split": "test"
+    }
+  ],
+  "split": "test"
+}

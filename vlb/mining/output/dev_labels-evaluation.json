@@ -1,0 +1,449 @@
+{
+  "cases": [
+    {
+      "case_id": "eval-0e8f0d49d678",
+      "existing_top1_correct": true,
+      "existing_top3_contains_gold": true,
+      "gold_source_ids": [
+        "vlb-emerson-r568-p00624"
+      ],
+      "headword": "moín",
+      "label_status": "clear",
+      "page_id": "I-039",
+      "proposal_status": "needs_review",
+      "ranked_source_ids": [
+        "vlb-emerson-r568-p00624",
+        "vlb-emerson-r568-p00634",
+        "vlb-emerson-r568-p00626"
+      ],
+      "top1_attested_span_contains_or_is_in_gold": true,
+      "top1_correct": true,
+      "top1_exact_attested_span": true,
+      "top3_contains_gold": true
+    },
+    {
+      "case_id": "eval-010c5c50dcaa",
+      "existing_top1_correct": true,
+      "existing_top3_contains_gold": true,
+      "gold_source_ids": [
+        "vlb-emerson-r568-p00143"
+      ],
+      "headword": "marã",
+      "label_status": "clear",
+      "page_id": "I-021",
+      "proposal_status": "needs_review",
+      "ranked_source_ids": [
+        "vlb-emerson-r568-p00143",
+        "vlb-emerson-r568-p00134",
+        "vlb-emerson-r568-p00125"
+      ],
+      "top1_attested_span_contains_or_is_in_gold": true,
+      "top1_correct": true,
+      "top1_exact_attested_span": false,
+      "top3_contains_gold": true
+    },
+    {
+      "case_id": "eval-00bd0d69e365",
+      "existing_top1_correct": true,
+      "existing_top3_contains_gold": true,
+      "gold_source_ids": [
+        "vlb-emerson-r568-p01818"
+      ],
+      "headword": "momotar",
+      "label_status": "clear",
+      "page_id": "I-075",
+      "proposal_status": "suggested",
+      "ranked_source_ids": [
+        "vlb-emerson-r568-p01818",
+        "vlb-emerson-r568-p01817",
+        "vlb-emerson-r568-p01819"
+      ],
+      "top1_attested_span_contains_or_is_in_gold": true,
+      "top1_correct": true,
+      "top1_exact_attested_span": true,
+      "top3_contains_gold": true
+    },
+    {
+      "case_id": "eval-0050e46302aa",
+      "existing_top1_correct": true,
+      "existing_top3_contains_gold": true,
+      "gold_source_ids": [
+        "vlb-emerson-r568-p00187"
+      ],
+      "headword": "pukusãmoín",
+      "label_status": "clear",
+      "page_id": "I-023",
+      "proposal_status": "needs_review",
+      "ranked_source_ids": [
+        "vlb-emerson-r568-p00187",
+        "vlb-emerson-r568-p00190",
+        "vlb-emerson-r568-p00201"
+      ],
+      "top1_attested_span_contains_or_is_in_gold": true,
+      "top1_correct": true,
+      "top1_exact_attested_span": true,
+      "top3_contains_gold": true
+    },
+    {
+      "case_id": "eval-0155740c2451",
+      "existing_top1_correct": true,
+      "existing_top3_contains_gold": true,
+      "gold_source_ids": [
+        "vlb-emerson-r568-p04048"
+      ],
+      "headword": "'atybaîa",
+      "label_status": "clear",
+      "page_id": "I-151",
+      "proposal_status": "needs_review",
+      "ranked_source_ids": [
+        "vlb-emerson-r568-p04048",
+        "vlb-emerson-r568-p04027",
+        "vlb-emerson-r568-p04029"
+      ],
+      "top1_attested_span_contains_or_is_in_gold": true,
+      "top1_correct": true,
+      "top1_exact_attested_span": true,
+      "top3_contains_gold": true
+    },
+    {
+      "case_id": "eval-017c83afa664",
+      "existing_top1_correct": true,
+      "existing_top3_contains_gold": true,
+      "gold_source_ids": [
+        "vlb-emerson-r568-p03894"
+      ],
+      "headword": "mba'epysykaba",
+      "label_status": "clear",
+      "page_id": "I-146",
+      "proposal_status": "needs_review",
+      "ranked_source_ids": [
+        "vlb-emerson-r568-p03894",
+        "vlb-emerson-r568-p03893",
+        "vlb-emerson-r568-p03880"
+      ],
+      "top1_attested_span_contains_or_is_in_gold": true,
+      "top1_correct": true,
+      "top1_exact_attested_span": true,
+      "top3_contains_gold": true
+    },
+    {
+      "case_id": "eval-00aa43dda534",
+      "existing_top1_correct": false,
+      "existing_top3_contains_gold": false,
+      "gold_source_ids": [
+        "vlb-emerson-r568-p00368"
+      ],
+      "headword": "mba'e",
+      "label_status": "clear",
+      "page_id": "I-031",
+      "proposal_status": "needs_review",
+      "ranked_source_ids": [
+        "vlb-emerson-r568-p00368",
+        "vlb-emerson-r568-p00380",
+        "vlb-emerson-r568-p00379"
+      ],
+      "top1_attested_span_contains_or_is_in_gold": true,
+      "top1_correct": true,
+      "top1_exact_attested_span": true,
+      "top3_contains_gold": true
+    },
+    {
+      "case_id": "eval-006579b4b36c",
+      "existing_top1_correct": false,
+      "existing_top3_contains_gold": false,
+      "gold_source_ids": [
+        "vlb-emerson-r568-p02255"
+      ],
+      "headword": "tanimbuky",
+      "label_status": "clear",
+      "page_id": "I-091",
+      "proposal_status": "needs_review",
+      "ranked_source_ids": [
+        "vlb-emerson-r568-p02255",
+        "vlb-emerson-r568-p02263",
+        "vlb-emerson-r568-p02264"
+      ],
+      "top1_attested_span_contains_or_is_in_gold": true,
+      "top1_correct": true,
+      "top1_exact_attested_span": true,
+      "top3_contains_gold": true
+    },
+    {
+      "case_id": "eval-040f17539c14",
+      "existing_top1_correct": false,
+      "existing_top3_contains_gold": false,
+      "gold_source_ids": [
+        "vlb-emerson-r568-p02953"
+      ],
+      "headword": "îemongatyrõ",
+      "label_status": "clear",
+      "page_id": "I-115",
+      "proposal_status": "needs_review",
+      "ranked_source_ids": [
+        "vlb-emerson-r568-p02953",
+        "vlb-emerson-r568-p02951",
+        "vlb-emerson-r568-p02929"
+      ],
+      "top1_attested_span_contains_or_is_in_gold": true,
+      "top1_correct": true,
+      "top1_exact_attested_span": true,
+      "top3_contains_gold": true
+    },
+    {
+      "case_id": "eval-01ca1c6fdca1",
+      "existing_top1_correct": false,
+      "existing_top3_contains_gold": false,
+      "gold_source_ids": [
+        "vlb-emerson-r568-p03249"
+      ],
+      "headword": "momemûã",
+      "label_status": "clear",
+      "page_id": "I-124",
+      "proposal_status": "suggested",
+      "ranked_source_ids": [
+        "vlb-emerson-r568-p03249",
+        "vlb-emerson-r568-p03245",
+        "vlb-emerson-r568-p03254"
+      ],
+      "top1_attested_span_contains_or_is_in_gold": true,
+      "top1_correct": true,
+      "top1_exact_attested_span": true,
+      "top3_contains_gold": true
+    },
+    {
+      "case_id": "eval-1bc3d178449c",
+      "existing_top1_correct": true,
+      "existing_top3_contains_gold": true,
+      "gold_source_ids": [
+        "vlb-emerson-r568-p05291"
+      ],
+      "headword": "îeîurume'eng",
+      "label_status": "clear",
+      "page_id": "II-053",
+      "proposal_status": "needs_review",
+      "ranked_source_ids": [
+        "vlb-emerson-r568-p05291",
+        "vlb-emerson-r568-p05282",
+        "vlb-emerson-r568-p05278"
+      ],
+      "top1_attested_span_contains_or_is_in_gold": true,
+      "top1_correct": true,
+      "top1_exact_attested_span": true,
+      "top3_contains_gold": true
+    },
+    {
+      "case_id": "eval-0117ca516860",
+      "existing_top1_correct": true,
+      "existing_top3_contains_gold": true,
+      "gold_source_ids": [
+        "vlb-emerson-r568-p06007"
+      ],
+      "headword": "mokonhõ",
+      "label_status": "clear",
+      "page_id": "II-083",
+      "proposal_status": "suggested",
+      "ranked_source_ids": [
+        "vlb-emerson-r568-p06007",
+        "vlb-emerson-r568-p06002",
+        "vlb-emerson-r568-p05984"
+      ],
+      "top1_attested_span_contains_or_is_in_gold": true,
+      "top1_correct": true,
+      "top1_exact_attested_span": true,
+      "top3_contains_gold": true
+    },
+    {
+      "case_id": "eval-011c20116a0d",
+      "existing_top1_correct": true,
+      "existing_top3_contains_gold": true,
+      "gold_source_ids": [
+        "vlb-emerson-r568-p05159"
+      ],
+      "headword": "tapiîara",
+      "label_status": "clear",
+      "page_id": "II-048",
+      "proposal_status": "suggested",
+      "ranked_source_ids": [
+        "vlb-emerson-r568-p05159",
+        "vlb-emerson-r568-p05168",
+        "vlb-emerson-r568-p05170"
+      ],
+      "top1_attested_span_contains_or_is_in_gold": true,
+      "top1_correct": true,
+      "top1_exact_attested_span": true,
+      "top3_contains_gold": true
+    },
+    {
+      "case_id": "eval-07939e161446",
+      "existing_top1_correct": null,
+      "existing_top3_contains_gold": null,
+      "gold_source_ids": [
+        "vlb-emerson-r568-p05251",
+        "vlb-emerson-r568-p05259"
+      ],
+      "headword": "mongakuab",
+      "label_status": "ambiguous",
+      "page_id": "II-051",
+      "proposal_status": "needs_review",
+      "ranked_source_ids": [
+        "vlb-emerson-r568-p05251",
+        "vlb-emerson-r568-p05259",
+        "vlb-emerson-r568-p05242"
+      ],
+      "top1_attested_span_contains_or_is_in_gold": null,
+      "top1_correct": null,
+      "top1_exact_attested_span": null,
+      "top3_contains_gold": null
+    },
+    {
+      "case_id": "eval-00d1b16e3212",
+      "existing_top1_correct": true,
+      "existing_top3_contains_gold": true,
+      "gold_source_ids": [
+        "vlb-emerson-r568-p07160"
+      ],
+      "headword": "yperupinima",
+      "label_status": "clear",
+      "page_id": "II-128",
+      "proposal_status": "suggested",
+      "ranked_source_ids": [
+        "vlb-emerson-r568-p07160",
+        "vlb-emerson-r568-p07154",
+        "vlb-emerson-r568-p07159"
+      ],
+      "top1_attested_span_contains_or_is_in_gold": true,
+      "top1_correct": true,
+      "top1_exact_attested_span": true,
+      "top3_contains_gold": true
+    },
+    {
+      "case_id": "eval-00203cb6f6f0",
+      "existing_top1_correct": true,
+      "existing_top3_contains_gold": true,
+      "gold_source_ids": [
+        "vlb-emerson-r568-p04647"
+      ],
+      "headword": "îuru'ar",
+      "label_status": "clear",
+      "page_id": "II-029",
+      "proposal_status": "needs_review",
+      "ranked_source_ids": [
+        "vlb-emerson-r568-p04647",
+        "vlb-emerson-r568-p04653",
+        "vlb-emerson-r568-p04652"
+      ],
+      "top1_attested_span_contains_or_is_in_gold": true,
+      "top1_correct": true,
+      "top1_exact_attested_span": true,
+      "top3_contains_gold": true
+    },
+    {
+      "case_id": "eval-00888389f7e1",
+      "existing_top1_correct": true,
+      "existing_top3_contains_gold": true,
+      "gold_source_ids": [
+        "vlb-emerson-r568-p07430"
+      ],
+      "headword": "kytyk",
+      "label_status": "clear",
+      "page_id": "II-139",
+      "proposal_status": "suggested",
+      "ranked_source_ids": [
+        "vlb-emerson-r568-p07430",
+        "vlb-emerson-r568-p07431",
+        "vlb-emerson-r568-p07419"
+      ],
+      "top1_attested_span_contains_or_is_in_gold": true,
+      "top1_correct": true,
+      "top1_exact_attested_span": true,
+      "top3_contains_gold": true
+    },
+    {
+      "case_id": "eval-037128d776c8",
+      "existing_top1_correct": false,
+      "existing_top3_contains_gold": false,
+      "gold_source_ids": [
+        "vlb-emerson-r568-p04436"
+      ],
+      "headword": "aty'y",
+      "label_status": "clear",
+      "page_id": "II-020",
+      "proposal_status": "needs_review",
+      "ranked_source_ids": [
+        "vlb-emerson-r568-p04436",
+        "vlb-emerson-r568-p04440",
+        "vlb-emerson-r568-p04457"
+      ],
+      "top1_attested_span_contains_or_is_in_gold": true,
+      "top1_correct": true,
+      "top1_exact_attested_span": true,
+      "top3_contains_gold": true
+    },
+    {
+      "case_id": "eval-045a8eae7084",
+      "existing_top1_correct": false,
+      "existing_top3_contains_gold": false,
+      "gold_source_ids": [
+        "vlb-emerson-r568-p04934"
+      ],
+      "headword": "ekoporeaûsuba",
+      "label_status": "clear",
+      "page_id": "II-038",
+      "proposal_status": "suggested",
+      "ranked_source_ids": [
+        "vlb-emerson-r568-p04934",
+        "vlb-emerson-r568-p04933",
+        "vlb-emerson-r568-p04931"
+      ],
+      "top1_attested_span_contains_or_is_in_gold": true,
+      "top1_correct": true,
+      "top1_exact_attested_span": true,
+      "top3_contains_gold": true
+    },
+    {
+      "case_id": "eval-033cd0e09222",
+      "existing_top1_correct": false,
+      "existing_top3_contains_gold": false,
+      "gold_source_ids": [
+        "vlb-emerson-r568-p06393"
+      ],
+      "headword": "memûã",
+      "label_status": "clear",
+      "page_id": "II-099",
+      "proposal_status": "needs_review",
+      "ranked_source_ids": [
+        "vlb-emerson-r568-p06393",
+        "vlb-emerson-r568-p06394",
+        "vlb-emerson-r568-p06388"
+      ],
+      "top1_attested_span_contains_or_is_in_gold": true,
+      "top1_correct": true,
+      "top1_exact_attested_span": true,
+      "top3_contains_gold": true
+    }
+  ],
+  "counts": {
+    "all_cases": 20,
+    "ambiguous_cases": 1,
+    "clear_cases": 19,
+    "existing_top1_correct": 12,
+    "existing_top3_contains_gold": 12,
+    "not_found_cases": 0,
+    "suggested_ambiguous_or_not_found": 0,
+    "suggested_clear_cases": 7,
+    "suggested_correct": 7,
+    "top1_attested_span_contains_or_is_in_gold": 19,
+    "top1_correct": 19,
+    "top1_exact_attested_span": 18,
+    "top3_contains_gold": 19
+  },
+  "evaluation_unit": "citation/page → source paragraph",
+  "labels_sha256": "81623ce860917c803201b95a801421b8a8bda29e254de8d60bc3a311ef686bfc",
+  "not_measured": [
+    "human-verified lexical equivalence",
+    "exact scan glyph-box accuracy",
+    "corpus-wide accuracy"
+  ],
+  "prediction_sha256": "84e9928cca755c6d78a4d4cb201555549ddbc80f0f5cbfb9506953e8bafd368e",
+  "reviewer": "assistant"
+}
