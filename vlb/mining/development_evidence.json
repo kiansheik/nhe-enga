@@ -1,0 +1,998 @@
+{
+  "schema_version": 1,
+  "purpose": "Development examples used to design and inspect directional Navarro-to-VLB spelling-retrieval priors. This file is not an evaluation benchmark, does not estimate accuracy, and does not confer editorial review status.",
+  "dictionary_sha256": "d235a7961961b58fcfbb93362bc3acb9b7f7b7e823196dca5763ef3e7fd16f53",
+  "emerson_text_sha256": "0be22fae2f181e344963590add1016670ba12706af675b51f21cf7571d974fb9",
+  "created_utc_date": "2026-11-03",
+  "primary_sources": [
+    {
+      "id": "navarro_2022_criteria",
+      "author": "Eduardo de Almeida Navarro",
+      "title": "Transcrição e tradução integral anotada das cartas dos índios Camarões, escritas em 1645 em tupi antigo",
+      "url": "https://www.scielo.br/j/bgoeldi/a/vy7RnrNvd5B4rrCCX6vVx4d/?lang=pt",
+      "doi": "10.1590/2178-2547-BGOELDI-2021-0034",
+      "section": "CRITÉRIOS PARA A TRANSCRIÇÃO PALEOGRÁFICA, items a,c,e,f,i; printed pp.7–8",
+      "scope_note": "Primary explanation of Navarro’s modern transcription conventions and historical spelling variability in another seventeenth-century corpus. It motivates priors, not universal VLB substitutions."
+    },
+    {
+      "id": "vlb_1952_preface_emerson_project",
+      "author": "Carlos Drumond; transcription by Emerson José Silveira da Costa",
+      "title": "Vocabulário na Língua Brasílica — Advertência necessária",
+      "url": "https://sites.google.com/site/vocabularionalinguabrasilica/",
+      "section": "Advertência necessária, items 1–6; transcription credit",
+      "scope_note": "Second edition incorporates and corrects material from distinct manuscripts while preserving original orthography of added Lisbon entries; do not assume a single uniform VLB spelling system."
+    }
+  ],
+  "recommended_priors": [
+    {
+      "id": "y_ig",
+      "modern": "y",
+      "historical": [
+        "ig"
+      ],
+      "kind": "multigraph_spelling",
+      "strength": "strong_retrieval_prior",
+      "limit": "Keep y and i distinct; never delete arbitrary g."
+    },
+    {
+      "id": "y_i",
+      "modern": "y",
+      "historical": [
+        "i",
+        "î"
+      ],
+      "kind": "competing_vowel_spelling",
+      "strength": "supported_but_ambiguous",
+      "limit": "Keep intact alternatives and a nonzero cost; historical î does not establish modern y=î."
+    },
+    {
+      "id": "k_c",
+      "modern": "k",
+      "historical": [
+        "c"
+      ],
+      "kind": "contextual_spelling",
+      "strength": "strong_retrieval_prior",
+      "limit": "Common before historical a,o,u and word end; c can instead encode s before e/i."
+    },
+    {
+      "id": "k_qu",
+      "modern": "k",
+      "historical": [
+        "qu"
+      ],
+      "kind": "contextual_multigraph_spelling",
+      "strength": "strong_retrieval_prior",
+      "limit": "Condition on following historical i/e, including historical î corresponding to modern y."
+    },
+    {
+      "id": "s_c",
+      "modern": "s",
+      "historical": [
+        "ç",
+        "c"
+      ],
+      "kind": "contextual_spelling",
+      "strength": "strong_retrieval_prior",
+      "limit": "c candidate normally before historical e/i; preserve original s and avoid globally equating c/k/s."
+    },
+    {
+      "id": "semivowel_alternatives",
+      "modern": "î / û",
+      "historical": [
+        "i,j,y / u"
+      ],
+      "kind": "semivowel_representation",
+      "strength": "retrieval_prior",
+      "limit": "A competing representation, not permission to strip all diacritics or merge modern i/y/î."
+    },
+    {
+      "id": "labial_glide",
+      "modern": "gûa",
+      "historical": [
+        "gua",
+        "goa"
+      ],
+      "kind": "multigraph_spelling",
+      "strength": "source_supported",
+      "limit": "Do not generalize to arbitrary u/o interchange."
+    },
+    {
+      "id": "glottal_omission",
+      "modern": "'",
+      "historical": [
+        ""
+      ],
+      "kind": "historical_underrepresentation",
+      "strength": "nonzero_cost_alternative",
+      "limit": "Modern glottal distinction remains part of lexical identity."
+    },
+    {
+      "id": "nasal_notation",
+      "modern": "an at observed word end",
+      "historical": [
+        "ã"
+      ],
+      "kind": "uncertain_contextual_correspondence",
+      "strength": "exploratory_only",
+      "limit": "Single demonstrated local pair; never strip nasalization freely or treat nasal consonants as interchangeable."
+    },
+    {
+      "id": "separate_inflection",
+      "modern": "lexeme plus explicitly attested surface morphology",
+      "historical": [
+        "ai-/a-/xe- attachments; nominal/adjectival stem alternants; relational r-/s-"
+      ],
+      "kind": "morphology_not_orthography",
+      "strength": "use_exact_dictionary_examples_first",
+      "limit": "Do not train these differences as generic insertions/deletions."
+    }
+  ],
+  "anchors": [
+    {
+      "headword": "mokanãî",
+      "homonym": "",
+      "entry_index": 7210,
+      "page_id": "I-017",
+      "source_id": "vlb-emerson-r568-p00013",
+      "source_line": 13,
+      "source_form": "Aimocanãy",
+      "source_form_span0": [
+        31,
+        40
+      ],
+      "source_text": "Abalar assi o fixo. — Aimõgue, Aimocanãy, Aimocanacanãy, actiuos.",
+      "citation_occurrences": [
+        {
+          "id": "navarro-d235a7961961b58f-r07210-s00078-e00088",
+          "raw": "VLB, I, 17",
+          "context": "(v.tr.) - afrouxar, abalar (o que era firme, fixo): Aîmokanãî. - Afrouxei-o. (",
+          "definition_context_span0": [
+            0,
+            78
+          ],
+          "definition_citation_span0": [
+            78,
+            88
+          ]
+        }
+      ],
+      "rule_ids": [
+        "k_c",
+        "semivowel_alternatives",
+        "separate_inflection"
+      ],
+      "assessment": "existing_formally_recorded_assistant_review",
+      "note": "Exact existing reviewed citation/form pair. Navarro explicit surface Aîmokanãî separates aî- from the lemma; preserve ã.",
+      "printed_form_visually_checked": true,
+      "human_verified": false,
+      "source_form_global_span0": [
+        574,
+        583
+      ]
+    },
+    {
+      "headword": "motumung",
+      "homonym": "",
+      "entry_index": 7574,
+      "page_id": "I-017",
+      "source_id": "vlb-emerson-r568-p00019",
+      "source_line": 19,
+      "source_form": "Aimotumung",
+      "source_form_span0": [
+        22,
+        32
+      ],
+      "source_text": "Abanar como a aruore. Aimotumung.",
+      "citation_occurrences": [
+        {
+          "id": "navarro-d235a7961961b58f-r07574-s00046-e00056",
+          "raw": "VLB, I, 17",
+          "context": "(etim. - fazer estremecer) (v.tr.) - sacudir (",
+          "definition_context_span0": [
+            0,
+            46
+          ],
+          "definition_citation_span0": [
+            46,
+            56
+          ]
+        }
+      ],
+      "rule_ids": [
+        "separate_inflection"
+      ],
+      "assessment": "existing_formally_recorded_assistant_review",
+      "note": "Exact existing reviewed I17 citation/form pair. ai- is surface morphology; ng stays intact. The other II110 citation is separate.",
+      "printed_form_visually_checked": true,
+      "human_verified": false,
+      "source_form_global_span0": [
+        864,
+        874
+      ]
+    },
+    {
+      "headword": "potyra",
+      "homonym": "1",
+      "entry_index": 9082,
+      "page_id": "I-017",
+      "source_id": "vlb-emerson-r568-p00022",
+      "source_line": 22,
+      "source_form": "Potigra",
+      "source_form_span0": [
+        20,
+        27
+      ],
+      "source_text": "Abanos da camisa. — Potigra.",
+      "citation_occurrences": [
+        {
+          "id": "navarro-d235a7961961b58f-r09082-s00029-e00039",
+          "raw": "VLB, I, 17",
+          "context": "(mb) (s.) - abano da camisa (",
+          "definition_context_span0": [
+            0,
+            29
+          ],
+          "definition_citation_span0": [
+            29,
+            39
+          ]
+        }
+      ],
+      "rule_ids": [
+        "y_ig"
+      ],
+      "assessment": "independent_assistant_source_and_semantic_inspection",
+      "note": "Strong single-form and single-sense pairing: headword homonym 1 means shirt ruffle. No prefix or semantic inference is required.",
+      "printed_form_visually_checked": true,
+      "human_verified": false,
+      "source_form_global_span0": [
+        960,
+        967
+      ]
+    },
+    {
+      "headword": "ku'apysyk",
+      "homonym": "",
+      "entry_index": 6184,
+      "page_id": "I-017",
+      "source_id": "vlb-emerson-r568-p00023",
+      "source_line": 23,
+      "source_form": "Aicuapigcigc",
+      "source_form_span0": [
+        34,
+        46
+      ],
+      "source_text": "Abarcar com os braços. — Aicuamã, Aicuapigcigc, act.",
+      "citation_occurrences": [
+        {
+          "id": "navarro-d235a7961961b58f-r06184-s00093-e00103",
+          "raw": "VLB, I, 17",
+          "context": "(etim. - agarrar a cintura) (v.tr.) - abarcar, agarrar (algo bojudo), pegar (com os braços) (",
+          "definition_context_span0": [
+            0,
+            93
+          ],
+          "definition_citation_span0": [
+            93,
+            103
+          ]
+        }
+      ],
+      "rule_ids": [
+        "y_ig",
+        "k_c",
+        "s_c",
+        "glottal_omission",
+        "separate_inflection"
+      ],
+      "assessment": "independent_assistant_source_and_semantic_inspection",
+      "note": "After the independently chosen ai- surface prefix: k→c, omitted apostrophe, y→ig twice, s→c before historical i, final k→c. Source has an alternative verb too.",
+      "printed_form_visually_checked": true,
+      "human_verified": false,
+      "source_form_global_span0": [
+        1003,
+        1015
+      ]
+    },
+    {
+      "headword": "ku'aman",
+      "homonym": "",
+      "entry_index": 6164,
+      "page_id": "I-017",
+      "source_id": "vlb-emerson-r568-p00023",
+      "source_line": 23,
+      "source_form": "Aicuamã",
+      "source_form_span0": [
+        25,
+        32
+      ],
+      "source_text": "Abarcar com os braços. — Aicuamã, Aicuapigcigc, act.",
+      "citation_occurrences": [
+        {
+          "id": "navarro-d235a7961961b58f-r06164-s00140-e00150",
+          "raw": "VLB, I, 17",
+          "context": "(etim. - circundar a cintura) (v.tr.) - abarcar, agarrar cingindo, pegar (com os braços); cingir (p.ex., com cinto): Aîku'aman. - Cingi-o. (",
+          "definition_context_span0": [
+            0,
+            140
+          ],
+          "definition_citation_span0": [
+            140,
+            150
+          ]
+        }
+      ],
+      "rule_ids": [
+        "k_c",
+        "glottal_omission",
+        "nasal_notation",
+        "separate_inflection"
+      ],
+      "assessment": "independent_assistant_source_and_semantic_inspection",
+      "note": "Navarro explicit Aîku'aman and shared wrapping-with-arms sense. an versus ã is an observed contextual correspondence; do not promote to universal nasal deletion or claim phonemic identity.",
+      "printed_form_visually_checked": true,
+      "human_verified": false,
+      "source_form_global_span0": [
+        994,
+        1001
+      ]
+    },
+    {
+      "headword": "esemõ",
+      "homonym": "1",
+      "entry_index": 4241,
+      "page_id": "I-017",
+      "source_id": "vlb-emerson-r568-p00027",
+      "source_line": 27,
+      "source_form": "Acecemõ",
+      "source_form_span0": [
+        16,
+        23
+      ],
+      "source_text": "Abastar assi. — Acecemõ. Aipoecemõ, actiuos.",
+      "citation_occurrences": [
+        {
+          "id": "navarro-d235a7961961b58f-r04241-s00088-e00098",
+          "raw": "VLB, I, 17",
+          "context": "(s) (v.tr.) - 1) fazer provisões de, fazer reservas de: Asesemõ. - Fiz provisões dele. (",
+          "definition_context_span0": [
+            0,
+            88
+          ],
+          "definition_citation_span0": [
+            88,
+            98
+          ]
+        },
+        {
+          "id": "navarro-d235a7961961b58f-r04241-s00194-e00204",
+          "raw": "VLB, I, 17",
+          "context": "); 2) sobrar a, sobejar a, abundar a: Xe resemõ îepé itaîuba. - Sobra-me dinheiro, certamente. (",
+          "definition_context_span0": [
+            98,
+            194
+          ],
+          "definition_citation_span0": [
+            194,
+            204
+          ]
+        }
+      ],
+      "rule_ids": [
+        "s_c",
+        "separate_inflection"
+      ],
+      "assessment": "independent_assistant_source_and_semantic_inspection",
+      "note": "Compare explicit Navarro Asesemõ, not the bare headword esemõ. Initial s- in Asesemõ is morphological; the two c/s spellings are the relevant correspondence.",
+      "printed_form_visually_checked": true,
+      "human_verified": false,
+      "source_form_global_span0": [
+        1216,
+        1223
+      ]
+    },
+    {
+      "headword": "esemõ",
+      "homonym": "1",
+      "entry_index": 4241,
+      "page_id": "I-017",
+      "source_id": "vlb-emerson-r568-p00026",
+      "source_line": 26,
+      "source_form": "Xerecemõ",
+      "source_form_span0": [
+        36,
+        44
+      ],
+      "source_text": "Abastado estar de qualquer cousa. — Xerecemõ, vel Xepoecemõ, tal ou tal cousa.",
+      "citation_occurrences": [
+        {
+          "id": "navarro-d235a7961961b58f-r04241-s00088-e00098",
+          "raw": "VLB, I, 17",
+          "context": "(s) (v.tr.) - 1) fazer provisões de, fazer reservas de: Asesemõ. - Fiz provisões dele. (",
+          "definition_context_span0": [
+            0,
+            88
+          ],
+          "definition_citation_span0": [
+            88,
+            98
+          ]
+        },
+        {
+          "id": "navarro-d235a7961961b58f-r04241-s00194-e00204",
+          "raw": "VLB, I, 17",
+          "context": "); 2) sobrar a, sobejar a, abundar a: Xe resemõ îepé itaîuba. - Sobra-me dinheiro, certamente. (",
+          "definition_context_span0": [
+            98,
+            194
+          ],
+          "definition_citation_span0": [
+            194,
+            204
+          ]
+        }
+      ],
+      "rule_ids": [
+        "s_c",
+        "separate_inflection"
+      ],
+      "assessment": "independent_assistant_source_and_semantic_inspection",
+      "note": "Compare explicit Navarro Xe resemõ. The r- onset and xe- attachment belong to choosing an attested surface form, not an e→rece spelling rule.",
+      "printed_form_visually_checked": true,
+      "human_verified": false,
+      "source_form_global_span0": [
+        1157,
+        1165
+      ]
+    },
+    {
+      "headword": "ybyraypy",
+      "homonym": "",
+      "entry_index": 11206,
+      "page_id": "I-018",
+      "source_id": "vlb-emerson-r568-p00033",
+      "source_line": 33,
+      "source_form": "Ybiraigpig",
+      "source_form_span0": [
+        45,
+        55
+      ],
+      "source_text": "Abelha, gnlr. — Eiruba, tem muitas especies. Ybiraigpig. jateî. Eiruçu. Eirapua.",
+      "citation_occurrences": [
+        {
+          "id": "navarro-d235a7961961b58f-r11206-s00055-e00065",
+          "raw": "VLB, I, 18",
+          "context": "(etim. - tronco de árvore) (s.) - variedade de abelha (",
+          "definition_context_span0": [
+            0,
+            55
+          ],
+          "definition_citation_span0": [
+            55,
+            65
+          ]
+        }
+      ],
+      "rule_ids": [
+        "y_ig",
+        "y_i"
+      ],
+      "assessment": "independent_assistant_source_and_semantic_inspection",
+      "note": "This one word retains initial y, writes the next y as i, and later y as ig twice. Strong evidence against one destructive y→i normalization.",
+      "printed_form_visually_checked": true,
+      "human_verified": false,
+      "source_form_global_span0": [
+        1738,
+        1748
+      ]
+    },
+    {
+      "headword": "eirapu'a",
+      "homonym": "",
+      "entry_index": 3811,
+      "page_id": "I-018",
+      "source_id": "vlb-emerson-r568-p00033",
+      "source_line": 33,
+      "source_form": "Eirapua",
+      "source_form_span0": [
+        72,
+        79
+      ],
+      "source_text": "Abelha, gnlr. — Eiruba, tem muitas especies. Ybiraigpig. jateî. Eiruçu. Eirapua.",
+      "citation_occurrences": [
+        {
+          "id": "navarro-d235a7961961b58f-r03811-s00205-e00216",
+          "raw": " VLB, I, 18",
+          "context": "(etim. - abelha de bola) (s.) - IRAPUÁ, ARAPUÃ, abelha da família dos meliponídeos, que nidifica no alto das árvores, com \"casas\" em forma de uma bola de meio metro de diâmetro (",
+          "definition_context_span0": [
+            0,
+            178
+          ],
+          "definition_citation_span0": [
+            205,
+            216
+          ]
+        }
+      ],
+      "rule_ids": [
+        "glottal_omission"
+      ],
+      "assessment": "independent_assistant_source_and_semantic_inspection",
+      "note": "Dictionary and source both identify the bee. Apostrophe absence is only a retrieval alternative; original strings remain distinct.",
+      "printed_form_visually_checked": true,
+      "human_verified": false,
+      "source_form_global_span0": [
+        1765,
+        1772
+      ]
+    },
+    {
+      "headword": "eirusu",
+      "homonym": "",
+      "entry_index": 3816,
+      "page_id": "I-018",
+      "source_id": "vlb-emerson-r568-p00033",
+      "source_line": 33,
+      "source_form": "Eiruçu",
+      "source_form_span0": [
+        64,
+        70
+      ],
+      "source_text": "Abelha, gnlr. — Eiruba, tem muitas especies. Ybiraigpig. jateî. Eiruçu. Eirapua.",
+      "citation_occurrences": [
+        {
+          "id": "navarro-d235a7961961b58f-r03816-s00147-e00158",
+          "raw": " VLB, I, 18",
+          "context": "(s.) - URUÇU, IRUÇU, GUIRUÇU, nome dado a várias espécies brasileiras de abelhas grandes da família dos meliponídeos (",
+          "definition_context_span0": [
+            0,
+            118
+          ],
+          "definition_citation_span0": [
+            147,
+            158
+          ]
+        }
+      ],
+      "rule_ids": [
+        "s_c"
+      ],
+      "assessment": "independent_assistant_source_and_semantic_inspection",
+      "note": "Dictionary and source both name a bee. This is a clean s→ç example without a prefix.",
+      "printed_form_visually_checked": true,
+      "human_verified": false,
+      "source_form_global_span0": [
+        1757,
+        1763
+      ]
+    },
+    {
+      "headword": "pokarugûara",
+      "homonym": "",
+      "entry_index": 8858,
+      "page_id": "I-018",
+      "source_id": "vlb-emerson-r568-p00036",
+      "source_line": 36,
+      "source_form": "Xepocarugoar",
+      "source_form_span0": [
+        19,
+        31
+      ],
+      "source_text": "Abil ser de mão. — Xepocarugoar, Xepocarugoacatu.",
+      "citation_occurrences": [
+        {
+          "id": "navarro-d235a7961961b58f-r08858-s00220-e00230",
+          "raw": "VLB, I, 18",
+          "context": "); 2) hábil, destro, hábil de mãos: Xe pokarugûar. - Eu sou hábil. (",
+          "definition_context_span0": [
+            152,
+            220
+          ],
+          "definition_citation_span0": [
+            220,
+            230
+          ]
+        }
+      ],
+      "rule_ids": [
+        "k_c",
+        "labial_glide",
+        "separate_inflection"
+      ],
+      "assessment": "independent_assistant_source_and_semantic_inspection",
+      "note": "Navarro explicitly lists adjective pokarugûar and example Xe pokarugûar. Final -a absence is a stem/adjective choice; gûa→goa is the spelling evidence.",
+      "printed_form_visually_checked": true,
+      "human_verified": false,
+      "source_form_global_span0": [
+        1935,
+        1947
+      ]
+    },
+    {
+      "headword": "akyrara",
+      "homonym": "",
+      "entry_index": 2778,
+      "page_id": "I-018",
+      "source_id": "vlb-emerson-r568-p00046",
+      "source_line": 46,
+      "source_form": "Aquîrara",
+      "source_form_span0": [
+        12,
+        20
+      ],
+      "source_text": "Abortiuo. — Aquîrara.",
+      "citation_occurrences": [
+        {
+          "id": "navarro-d235a7961961b58f-r02778-s00219-e00229",
+          "raw": "VLB, I, 18",
+          "context": "); (adj.: akyrar) - abortivo (",
+          "definition_context_span0": [
+            189,
+            219
+          ],
+          "definition_citation_span0": [
+            219,
+            229
+          ]
+        },
+        {
+          "id": "navarro-d235a7961961b58f-r02778-s00285-e00295",
+          "raw": "VLB, I, 18",
+          "context": "); (xe) abortar: Xe membyrakyrar. - Abortei meu filho. (",
+          "definition_context_span0": [
+            229,
+            285
+          ],
+          "definition_citation_span0": [
+            285,
+            295
+          ]
+        }
+      ],
+      "rule_ids": [
+        "k_qu",
+        "y_i"
+      ],
+      "assessment": "independent_assistant_source_and_semantic_inspection",
+      "note": "Source uses qu before î, where Navarro headword has ky. y→î here is historical vowel notation, not proof that Navarro y and î are equivalent. Multiple same-lexeme entries occur on this page; not a unique citation target.",
+      "printed_form_visually_checked": true,
+      "human_verified": false,
+      "source_form_global_span0": [
+        2456,
+        2464
+      ]
+    },
+    {
+      "headword": "moendypuk",
+      "homonym": "",
+      "entry_index": 7098,
+      "page_id": "I-019",
+      "source_id": "vlb-emerson-r568-p00085",
+      "source_line": 85,
+      "source_form": "Aimoendipuc",
+      "source_form_span0": [
+        37,
+        48
+      ],
+      "source_text": "Açacalar como espada. — Aiquitingoc. Aimoendipuc. act.",
+      "citation_occurrences": [
+        {
+          "id": "navarro-d235a7961961b58f-r07098-s00043-e00053",
+          "raw": "VLB, I, 19",
+          "context": "(v.tr.) - açacalar, polir (p.ex., espada) (",
+          "definition_context_span0": [
+            0,
+            43
+          ],
+          "definition_citation_span0": [
+            43,
+            53
+          ]
+        }
+      ],
+      "rule_ids": [
+        "y_i",
+        "k_c",
+        "separate_inflection"
+      ],
+      "assessment": "independent_assistant_source_and_semantic_inspection",
+      "note": "The matching sword-polishing sense isolates this form from Aiquitingoc in the same source paragraph. Prefix ai- chosen separately.",
+      "printed_form_visually_checked": true,
+      "human_verified": false,
+      "source_form_global_span0": [
+        4572,
+        4583
+      ]
+    },
+    {
+      "headword": "moîepotar",
+      "homonym": "2",
+      "entry_index": 7154,
+      "page_id": "I-019",
+      "source_id": "vlb-emerson-r568-p00093",
+      "source_line": 93,
+      "source_form": "Aimojepotar",
+      "source_form_span0": [
+        42,
+        53
+      ],
+      "source_text": "Acender com hũa braza, ou tição outros. — Aimojepotar.",
+      "citation_occurrences": [
+        {
+          "id": "navarro-d235a7961961b58f-r07154-s00040-e00050",
+          "raw": "VLB, I, 19",
+          "context": "(v.tr.) - acender (com brasa ou tição) (",
+          "definition_context_span0": [
+            0,
+            40
+          ],
+          "definition_citation_span0": [
+            40,
+            50
+          ]
+        }
+      ],
+      "rule_ids": [
+        "semivowel_alternatives",
+        "separate_inflection"
+      ],
+      "assessment": "independent_assistant_source_and_semantic_inspection",
+      "note": "Exact shared sense: kindle with ember/firebrand. Modern î→historical j within the stem, plus separate ai- prefix.",
+      "printed_form_visually_checked": true,
+      "human_verified": false,
+      "source_form_global_span0": [
+        5017,
+        5028
+      ]
+    },
+    {
+      "headword": "nhemoesabyk",
+      "homonym": "",
+      "entry_index": 7973,
+      "page_id": "I-019",
+      "source_id": "vlb-emerson-r568-p00087",
+      "source_line": 87,
+      "source_form": "Anhemoeçabic",
+      "source_form_span0": [
+        23,
+        35
+      ],
+      "source_text": "Acenar com os olhos. — Anhemoeçabic, çupe.",
+      "citation_occurrences": [
+        {
+          "id": "navarro-d235a7961961b58f-r07973-s00143-e00161",
+          "raw": "VLB, I, 19, adapt.",
+          "context": "(etim. - apertar-se o olho) (v. intr. compl. posp.) - piscar (para alguém: compl. com supé): Anhemoesabyk (abá) supé. - Pisquei para o homem. (",
+          "definition_context_span0": [
+            0,
+            143
+          ],
+          "definition_citation_span0": [
+            143,
+            161
+          ]
+        }
+      ],
+      "rule_ids": [
+        "s_c",
+        "y_i",
+        "k_c",
+        "separate_inflection"
+      ],
+      "assessment": "independent_assistant_source_and_semantic_inspection",
+      "note": "Navarro gives the explicit adapted example Anhemoesabyk (abá) supé. Source gives Anhemoeçabic, çupe; a- is morphology and the lexical spelling changes are s→ç, y→i, k→c.",
+      "printed_form_visually_checked": true,
+      "human_verified": false,
+      "source_form_global_span0": [
+        4672,
+        4684
+      ]
+    },
+    {
+      "headword": "putusok",
+      "homonym": "",
+      "entry_index": 9209,
+      "page_id": "I-019",
+      "source_id": "vlb-emerson-r568-p00078",
+      "source_line": 78,
+      "source_form": "Xeputuçoc",
+      "source_form_span0": [
+        25,
+        34
+      ],
+      "source_text": "Acalmar o vento. — Apîc. Xeputuçoc. Neut.",
+      "citation_occurrences": [
+        {
+          "id": "navarro-d235a7961961b58f-r09209-s00126-e00136",
+          "raw": "VLB, I, 19",
+          "context": "(ou pytusok) (xe) (etim. - bater o fôlego) (v. da 2ª classe) - perder o fôlego, perder o alento, acalmar-se (p.ex., o vento) (",
+          "definition_context_span0": [
+            0,
+            126
+          ],
+          "definition_citation_span0": [
+            126,
+            136
+          ]
+        }
+      ],
+      "rule_ids": [
+        "s_c",
+        "k_c",
+        "separate_inflection"
+      ],
+      "assessment": "independent_assistant_source_and_semantic_inspection",
+      "note": "The wind-calming sense agrees. Navarro explicitly marks (xe); choose that form before spelling alignment. Alternative headword pytusok is separately stated in dictionary.",
+      "printed_form_visually_checked": true,
+      "human_verified": false,
+      "source_form_global_span0": [
+        4236,
+        4245
+      ]
+    },
+    {
+      "headword": "agûasá",
+      "homonym": "",
+      "entry_index": 2480,
+      "page_id": "I-017",
+      "source_id": "vlb-emerson-r568-p00025",
+      "source_line": 25,
+      "source_form": "Aguaça",
+      "source_form_span0": [
+        45,
+        51
+      ],
+      "source_text": "Abarregado estar. — Xeaguaça guitecobo, vel, Aguaça pupe aico.",
+      "citation_occurrences": [
+        {
+          "id": "navarro-d235a7961961b58f-r02480-s00076-e00086",
+          "raw": "VLB, I, 17",
+          "context": "(s.) - 1) mancebia: Agûasá pupé aîkó. - Vivo na mancebia, vivo amancebado. (",
+          "definition_context_span0": [
+            0,
+            76
+          ],
+          "definition_citation_span0": [
+            76,
+            86
+          ]
+        }
+      ],
+      "rule_ids": [
+        "labial_glide",
+        "s_c"
+      ],
+      "assessment": "independent_assistant_source_and_semantic_inspection",
+      "note": "Navarro explicit Agûasá pupé aîkó matches source Aguaça pupe aico. The same source paragraph also has Xeaguaça; this is not a unique in-paragraph occurrence.",
+      "printed_form_visually_checked": true,
+      "human_verified": false,
+      "source_form_global_span0": [
+        1103,
+        1109
+      ]
+    },
+    {
+      "headword": "andara",
+      "homonym": "",
+      "entry_index": 2922,
+      "page_id": "I-018",
+      "source_id": "vlb-emerson-r568-p00048",
+      "source_line": 48,
+      "source_form": "Xeandar",
+      "source_form_span0": [
+        34,
+        41
+      ],
+      "source_text": "Abraçado assi trazer em bailos. — Xeandaramo areco. act. vel Xeandar. Neutro; rece.",
+      "citation_occurrences": [
+        {
+          "id": "navarro-d235a7961961b58f-r02922-s00132-e00142",
+          "raw": "VLB, I, 18",
+          "context": "(ou enoandara) (s.) - par para dança, parceiro de dança, o que dança abraçado com: I nhandaramo aîkó. - Sou seu parceiro de dança. (",
+          "definition_context_span0": [
+            0,
+            132
+          ],
+          "definition_citation_span0": [
+            132,
+            142
+          ]
+        },
+        {
+          "id": "navarro-d235a7961961b58f-r02922-s00200-e00210",
+          "raw": "VLB, I, 18",
+          "context": "); Xe andaramo arekó. - Tenho-o como meu par para dança. (",
+          "definition_context_span0": [
+            142,
+            200
+          ],
+          "definition_citation_span0": [
+            200,
+            210
+          ]
+        },
+        {
+          "id": "navarro-d235a7961961b58f-r02922-s00317-e00335",
+          "raw": "VLB, I, 18, adapt.",
+          "context": "); (adj.: andar) (xe) - ter par para dança: Xe andar (abá) resé. - Eu tenho, no homem, um par para dança. (",
+          "definition_context_span0": [
+            210,
+            317
+          ],
+          "definition_citation_span0": [
+            317,
+            335
+          ]
+        }
+      ],
+      "rule_ids": [
+        "separate_inflection"
+      ],
+      "assessment": "independent_assistant_source_and_semantic_inspection",
+      "note": "Dictionary explicitly lists adjective andar under nominal headword andara, and Xe andar. Do not learn final a deletion as unrestricted orthography. Several contiguous source records map to this one dictionary entry.",
+      "printed_form_visually_checked": true,
+      "human_verified": false,
+      "source_form_global_span0": [
+        2547,
+        2554
+      ]
+    }
+  ],
+  "usage": {
+    "development_evidence": true,
+    "evaluation_labels": false,
+    "automatic_editorial_verification": false,
+    "human_reviewed": false,
+    "selection": "Purposively selected for spelling and morphology contrasts, not sampled for corpus-wide estimates.",
+    "training_note": "These examples informed the proposed priors; do not report performance on them as held-out evaluation.",
+    "review_scope": "Assistant visual inspection confirms the recorded printed forms and supports the stated candidate comparisons. It does not certify all citation occurrences or complete coverage of any paragraph.",
+    "existing_review_note": "Two anchors identify previously recorded assistant-reviewed citation/form associations. Their status comes from vlb/source/verified_citation_associations.json and is not newly assigned by this evidence file."
+  },
+  "offset_conventions": {
+    "source_line": "One-based paragraph number in the pinned Emerson text, not a printed page line.",
+    "source_form_span0": "Zero-based half-open Unicode character interval within the anchor source_text.",
+    "source_form_global_span0": "Zero-based half-open Unicode character interval within vlb/source/emerson_vlb.txt.",
+    "definition_context_span0": "Zero-based half-open Unicode character interval within the pinned dictionary row definition.",
+    "definition_citation_span0": "Zero-based half-open Unicode character interval within the pinned dictionary row definition.",
+    "citation_occurrences_scope": "All cited-page occurrences for the dictionary row; their inclusion does not assert that each occurrence maps to the anchor source paragraph.",
+    "row_identity": "entry_index identifies a row only within the pinned dictionary snapshot; it is not a permanent lexical identifier."
+  },
+  "snapshot_paths": {
+    "dictionary": "docs/dict-conjugated.json.gz",
+    "emerson_text": "vlb/source/emerson_vlb.txt",
+    "citation_occurrences": "vlb/source/citation_links.json.gz"
+  },
+  "facsimile_inspection": {
+    "source_url": "https://etnolinguistica.wdfiles.com/local--files/biblio:drumond-1952-1953-vlb/VLBrasilica_2edDrumond_1952_1953_COMPLETE_OCR.pdf",
+    "source_sha256": "bf9fc93d42ca14a2f2876fcd02d83e739936a110fba0ae758e224e92bc65fbc2",
+    "edition": "Vocabulário na Língua Brasílica, second edition revised by Carlos Drumond, volume I, 1952.",
+    "scanner_credit": "Renato Nicolai",
+    "method": "Assistant visual inspection of page renderings from the pinned combined PDF; repository_image_path identifies the corresponding repository facsimile page.",
+    "pages": {
+      "I-017": {
+        "printed_volume": "I",
+        "printed_page": 17,
+        "combined_pdf_page1": 17,
+        "repository_image_path": "docs/primary_sources/vlb/17.png"
+      },
+      "I-018": {
+        "printed_volume": "I",
+        "printed_page": 18,
+        "combined_pdf_page1": 18,
+        "repository_image_path": "docs/primary_sources/vlb/18.png"
+      },
+      "I-019": {
+        "printed_volume": "I",
+        "printed_page": 19,
+        "combined_pdf_page1": 19,
+        "repository_image_path": "docs/primary_sources/vlb/19.png"
+      }
+    }
+  },
+  "emerson_document": {
+    "url": "https://docs.google.com/document/d/1oNYyk0gHjtP4Rm_Auemt-63DYMXLY9GgFtQ2OE2H6Ek/edit?tab=t.0",
+    "document_revision": "568",
+    "digitizer": "Emerson José Silveira da Costa"
+  }
+}

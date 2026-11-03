@@ -1,0 +1,813 @@
+{
+  "schema_version": 1,
+  "purpose": "Development evaluation only; exclude these headwords and pages from orthographic rule seed training. Assistant-reviewed, not human-verified.",
+  "dictionary_sha256": "d235a7961961b58fcfbb93362bc3acb9b7f7b7e823196dca5763ef3e7fd16f53",
+  "source_sha256": "0be22fae2f181e344963590add1016670ba12706af675b51f21cf7571d974fb9",
+  "sample_preregistration": "preregistered_sample.json",
+  "review_method": "Read citation context and Emerson page fragments without future model rankings. Identify a form using both historical spelling and the Portuguese sense or quoted example. Do not force uncertain locations.",
+  "status_definitions": {
+    "clear": "Assistant identifies a particular Emerson source paragraph and literal form corresponding to this citation occurrence.",
+    "ambiguous": "Assistant identifies possible locations but cannot establish a unique correspondence; do not count these as confirmed positive labels.",
+    "not_found": "Assistant did not identify a correspondence on the cited page; not proof that the VLB or dictionary lacks the lexeme."
+  },
+  "limitations": [
+    "No human or specialist verification is claimed.",
+    "Source IDs and source_line values identify Emerson transcription paragraphs, not physical printed scan lines.",
+    "Character offsets are zero-based, half-open Unicode code-point offsets in the pinned Emerson text snapshot.",
+    "Citation-page boundaries are existing estimated boundaries; a not_found case may reflect a citation or boundary error.",
+    "The sample deliberately balances baseline difficulty strata; its raw accuracy is not a corpus-wide prevalence estimate.",
+    "A clear paragraph match does not validate every dictionary gloss, etymology, or morphological analysis."
+  ],
+  "cases": [
+    {
+      "case_id": "eval-0e8f0d49d678",
+      "citation_id": "navarro-d235a7961961b58f-r07167-s00105-e00123",
+      "page_id": "I-039",
+      "headword": "moín",
+      "entry_index": 7167,
+      "homonym": "2",
+      "volume": "I",
+      "baseline_stratum": "baseline_target",
+      "adapted": true,
+      "ordinal": 1,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p00624"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p00624",
+          "source_line": 624,
+          "form": "Aimoin",
+          "form_start0": 34603,
+          "form_end0": 34609,
+          "fragment_start0": 24,
+          "fragment_end0": 30,
+          "role": "quoted_example",
+          "source_excerpt": "Apontar com a frecha. — Aimoin üuba. (çupe)."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 39, adapt.",
+        "citation_context": "(v.tr.) - 1) apontar (para alguém: com supé): Aîmoín u'uba (abá) supé. - Apontei a flecha para o homem. (",
+        "reason": "Navarro's adapted example Aîmoín u'uba ... supé corresponds directly to the VLB entry Apontar com a frecha, Aimoin üuba (çupe). The first-person form contains the lemma moín."
+      },
+      "limitations": [],
+      "split": "dev"
+    },
+    {
+      "case_id": "eval-010c5c50dcaa",
+      "citation_id": "navarro-d235a7961961b58f-r06559-s00191-e00201",
+      "page_id": "I-021",
+      "headword": "marã",
+      "entry_index": 6559,
+      "homonym": "4",
+      "volume": "I",
+      "baseline_stratum": "baseline_target",
+      "adapted": false,
+      "ordinal": 2,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p00143"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p00143",
+          "source_line": 143,
+          "form": "Aimoingo marã",
+          "form_start0": 8312,
+          "form_end0": 8325,
+          "fragment_start0": 200,
+          "fragment_end0": 213,
+          "role": "quoted_example",
+          "source_excerpt": "Acupar alguem. — Aiopoây. act. ut. Ajopoay Pero .l. Accupei a Pedro, ou mandeilhe fazer algũa cousa. E se digo o em q ha de ser com (rece) vt Aiopoay N. jepeaba rece. i. Accupei a N a fazer lenha, l, Aimoingo marã, l, aimoĩgo ucar marã, activos."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 21",
+        "citation_context": "(s.) - labuta, ocupação, trabalho, esforço, afã, sacrifício; (adv.) usado com o verbo ikó / ekó (t) 1) em ocupação, em labuta: Aîmoingó-marã. - Fi-lo trabalhar (ou Fi-lo estar em ocupação). (",
+        "reason": "The cited example Aîmoingó-marã and its occupational sense match Aimoingo marã under Acupar alguem. Two examples in the same paragraph contain marã; the first matches the quoted phrase."
+      },
+      "limitations": [],
+      "split": "dev"
+    },
+    {
+      "case_id": "eval-00bd0d69e365",
+      "citation_id": "navarro-d235a7961961b58f-r07313-s00211-e00221",
+      "page_id": "I-075",
+      "headword": "momotar",
+      "entry_index": 7313,
+      "homonym": "",
+      "volume": "I",
+      "baseline_stratum": "baseline_target",
+      "adapted": false,
+      "ordinal": 6,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p01818"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p01818",
+          "source_line": 1818,
+          "form": "Xemomotar",
+          "form_start0": 96127,
+          "form_end0": 96136,
+          "fragment_start0": 48,
+          "fragment_end0": 57,
+          "role": "quoted_example",
+          "source_excerpt": "Cobiça fazer algũa cousa. — Aimomotar. act. ut. Xemomotar ahẽ aoba, l, faz-me cobiça o uestido daquelle."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 75",
+        "citation_context": "); Xe momotar ahẽ aoba. - Atrai-me a roupa daquele. (",
+        "reason": "Navarro's Xe momotar ahẽ aoba and translation attracting/desiring someone's clothing reproduce the VLB example Xemomotar ahẽ aoba, faz-me cobiça o uestido daquelle. This is the example occurrence, not the reflexive Anhemomotar in the next paragraph."
+      },
+      "limitations": [],
+      "split": "dev"
+    },
+    {
+      "case_id": "eval-0050e46302aa",
+      "citation_id": "navarro-d235a7961961b58f-r09159-s00117-e00127",
+      "page_id": "I-023",
+      "headword": "pukusãmoín",
+      "entry_index": 9159,
+      "homonym": "",
+      "volume": "I",
+      "baseline_stratum": "candidate_unresolved",
+      "adapted": false,
+      "ordinal": 12,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p00187"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p00187",
+          "source_line": 187,
+          "form": "Aipocuçãmoin",
+          "form_start0": 10294,
+          "form_end0": 10306,
+          "fragment_start0": 39,
+          "fragment_end0": 51,
+          "role": "inflected_form",
+          "source_excerpt": "Aferrolhar com prisões. — Aimopocuçam. Aipocuçãmoin. Act. Aimoin itâ. (rece)."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 23",
+        "citation_context": "); prender em ferros, aferrolhar com prisões (",
+        "reason": "Aferrolhar com prisões gives Aipocuçãmoin, matching the lemma pukusãmoín and its exact gloss. The paragraph also gives different synonymous constructions, but this form is identifiable."
+      },
+      "limitations": [],
+      "split": "dev"
+    },
+    {
+      "case_id": "eval-0155740c2451",
+      "citation_id": "navarro-d235a7961961b58f-r03541-s00062-e00073",
+      "page_id": "I-151",
+      "headword": "'atybaîa",
+      "entry_index": 3541,
+      "homonym": "",
+      "volume": "I",
+      "baseline_stratum": "candidate_unresolved",
+      "adapted": false,
+      "ordinal": 15,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p04048"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p04048",
+          "source_line": 4048,
+          "form": "Atigbaya",
+          "form_start0": 227266,
+          "form_end0": 227274,
+          "fragment_start0": 47,
+          "fragment_end0": 55,
+          "role": "headword_form",
+          "source_excerpt": "Guedelha que os Indios tem sobre as orelhas. — Atigbaya."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 151",
+        "citation_context": "(s.) - cabelo crescido que os índios tinham sobre as orelhas (",
+        "reason": "Guedelha que os Indios tem sobre as orelhas — Atigbaya agrees with the distinctive definition cabelo crescido ... sobre as orelhas and the historical spelling of 'atybaîa."
+      },
+      "limitations": [],
+      "split": "dev"
+    },
+    {
+      "case_id": "eval-017c83afa664",
+      "citation_id": "navarro-d235a7961961b58f-r06730-s00057-e00068",
+      "page_id": "I-146",
+      "headword": "mba'epysykaba",
+      "entry_index": 6730,
+      "homonym": "",
+      "volume": "I",
+      "baseline_stratum": "candidate_unresolved",
+      "adapted": false,
+      "ordinal": 16,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p03894"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p03894",
+          "source_line": 3894,
+          "form": "Baepigcigcaba",
+          "form_start0": 218483,
+          "form_end0": 218496,
+          "fragment_start0": 9,
+          "fragment_end0": 22,
+          "role": "headword_form",
+          "source_excerpt": "Garfo. — Baepigcigcaba."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 146",
+        "citation_context": "(etim. - instrumento de segurar as coisas) (s.) - garfo (",
+        "reason": "Garfo — Baepigcigcaba is a direct form-and-gloss match for mba'epysykaba. The literal transcription lacks the normalized initial mb and uses historical pigcig spelling; the source is preserved as written."
+      },
+      "limitations": [],
+      "split": "dev"
+    },
+    {
+      "case_id": "eval-00aa43dda534",
+      "citation_id": "navarro-d235a7961961b58f-r06682-s00072-e00082",
+      "page_id": "I-031",
+      "headword": "mba'e",
+      "entry_index": 6682,
+      "homonym": "9",
+      "volume": "I",
+      "baseline_stratum": "no_candidate",
+      "adapted": false,
+      "ordinal": 19,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p00368"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p00368",
+          "source_line": 368,
+          "form": "Baê",
+          "form_start0": 21393,
+          "form_end0": 21396,
+          "fragment_start0": 11,
+          "fragment_end0": 14,
+          "role": "headword_form",
+          "source_excerpt": "Alfayas. — Baê."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 31",
+        "citation_context": "(ou ma'e) (s.) - alfaia, móvel ou utensílio de uso ou adorno doméstico (",
+        "reason": "The specific sense alfaia matches Alfayas — Baê. Generic Bae under Algũa cousa in paragraph 380 is a different citation context despite sharing the parent lexeme."
+      },
+      "limitations": [],
+      "split": "dev"
+    },
+    {
+      "case_id": "eval-006579b4b36c",
+      "citation_id": "navarro-d235a7961961b58f-r09967-s00132-e00142",
+      "page_id": "I-091",
+      "headword": "tanimbuky",
+      "entry_index": 9967,
+      "homonym": "",
+      "volume": "I",
+      "baseline_stratum": "no_candidate",
+      "adapted": false,
+      "ordinal": 20,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p02255"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p02255",
+          "source_line": 2255,
+          "form": "Tanĩbucig",
+          "form_start0": 123455,
+          "form_end0": 123464,
+          "fragment_start0": 11,
+          "fragment_end0": 20,
+          "role": "headword_variant",
+          "source_excerpt": "Decoada. — Tanĩbucig, l, Tanĩbuquig."
+        },
+        {
+          "source_id": "vlb-emerson-r568-p02255",
+          "source_line": 2255,
+          "form": "Tanĩbuquig",
+          "form_start0": 123469,
+          "form_end0": 123479,
+          "fragment_start0": 25,
+          "fragment_end0": 35,
+          "role": "headword_variant",
+          "source_excerpt": "Decoada. — Tanĩbucig, l, Tanĩbuquig."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 91",
+        "citation_context": "(etim. - água de cinzas) (s.) - lixívia, água de lavagem de roupa onde entram cinzas e outros elementos de limpeza e branqueamento (",
+        "reason": "Decoada gives Tanĩbucig and Tanĩbuquig, both spellings corresponding to tanimbuky and the ash-water/lye sense. Both variants are in a single uniquely identifiable paragraph."
+      },
+      "limitations": [],
+      "split": "dev"
+    },
+    {
+      "case_id": "eval-040f17539c14",
+      "citation_id": "navarro-d235a7961961b58f-r05021-s00203-e00214",
+      "page_id": "I-115",
+      "headword": "îemongatyrõ",
+      "entry_index": 5021,
+      "homonym": "",
+      "volume": "I",
+      "baseline_stratum": "no_candidate",
+      "adapted": false,
+      "ordinal": 21,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p02953"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p02953",
+          "source_line": 2953,
+          "form": "Anhemongatigrõ",
+          "form_start0": 167019,
+          "form_end0": 167033,
+          "fragment_start0": 25,
+          "fragment_end0": 39,
+          "role": "quoted_example",
+          "source_excerpt": "Enfeitar-se como quer. — Anhemongatigrõ. Aieguac."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 115",
+        "citation_context": "); Anhemongatyrõ. - Enfeitei-me. (",
+        "reason": "Enfeitar-se como quer — Anhemongatigrõ matches the dictionary's Anhemongatyrõ, Enfeitei-me. The nonreflexive Aimongatigrõ in paragraph 2951 is distinguishable by grammar and gloss."
+      },
+      "limitations": [],
+      "split": "dev"
+    },
+    {
+      "case_id": "eval-01ca1c6fdca1",
+      "citation_id": "navarro-d235a7961961b58f-r07296-s00385-e00396",
+      "page_id": "I-124",
+      "headword": "momemûã",
+      "entry_index": 7296,
+      "homonym": "1",
+      "volume": "I",
+      "baseline_stratum": "no_candidate",
+      "adapted": false,
+      "ordinal": 24,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p03249"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p03249",
+          "source_line": 3249,
+          "form": "Aipicuimomemoã",
+          "form_start0": 182945,
+          "form_end0": 182959,
+          "fragment_start0": 119,
+          "fragment_end0": 133,
+          "role": "quoted_compound",
+          "source_excerpt": "Esfregar. — Aiquigtigc. act. E se he por desfazer hũas burbulhinhas q. causa o frio ou a muita secura. Aipimomemoã, l, Aipicuimomemoã."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, I, 124",
+        "citation_context": "); Aîpiku'i-momemûã. - Esfreguei-lhe a caspa. (",
+        "reason": "The dictionary example Aîpiku'i-momemûã corresponds to Aipicuimomemoã under Esfregar. Both contain the piku'i element and the momemûã verb, unlike the more general alternative Aiquigtigc in the same paragraph."
+      },
+      "limitations": [
+        "The Portuguese source describes rubbing away small skin eruptions from cold or dryness; this label identifies the cited compound, without validating the dictionary’s narrower caspa translation."
+      ],
+      "split": "dev"
+    },
+    {
+      "case_id": "eval-1bc3d178449c",
+      "citation_id": "navarro-d235a7961961b58f-r04946-s00139-e00158",
+      "page_id": "II-053",
+      "headword": "îeîurume'eng",
+      "entry_index": 4946,
+      "homonym": "",
+      "volume": "II",
+      "baseline_stratum": "baseline_target",
+      "adapted": true,
+      "ordinal": 25,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p05291"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p05291",
+          "source_line": 5291,
+          "form": "Aiejurumeeng",
+          "form_start0": 304234,
+          "form_end0": 304246,
+          "fragment_start0": 45,
+          "fragment_end0": 57,
+          "role": "inflected_form",
+          "source_excerpt": "Ocasião dar falando mal a lhe mal falarem. — Aiejurumeeng. çupe"
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, II, 53, adapt.",
+        "citation_context": "(v. intr. compl. posp.) - deixar falar mal (de algo ou de alguém: compl. com supé): Aîeîurume'eng (abá) supé. - Deixo falar mal do homem. (",
+        "reason": "Aiejurumeeng with çupe is the identifiable source form for îeîurume'eng and the adapted Aîeîurume'eng ... supé example. Its source heading specifically describes occasioning ill speech by speaking ill."
+      },
+      "limitations": [
+        "The source gloss is more specific than the dictionary paraphrase; matching the paragraph does not endorse the paraphrase or its supplied object abá."
+      ],
+      "split": "dev"
+    },
+    {
+      "case_id": "eval-0117ca516860",
+      "citation_id": "navarro-d235a7961961b58f-r07224-s00071-e00082",
+      "page_id": "II-083",
+      "headword": "mokonhõ",
+      "entry_index": 7224,
+      "homonym": "",
+      "volume": "II",
+      "baseline_stratum": "baseline_target",
+      "adapted": false,
+      "ordinal": 31,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p06007"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p06007",
+          "source_line": 6007,
+          "form": "Moconho",
+          "form_start0": 355362,
+          "form_end0": 355369,
+          "fragment_start0": 41,
+          "fragment_end0": 48,
+          "role": "headword_form",
+          "source_excerpt": "Poucos, ou poucas em numero. — Bobigriõ. Moconho."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, II, 83",
+        "citation_context": "(ou mokõînhõ) (etim. - dois, somente) (pron.) - 1) poucos (em número) (",
+        "reason": "Poucos, ou poucas em numero — Moconho directly matches mokonhõ, poucos (em número). The other alternative Bobigriõ is distinguishable by form."
+      },
+      "limitations": [],
+      "split": "dev"
+    },
+    {
+      "case_id": "eval-011c20116a0d",
+      "citation_id": "navarro-d235a7961961b58f-r09990-s00175-e00186",
+      "page_id": "II-048",
+      "headword": "tapiîara",
+      "entry_index": 9990,
+      "homonym": "",
+      "volume": "II",
+      "baseline_stratum": "baseline_target",
+      "adapted": false,
+      "ordinal": 32,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p05159"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p05159",
+          "source_line": 5159,
+          "form": "Tapijara",
+          "form_start0": 296623,
+          "form_end0": 296631,
+          "fragment_start0": 54,
+          "fragment_end0": 62,
+          "role": "headword_form",
+          "source_excerpt": "Natural de algũa terra ou morador. — Iggoara. aliter. Tapijara."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, II, 48",
+        "citation_context": "); habitante de aldeia; natural de alguma terra (",
+        "reason": "Natural de algũa terra ou morador — Tapijara matches the cited sense natural de alguma terra/habitante and the spelling of tapiîara."
+      },
+      "limitations": [],
+      "split": "dev"
+    },
+    {
+      "case_id": "eval-07939e161446",
+      "citation_id": "navarro-d235a7961961b58f-r07365-s00162-e00181",
+      "page_id": "II-051",
+      "headword": "mongakuab",
+      "entry_index": 7365,
+      "homonym": "1",
+      "volume": "II",
+      "baseline_stratum": "candidate_unresolved",
+      "adapted": true,
+      "ordinal": 33,
+      "status": "ambiguous",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p05251",
+        "vlb-emerson-r568-p05259"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p05251",
+          "source_line": 5251,
+          "form": "Aimongacuguab",
+          "form_start0": 301081,
+          "form_end0": 301094,
+          "fragment_start0": 56,
+          "fragment_end0": 69,
+          "role": "inflected_form",
+          "source_excerpt": "Noticia ter de algũa cousa. — Aimombeû. act. çupê. alr. Aimongacuguab. act. rece."
+        },
+        {
+          "source_id": "vlb-emerson-r568-p05259",
+          "source_line": 5259,
+          "form": "Aimongacuguab",
+          "form_start0": 301684,
+          "form_end0": 301697,
+          "fragment_start0": 36,
+          "fragment_end0": 49,
+          "role": "inflected_form",
+          "source_excerpt": "Nouas dar a alguem. — Aimomorandub. Aimongacuguab. acts."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, II, 51, adapt.",
+        "citation_context": "(ou mongakugûab) (v.tr.) - dar as novas a, dar notícia a, informar [sobre algo: compl. com esé (r, s)]: Aîmongakuab (mba'e) resé. - Informo-o acerca das coisas. (",
+        "reason": "Aimongacuguab appears both under Noticia ter de algũa cousa and Nouas dar a alguem. The former explicitly gives rece, matching the adapted example's resé complement, while the latter matches the main dar as novas gloss. Because the supplied example is adapted and the same form is present twice, a unique paragraph cannot be established confidently."
+      },
+      "limitations": [],
+      "split": "dev"
+    },
+    {
+      "case_id": "eval-00d1b16e3212",
+      "citation_id": "navarro-d235a7961961b58f-r11366-s00051-e00063",
+      "page_id": "II-128",
+      "headword": "yperupinima",
+      "entry_index": 11366,
+      "homonym": "",
+      "volume": "II",
+      "baseline_stratum": "candidate_unresolved",
+      "adapted": false,
+      "ordinal": 37,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p07160"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p07160",
+          "source_line": 7160,
+          "form": "Igperupinĩma",
+          "form_start0": 431229,
+          "form_end0": 431241,
+          "fragment_start0": 21,
+          "fragment_end0": 33,
+          "role": "headword_form",
+          "source_excerpt": "Tintureira. Peixe. — Igperupinĩma."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, II, 128",
+        "citation_context": "(etim. - tubarão pintado) (s.) - nome de um peixe (",
+        "reason": "Tintureira. Peixe — Igperupinĩma matches the distinctive yperupinima form and fish sense. The modern shark etymology is not independently validated by this label."
+      },
+      "limitations": [],
+      "split": "dev"
+    },
+    {
+      "case_id": "eval-00203cb6f6f0",
+      "citation_id": "navarro-d235a7961961b58f-r05555-s00233-e00245",
+      "page_id": "II-029",
+      "headword": "îuru'ar",
+      "entry_index": 5555,
+      "homonym": "",
+      "volume": "II",
+      "baseline_stratum": "candidate_unresolved",
+      "adapted": false,
+      "ordinal": 39,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p04647"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p04647",
+          "source_line": 4647,
+          "form": "ojuruaramo",
+          "form_start0": 264498,
+          "form_end0": 264508,
+          "fragment_start0": 109,
+          "fragment_end0": 119,
+          "role": "quoted_example",
+          "source_excerpt": "propriamente he o q. nos dizemos boquejar, e assi fica indiferente pera bẽ, e pera mal. ut. Teitenheume xeri ojuruaramo .i. não cure de boquejar em mĩ."
+        }
+      ],
+      "evidence": {
+        "raw_citation": " VLB, II, 29",
+        "citation_context": "(xe) (etim. - cair a boca) (v. da 2ª classe) - dizer mal; boquejar; murmurar, falar mal [de algo ou de alguém: compl. com esé (r, s) ou ri]: T'e'i tenhẽ umẽ xe ri o îuru'aramo. - Não fique ele boquejando a meu respeito. (",
+        "reason": "The page fragment contains Teitenheume xeri ojuruaramo, não cure de boquejar em mĩ, matching the dictionary's quoted T'e'i tenhẽ umẽ xe ri o îuru'aramo and its translation."
+      },
+      "limitations": [
+        "The relevant source paragraph continues from the preceding printed page; this label anchors the visible continuation carrying the actual quoted example."
+      ],
+      "split": "dev"
+    },
+    {
+      "case_id": "eval-00888389f7e1",
+      "citation_id": "navarro-d235a7961961b58f-r06432-s00353-e00365",
+      "page_id": "II-139",
+      "headword": "kytyk",
+      "entry_index": 6432,
+      "homonym": "",
+      "volume": "II",
+      "baseline_stratum": "candidate_unresolved",
+      "adapted": false,
+      "ordinal": 40,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p07430"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p07430",
+          "source_line": 7430,
+          "form": "Aiquigtigc",
+          "form_start0": 449826,
+          "form_end0": 449836,
+          "fragment_start0": 30,
+          "fragment_end0": 40,
+          "role": "inflected_form",
+          "source_excerpt": "Untar como com azeite, etc. — Aiquigtigc. act. pupe. Quasi o mesmo he. Aipixib. act."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, II, 139",
+        "citation_context": "); 2) brear, passar breu, alcatrão (p.ex., no barco); encerar, untar (p.ex., com azeite) (",
+        "reason": "Untar como com azeite — Aiquigtigc directly matches the cited untar (p.ex., com azeite) sense of kytyk. The distinct alternatives Aipixib and Aipitub need not be treated as spellings of this headword."
+      },
+      "limitations": [],
+      "split": "dev"
+    },
+    {
+      "case_id": "eval-037128d776c8",
+      "citation_id": "navarro-d235a7961961b58f-r03561-s00018-e00029",
+      "page_id": "II-020",
+      "headword": "aty'y",
+      "entry_index": 3561,
+      "homonym": "",
+      "volume": "II",
+      "baseline_stratum": "no_candidate",
+      "adapted": false,
+      "ordinal": 43,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p04436"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p04436",
+          "source_line": 4436,
+          "form": "Atij",
+          "form_start0": 250636,
+          "form_end0": 250640,
+          "fragment_start0": 12,
+          "fragment_end0": 16,
+          "role": "headword_form",
+          "source_excerpt": "Leicenço. — Atij."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, II, 20",
+        "citation_context": "(s.) - furúnculo (",
+        "reason": "Leicenço — Atij is the identifiable form-and-sense correspondence for aty'y, furúnculo, on this cited page. It is a short form, but the Portuguese medical noun and exact page constrain the identification."
+      },
+      "limitations": [],
+      "split": "dev"
+    },
+    {
+      "case_id": "eval-045a8eae7084",
+      "citation_id": "navarro-d235a7961961b58f-r03886-s00032-e00043",
+      "page_id": "II-038",
+      "headword": "ekoporeaûsuba",
+      "entry_index": 3886,
+      "homonym": "2",
+      "volume": "II",
+      "baseline_stratum": "no_candidate",
+      "adapted": false,
+      "ordinal": 45,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p04934"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p04934",
+          "source_line": 4934,
+          "form": "Tecoporeauçuba",
+          "form_start0": 281384,
+          "form_end0": 281398,
+          "fragment_start0": 55,
+          "fragment_end0": 69,
+          "role": "headword_form",
+          "source_excerpt": "Miserias assi ou infortunios. — Morauçuba. Moreauçuba. Tecoporeauçuba."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, II, 38",
+        "citation_context": "(t) (s.) - miséria; infortúnio (",
+        "reason": "Miserias assi ou infortunios — Tecoporeauçuba matches ekoporeaûsuba (t), miséria/infortúnio. The initial t- is explicitly licensed by the dictionary's relational prefix notation."
+      },
+      "limitations": [],
+      "split": "dev"
+    },
+    {
+      "case_id": "eval-033cd0e09222",
+      "citation_id": "navarro-d235a7961961b58f-r06875-s00805-e00816",
+      "page_id": "II-099",
+      "headword": "memûã",
+      "entry_index": 6875,
+      "homonym": "1",
+      "volume": "II",
+      "baseline_stratum": "no_candidate",
+      "adapted": false,
+      "ordinal": 47,
+      "status": "clear",
+      "reviewer": "assistant",
+      "scope": "citation_occurrence_to_transcription_fragment",
+      "source_ids": [
+        "vlb-emerson-r568-p06393"
+      ],
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p06393",
+          "source_line": 6393,
+          "form": "Abamemoã",
+          "form_start0": 381619,
+          "form_end0": 381627,
+          "fragment_start0": 13,
+          "fragment_end0": 21,
+          "role": "quoted_compound",
+          "source_excerpt": "Refalçado. — Abamemoã."
+        }
+      ],
+      "evidence": {
+        "raw_citation": "VLB, II, 99",
+        "citation_context": "); 3) falso, errado, fingido: abá-memûã - homem falso (",
+        "reason": "Refalçado — Abamemoã matches the compound abá-memûã, homem falso, immediately before this citation. The next paragraph's Xememoã is the predicate 'be false' and is not the cited compound."
+      },
+      "limitations": [],
+      "split": "dev"
+    }
+  ],
+  "split": "dev"
+}

@@ -1,0 +1,386 @@
+{
+  "audit_kind": "independent_frozen_heldout_test_check",
+  "chronology": {
+    "annotation_frozen_utc": "2026-11-03T02:29:22.487188+00:00",
+    "labels_unchanged_since_annotation_freeze": true,
+    "model_frozen_utc": "2026-11-03T02:36:23.264393+00:00",
+    "predictions_viewed_after_test_release": true,
+    "test_released_after_model_freeze": true
+  },
+  "evaluation_scope": {
+    "all_cases": 28,
+    "exact_span_match": "Predicted source_id, start0 and end0 exactly equal one annotated literal target. Offsets are zero-based, half-open source-text character positions.",
+    "label_counts": {
+      "ambiguous": 2,
+      "clear": 25,
+      "not_found": 1
+    },
+    "paragraph_match": "Predicted source_id equals an accepted source_id for a clear citation occurrence.",
+    "physical_OCR_line_or_box_accuracy_evaluated": false,
+    "rank_limit": 3,
+    "scores_are_probabilities": false,
+    "split": "test"
+  },
+  "failure_explanations": [
+    {
+      "annotated_targets": [
+        {
+          "end0": 73108,
+          "form": "Xeçoocuguab",
+          "source_id": "vlb-emerson-r568-p01349",
+          "source_line": 1349,
+          "start0": 73097
+        }
+      ],
+      "case_id": "eval-01936492a5c4",
+      "category": "paragraph_ranking",
+      "citation_id": "navarro-d235a7961961b58f-r09662-s00866-e00876",
+      "correct_paragraph_rank": 2,
+      "explanation": "The citation concerns the compound so'o-kugûaba (a good hunting dog), represented by Xeçoocuguab in paragraph 1349. The top result is standalone Çoo under Caça in paragraph 1341. The correct paragraph ranks second, and the decision remains needs_review.",
+      "headword": "so'o",
+      "ordinal": 3,
+      "page_id": "I-062",
+      "predicted_top": {
+        "end0": 72801,
+        "form": "Çoo",
+        "source_id": "vlb-emerson-r568-p01341",
+        "source_line": 1341,
+        "start0": 72798
+      },
+      "prediction_status": "needs_review"
+    },
+    {
+      "annotated_targets": [
+        {
+          "end0": 204093,
+          "form": "Apixapaba",
+          "source_id": "vlb-emerson-r568-p03612",
+          "source_line": 3612,
+          "start0": 204084
+        }
+      ],
+      "case_id": "eval-001634319ffd",
+      "category": "literal_span_only",
+      "citation_id": "navarro-d235a7961961b58f-r02314-s00265-e00276",
+      "correct_paragraph_rank": 1,
+      "explanation": "The correct paragraph is identified, but its selected span is the Portuguese article A. The cited compound and quoted explanatory prose identify Apixapaba. This is a literal-span failure despite paragraph success; the decision remains needs_review.",
+      "headword": "'a",
+      "ordinal": 10,
+      "page_id": "I-137",
+      "predicted_top": {
+        "end0": 204059,
+        "form": "A",
+        "source_id": "vlb-emerson-r568-p03612",
+        "source_line": 3612,
+        "start0": 204058
+      },
+      "prediction_status": "needs_review"
+    },
+    {
+      "annotated_targets": [
+        {
+          "end0": 187687,
+          "form": "Xereçaray",
+          "source_id": "vlb-emerson-r568-p03340",
+          "source_line": 3340,
+          "start0": 187678
+        }
+      ],
+      "case_id": "eval-499a8b233df1",
+      "category": "paragraph_ranking",
+      "citation_id": "navarro-d235a7961961b58f-r04230-s00221-e00240",
+      "correct_paragraph_rank": 2,
+      "explanation": "The adapted example specifies suí, matching Xereçaray with çuî in paragraph 3340. The top result is neighboring Xereçarai with rece in paragraph 3339. The correct paragraph ranks second; the decision remains needs_review.",
+      "headword": "esaraî",
+      "ordinal": 17,
+      "page_id": "I-127",
+      "predicted_top": {
+        "end0": 187607,
+        "form": "Xereçarai",
+        "source_id": "vlb-emerson-r568-p03339",
+        "source_line": 3339,
+        "start0": 187598
+      },
+      "prediction_status": "needs_review"
+    },
+    {
+      "annotated_targets": [
+        {
+          "end0": 299749,
+          "form": "Pigtuã",
+          "source_id": "vlb-emerson-r568-p05224",
+          "source_line": 5224,
+          "start0": 299743
+        },
+        {
+          "end0": 299759,
+          "form": "Pigtuniã",
+          "source_id": "vlb-emerson-r568-p05224",
+          "source_line": 5224,
+          "start0": 299751
+        }
+      ],
+      "case_id": "eval-00d52cbb1cfa",
+      "category": "paragraph_ranking",
+      "citation_id": "navarro-d235a7961961b58f-r09199-s00955-e00966",
+      "correct_paragraph_rank": 2,
+      "explanation": "The specific citation quotes Pytũ 'ã / Pytun iã, corresponding to Pigtuã / Pigtuniã under Noite ser in paragraph 5224. The top result is the standalone noun Putuna in paragraph 5223, and it is incorrectly marked suggested. Paragraph 5224 ranks second but its selected Pigtun span also differs from the cited variants.",
+      "headword": "putuna",
+      "ordinal": 30,
+      "page_id": "II-050",
+      "predicted_top": {
+        "end0": 299720,
+        "form": "Putuna",
+        "source_id": "vlb-emerson-r568-p05223",
+        "source_line": 5223,
+        "start0": 299714
+      },
+      "prediction_status": "suggested"
+    },
+    {
+      "annotated_targets": [
+        {
+          "end0": 271669,
+          "form": "Ajucamatutenhe",
+          "source_id": "vlb-emerson-r568-p04778",
+          "source_line": 4778,
+          "start0": 271655
+        }
+      ],
+      "case_id": "eval-001bd169767d",
+      "category": "paragraph_ranking",
+      "citation_id": "navarro-d235a7961961b58f-r05490-s00304-e00315",
+      "correct_paragraph_rank": 3,
+      "explanation": "The citation quotes Aîuká-matutenhẽ, corresponding to Ajucamatutenhe under Matança fazer in paragraph 4778. The top result is general Ajuca in paragraph 4779. The correct paragraph and literal form rank third; the decision remains needs_review.",
+      "headword": "îuká",
+      "ordinal": 34,
+      "page_id": "II-033",
+      "predicted_top": {
+        "end0": 271775,
+        "form": "Ajuca",
+        "source_id": "vlb-emerson-r568-p04779",
+        "source_line": 4779,
+        "start0": 271770
+      },
+      "prediction_status": "needs_review"
+    },
+    {
+      "annotated_targets": [
+        {
+          "end0": 325050,
+          "form": "Uinte çoce",
+          "source_id": "vlb-emerson-r568-p05589",
+          "source_line": 5589,
+          "start0": 325040
+        }
+      ],
+      "case_id": "eval-038ad8345194",
+      "category": "literal_span_only",
+      "citation_id": "navarro-d235a7961961b58f-r09680-s00619-e00630",
+      "correct_paragraph_rank": 1,
+      "explanation": "The correct paragraph is identified, but its selected span is the first standalone Çoce. The cited phrase is Uinte çoce later in the same paragraph. The selected span does not overlap the annotated example occurrence; the decision remains needs_review.",
+      "headword": "sosé",
+      "ordinal": 48,
+      "page_id": "II-067",
+      "predicted_top": {
+        "end0": 325034,
+        "form": "Çoce",
+        "source_id": "vlb-emerson-r568-p05589",
+        "source_line": 5589,
+        "start0": 325030
+      },
+      "prediction_status": "needs_review"
+    }
+  ],
+  "human_verified": false,
+  "interpretation": [
+    "The small test set was deliberately balanced by baseline difficulty and word length; these percentages are not corpus-wide prevalence estimates.",
+    "Labels are assistant-reviewed and do not claim human or specialist verification.",
+    "Ambiguous and not_found cases are reported separately, not counted as confirmed positive paragraph targets.",
+    "Paragraph recall is stronger than exact highlighted-span accuracy; both metrics must remain visible.",
+    "One suggested decision is wrong for its specific citation occurrence, so this audit does not support automatic promotion of mined suggestions to production links.",
+    "No post-release gold correction, model retuning, or implementation change was made for this audit."
+  ],
+  "method": "Recomputed directly from frozen candidate records and unchanged assistant-reviewed test labels, without importing the matcher or its evaluator. No implementation edits or retuning were performed.",
+  "metrics": {
+    "clear_cases": 25,
+    "suggested_decisions": 10,
+    "suggested_paragraph_correct": 9,
+    "top1_exact_span_correct": 19,
+    "top1_paragraph_correct": 21,
+    "top3_exact_span_correct": 22,
+    "top3_paragraph_correct": 25
+  },
+  "prediction_status_counts": {
+    "needs_review": 17,
+    "suggested": 10,
+    "weak_candidates": 1
+  },
+  "rates": {
+    "suggested_coverage_all_cases": 0.35714285714285715,
+    "suggested_coverage_clear_cases": 0.4,
+    "suggested_paragraph_accuracy": 0.9,
+    "top1_exact_span_accuracy_clear": 0.76,
+    "top1_paragraph_accuracy_clear": 0.84,
+    "top3_exact_span_recall_clear": 0.88,
+    "top3_paragraph_recall_clear": 1.0
+  },
+  "reviewer": "assistant",
+  "schema_version": 1,
+  "seed_leakage_audit": {
+    "all_exclusions_pass": true,
+    "heldout_headwords": 48,
+    "heldout_printed_pages": 45,
+    "heldout_source_paragraphs": 1327,
+    "normalization": "Lowercase, NFD decomposition, remove combining marks, retain letters only.",
+    "overlap_counts": {
+      "normalized_headword": 0,
+      "printed_page": 0,
+      "source_paragraph": 0
+    },
+    "overlapping_seed_ids": {
+      "normalized_headword": [],
+      "printed_page": [],
+      "source_paragraph": []
+    },
+    "seed_records_checked": 613
+  },
+  "stratum_breakdown": {
+    "baseline_target": {
+      "all_cases": 10,
+      "clear_cases": 10,
+      "label_clear": 10,
+      "suggested_decisions": 7,
+      "suggested_paragraph_correct": 6,
+      "top1_exact_span_correct": 8,
+      "top1_paragraph_correct": 8,
+      "top3_exact_span_correct": 9,
+      "top3_paragraph_correct": 10
+    },
+    "candidate_unresolved": {
+      "all_cases": 9,
+      "clear_cases": 7,
+      "label_ambiguous": 2,
+      "label_clear": 7,
+      "suggested_decisions": 2,
+      "suggested_paragraph_correct": 2,
+      "top1_exact_span_correct": 5,
+      "top1_paragraph_correct": 6,
+      "top3_exact_span_correct": 6,
+      "top3_paragraph_correct": 7
+    },
+    "no_candidate": {
+      "all_cases": 9,
+      "clear_cases": 8,
+      "label_clear": 8,
+      "label_not_found": 1,
+      "suggested_decisions": 1,
+      "suggested_paragraph_correct": 1,
+      "top1_exact_span_correct": 6,
+      "top1_paragraph_correct": 7,
+      "top3_exact_span_correct": 7,
+      "top3_paragraph_correct": 8
+    }
+  },
+  "uncertain_cases": {
+    "cases": [
+      {
+        "case_id": "eval-0129a03fb901",
+        "headword": "gûyragûasu",
+        "label_status": "ambiguous",
+        "prediction_status": "needs_review",
+        "review_reasons": [
+          "explicit_quoted_surface_not_matched"
+        ],
+        "suggested": false
+      },
+      {
+        "case_id": "eval-00a304c94a15",
+        "headword": "ka'apîasó",
+        "label_status": "ambiguous",
+        "prediction_status": "needs_review",
+        "review_reasons": [
+          "close_competing_passage"
+        ],
+        "suggested": false
+      },
+      {
+        "case_id": "eval-01cc1ce0c33a",
+        "headword": "anõîa",
+        "label_status": "not_found",
+        "prediction_status": "weak_candidates",
+        "review_reasons": [
+          "weak_form_fit",
+          "close_competing_passage",
+          "explicit_quoted_surface_not_matched"
+        ],
+        "suggested": false
+      }
+    ],
+    "count": 3,
+    "suggested_count": 0
+  },
+  "verified_hashes": {
+    "prediction_config_canonical_json": {
+      "expected_sha256": "64d337f06a42c2fd6bde1095346c0d96305a408800d1c4c125ad667e63d909e0",
+      "matches": true,
+      "observed_sha256": "64d337f06a42c2fd6bde1095346c0d96305a408800d1c4c125ad667e63d909e0"
+    },
+    "vlb/mine_alignment.py": {
+      "expected_sha256": "06895c10fac9e68316682409d8839ddc17e19f4ceb85ae7eecb80781c731cca9",
+      "matches": true,
+      "observed_sha256": "06895c10fac9e68316682409d8839ddc17e19f4ceb85ae7eecb80781c731cca9"
+    },
+    "vlb/mining/benchmark/dev_labels.json": {
+      "expected_sha256": "81623ce860917c803201b95a801421b8a8bda29e254de8d60bc3a311ef686bfc",
+      "matches": true,
+      "observed_sha256": "81623ce860917c803201b95a801421b8a8bda29e254de8d60bc3a311ef686bfc"
+    },
+    "vlb/mining/benchmark/preregistered_sample.json": {
+      "expected_sha256": "f5a71f90a73e48710b984179b693e3b70a20f3c57b7b93109bcd786d2ff597fc",
+      "matches": true,
+      "observed_sha256": "f5a71f90a73e48710b984179b693e3b70a20f3c57b7b93109bcd786d2ff597fc"
+    },
+    "vlb/mining/benchmark/test_labels.json": {
+      "expected_sha256": "9127cf95329f476df3c61df81eab69acc7f6094fe8a2b6d021d571482dce846a",
+      "matches": true,
+      "observed_sha256": "9127cf95329f476df3c61df81eab69acc7f6094fe8a2b6d021d571482dce846a"
+    },
+    "vlb/mining/form_index.py": {
+      "expected_sha256": "6222293c60f1dcfbedde2b678634f469f6aeda9ebdd63ad1a6f9dac73eb578f6",
+      "matches": true,
+      "observed_sha256": "6222293c60f1dcfbedde2b678634f469f6aeda9ebdd63ad1a6f9dac73eb578f6"
+    },
+    "vlb/mining/orthography.py": {
+      "expected_sha256": "ed96dd603cb3d92fbf18e0f58b04a48bdf64cb872f8c24623d6a5620146d9ebc",
+      "matches": true,
+      "observed_sha256": "ed96dd603cb3d92fbf18e0f58b04a48bdf64cb872f8c24623d6a5620146d9ebc"
+    },
+    "vlb/mining/output/candidates.json.gz": {
+      "expected_sha256": "84e9928cca755c6d78a4d4cb201555549ddbc80f0f5cbfb9506953e8bafd368e",
+      "matches": true,
+      "observed_sha256": "84e9928cca755c6d78a4d4cb201555549ddbc80f0f5cbfb9506953e8bafd368e"
+    },
+    "vlb/mining/output/orthography-model.json": {
+      "expected_sha256": "8726e287a0a776676846ee718df4a65af3ea9a3db354d732929922090d24f68e",
+      "matches": true,
+      "observed_sha256": "8726e287a0a776676846ee718df4a65af3ea9a3db354d732929922090d24f68e"
+    },
+    "vlb/mining/output/seeds.json.gz": {
+      "expected_sha256": "d2c38e055b9f39b7467e52b33d4229434fa9d58438d07d5023965182638baf52",
+      "matches": true,
+      "observed_sha256": "d2c38e055b9f39b7467e52b33d4229434fa9d58438d07d5023965182638baf52"
+    },
+    "vlb/mining/pipeline.py": {
+      "expected_sha256": "86f66cabb82580c5114b4f7dccfd4daeea8cd6dd61d7b03c832db4ac4387d13d",
+      "matches": true,
+      "observed_sha256": "86f66cabb82580c5114b4f7dccfd4daeea8cd6dd61d7b03c832db4ac4387d13d"
+    },
+    "vlb/mining/seeds.py": {
+      "expected_sha256": "2b6df0633c0980dc901faab1ca48de77d8ff147d7c44a51f56294dd153e716d4",
+      "matches": true,
+      "observed_sha256": "2b6df0633c0980dc901faab1ca48de77d8ff147d7c44a51f56294dd153e716d4"
+    }
+  },
+  "written_utc": "2026-11-03T02:39:33.640065+00:00"
+}

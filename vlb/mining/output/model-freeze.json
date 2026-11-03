@@ -1,0 +1,22 @@
+{
+  "ablation_prediction_sha256": {
+    "prior": "ef6c0bdf22408c21f6ef26c6cac822bd4c3e1634eff57a96689bb8458e37d305",
+    "uniform": "a4fcc0c9fe3af6945fe0bae07c84093a9ee99e6622f3d2c23112b7d527bb9dde"
+  },
+  "algorithm_files_sha256": {
+    "vlb/mine_alignment.py": "06895c10fac9e68316682409d8839ddc17e19f4ceb85ae7eecb80781c731cca9",
+    "vlb/mining/form_index.py": "6222293c60f1dcfbedde2b678634f469f6aeda9ebdd63ad1a6f9dac73eb578f6",
+    "vlb/mining/orthography.py": "ed96dd603cb3d92fbf18e0f58b04a48bdf64cb872f8c24623d6a5620146d9ebc",
+    "vlb/mining/pipeline.py": "86f66cabb82580c5114b4f7dccfd4daeea8cd6dd61d7b03c832db4ac4387d13d",
+    "vlb/mining/seeds.py": "2b6df0633c0980dc901faab1ca48de77d8ff147d7c44a51f56294dd153e716d4"
+  },
+  "benchmark_preregistration_sha256": "f5a71f90a73e48710b984179b693e3b70a20f3c57b7b93109bcd786d2ff597fc",
+  "config_sha256": "64d337f06a42c2fd6bde1095346c0d96305a408800d1c4c125ad667e63d909e0",
+  "frozen_utc": "2026-11-03T02:36:23.264393+00:00",
+  "model_file_sha256": "8726e287a0a776676846ee718df4a65af3ea9a3db354d732929922090d24f68e",
+  "prediction_sha256": "84e9928cca755c6d78a4d4cb201555549ddbc80f0f5cbfb9506953e8bafd368e",
+  "purpose": "Candidate generation, scores, thresholds and predictions frozen before test label release. Future report/index presentation may change without reranking.",
+  "schema_version": 1,
+  "seed_file_sha256": "d2c38e055b9f39b7467e52b33d4229434fa9d58438d07d5023965182638baf52",
+  "withheld_test_labels_sha256": "9127cf95329f476df3c61df81eab69acc7f6094fe8a2b6d021d571482dce846a"
+}

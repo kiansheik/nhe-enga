@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "frozen_at_utc": "2026-11-03T02:29:22.487188+00:00",
+  "reviewer": "assistant",
+  "human_verified": false,
+  "new_matcher_predictions_viewed_before_freeze": false,
+  "baseline_information_used": "Old viewer target/candidate availability status only for sampling; manual review materials omit candidate rankings.",
+  "dev_file": "dev_labels.json",
+  "dev_sha256": "81623ce860917c803201b95a801421b8a8bda29e254de8d60bc3a311ef686bfc",
+  "dev_cases": 20,
+  "test_file": "test_labels.json",
+  "test_sha256": "9127cf95329f476df3c61df81eab69acc7f6094fe8a2b6d021d571482dce846a",
+  "test_cases": 28,
+  "release_protocol": "Test labels are frozen and withheld from model developer until candidate generation, scoring, and automatic-link thresholds are frozen.",
+  "preregistration": "preregistered_sample.json"
+}

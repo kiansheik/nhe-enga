@@ -1,0 +1,12 @@
+{
+  "default_costs": {
+    "edit": 1.0,
+    "nasal_mark_difference": 1.0,
+    "stress_mark_difference": 1.0
+  },
+  "direction": "Navarro surface -> Emerson surface",
+  "method": "uniform character edit costs; same shortlist, context and surface hypotheses as orthographic models",
+  "rules": [],
+  "schema_version": 1,
+  "weights_are_probabilities": false
+}
