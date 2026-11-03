@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Compare a transcrição do Vocabulário na Língua Brasílica de Emerson Costa com os fac-símiles e as citações do dicionário de Navarro.">
+  <title>VLB · Fac-símile e transcrição · Nhe'enga</title>
+  <link rel="icon" href="../favicon.ico">
+  <link rel="stylesheet" href="styles.css">
+  <script src="../js/pako.min.js" defer></script>
+  <script src="app.js" defer></script>
+<script defer src="/nhe-enga/offline/register.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#transcription-panel">Ir para a transcrição</a>
+  <header class="site-header">
+    <div class="heading-row">
+      <a class="brand" href="../">Nhe’enga <span aria-hidden="true">/</span> <span>Fontes</span></a>
+      <button id="about-button" class="quiet-button" type="button">Sobre esta edição</button>
+    </div>
+    <div class="title-row">
+      <div>
+        <p class="eyebrow">Um vocabulário, três caminhos de leitura</p>
+        <h1>Vocabulário na Língua Brasílica</h1>
+        <p class="intro">O fac-símile, a transcrição de Emerson Costa e as citações de Navarro, página a página.</p>
+      </div>
+      <div class="edition-mark" aria-label="Edição de 1952–1953, volumes I e II"><span>VLB</span><small>1952 — 1953</small></div>
+    </div>
+    <p class="credit">Transcrição digital de <strong>Emerson José Silveira da Costa</strong>.
+      <a href="https://sites.google.com/site/vocabularionalinguabrasilica/" target="_blank" rel="noopener noreferrer">Projeto original ↗</a>
+      <a href="https://abanheenga.blogspot.com/p/como-aprender-tupi.html" target="_blank" rel="noopener noreferrer">Emerson no Abanhe’enga ↗</a>
+    </p>
+  </header>
+
+  <main>
+    <section class="navigation" aria-label="Navegar pelo vocabulário">
+      <div class="page-controls">
+        <button id="previous-page" class="icon-button" type="button" title="Página anterior" aria-label="Página anterior">←</button>
+        <label>Volume <select id="volume-select"><option value="I">I · 1952</option><option value="II">II · 1953</option></select></label>
+        <label>Página <select id="page-select" aria-label="Página impressa"></select></label>
+        <button id="next-page" class="icon-button" type="button" title="Página seguinte" aria-label="Página seguinte">→</button>
+        <span id="page-position" class="muted"></span>
+      </div>
+      <form id="search-form" class="search-form" role="search">
+        <label class="sr-only" for="search-input">Buscar na transcrição ou nos verbetes citados</label>
+        <input id="search-input" type="search" placeholder="Buscar transcrição ou verbete…" autocomplete="off">
+        <button type="submit">Buscar</button>
+      </form>
+    </section>
+    <section id="search-results" class="search-results" aria-label="Resultados da busca" hidden>
+      <div class="section-heading"><h2 id="search-heading">Resultados</h2><button id="close-search" type="button" class="quiet-button">Fechar busca ×</button></div>
+      <div id="search-result-list"></div>
+    </section>
+
+    <div class="reading-status">
+      <p id="page-status" role="status" aria-live="polite">Carregando a concordância…</p>
+      <button id="copy-link" type="button" class="quiet-button">Copiar link</button>
+    </div>
+    <div id="load-error" class="notice error" role="alert" hidden></div>
+
+    <div class="workspace">
+      <section class="pane scan-pane" aria-labelledby="scan-heading">
+        <header class="pane-heading"><div><p class="eyebrow">01 · Documento</p><h2 id="scan-heading">Fac-símile</h2></div><span id="scan-page-label" class="page-stamp"></span></header>
+        <div class="scan-toolbar">
+          <div class="zoom-controls" aria-label="Ampliação do fac-símile">
+            <button id="zoom-out" type="button" aria-label="Diminuir imagem">−</button>
+            <button id="zoom-reset" type="button" title="Ajustar à largura">100%</button>
+            <button id="zoom-in" type="button" aria-label="Ampliar imagem">+</button>
+          </div>
+          <label class="checkbox-label"><input id="show-ocr" type="checkbox" checked> Realçar trecho</label>
+          <a id="open-scan" href="#" target="_blank" rel="noopener noreferrer">Abrir imagem ↗</a>
+        </div>
+        <div id="scan-viewport" class="scan-viewport" tabindex="0" aria-label="Imagem da página; use os controles para ampliar">
+          <div id="scan-stage" class="scan-stage">
+            <img id="page-image" alt="" decoding="async">
+            <svg id="ocr-overlay" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true"></svg>
+          </div>
+          <p id="image-message" class="image-message">Carregando imagem…</p>
+        </div>
+        <footer class="scan-footer"><span id="highlight-status">Selecione um trecho da transcrição para localizar suas linhas no fac-símile.</span></footer>
+      </section>
+
+      <section id="transcription-panel" class="pane text-pane" aria-labelledby="text-heading">
+        <header class="pane-heading"><div><p class="eyebrow">02 · Transcrição e referências</p><h2 id="text-heading">Leitura e conferência</h2></div><span id="text-range" class="muted"></span></header>
+        <div class="tabs" role="tablist" aria-label="Conteúdo da página">
+          <button id="text-tab" type="button" role="tab" aria-selected="true" aria-controls="text-content" tabindex="0">Transcrição <span id="text-count"></span></button>
+          <button id="citations-tab" type="button" role="tab" aria-selected="false" aria-controls="citations-content" tabindex="-1">Navarro <span id="citation-count"></span></button>
+          <button id="notes-tab" type="button" role="tab" aria-selected="false" aria-controls="notes-content" tabindex="-1">Anotações <span id="notes-count"></span></button>
+        </div>
+        <div id="citation-detail" class="citation-detail" hidden></div>
+        <div class="text-viewport" id="text-viewport">
+          <div id="text-content" role="tabpanel" aria-labelledby="text-tab" tabindex="0">
+            <p class="panel-guide">Selecione um trecho para realçá-lo na imagem. Os números identificam os parágrafos da transcrição digital.</p>
+            <div id="boundary-notice" class="notice boundary-notice" hidden></div>
+            <div id="fragment-list" class="fragment-list"></div>
+          </div>
+          <div id="citations-content" role="tabpanel" aria-labelledby="citations-tab" tabindex="0" hidden>
+            <p class="panel-guide">Estas ocorrências citam esta página. Uma <strong>associação proposta</strong> com um trecho ainda precisa de conferência.</p>
+            <label class="citation-filter">Filtrar nesta página <input id="citation-filter" type="search" placeholder="Verbete ou contexto da citação"></label>
+            <div id="citation-list" class="citation-list"></div>
+          </div>
+          <div id="notes-content" role="tabpanel" aria-labelledby="notes-tab" tabindex="0" hidden>
+            <p class="panel-guide">Registre uma diferença, uma leitura ou uma associação a conferir. As anotações ficam neste navegador; exporte o arquivo para guardá-las ou compartilhá-las.</p>
+            <form id="note-form" class="note-form">
+              <p id="note-target" class="note-target">Página atual</p>
+              <label>Tipo de observação <select id="note-kind"><option value="transcription">Diferença na transcrição</option><option value="association">Associação com uma citação</option><option value="pagination">Limite de página</option><option value="other">Outra observação</option></select></label>
+              <label>Observação <textarea id="note-text" rows="5" placeholder="O que aparece no fac-símile? Qual trecho ou citação precisa ser conferido?" required></textarea></label>
+              <button type="submit">Salvar anotação neste navegador</button>
+              <p id="note-feedback" class="muted" role="status"></p>
+            </form>
+            <div class="section-heading"><h3>Anotações desta página</h3><button id="export-notes" type="button" class="quiet-button">Exportar todas ↓</button></div>
+            <div id="note-list"></div>
+          </div>
+        </div>
+        <footer class="text-footer"><span class="legend-dot"></span> Realces e associações automáticas orientam a revisão; não alteram o texto de Emerson.</footer>
+      </section>
+    </div>
+
+    <footer class="site-footer">
+      <p>Segunda edição, revista por Carlos Drumond · Vol. I (1952) e II (1953).<br>Fac-símiles digitalizados por Renato Nicolai, na <a href="https://www.etnolinguistica.org/biblio:drumond-1952-1953-vlb" target="_blank" rel="noopener noreferrer">Biblioteca Digital Curt Nimuendajú</a>.</p>
+      <p><a href="../">Voltar ao dicionário</a> <span aria-hidden="true">·</span> <a href="https://docs.google.com/document/d/1oNYyk0gHjtP4Rm_Auemt-63DYMXLY9GgFtQ2OE2H6Ek/edit?tab=t.0" target="_blank" rel="noopener noreferrer">Transcrição no Google Docs ↗</a></p>
+    </footer>
+  </main>
+
+  <dialog id="about-dialog" aria-labelledby="about-title">
+    <div class="section-heading"><h2 id="about-title">Sobre esta edição de consulta</h2><button id="close-about" type="button" class="quiet-button" aria-label="Fechar informações">Fechar ×</button></div>
+    <p>Este leitor aproxima três fontes: o fac-símile do <em>Vocabulário na Língua Brasílica</em>, a transcrição digital de <strong>Emerson José Silveira da Costa</strong> e as referências ao VLB presentes no conjunto de dados do dicionário de Eduardo de Almeida Navarro usado no Nhe’enga.</p>
+    <h3>Créditos e fontes</h3>
+    <p>A transcrição pertence ao projeto de Emerson e é apresentada aqui com sua grafia preservada. Consulte a <a href="https://sites.google.com/site/vocabularionalinguabrasilica/" target="_blank" rel="noopener noreferrer">página original</a> e <a href="https://abanheenga.blogspot.com/p/como-aprender-tupi.html" target="_blank" rel="noopener noreferrer"><em>Como aprender tupi</em>, no blog Abanhe’enga</a>, onde ele reúne a transcrição e os fac-símiles.</p>
+    <p>A edição consultada é a segunda, revista por Carlos Drumond, publicada em 1952–1953. As imagens foram digitalizadas por Renato Nicolai e disponibilizadas pela <a href="https://www.etnolinguistica.org/biblio:drumond-1952-1953-vlb" target="_blank" rel="noopener noreferrer">Biblioteca Digital Curt Nimuendajú</a>.</p>
+    <h3>Como interpretar os vínculos</h3>
+    <ul>
+      <li><strong>Página citada:</strong> volume e página extraídos da referência de Navarro. Uma citação pode apontar para mais de uma página.</li>
+      <li><strong>Trecho da transcrição:</strong> parágrafo localizado na página por alinhamento com o OCR. Alguns limites de página são aproximados e alguns parágrafos continuam na página seguinte.</li>
+      <li><strong>Associação proposta:</strong> sugestão automática de qual trecho pode corresponder a uma citação. Não é uma identificação já confirmada nem uma prova de ausência no dicionário.</li>
+      <li><strong>Realce no fac-símile:</strong> posição aproximada obtida pelo OCR, sujeita a erros de leitura e de alinhamento.</li>
+    </ul>
+    <p>Os números “§” são identificadores de parágrafos desta versão da transcrição, não números de linhas impressas. As posições 25 e 26 do fac-símile do primeiro volume correspondem a uma prancha e seu verso em branco, sem numeração impressa; não são lacunas de verbetes.</p>
+    <p id="snapshot-info" class="notice"></p>
+    <details id="unresolved-details"><summary>Referências que precisam de correção</summary><div id="unresolved-list"></div></details>
+    <p class="muted">Esta ferramenta preserva as fontes e permite conferir as diferenças. Nenhuma sugestão automática cria ou modifica verbetes no dicionário.</p>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <noscript><p class="notice">Ative o JavaScript para carregar a transcrição, as imagens e as referências por página.</p></noscript>
+</body>
+</html>
