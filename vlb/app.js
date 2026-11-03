@@ -7,8 +7,11 @@
     manifest: null, page: null, pageId: null, selectedSource: null,
     selectedCitation: null, entry: null, tab: "text", zoom: 100,
     imageExtension: ".png", sourceIndex: null, citationIndex: null,
-    notes: [], loadToken: 0, searchToken: 0, cache: new Map(),
+    notes: [], loadToken: 0, searchToken: 0, cache: new Map(), pending: new Map(),
+    mode: "page", autoTarget: null, citationEntryFilter: null, imageFocus: null,
   };
+  const flow = {views: new Map(), ids: [], generation: 0, pending: new Map(),
+    frames: {}, lockedUntil: {scan: 0, text: 0}, failed: new Set(), position: null};
   const NOTE_KEY = "nhe-enga-vlb-review-v1";
   const noteKinds = {transcription: "Transcrição", association: "Associação", pagination: "Paginação", other: "Observação"};
   let toastTimer;
@@ -53,6 +56,7 @@
   }
 
   function allPages() {
+    if (state.pages) return state.pages;
     // Plate and blank verso remain navigable even though they have no text file.
     const pages = [...state.manifest.pages];
     for (const slot of state.manifest.scan_slots || []) {
@@ -60,11 +64,284 @@
       pages.push({id: pageId("I", slot.image_index), volume: "I", page: slot.image_index,
         pdf_page: slot.image_index, image_index: slot.image_index, kind: slot.kind});
     }
-    return pages.sort((a, b) => a.image_index - b.image_index);
+    state.pages = pages.sort((a, b) => a.image_index - b.image_index);
+    state.pageOrdinals = new Map(state.pages.map((page, index) => [page.id, index]));
+    return state.pages;
   }
 
   function metadata(id) {
     return allPages().find(p => p.id === id);
+  }
+
+  async function pageData(id) {
+    if (state.cache.has(id)) return state.cache.get(id);
+    if (state.pending.has(id)) return state.pending.get(id);
+    const meta = metadata(id);
+    const promise = (async () => {
+      const data = meta.data_file ? await readJSON(`data/${meta.data_file}`) :
+        {...meta, fragments: [], citations: [], ocr_lines: [], boundaries: null};
+      const page = {...meta, ...data};
+      state.cache.set(id, page);
+      if (state.cache.size > 12) state.cache.delete(state.cache.keys().next().value);
+      return page;
+    })();
+    state.pending.set(id, promise);
+    try { return await promise; } finally { state.pending.delete(id); }
+  }
+
+  function fragmentContainer(id = state.pageId) {
+    return state.mode === "continuous" ? flow.views.get(id)?.list : $("fragment-list");
+  }
+
+  function activeScan() {
+    if (state.mode === "continuous") return flow.views.get(state.pageId);
+    return {stage: $("scan-stage"), image: $("page-image"), overlay: $("ocr-overlay")};
+  }
+
+  function setMode(mode) {
+    state.mode = mode === "continuous" ? "continuous" : "page";
+    document.body.classList.toggle("continuous-mode", state.mode === "continuous");
+    $("mode-select").value = state.mode;
+    $("scan-stack").hidden = state.mode !== "continuous";
+    $("scan-stage").hidden = state.mode === "continuous";
+    if (state.mode === "continuous") $("image-message").hidden = true;
+    else resetFlow();
+  }
+
+  function resetFlow() {
+    flow.generation++;
+    flow.views.clear();
+    flow.ids = [];
+    flow.pending.clear();
+    flow.failed.clear();
+    flow.position = null;
+    $("scan-stack").replaceChildren();
+    $("fragment-list").replaceChildren();
+  }
+
+  function flowViewport(pane) { return $(pane === "scan" ? "scan-viewport" : "text-viewport"); }
+  function flowElement(view, pane) { return pane === "scan" ? view.scan : view.text; }
+
+  function lockFlow(pane, milliseconds = 160) {
+    flow.lockedUntil[pane] = performance.now() + milliseconds;
+  }
+
+  function preserveFlowAnchors(change) {
+    // Native scroll anchoring is disabled for the stacks; preserve the same
+    // visible page when earlier pages or image dimensions become available.
+    const anchors = ["scan", "text"].map(pane => {
+      const position = flowPosition(pane);
+      const node = position && flowElement(flow.views.get(position.id), pane);
+      return {pane, node, top: node?.getBoundingClientRect().top};
+    });
+    change();
+    for (const {pane, node, top} of anchors) {
+      if (!node?.isConnected || (pane === "text" && state.tab !== "text")) continue;
+      const delta = node.getBoundingClientRect().top - top;
+      if (Math.abs(delta) > .5) {
+        lockFlow(pane);
+        flowViewport(pane).scrollTop += delta;
+      }
+    }
+  }
+
+  function flowHeading(page) {
+    const heading = element("header", "continuous-page-heading");
+    heading.append(element("span", "", `VLB ${page.volume} · ${page.fragments.length ? "página" : "posição"} ${page.page}`),
+      element("small", "", page.fragments.length ? `${page.fragments.length} trechos · ${page.citations.length} citações` : page.image_index === 25 ? "Prancha" : "Verso em branco"));
+    return heading;
+  }
+
+  function createFlowView(page) {
+    const scan = element("section", "continuous-scan-page");
+    const text = element("section", "continuous-text-page");
+    scan.dataset.pageId = text.dataset.pageId = page.id;
+    scan.setAttribute("aria-label", `Fac-símile VLB ${pageLabel(page)}`);
+    text.setAttribute("aria-label", `Transcrição VLB ${pageLabel(page)}`);
+    const stage = element("div", "scan-stage");
+    const img = element("img");
+    img.decoding = "async";
+    img.loading = "lazy";
+    img.alt = `Fac-símile do VLB, volume ${page.volume}, ${page.fragments.length ? "página" : "posição"} ${page.page}`;
+    const overlay = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    overlay.setAttribute("viewBox", "0 0 1000 1000");
+    overlay.setAttribute("preserveAspectRatio", "none");
+    overlay.setAttribute("aria-hidden", "true");
+    stage.append(img, overlay);
+    stage.style.width = `${state.zoom}%`;
+    stage.style.setProperty("--scan-ratio", "0.7071");
+    const message = element("p", "image-message", "A imagem será carregada ao se aproximar desta página.");
+    scan.append(flowHeading(page), stage, message);
+    const list = element("div", "fragment-list");
+    text.append(flowHeading(page), list);
+    renderFragments(page, list, true);
+    const view = {page, scan, text, stage, image: img, overlay, list, message,
+      fallback: false, imageURL: scanURL(page)};
+    img.onload = () => {
+      if (!scan.isConnected) return;
+      preserveFlowAnchors(() => {
+        stage.style.setProperty("--scan-ratio", `${img.naturalWidth} / ${img.naturalHeight}`);
+        message.hidden = true;
+      });
+      if (state.mode === "continuous" && state.pageId === page.id) {
+        drawOverlay();
+        const selected = page.fragments.find(f => f.id === state.selectedSource);
+        if (selected && state.imageFocus === selected.id) scrollToHighlight(selected);
+      }
+    };
+    img.onerror = () => {
+      if (!img.hasAttribute("src")) return;
+      if (!view.fallback && state.imageExtension !== ".png") {
+        view.fallback = true;
+        view.imageURL = `../docs/primary_sources/vlb/${page.image_index}.png`;
+        img.src = view.imageURL;
+        if (state.pageId === page.id) $("open-scan").href = view.imageURL;
+      } else {
+        message.hidden = false;
+        message.replaceChildren(element("span", "", "Não foi possível carregar a imagem. "),
+          action("Tentar novamente", "quiet-button", () => {
+            view.fallback = false; view.imageURL = scanURL(page); img.src = view.imageURL;
+          }));
+      }
+    };
+    return view;
+  }
+
+  function scanURL(page) { return `../docs/primary_sources/vlb/${page.image_index}${state.imageExtension}`; }
+
+  function manageFlowImages() {
+    allPages();
+    const currentIndex = state.pageOrdinals.get(state.pageId) ?? 0;
+    for (const view of flow.views.values()) {
+      const near = Math.abs(state.pageOrdinals.get(view.page.id) - currentIndex) <= 3;
+      if (near && !view.image.hasAttribute("src")) {
+        view.message.hidden = false;
+        view.message.textContent = "Carregando imagem…";
+        view.image.src = view.imageURL;
+      } else if (!near && view.image.hasAttribute("src")) {
+        view.image.removeAttribute("src");
+        view.message.hidden = true;
+      }
+    }
+  }
+
+  function insertFlowPage(page) {
+    if (flow.views.has(page.id)) return flow.views.get(page.id);
+    const view = createFlowView(page);
+    const nextId = flow.ids.find(id => metadata(id).image_index > page.image_index);
+    preserveFlowAnchors(() => {
+      $("scan-stack").insertBefore(view.scan, nextId ? flow.views.get(nextId).scan : null);
+      $("fragment-list").insertBefore(view.text, nextId ? flow.views.get(nextId).text : null);
+    });
+    flow.views.set(page.id, view);
+    flow.ids.push(page.id);
+    flow.ids.sort((a, b) => metadata(a).image_index - metadata(b).image_index);
+    manageFlowImages();
+    return view;
+  }
+
+  async function extendFlow(direction) {
+    if (state.mode !== "continuous" || !flow.ids.length) return;
+    const pages = allPages();
+    const edge = direction < 0 ? flow.ids[0] : flow.ids.at(-1);
+    const next = pages[pages.findIndex(p => p.id === edge) + direction];
+    if (!next || flow.pending.has(next.id) || flow.failed.has(next.id)) return;
+    const generation = flow.generation;
+    flow.pending.set(next.id, true);
+    try {
+      const page = await pageData(next.id);
+      if (state.mode !== "continuous" || generation !== flow.generation) return;
+      insertFlowPage(page);
+    } catch (error) {
+      if (generation !== flow.generation) return;
+      flow.failed.add(next.id);
+      $("load-error").hidden = false;
+      $("load-error").replaceChildren(element("span", "", `Não foi possível carregar VLB ${next.volume}, ${next.page}. `),
+        action("Tentar novamente", "quiet-button", () => {
+          flow.failed.delete(next.id); $("load-error").hidden = true; extendFlow(direction);
+        }));
+    } finally {
+      if (generation === flow.generation) flow.pending.delete(next.id);
+    }
+  }
+
+  function flowPosition(pane) {
+    if (!flow.ids.length || (pane === "text" && state.tab !== "text")) return null;
+    const viewport = flowViewport(pane);
+    const offset = Math.min(100, viewport.clientHeight * .2);
+    const line = viewport.getBoundingClientRect().top + offset;
+    let view = flow.views.get(flow.ids[0]);
+    for (const id of flow.ids) {
+      const candidate = flow.views.get(id);
+      if (flowElement(candidate, pane).getBoundingClientRect().top <= line) view = candidate;
+      else break;
+    }
+    const bounds = flowElement(view, pane).getBoundingClientRect();
+    return {id: view.page.id, fraction: Math.max(0, Math.min(1, (line - bounds.top) / Math.max(1, bounds.height))), offset};
+  }
+
+  function syncFlowPane(pane, position) {
+    const view = flow.views.get(position.id);
+    if (!view || (pane === "text" && state.tab !== "text")) return;
+    const viewport = flowViewport(pane);
+    const bounds = flowElement(view, pane).getBoundingClientRect();
+    const top = bounds.top - viewport.getBoundingClientRect().top + viewport.scrollTop + bounds.height * position.fraction - Math.min(100, viewport.clientHeight * .2);
+    if (Math.abs(viewport.scrollTop - top) < 2) return;
+    lockFlow(pane);
+    viewport.scrollTo({top: Math.max(0, top), behavior: "instant"});
+  }
+
+  function activateFlowPage(id, {update = true} = {}) {
+    if (state.pageId === id) return;
+    const view = flow.views.get(id);
+    if (!view) return;
+    state.page = view.page;
+    state.pageId = id;
+    state.selectedSource = state.selectedCitation = state.autoTarget = state.imageFocus = null;
+    state.entry = state.citationEntryFilter = null;
+    $("citation-detail").hidden = true;
+    $("citation-choice-notice").hidden = true;
+    $("citation-filter").value = "";
+    for (const article of $("fragment-list").querySelectorAll(".fragment.selected")) {
+      article.classList.remove("selected");
+      article.querySelector(".source-main")?.setAttribute("aria-pressed", "false");
+      for (const extra of article.querySelectorAll(".fragment-actions,.ocr-reading")) extra.hidden = true;
+    }
+    for (const v of flow.views.values()) v.overlay.replaceChildren();
+    setPageControls();
+    renderPage();
+    updateNoteTarget();
+    updatePageStatus();
+    if (update) updateURL();
+  }
+
+  function onFlowScroll(pane) {
+    if (state.mode !== "continuous" || performance.now() < flow.lockedUntil[pane] || (pane === "text" && state.tab !== "text")) return;
+    if (flow.frames[pane]) return;
+    flow.frames[pane] = requestAnimationFrame(() => {
+      flow.frames[pane] = null;
+      if (state.mode !== "continuous" || performance.now() < flow.lockedUntil[pane]) return;
+      const position = flowPosition(pane);
+      if (!position) return;
+      flow.position = position;
+      activateFlowPage(position.id);
+      syncFlowPane(pane === "scan" ? "text" : "scan", position);
+      const viewport = flowViewport(pane);
+      if (viewport.scrollTop < viewport.clientHeight * 1.5) extendFlow(-1);
+      if (viewport.scrollHeight - viewport.scrollTop - viewport.clientHeight < viewport.clientHeight * 2) extendFlow(1);
+    });
+  }
+
+  function scrollFlowToPage(id) {
+    const view = flow.views.get(id);
+    if (!view) return;
+    for (const pane of ["scan", "text"]) {
+      if (pane === "text" && state.tab !== "text") continue;
+      const viewport = flowViewport(pane);
+      const node = flowElement(view, pane);
+      lockFlow(pane, 450);
+      viewport.scrollTo({top: node.getBoundingClientRect().top - viewport.getBoundingClientRect().top + viewport.scrollTop - 12, behavior: "instant"});
+    }
   }
 
   async function readJSON(path) {
@@ -89,9 +366,11 @@
     url.search = "";
     url.searchParams.set("volume", state.page.volume);
     url.searchParams.set("page", state.page.page);
+    if (state.mode === "continuous") url.searchParams.set("mode", "continuous");
     if (state.selectedSource) url.searchParams.set("source", state.selectedSource);
     if (state.selectedCitation) url.searchParams.set("citation", state.selectedCitation);
     if (state.entry !== null) url.searchParams.set("entry", state.entry);
+    if (state.autoTarget && state.selectedCitation) url.searchParams.set("focus", "auto");
     url.hash = "";
     history[push ? "pushState" : "replaceState"]({}, "", url);
   }
@@ -103,8 +382,11 @@
     const volume = combined?.[1] || oldHash?.[1] || query.get("volume") || "I";
     const number = combined?.[2] || oldHash?.[2] || query.get("page") || (volume === "II" ? "7" : "17");
     const entry = query.get("entry");
+    const position = query.get("citation_pos");
     return {id: pageId(volume, Number(number)), source: query.get("source"),
-      citation: query.get("citation"), entry: entry !== null && /^\d+$/.test(entry) ? Number(entry) : null};
+      citation: query.get("citation"), entry: entry !== null && /^\d+$/.test(entry) ? Number(entry) : null,
+      citationPos: position !== null && /^\d+$/.test(position) ? Number(position) : null,
+      mode: query.get("mode") === "continuous" ? "continuous" : "page", focus: query.get("focus") === "auto"};
   }
 
   function setPageControls() {
@@ -126,6 +408,7 @@
 
   async function loadPage(id, options = {}) {
     const token = ++state.loadToken;
+    if (options.mode && options.mode !== state.mode) setMode(options.mode);
     const meta = metadata(id);
     if (!meta) {
       $("load-error").hidden = false;
@@ -136,37 +419,48 @@
     if (!options.preserveError) $("load-error").hidden = true;
     $("transcription-panel").setAttribute("aria-busy", "true");
     try {
-      let data = state.cache.get(id);
-      if (!data) {
-        data = meta.data_file ? await readJSON(`data/${meta.data_file}`) :
-          {...meta, fragments: [], citations: [], ocr_lines: [], boundaries: null};
-        state.cache.set(id, data);
-        if (state.cache.size > 10) state.cache.delete(state.cache.keys().next().value);
-      }
+      const data = flow.views.get(id)?.page || await pageData(id);
       if (token !== state.loadToken) return;
       state.page = {...meta, ...data};
       state.pageId = id;
       state.selectedSource = null;
       state.selectedCitation = null;
+      state.autoTarget = state.citationEntryFilter = state.imageFocus = null;
       state.entry = options.entry ?? null;
       $("citation-filter").value = "";
       $("citation-detail").hidden = true;
+      $("citation-choice-notice").hidden = true;
+      if (state.mode === "continuous") {
+        if (!flow.views.has(id)) resetFlow();
+        insertFlowPage(state.page);
+      }
       setPageControls();
       renderPage();
-      if (options.citation) selectCitation(options.citation, {update: false, showTab: !options.source});
+      if (options.citation) selectCitation(options.citation, {update: false, showTab: !options.source, autoFocus: options.focus});
       else if (state.entry !== null) {
-        const cite = state.page.citations.find(c => c.entry_index === state.entry);
-        if (cite) selectCitation(cite.id, {update: false, showTab: true});
-        else announce("Este verbete não tem uma ocorrência vinculada nesta página do conjunto de dados.");
+        const candidates = state.page.citations.filter(c => c.entry_index === state.entry);
+        const exact = options.citationPos !== null && options.citationPos !== undefined ?
+          candidates.filter(c => c.citation_start <= options.citationPos && options.citationPos < c.citation_end) : candidates;
+        if (exact.length === 1) selectCitation(exact[0].id, {update: false, showTab: !options.source, autoFocus: options.focus});
+        else if (candidates.length) {
+          state.citationEntryFilter = state.entry;
+          $("citation-choice-notice").hidden = false;
+          $("citation-choice-notice").textContent = "Há mais de uma leitura possível para esta referência. Escolha a ocorrência deste verbete para conferir seu trecho; nenhuma linha foi selecionada automaticamente.";
+          renderCitations();
+          setTab("citations");
+        } else announce("Este verbete não tem uma ocorrência vinculada nesta página do conjunto de dados.");
       }
-      if (options.source) selectSource(options.source, {update: false, scroll: true});
-      else if (!state.selectedCitation) setTab("text");
+      if (options.source) selectSource(options.source, {update: false, scroll: true,
+        target: state.autoTarget?.source_id === options.source ? state.autoTarget : null});
+      else if (!state.selectedCitation && state.citationEntryFilter === null) setTab("text");
+      if (state.mode === "continuous") {
+        if (!state.selectedSource) scrollFlowToPage(id);
+        extendFlow(-1);
+        extendFlow(1);
+      }
       updateNoteTarget();
       updateURL(!!options.push);
-      document.title = `VLB ${pageLabel()} · Nhe'enga`;
-      $("page-status").textContent = state.page.fragments.length ?
-        `Volume ${state.page.volume} · página impressa ${state.page.page} · imagem ${state.page.image_index} do PDF · ${state.page.citations.length} citações` :
-        `Volume I · posição ${state.page.page} · ${state.page.image_index === 25 ? "prancha do manuscrito" : "verso em branco"}`;
+      updatePageStatus();
     } catch (error) {
       if (token !== state.loadToken) return;
       $("load-error").hidden = false;
@@ -177,18 +471,42 @@
     }
   }
 
+  function updatePageStatus() {
+    document.title = `VLB ${pageLabel()} · Nhe'enga`;
+    $("page-status").textContent = state.page.fragments.length ?
+      `Volume ${state.page.volume} · página impressa ${state.page.page} · imagem ${state.page.image_index} do PDF · ${state.page.citations.length} citações${state.mode === "continuous" ? " · rolagem contínua" : ""}` :
+      `Volume I · posição ${state.page.page} · ${state.page.image_index === 25 ? "prancha do manuscrito" : "verso em branco"}`;
+  }
+
   function renderPage() {
     $("scan-page-label").textContent = `${state.page.volume} · ${state.page.page}`;
     $("text-count").textContent = state.page.fragments.length;
     $("citation-count").textContent = state.page.citations.length;
     const fragments = state.page.fragments;
     $("text-range").textContent = fragments.length ? `§ ${fragments[0].source_line}–${fragments.at(-1).source_line}` : "Sem texto lexical";
-    setImage();
-    renderFragments();
+    if (state.mode === "continuous") {
+      for (const view of flow.views.values()) {
+        view.scan.classList.toggle("current-page", view.page.id === state.pageId);
+        view.text.classList.toggle("current-page", view.page.id === state.pageId);
+        view.overlay.replaceChildren();
+        for (const article of view.list.querySelectorAll(".fragment.selected")) {
+          if (view.page.id === state.pageId && article.dataset.sourceId === state.selectedSource) continue;
+          article.classList.remove("selected");
+          article.querySelector(".source-main")?.setAttribute("aria-pressed", "false");
+          for (const extra of article.querySelectorAll(".fragment-actions,.ocr-reading")) extra.hidden = true;
+        }
+      }
+      $("open-scan").href = flow.views.get(state.pageId)?.imageURL || scanURL(state.page);
+      manageFlowImages();
+      drawOverlay();
+    } else {
+      setImage();
+      renderFragments();
+      $("text-viewport").scrollTop = 0;
+    }
     renderCitations();
     renderNotes();
     renderBoundaries();
-    $("text-viewport").scrollTop = 0;
   }
 
   function setImage() {
@@ -202,7 +520,7 @@
       $("image-message").hidden = true;
       drawOverlay();
       const selected = state.page.fragments.find(f => f.id === state.selectedSource);
-      if (selected) scrollToHighlight(selected);
+      if (selected && state.imageFocus === selected.id) scrollToHighlight(selected);
     };
     let fallback = false;
     img.onerror = () => {
@@ -235,29 +553,32 @@
     if (uncertain) notice.textContent = "Limite de página aproximado: confira os trechos junto às margens superior e inferior no fac-símile. O texto foi dividido pelo alinhamento do OCR.";
   }
 
-  function associatedCitations(sourceId) {
-    return state.page.citations.filter(c => (c.associations || []).some(a => a.source_id === sourceId));
+  function associatedCitations(sourceId, page = state.page) {
+    return page.citations.filter(c => (c.associations || []).some(a => a.source_id === sourceId));
   }
 
   function associationLabel(association) {
     return association.status === "reviewed" ? "conferência assistida" : "proposta";
   }
 
-  function renderFragments() {
-    const list = $("fragment-list");
+  function renderFragments(page = state.page, list = $("fragment-list"), continuous = false) {
     list.replaceChildren();
-    if (!state.page.fragments.length) {
-      list.append(element("p", "empty-state", state.page.image_index === 25 ?
+    if (!page.fragments.length) {
+      list.append(element("p", "empty-state", page.image_index === 25 ?
         "Esta posição contém a reprodução de uma página do manuscrito. A transcrição lexical retoma na página 27." :
         "Verso em branco da prancha. Não há verbetes para alinhar nesta posição."));
       return;
     }
-    for (const source of state.page.fragments) {
+    for (const source of page.fragments) {
       const article = element("article", "fragment" + (source.kind === "heading" ? " heading" : ""));
       article.dataset.sourceId = source.id;
-      article.id = `source-${source.source_line}`;
+      article.dataset.pageId = page.id;
+      article.id = continuous ? `source-${page.id}-${source.source_line}` : `source-${source.source_line}`;
       if (source.continues_from_previous) article.append(element("span", "continuation", "↳ Continuação da página anterior"));
-      const button = action("", "source-main", () => selectSource(source.id));
+      const button = action("", "source-main", () => {
+        if (continuous) activateFlowPage(page.id, {update: false});
+        selectSource(source.id);
+      });
       button.setAttribute("aria-label", `Selecionar parágrafo ${source.source_line}: ${compact(source.text, 110)}`);
       button.setAttribute("aria-pressed", "false");
       button.append(element("span", "source-number", `§ ${source.source_line}`), element("span", "source-text", source.text));
@@ -265,19 +586,25 @@
       if (source.continues_on_next) article.append(element("span", "continuation", "Continua na página seguinte ↗"));
       const meta = element("div", "source-meta");
       if (source.boundary_uncertain) meta.append(element("span", "chip proposed", "página a conferir"));
-      for (const cite of associatedCitations(source.id)) {
+      for (const cite of associatedCitations(source.id, page)) {
         const assoc = cite.associations.find(a => a.source_id === source.id);
         meta.append(action(`${cite.headword}${cite.homonym ? " " + cite.homonym : ""} · ${associationLabel(assoc)}${assoc.status === "reviewed" && assoc.source_form ? `: ${assoc.source_form}` : ""}`,
-          `chip ${assoc.status === "reviewed" ? "reviewed" : "proposed"}`, () => selectCitation(cite.id, {source: source.id})));
+          `chip ${assoc.status === "reviewed" ? "reviewed" : "proposed"}`, () => {
+            if (continuous) activateFlowPage(page.id, {update: false});
+            selectCitation(cite.id, {source: source.id});
+          }));
       }
       article.append(meta);
       const actions = element("div", "fragment-actions");
       actions.hidden = true;
-      actions.append(action("Anotar diferença", "quiet-button", () => { selectSource(source.id); setTab("notes"); $("note-text").focus(); }));
-      const citeCount = associatedCitations(source.id).length;
+      actions.append(action("Anotar diferença", "quiet-button", () => {
+        if (continuous) activateFlowPage(page.id, {update: false});
+        selectSource(source.id); setTab("notes"); $("note-text").focus();
+      }));
+      const citeCount = associatedCitations(source.id, page).length;
       if (!citeCount) actions.append(element("span", "muted", "Nenhuma associação proposta neste trecho"));
       article.append(actions);
-      const lines = ocrLinesFor(source);
+      const lines = ocrLinesFor(source, page);
       if (lines.length) {
         const details = element("details", "ocr-reading");
         details.hidden = true;
@@ -288,9 +615,9 @@
     }
   }
 
-  function ocrLinesFor(source) {
+  function ocrLinesFor(source, page = state.page) {
     const ids = new Set(source?.ocr?.line_ids || []);
-    return (state.page.ocr_lines || []).filter(line => ids.has(line.id));
+    return (page.ocr_lines || []).filter(line => ids.has(line.id));
   }
 
   function selectSource(id, options = {}) {
@@ -300,8 +627,10 @@
       return;
     }
     state.selectedSource = id;
-    for (const article of $("fragment-list").children) {
-      const selected = article.dataset.sourceId === id;
+    state.autoTarget = options.target || null;
+    state.imageFocus = options.scroll === false ? null : id;
+    for (const article of $("fragment-list").querySelectorAll(".fragment")) {
+      const selected = article.dataset.sourceId === id && article.dataset.pageId === state.pageId;
       article.classList.toggle("selected", selected);
       article.querySelector(".source-main")?.setAttribute("aria-pressed", String(selected));
       if (article.querySelector(".fragment-actions")) article.querySelector(".fragment-actions").hidden = !selected;
@@ -309,24 +638,35 @@
     }
     setTab("text");
     drawOverlay();
+    if (!options.target && state.selectedCitation) {
+      const cite = state.page.citations.find(c => c.id === state.selectedCitation);
+      if (cite) showCitationDetail(cite, null);
+    }
     updateNoteTarget();
     if (options.update !== false) updateURL();
     if (options.scroll !== false) {
-      const article = $("fragment-list").querySelector(`[data-source-id="${CSS.escape(id)}"]`);
+      const article = fragmentContainer()?.querySelector(`[data-source-id="${CSS.escape(id)}"]`);
       if (article) {
         const viewport = $("text-viewport");
-        viewport.scrollTo({top: article.getBoundingClientRect().top - viewport.getBoundingClientRect().top + viewport.scrollTop - 12, behavior: scrollBehavior()});
+        if (state.mode === "continuous") lockFlow("text", 700);
+        const headingHeight = state.mode === "continuous" ? flow.views.get(state.pageId).text.querySelector(".continuous-page-heading").offsetHeight : 0;
+        viewport.scrollTo({top: article.getBoundingClientRect().top - viewport.getBoundingClientRect().top + viewport.scrollTop - headingHeight - 12, behavior: scrollBehavior()});
       }
       scrollToHighlight(source);
     }
   }
 
   function sourceBoxes(source) {
+    if (state.autoTarget?.source_id === source?.id && state.autoTarget.line_ids?.length) {
+      const ids = new Set(state.autoTarget.line_ids);
+      return state.page.ocr_lines.filter(line => ids.has(line.id)).map(line => line.box);
+    }
     return source?.ocr?.boxes || ocrLinesFor(source).map(l => l.box);
   }
 
   function drawOverlay() {
-    const overlay = $("ocr-overlay");
+    const overlay = activeScan()?.overlay;
+    if (!overlay) return;
     overlay.replaceChildren();
     const source = state.page?.fragments.find(f => f.id === state.selectedSource);
     if (!source) {
@@ -335,7 +675,7 @@
     }
     const boxes = sourceBoxes(source);
     $("highlight-status").textContent = boxes.length ?
-      `§ ${source.source_line} · ${boxes.length} ${boxes.length === 1 ? "linha realçada" : "linhas realçadas"} · posição aproximada pelo OCR${source.ocr.status === "partial" ? " (alinhamento parcial)" : ""}.` :
+      `§ ${source.source_line} · ${boxes.length} ${boxes.length === 1 ? "linha realçada" : "linhas realçadas"}${state.autoTarget?.status === "proposed" ? " · associação proposta" : ""} · posição aproximada pelo OCR${source.ocr.status === "partial" ? " (alinhamento parcial)" : ""}.` :
       `§ ${source.source_line} · o OCR não localizou linhas com segurança. Confira o trecho diretamente na imagem.`;
     if (!$("show-ocr").checked) return;
     for (const box of boxes) {
@@ -352,9 +692,13 @@
   function scrollToHighlight(source) {
     const boxes = sourceBoxes(source);
     const viewport = $("scan-viewport");
-    if (!boxes.length || !$("page-image").complete) return;
-    const top = Math.min(...boxes.map(b => b[1])) * $("scan-stage").clientHeight;
+    const scan = activeScan();
+    if (!boxes.length || !scan?.image.complete || !scan.image.naturalWidth) return;
+    const stageTop = state.mode === "continuous" ? scan.stage.getBoundingClientRect().top - viewport.getBoundingClientRect().top + viewport.scrollTop : 0;
+    const top = stageTop + Math.min(...boxes.map(b => b[1])) * scan.stage.clientHeight;
+    if (state.mode === "continuous") lockFlow("scan", 700);
     viewport.scrollTo({top: Math.max(0, top - viewport.clientHeight * .27), behavior: scrollBehavior()});
+    state.imageFocus = null;
   }
 
   function scrollBehavior() {
@@ -362,7 +706,10 @@
   }
 
   function applyZoom() {
-    $("scan-stage").style.width = `${state.zoom}%`;
+    if (state.mode === "continuous") preserveFlowAnchors(() => {
+      for (const view of flow.views.values()) view.stage.style.width = `${state.zoom}%`;
+    });
+    else $("scan-stage").style.width = `${state.zoom}%`;
     $("zoom-reset").textContent = `${state.zoom}%`;
     $("zoom-out").disabled = state.zoom <= 100;
     $("zoom-in").disabled = state.zoom >= 250;
@@ -385,6 +732,8 @@
       const text = `§ ${source?.source_line || assoc.source_line || "?"} · ${associationLabel(assoc)}${assoc.status === "reviewed" && assoc.source_form ? `: ${assoc.source_form}` : ""}`;
       const button = action(text, `chip ${assoc.status === "reviewed" ? "reviewed" : "proposed"}`, () => {
         state.selectedCitation = cite.id;
+        state.entry = cite.entry_index;
+        state.autoTarget = null;
         showCitationDetail(cite);
         selectSource(assoc.source_id);
         renderCitations();
@@ -401,7 +750,8 @@
     const list = $("citation-list");
     list.replaceChildren();
     const query = fold($("citation-filter").value);
-    const citations = state.page.citations.filter(c => !query || fold(`${c.headword} ${c.context} ${c.raw_citation}`).includes(query));
+    const citations = state.page.citations.filter(c => (state.citationEntryFilter === null || c.entry_index === state.citationEntryFilter) &&
+      (!query || fold(`${c.headword} ${c.context} ${c.raw_citation}`).includes(query)));
     if (!citations.length) {
       list.append(element("p", "empty-state", state.page.citations.length ? "Nenhuma citação corresponde a este filtro." :
         "Não há referências de Navarro a esta página no conjunto de dados consultado. Isso não demonstra que seus verbetes estejam ausentes do dicionário."));
@@ -426,15 +776,27 @@
     if (!cite) { announce("Esta ocorrência de citação não foi encontrada nesta página."); return; }
     state.selectedCitation = id;
     state.entry = cite.entry_index;
-    showCitationDetail(cite);
-    renderCitations();
+    state.autoTarget = null;
+    const target = options.autoFocus !== false && !options.source ? window.VLBCitationTargets?.choose(cite, state.page) : null;
     if (options.source) selectSource(options.source, {update: false});
-    else if (options.showTab !== false) setTab("citations");
+    else if (target?.source_id) selectSource(target.source_id, {update: false, target});
+    else {
+      state.selectedSource = null;
+      for (const article of $("fragment-list").querySelectorAll(".fragment.selected")) {
+        article.classList.remove("selected");
+        article.querySelector(".source-main")?.setAttribute("aria-pressed", "false");
+        for (const extra of article.querySelectorAll(".fragment-actions,.ocr-reading")) extra.hidden = true;
+      }
+      drawOverlay();
+      if (options.showTab !== false) setTab("citations");
+    }
+    showCitationDetail(cite, target);
+    renderCitations();
     updateNoteTarget();
     if (options.update !== false) updateURL();
   }
 
-  function showCitationDetail(cite) {
+  function showCitationDetail(cite, target = state.autoTarget) {
     const detail = $("citation-detail");
     detail.replaceChildren();
     detail.hidden = false;
@@ -444,19 +806,29 @@
     top.append(title, action("Fechar ×", "quiet-button close-detail", () => {
       state.selectedCitation = null;
       state.entry = null;
+      state.autoTarget = null;
       detail.hidden = true;
+      drawOverlay();
       renderCitations();
       updateNoteTarget();
       updateURL();
     }));
     detail.append(top, element("p", "citation-reference", `${cite.raw_citation} · ocorrência no dicionário${cite.adapted ? " · citação adaptada" : ""}`),
       element("p", "", cite.context));
+    if (target?.source_id) {
+      detail.append(element("p", `auto-target-notice ${target.status === "reviewed" ? "reviewed" : "proposed"}`,
+        target.status === "reviewed" ? `Trecho localizado por conferência assistida${target.source_form ? `: ${target.source_form}` : ""}. O realce do OCR é aproximado.` :
+          "Associação proposta: trecho localizado automaticamente pela forma e pelo contexto disponíveis. Confira a leitura e o sentido no fac-símile."));
+    } else if (target) detail.append(element("p", "muted", target.status === "ambiguous" ?
+      "Mais de um trecho é possível. Escolha uma das propostas abaixo para conferir a linha." :
+      "Não há evidência suficiente para localizar uma linha automaticamente. Confira as propostas e a página."));
     const associations = element("div", "associations");
     addAssociationButtons(associations, cite);
     detail.append(associations);
   }
 
   function setTab(tab, focus = false) {
+    const previous = state.tab;
     state.tab = tab;
     for (const name of ["text", "citations", "notes"]) {
       const selected = name === tab;
@@ -466,6 +838,10 @@
     }
     if (focus) $(`${tab}-tab`).focus();
     if (tab === "notes") updateNoteTarget();
+    if (state.mode === "continuous" && tab === "text" && previous !== "text" && !state.selectedSource) {
+      const position = flowPosition("scan");
+      if (position) syncFlowPane("text", position);
+    }
   }
 
   async function ensureSearchIndexes() {
@@ -622,13 +998,29 @@
     $("next-page").addEventListener("click", () => navigate(1));
     $("page-select").addEventListener("change", event => loadPage(event.target.value, {push: true}));
     $("volume-select").addEventListener("change", event => loadPage(pageId(event.target.value, event.target.value === "I" ? 17 : 7), {push: true}));
+    $("mode-select").addEventListener("change", event => {
+      if (!state.page) return;
+      loadPage(state.pageId, {push: true, mode: event.target.value, source: state.selectedSource,
+        citation: state.selectedCitation, entry: state.entry, focus: Boolean(state.autoTarget)});
+    });
+    for (const pane of ["scan", "text"]) {
+      const viewport = flowViewport(pane);
+      viewport.addEventListener("scroll", () => onFlowScroll(pane), {passive: true});
+      for (const event of ["wheel", "touchstart", "pointerdown", "keydown"]) {
+        viewport.addEventListener(event, () => { flow.lockedUntil[pane] = 0; state.imageFocus = null; }, {passive: true});
+      }
+    }
     $("zoom-in").addEventListener("click", () => { state.zoom = Math.min(250, state.zoom + 25); applyZoom(); });
     $("zoom-out").addEventListener("click", () => { state.zoom = Math.max(100, state.zoom - 25); applyZoom(); });
     $("zoom-reset").addEventListener("click", () => { state.zoom = 100; applyZoom(); });
     $("show-ocr").addEventListener("change", drawOverlay);
     $("search-form").addEventListener("submit", search);
     $("close-search").addEventListener("click", () => { state.searchToken++; $("search-results").hidden = true; $("search-input").focus(); });
-    $("citation-filter").addEventListener("input", renderCitations);
+    $("citation-filter").addEventListener("input", () => {
+      state.citationEntryFilter = null;
+      $("citation-choice-notice").hidden = true;
+      renderCitations();
+    });
     for (const tab of ["text", "citations", "notes"]) $(`${tab}-tab`).addEventListener("click", () => setTab(tab));
     document.querySelector(".tabs").addEventListener("keydown", event => {
       if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
@@ -652,6 +1044,18 @@
       catch { announce("Copie o endereço da barra do navegador; ele contém a seleção atual."); }
     });
     window.addEventListener("popstate", () => { const route = routeFromURL(); loadPage(route.id, route); });
+    let resizeTimer;
+    window.addEventListener("resize", () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (state.mode !== "continuous" || !state.page) return;
+        if (state.selectedSource) selectSource(state.selectedSource, {update: false, target: state.autoTarget});
+        else if (flow.position?.id === state.pageId) {
+          syncFlowPane("scan", flow.position);
+          syncFlowPane("text", flow.position);
+        } else scrollFlowToPage(state.pageId);
+      }, 100);
+    });
     document.addEventListener("keydown", event => {
       if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || /INPUT|SELECT|TEXTAREA|BUTTON/.test(event.target.tagName) || $("about-dialog").open) return;
       if (event.key === "ArrowLeft") { event.preventDefault(); navigate(-1); }

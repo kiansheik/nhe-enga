@@ -5,12 +5,17 @@
 - Root dictionary: `index.html`, `styles.css`, `manifest.json`, `favicon.ico`, `js/index.js`, `js/pako.min.js`, `js/papaparse.min.js`.
 - Dictionary data: `docs/dict-conjugated.json.gz`; legacy `sentence-builder.html` also reads `docs/dict-conjugated.json`.
 - Neologisms: `neologisms.csv` and `neologisms/index.html`.
-- VLB reader: `vlb/`, linked from the root navigation and VLB dictionary
-  citations. `vlb/data/` contains generated page and citation indexes;
+- VLB reader: `vlb/`, opened through inline VLB dictionary citations, with no
+  standalone root navigation item. `vlb/data/` contains generated page and citation indexes;
   `vlb/source/` pins the compact transcription/alignment inputs and
   `vlb/build_data.py` regenerates the projection without network access.
-  `?volume=I&page=17&entry=<row>` opens the printed page and scopes its Navarro
-  citations to the originating dictionary row. Associations distinguish
+  `?volume=I&page=17&mode=continuous&focus=auto&entry=<row>&citation_pos=<offset>`
+  opens the printed page and resolves the original citation occurrence.
+  `citation_pos` is a Unicode code-point position within its untouched
+  definition span, not an offset into formatted HTML. Ambiguous displayed
+  copies omit that position and require a choice. `vlb/citation-targets.js`
+  selects an available OCR-backed source target without changing review status.
+  Associations distinguish
   reviewed links from unreviewed suggestions; page alignment alone does not
   establish lexical identity. Both viewers reuse the original scan URLs and
   `image-formats.json`, so no second scan collection is added.

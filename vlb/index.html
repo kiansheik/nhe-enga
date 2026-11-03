@@ -8,6 +8,7 @@
   <link rel="icon" href="../favicon.ico">
   <link rel="stylesheet" href="styles.css">
   <script src="../js/pako.min.js" defer></script>
+  <script src="citation-targets.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -40,6 +41,9 @@
         <button id="next-page" class="icon-button" type="button" title="Página seguinte" aria-label="Página seguinte">→</button>
         <span id="page-position" class="muted"></span>
       </div>
+      <label class="mode-control" for="mode-select">Leitura
+        <select id="mode-select"><option value="page">Página a página</option><option value="continuous">Rolagem contínua</option></select>
+      </label>
       <form id="search-form" class="search-form" role="search">
         <label class="sr-only" for="search-input">Buscar na transcrição ou nos verbetes citados</label>
         <input id="search-input" type="search" placeholder="Buscar transcrição ou verbete…" autocomplete="off">
@@ -70,6 +74,7 @@
           <a id="open-scan" href="#" target="_blank" rel="noopener noreferrer">Abrir imagem ↗</a>
         </div>
         <div id="scan-viewport" class="scan-viewport" tabindex="0" aria-label="Imagem da página; use os controles para ampliar">
+          <div id="scan-stack" hidden></div>
           <div id="scan-stage" class="scan-stage">
             <img id="page-image" alt="" decoding="async">
             <svg id="ocr-overlay" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true"></svg>
@@ -95,6 +100,7 @@
           </div>
           <div id="citations-content" role="tabpanel" aria-labelledby="citations-tab" tabindex="0" hidden>
             <p class="panel-guide">Estas ocorrências citam esta página. Uma <strong>associação proposta</strong> com um trecho ainda precisa de conferência.</p>
+            <p id="citation-choice-notice" class="notice citation-choice-notice" role="status" hidden></p>
             <label class="citation-filter">Filtrar nesta página <input id="citation-filter" type="search" placeholder="Verbete ou contexto da citação"></label>
             <div id="citation-list" class="citation-list"></div>
           </div>
@@ -128,11 +134,13 @@
     <p>A transcrição pertence ao projeto de Emerson e é apresentada aqui com sua grafia preservada. Consulte a <a href="https://sites.google.com/site/vocabularionalinguabrasilica/" target="_blank" rel="noopener noreferrer">página original</a> e <a href="https://abanheenga.blogspot.com/p/como-aprender-tupi.html" target="_blank" rel="noopener noreferrer"><em>Como aprender tupi</em>, no blog Abanhe’enga</a>, onde ele reúne a transcrição e os fac-símiles.</p>
     <p>A edição consultada é a segunda, revista por Carlos Drumond, publicada em 1952–1953. As imagens foram digitalizadas por Renato Nicolai e disponibilizadas pela <a href="https://www.etnolinguistica.org/biblio:drumond-1952-1953-vlb" target="_blank" rel="noopener noreferrer">Biblioteca Digital Curt Nimuendajú</a>.</p>
     <h3>Como interpretar os vínculos</h3>
+    <p>Em <strong>Rolagem contínua</strong>, role qualquer uma das duas colunas para percorrer as páginas. A outra coluna acompanha a página e a posição aproximada de leitura. Você pode voltar a <strong>Página a página</strong> a qualquer momento.</p>
     <ul>
       <li><strong>Página citada:</strong> volume e página extraídos da referência de Navarro. Uma citação pode apontar para mais de uma página.</li>
       <li><strong>Trecho da transcrição:</strong> parágrafo localizado na página por alinhamento com o OCR. Alguns limites de página são aproximados e alguns parágrafos continuam na página seguinte.</li>
       <li><strong>Associação proposta:</strong> sugestão automática de qual trecho pode corresponder a uma citação. Não é uma identificação já confirmada nem uma prova de ausência no dicionário.</li>
       <li><strong>Realce no fac-símile:</strong> posição aproximada obtida pelo OCR, sujeita a erros de leitura e de alinhamento.</li>
+      <li><strong>Localização automática:</strong> uma citação pode abrir um trecho com evidência suficiente para navegação. Quando a associação é proposta, o aviso permanece visível; referências ambíguas oferecem opções para conferência.</li>
     </ul>
     <p>Os números “§” são identificadores de parágrafos desta versão da transcrição, não números de linhas impressas. As posições 25 e 26 do fac-símile do primeiro volume correspondem a uma prancha e seu verso em branco, sem numeração impressa; não são lacunas de verbetes.</p>
     <p id="snapshot-info" class="notice"></p>

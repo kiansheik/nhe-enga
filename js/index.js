@@ -945,7 +945,7 @@
     createConjugateFunction(tableElement, conjugations);
   }
 
-  function linkSources(definition, dictionaryIndex = null) {
+  function linkSources(definition, dictionaryIndex = null, originalDefinition = definition) {
     let replacedString = definition;
 
     // Navarro cites the 1929 Portuguese edition. Its printed page number is
@@ -1039,10 +1039,36 @@
     // the historical VBL typo is preserved as displayed text. The known I,1390
     // outlier and page-less references must not silently select another page.
     regex = /\b((?:VLB|VBL),\s*(II|I),\s*)(\d+(?:\s*[-–—,;]\s*(?:(?:II|I)\s*,\s*)?\d+)*)(?![\dA-Za-zÀ-ÿ])/g;
+    // Formatting inserts markup and sometimes repeats a citation beside a
+    // repeated source example. Keep positions in the untouched definition:
+    // unique page references can be reused; equal counts retain source order.
+    // If several originals share a page and rendering changes that count,
+    // leave the occurrence unspecified rather than guessing which it copied.
+    const collectVlbLocators = (text) => {
+      const byPage = new Map();
+      if (typeof text !== 'string') return byPage;
+      for (const group of text.matchAll(regex)) {
+        let volume = group[2];
+        for (const token of group[3].matchAll(/(II|I)(\s*,\s*)|(\d+)/g)) {
+          if (token[1]) {
+            volume = token[1];
+            continue;
+          }
+          const key = `${volume}:${Number(token[3])}`;
+          if (!byPage.has(key)) byPage.set(key, []);
+          byPage.get(key).push(group.index + group[1].length + token.index);
+        }
+      }
+      return byPage;
+    };
+    const rawVlbLocators = collectVlbLocators(originalDefinition);
+    const renderedVlbLocators = collectVlbLocators(replacedString);
+    const renderedVlbOrdinals = new Map();
     replacedString = replacedString.replace(regex, (match, prefix, initialVolume, pages) => {
       let volume = initialVolume;
       let firstPage = true;
-      const entryQuery = Number.isInteger(dictionaryIndex) && dictionaryIndex >= 0
+      const hasDictionaryRow = Number.isInteger(dictionaryIndex) && dictionaryIndex >= 0;
+      const entryQuery = hasDictionaryRow
         ? `&entry=${dictionaryIndex}` : '';
       return pages.replace(/(II|I)(\s*,\s*)|(\d+)/g, (piece, nextVolume, _separator, page) => {
         if (nextVolume) {
@@ -1052,11 +1078,23 @@
         const label = firstPage ? `${prefix}${page}` : page;
         firstPage = false;
         const printedPage = Number(page);
+        const key = `${volume}:${printedPage}`;
+        const ordinal = renderedVlbOrdinals.get(key) || 0;
+        renderedVlbOrdinals.set(key, ordinal + 1);
         const available = volume === 'I'
           ? printedPage >= 17 && printedPage <= 154 && printedPage !== 25 && printedPage !== 26
           : printedPage >= 7 && printedPage <= 149;
         if (!available) return label;
-        return `<a href="/nhe-enga/vlb/?volume=${volume}&page=${printedPage}${entryQuery}" target="_blank" rel="noopener">${label}</a>`;
+        // Citation offsets in the source data are Unicode code points, whereas
+        // JavaScript string positions use UTF-16. Do not assume all text is BMP.
+        const originals = rawVlbLocators.get(key) || [];
+        const rawPosition = originals.length === 1 ? originals[0]
+          : originals.length === renderedVlbLocators.get(key).length ? originals[ordinal] : null;
+        const position = rawPosition !== null && rawPosition !== undefined && hasDictionaryRow
+          ? Array.from(originalDefinition.slice(0, rawPosition)).length
+          : null;
+        const positionQuery = position !== null ? `&citation_pos=${position}` : '';
+        return `<a href="/nhe-enga/vlb/?volume=${volume}&page=${printedPage}&mode=continuous&focus=auto${entryQuery}${positionQuery}" target="_blank" rel="noopener">${label}</a>`;
       });
     });
 
@@ -3776,7 +3814,7 @@
       const baseDefinition = result.is_tupi_portuguese
         ? formatVerbeteDefinition(result.definition)
         : result.definition;
-      const linkedDefinition = linkSources(baseDefinition, result.dictionary_index);
+      const linkedDefinition = linkSources(baseDefinition, result.dictionary_index, result.definition);
 
       const link = document.createElement('a');
       link.href = `${window.location.pathname}?query=${encodeURIComponent(result.first_word)}`;
