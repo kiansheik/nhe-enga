@@ -1,0 +1,1152 @@
+{
+  "corpus_wide_accuracy": false,
+  "evaluation_status": "fresh blind evaluation of frozen V3 predictions",
+  "human_verified": false,
+  "navigation_policy": {
+    "blind_release_policy": {
+      "cases": [
+        {
+          "automatic_target": false,
+          "case_id": "v3-001205254cd2",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "yby'ama",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "headword"
+        },
+        {
+          "automatic_target": true,
+          "case_id": "v3-002693c648d6",
+          "correct_paragraph": true,
+          "exact_span": true,
+          "headword": "ybyra",
+          "label_status": "clear",
+          "narrow_ocr_lines": true,
+          "query_kind": "quoted_surface_hypothesis"
+        },
+        {
+          "automatic_target": true,
+          "case_id": "v3-00504394c4ec",
+          "correct_paragraph": true,
+          "exact_span": true,
+          "headword": "tuîuk",
+          "label_status": "clear",
+          "narrow_ocr_lines": true,
+          "query_kind": "quoted_surface_hypothesis"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-00ad3f004818",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "moapysyk",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "surface_prefix_hypothesis"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-00b8a08135f7",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "'ara",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "headword"
+        },
+        {
+          "automatic_target": true,
+          "case_id": "v3-00b9feb7c49a",
+          "correct_paragraph": true,
+          "exact_span": true,
+          "headword": "titinga",
+          "label_status": "clear",
+          "narrow_ocr_lines": true,
+          "query_kind": "quoted_surface_hypothesis"
+        },
+        {
+          "automatic_target": true,
+          "case_id": "v3-00c3fc7f97d1",
+          "correct_paragraph": true,
+          "exact_span": true,
+          "headword": "mutugûaba",
+          "label_status": "clear",
+          "narrow_ocr_lines": true,
+          "query_kind": "headword"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-00e05b569656",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "patagûy",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "headword"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-00e9315804ac",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "a'eserãne",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "quoted_surface_hypothesis"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-00ef0c7cb881",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "teîkûaratĩ",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "headword"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-0106d0a865cb",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "nhe'eng",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "quoted_surface_hypothesis"
+        },
+        {
+          "automatic_target": true,
+          "case_id": "v3-010825f022c3",
+          "correct_paragraph": true,
+          "exact_span": true,
+          "headword": "urapara",
+          "label_status": "clear",
+          "narrow_ocr_lines": true,
+          "query_kind": "headword"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-0144b11472cc",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "enena",
+          "label_status": "ambiguous",
+          "narrow_ocr_lines": false,
+          "query_kind": "headword"
+        },
+        {
+          "automatic_target": true,
+          "case_id": "v3-014fee07b366",
+          "correct_paragraph": true,
+          "exact_span": true,
+          "headword": "porero'ar",
+          "label_status": "clear",
+          "narrow_ocr_lines": true,
+          "query_kind": "quoted_surface_hypothesis"
+        },
+        {
+          "automatic_target": true,
+          "case_id": "v3-0154aee6ddb7",
+          "correct_paragraph": true,
+          "exact_span": true,
+          "headword": "pytanga",
+          "label_status": "clear",
+          "narrow_ocr_lines": true,
+          "query_kind": "headword"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-017c12922a74",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "ymûanĩ",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "quoted_surface_hypothesis"
+        },
+        {
+          "automatic_target": true,
+          "case_id": "v3-017e7bbbc691",
+          "correct_paragraph": true,
+          "exact_span": true,
+          "headword": "aupaba",
+          "label_status": "clear",
+          "narrow_ocr_lines": true,
+          "query_kind": "headword"
+        },
+        {
+          "automatic_target": true,
+          "case_id": "v3-0195b9a08ea9",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "moapyr",
+          "label_status": "ambiguous",
+          "narrow_ocr_lines": true,
+          "query_kind": "surface_prefix_hypothesis"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-01bcc1d47922",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "ku'a",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "quoted_surface_hypothesis"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-01c77309fe30",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "poruukar",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "quoted_surface_hypothesis"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-01d761877a82",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "etymã",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "quoted_surface_hypothesis"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-02009c5f792d",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "po'yra",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "quoted_surface_hypothesis"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-0216e0269104",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "îyboîusu",
+          "label_status": "ambiguous",
+          "narrow_ocr_lines": false,
+          "query_kind": "headword"
+        },
+        {
+          "automatic_target": true,
+          "case_id": "v3-0228f22422b8",
+          "correct_paragraph": true,
+          "exact_span": false,
+          "headword": "gûebirãîari",
+          "label_status": "clear",
+          "narrow_ocr_lines": true,
+          "query_kind": "quoted_surface_hypothesis"
+        }
+      ],
+      "counts": {
+        "ambiguous_or_not_found_abstentions": 2,
+        "ambiguous_or_not_found_targets": 1,
+        "clear_abstentions": 12,
+        "clear_targets": 9,
+        "correct_paragraph_clear_targets": 9,
+        "exact_span_clear_targets": 8,
+        "narrow_ocr_line_targets": 10,
+        "targets": 10
+      },
+      "rates": {
+        "ambiguity_abstention_rate": 0.666667,
+        "clear_case_coverage": 0.428571,
+        "exact_span_precision_all_targets": 0.8,
+        "paragraph_precision_all_targets": 0.9
+      }
+    },
+    "policy_version": "vlb-navigation-policy-v3.1",
+    "post_release_result_is_held_out": false,
+    "post_release_safety_gate": {
+      "cases": [
+        {
+          "automatic_target": false,
+          "case_id": "v3-001205254cd2",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "yby'ama",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "headword"
+        },
+        {
+          "automatic_target": true,
+          "case_id": "v3-002693c648d6",
+          "correct_paragraph": true,
+          "exact_span": true,
+          "headword": "ybyra",
+          "label_status": "clear",
+          "narrow_ocr_lines": true,
+          "query_kind": "quoted_surface_hypothesis"
+        },
+        {
+          "automatic_target": true,
+          "case_id": "v3-00504394c4ec",
+          "correct_paragraph": true,
+          "exact_span": true,
+          "headword": "tuîuk",
+          "label_status": "clear",
+          "narrow_ocr_lines": true,
+          "query_kind": "quoted_surface_hypothesis"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-00ad3f004818",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "moapysyk",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "surface_prefix_hypothesis"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-00b8a08135f7",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "'ara",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "headword"
+        },
+        {
+          "automatic_target": true,
+          "case_id": "v3-00b9feb7c49a",
+          "correct_paragraph": true,
+          "exact_span": true,
+          "headword": "titinga",
+          "label_status": "clear",
+          "narrow_ocr_lines": true,
+          "query_kind": "quoted_surface_hypothesis"
+        },
+        {
+          "automatic_target": true,
+          "case_id": "v3-00c3fc7f97d1",
+          "correct_paragraph": true,
+          "exact_span": true,
+          "headword": "mutugûaba",
+          "label_status": "clear",
+          "narrow_ocr_lines": true,
+          "query_kind": "headword"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-00e05b569656",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "patagûy",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "headword"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-00e9315804ac",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "a'eserãne",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "quoted_surface_hypothesis"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-00ef0c7cb881",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "teîkûaratĩ",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "headword"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-0106d0a865cb",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "nhe'eng",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "quoted_surface_hypothesis"
+        },
+        {
+          "automatic_target": true,
+          "case_id": "v3-010825f022c3",
+          "correct_paragraph": true,
+          "exact_span": true,
+          "headword": "urapara",
+          "label_status": "clear",
+          "narrow_ocr_lines": true,
+          "query_kind": "headword"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-0144b11472cc",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "enena",
+          "label_status": "ambiguous",
+          "narrow_ocr_lines": false,
+          "query_kind": "headword"
+        },
+        {
+          "automatic_target": true,
+          "case_id": "v3-014fee07b366",
+          "correct_paragraph": true,
+          "exact_span": true,
+          "headword": "porero'ar",
+          "label_status": "clear",
+          "narrow_ocr_lines": true,
+          "query_kind": "quoted_surface_hypothesis"
+        },
+        {
+          "automatic_target": true,
+          "case_id": "v3-0154aee6ddb7",
+          "correct_paragraph": true,
+          "exact_span": true,
+          "headword": "pytanga",
+          "label_status": "clear",
+          "narrow_ocr_lines": true,
+          "query_kind": "headword"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-017c12922a74",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "ymûanĩ",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "quoted_surface_hypothesis"
+        },
+        {
+          "automatic_target": true,
+          "case_id": "v3-017e7bbbc691",
+          "correct_paragraph": true,
+          "exact_span": true,
+          "headword": "aupaba",
+          "label_status": "clear",
+          "narrow_ocr_lines": true,
+          "query_kind": "headword"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-0195b9a08ea9",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "moapyr",
+          "label_status": "ambiguous",
+          "narrow_ocr_lines": false,
+          "query_kind": "surface_prefix_hypothesis"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-01bcc1d47922",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "ku'a",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "quoted_surface_hypothesis"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-01c77309fe30",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "poruukar",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "quoted_surface_hypothesis"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-01d761877a82",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "etymã",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "quoted_surface_hypothesis"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-02009c5f792d",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "po'yra",
+          "label_status": "clear",
+          "narrow_ocr_lines": false,
+          "query_kind": "quoted_surface_hypothesis"
+        },
+        {
+          "automatic_target": false,
+          "case_id": "v3-0216e0269104",
+          "correct_paragraph": null,
+          "exact_span": null,
+          "headword": "îyboîusu",
+          "label_status": "ambiguous",
+          "narrow_ocr_lines": false,
+          "query_kind": "headword"
+        },
+        {
+          "automatic_target": true,
+          "case_id": "v3-0228f22422b8",
+          "correct_paragraph": true,
+          "exact_span": false,
+          "headword": "gûebirãîari",
+          "label_status": "clear",
+          "narrow_ocr_lines": true,
+          "query_kind": "quoted_surface_hypothesis"
+        }
+      ],
+      "counts": {
+        "ambiguous_or_not_found_abstentions": 3,
+        "ambiguous_or_not_found_targets": 0,
+        "clear_abstentions": 12,
+        "clear_targets": 9,
+        "correct_paragraph_clear_targets": 9,
+        "exact_span_clear_targets": 8,
+        "narrow_ocr_line_targets": 9,
+        "targets": 9
+      },
+      "rates": {
+        "ambiguity_abstention_rate": 1.0,
+        "clear_case_coverage": 0.428571,
+        "exact_span_precision_all_targets": 0.888889,
+        "paragraph_precision_all_targets": 1.0
+      }
+    }
+  },
+  "not_measured": [
+    "human-verified lexical equivalence",
+    "exact scan glyph-box accuracy",
+    "corpus-wide accuracy"
+  ],
+  "provenance": {
+    "annotation_freeze_sha256": "53f99fa9084f91a0916031df69fa93c9a2fbe9b8496deb7daf2ceabbcf1c7f37",
+    "labels_sha256": "ab73a469e445b722a4f55479daf513731a13b1d7cb5a30ec7988439eff422685",
+    "model_freeze_sha256": "83f55bd1805cd40b95530c61f10bab1ab3419b556f13180ee23e334ad0eb3676",
+    "packet_sha256": "a64adf5225b2477773089c4b9543c1c92b070475d44c341831e3e2cfc0ba1d31",
+    "pre_v3_reader_ranking_sha256": "2a962643459153a91fd2a0c9d06139844a177becfae80a9c82bcc7d42133456f",
+    "pre_v3_reader_source_commit": "b5df369af6a7d2db72f933746ca6b5c13a44310d",
+    "prediction_sha256": "98cde030318d3e2131b0c6df38f3aa77fd1b80444445d4bedc833843461e4928"
+  },
+  "ranker": {
+    "cases": [
+      {
+        "case_id": "v3-001205254cd2",
+        "existing_top1_correct": true,
+        "existing_top3_contains_gold": true,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p01699"
+        ],
+        "headword": "yby'ama",
+        "label_status": "clear",
+        "offered_exact_attested_span": true,
+        "offered_span_count": 12,
+        "page_id": "I-072",
+        "proposal_status": "needs_review",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p01699",
+          "vlb-emerson-r568-p01713",
+          "vlb-emerson-r568-p01692"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": false,
+        "top1_correct": true,
+        "top1_exact_attested_span": false,
+        "top3_contains_gold": true,
+        "top3_exact_attested_span": false
+      },
+      {
+        "case_id": "v3-002693c648d6",
+        "existing_top1_correct": true,
+        "existing_top3_contains_gold": true,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p05512"
+        ],
+        "headword": "ybyra",
+        "label_status": "clear",
+        "offered_exact_attested_span": true,
+        "offered_span_count": 3,
+        "page_id": "II-064",
+        "proposal_status": "suggested",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p05512",
+          "vlb-emerson-r568-p05515",
+          "vlb-emerson-r568-p05513"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": true,
+        "top1_correct": true,
+        "top1_exact_attested_span": true,
+        "top3_contains_gold": true,
+        "top3_exact_attested_span": true
+      },
+      {
+        "case_id": "v3-00504394c4ec",
+        "existing_top1_correct": true,
+        "existing_top3_contains_gold": true,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p00619"
+        ],
+        "headword": "tuîuk",
+        "label_status": "clear",
+        "offered_exact_attested_span": true,
+        "offered_span_count": 4,
+        "page_id": "I-038",
+        "proposal_status": "suggested",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p00619",
+          "vlb-emerson-r568-p00620",
+          "vlb-emerson-r568-p00610"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": true,
+        "top1_correct": true,
+        "top1_exact_attested_span": true,
+        "top3_contains_gold": true,
+        "top3_exact_attested_span": true
+      },
+      {
+        "case_id": "v3-00ad3f004818",
+        "existing_top1_correct": false,
+        "existing_top3_contains_gold": false,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p00260"
+        ],
+        "headword": "moapysyk",
+        "label_status": "clear",
+        "offered_exact_attested_span": true,
+        "offered_span_count": 4,
+        "page_id": "I-027",
+        "proposal_status": "needs_review",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p00260",
+          "vlb-emerson-r568-p00271",
+          "vlb-emerson-r568-p00261"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": true,
+        "top1_correct": true,
+        "top1_exact_attested_span": true,
+        "top3_contains_gold": true,
+        "top3_exact_attested_span": true
+      },
+      {
+        "case_id": "v3-00b8a08135f7",
+        "existing_top1_correct": true,
+        "existing_top3_contains_gold": true,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p02846"
+        ],
+        "headword": "'ara",
+        "label_status": "clear",
+        "offered_exact_attested_span": false,
+        "offered_span_count": 12,
+        "page_id": "I-112",
+        "proposal_status": "needs_review",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p02846",
+          "vlb-emerson-r568-p02839",
+          "vlb-emerson-r568-p02849"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": false,
+        "top1_correct": true,
+        "top1_exact_attested_span": false,
+        "top3_contains_gold": true,
+        "top3_exact_attested_span": false
+      },
+      {
+        "case_id": "v3-00b9feb7c49a",
+        "existing_top1_correct": true,
+        "existing_top3_contains_gold": true,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p04192",
+          "vlb-emerson-r568-p04193"
+        ],
+        "headword": "titinga",
+        "label_status": "clear",
+        "offered_exact_attested_span": true,
+        "offered_span_count": 12,
+        "page_id": "II-010",
+        "proposal_status": "suggested",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p04193",
+          "vlb-emerson-r568-p04192",
+          "vlb-emerson-r568-p04183"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": true,
+        "top1_correct": true,
+        "top1_exact_attested_span": true,
+        "top3_contains_gold": true,
+        "top3_exact_attested_span": true
+      },
+      {
+        "case_id": "v3-00c3fc7f97d1",
+        "existing_top1_correct": true,
+        "existing_top3_contains_gold": true,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p03640"
+        ],
+        "headword": "mutugûaba",
+        "label_status": "clear",
+        "offered_exact_attested_span": true,
+        "offered_span_count": 3,
+        "page_id": "I-138",
+        "proposal_status": "suggested",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p03640",
+          "vlb-emerson-r568-p03630",
+          "vlb-emerson-r568-p03625"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": true,
+        "top1_correct": true,
+        "top1_exact_attested_span": true,
+        "top3_contains_gold": true,
+        "top3_exact_attested_span": true
+      },
+      {
+        "case_id": "v3-00e05b569656",
+        "existing_top1_correct": false,
+        "existing_top3_contains_gold": false,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p03910"
+        ],
+        "headword": "patagûy",
+        "label_status": "clear",
+        "offered_exact_attested_span": true,
+        "offered_span_count": 8,
+        "page_id": "I-147",
+        "proposal_status": "needs_review",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p03910",
+          "vlb-emerson-r568-p03917",
+          "vlb-emerson-r568-p03923"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": true,
+        "top1_correct": true,
+        "top1_exact_attested_span": true,
+        "top3_contains_gold": true,
+        "top3_exact_attested_span": true
+      },
+      {
+        "case_id": "v3-00e9315804ac",
+        "existing_top1_correct": false,
+        "existing_top3_contains_gold": false,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p03118"
+        ],
+        "headword": "a'eserãne",
+        "label_status": "clear",
+        "offered_exact_attested_span": true,
+        "offered_span_count": 11,
+        "page_id": "I-120",
+        "proposal_status": "needs_review",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p03117",
+          "vlb-emerson-r568-p03118",
+          "vlb-emerson-r568-p03119"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": false,
+        "top1_correct": false,
+        "top1_exact_attested_span": false,
+        "top3_contains_gold": true,
+        "top3_exact_attested_span": false
+      },
+      {
+        "case_id": "v3-00ef0c7cb881",
+        "existing_top1_correct": true,
+        "existing_top3_contains_gold": true,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p06272"
+        ],
+        "headword": "teîkûaratĩ",
+        "label_status": "clear",
+        "offered_exact_attested_span": true,
+        "offered_span_count": 6,
+        "page_id": "II-095",
+        "proposal_status": "needs_review",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p06272",
+          "vlb-emerson-r568-p06267",
+          "vlb-emerson-r568-p06289"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": true,
+        "top1_correct": true,
+        "top1_exact_attested_span": true,
+        "top3_contains_gold": true,
+        "top3_exact_attested_span": true
+      },
+      {
+        "case_id": "v3-0106d0a865cb",
+        "existing_top1_correct": true,
+        "existing_top3_contains_gold": true,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p06762"
+        ],
+        "headword": "nhe'eng",
+        "label_status": "clear",
+        "offered_exact_attested_span": true,
+        "offered_span_count": 6,
+        "page_id": "II-113",
+        "proposal_status": "needs_review",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p06762",
+          "vlb-emerson-r568-p06758",
+          "vlb-emerson-r568-p06759"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": true,
+        "top1_correct": true,
+        "top1_exact_attested_span": true,
+        "top3_contains_gold": true,
+        "top3_exact_attested_span": true
+      },
+      {
+        "case_id": "v3-010825f022c3",
+        "existing_top1_correct": true,
+        "existing_top3_contains_gold": true,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p00675"
+        ],
+        "headword": "urapara",
+        "label_status": "clear",
+        "offered_exact_attested_span": true,
+        "offered_span_count": 6,
+        "page_id": "I-040",
+        "proposal_status": "suggested",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p00675",
+          "vlb-emerson-r568-p00673",
+          "vlb-emerson-r568-p00674"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": true,
+        "top1_correct": true,
+        "top1_exact_attested_span": true,
+        "top3_contains_gold": true,
+        "top3_exact_attested_span": true
+      },
+      {
+        "case_id": "v3-0144b11472cc",
+        "existing_top1_correct": null,
+        "existing_top3_contains_gold": null,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p03185"
+        ],
+        "headword": "enena",
+        "label_status": "ambiguous",
+        "offered_exact_attested_span": null,
+        "offered_span_count": 4,
+        "page_id": "I-123",
+        "proposal_status": "needs_review",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p03185",
+          "vlb-emerson-r568-p03192",
+          "vlb-emerson-r568-p03198"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": null,
+        "top1_correct": null,
+        "top1_exact_attested_span": null,
+        "top3_contains_gold": null,
+        "top3_exact_attested_span": null
+      },
+      {
+        "case_id": "v3-014fee07b366",
+        "existing_top1_correct": true,
+        "existing_top3_contains_gold": true,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p06718"
+        ],
+        "headword": "porero'ar",
+        "label_status": "clear",
+        "offered_exact_attested_span": true,
+        "offered_span_count": 8,
+        "page_id": "II-112",
+        "proposal_status": "suggested",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p06718",
+          "vlb-emerson-r568-p06717",
+          "vlb-emerson-r568-p06714"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": true,
+        "top1_correct": true,
+        "top1_exact_attested_span": true,
+        "top3_contains_gold": true,
+        "top3_exact_attested_span": true
+      },
+      {
+        "case_id": "v3-0154aee6ddb7",
+        "existing_top1_correct": false,
+        "existing_top3_contains_gold": true,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p07377"
+        ],
+        "headword": "pytanga",
+        "label_status": "clear",
+        "offered_exact_attested_span": true,
+        "offered_span_count": 4,
+        "page_id": "II-137",
+        "proposal_status": "suggested",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p07377",
+          "vlb-emerson-r568-p07376",
+          "vlb-emerson-r568-p07375"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": true,
+        "top1_correct": true,
+        "top1_exact_attested_span": true,
+        "top3_contains_gold": true,
+        "top3_exact_attested_span": true
+      },
+      {
+        "case_id": "v3-017c12922a74",
+        "existing_top1_correct": true,
+        "existing_top3_contains_gold": true,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p05272"
+        ],
+        "headword": "ymûanĩ",
+        "label_status": "clear",
+        "offered_exact_attested_span": false,
+        "offered_span_count": 6,
+        "page_id": "II-052",
+        "proposal_status": "needs_review",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p05272",
+          "vlb-emerson-r568-p05269",
+          "vlb-emerson-r568-p05270"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": false,
+        "top1_correct": true,
+        "top1_exact_attested_span": false,
+        "top3_contains_gold": true,
+        "top3_exact_attested_span": false
+      },
+      {
+        "case_id": "v3-017e7bbbc691",
+        "existing_top1_correct": true,
+        "existing_top3_contains_gold": true,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p05544"
+        ],
+        "headword": "aupaba",
+        "label_status": "clear",
+        "offered_exact_attested_span": true,
+        "offered_span_count": 9,
+        "page_id": "II-065",
+        "proposal_status": "suggested",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p05544",
+          "vlb-emerson-r568-p05540",
+          "vlb-emerson-r568-p05548"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": true,
+        "top1_correct": true,
+        "top1_exact_attested_span": true,
+        "top3_contains_gold": true,
+        "top3_exact_attested_span": true
+      },
+      {
+        "case_id": "v3-0195b9a08ea9",
+        "existing_top1_correct": null,
+        "existing_top3_contains_gold": null,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p03258"
+        ],
+        "headword": "moapyr",
+        "label_status": "ambiguous",
+        "offered_exact_attested_span": null,
+        "offered_span_count": 9,
+        "page_id": "I-125",
+        "proposal_status": "suggested",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p03258",
+          "vlb-emerson-r568-p03276",
+          "vlb-emerson-r568-p03257"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": null,
+        "top1_correct": null,
+        "top1_exact_attested_span": null,
+        "top3_contains_gold": null,
+        "top3_exact_attested_span": null
+      },
+      {
+        "case_id": "v3-01bcc1d47922",
+        "existing_top1_correct": false,
+        "existing_top3_contains_gold": true,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p04809"
+        ],
+        "headword": "ku'a",
+        "label_status": "clear",
+        "offered_exact_attested_span": true,
+        "offered_span_count": 9,
+        "page_id": "II-034",
+        "proposal_status": "needs_review",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p04809",
+          "vlb-emerson-r568-p04802",
+          "vlb-emerson-r568-p04804"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": false,
+        "top1_correct": true,
+        "top1_exact_attested_span": false,
+        "top3_contains_gold": true,
+        "top3_exact_attested_span": false
+      },
+      {
+        "case_id": "v3-01c77309fe30",
+        "existing_top1_correct": true,
+        "existing_top3_contains_gold": true,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p02864"
+        ],
+        "headword": "poruukar",
+        "label_status": "clear",
+        "offered_exact_attested_span": true,
+        "offered_span_count": 6,
+        "page_id": "I-113",
+        "proposal_status": "needs_review",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p02864",
+          "vlb-emerson-r568-p02863",
+          "vlb-emerson-r568-p02882"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": true,
+        "top1_correct": true,
+        "top1_exact_attested_span": true,
+        "top3_contains_gold": true,
+        "top3_exact_attested_span": true
+      },
+      {
+        "case_id": "v3-01d761877a82",
+        "existing_top1_correct": false,
+        "existing_top3_contains_gold": true,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p06192"
+        ],
+        "headword": "etymã",
+        "label_status": "clear",
+        "offered_exact_attested_span": true,
+        "offered_span_count": 5,
+        "page_id": "II-091",
+        "proposal_status": "needs_review",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p06192",
+          "vlb-emerson-r568-p06191",
+          "vlb-emerson-r568-p06182"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": true,
+        "top1_correct": true,
+        "top1_exact_attested_span": true,
+        "top3_contains_gold": true,
+        "top3_exact_attested_span": true
+      },
+      {
+        "case_id": "v3-02009c5f792d",
+        "existing_top1_correct": true,
+        "existing_top3_contains_gold": true,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p02954",
+          "vlb-emerson-r568-p02955"
+        ],
+        "headword": "po'yra",
+        "label_status": "clear",
+        "offered_exact_attested_span": true,
+        "offered_span_count": 4,
+        "page_id": "I-116",
+        "proposal_status": "suggested",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p02954",
+          "vlb-emerson-r568-p02955",
+          "vlb-emerson-r568-p02984"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": true,
+        "top1_correct": true,
+        "top1_exact_attested_span": true,
+        "top3_contains_gold": true,
+        "top3_exact_attested_span": true
+      },
+      {
+        "case_id": "v3-0216e0269104",
+        "existing_top1_correct": null,
+        "existing_top3_contains_gold": null,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p02720"
+        ],
+        "headword": "îyboîusu",
+        "label_status": "ambiguous",
+        "offered_exact_attested_span": null,
+        "offered_span_count": 6,
+        "page_id": "I-107",
+        "proposal_status": "needs_review",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p02720",
+          "vlb-emerson-r568-p02727",
+          "vlb-emerson-r568-p02724"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": null,
+        "top1_correct": null,
+        "top1_exact_attested_span": null,
+        "top3_contains_gold": null,
+        "top3_exact_attested_span": null
+      },
+      {
+        "case_id": "v3-0228f22422b8",
+        "existing_top1_correct": true,
+        "existing_top3_contains_gold": true,
+        "gold_source_ids": [
+          "vlb-emerson-r568-p01330"
+        ],
+        "headword": "gûebirãîari",
+        "label_status": "clear",
+        "offered_exact_attested_span": true,
+        "offered_span_count": 7,
+        "page_id": "I-061",
+        "proposal_status": "suggested",
+        "ranked_source_ids": [
+          "vlb-emerson-r568-p01330",
+          "vlb-emerson-r568-p01333",
+          "vlb-emerson-r568-p01327"
+        ],
+        "top1_attested_span_contains_or_is_in_gold": false,
+        "top1_correct": true,
+        "top1_exact_attested_span": false,
+        "top3_contains_gold": true,
+        "top3_exact_attested_span": false
+      }
+    ],
+    "counts": {
+      "all_cases": 24,
+      "ambiguous_cases": 3,
+      "clear_cases": 21,
+      "existing_top1_correct": 15,
+      "existing_top3_contains_gold": 18,
+      "not_found_cases": 0,
+      "offered_exact_attested_span": 19,
+      "suggested_ambiguous_or_not_found": 1,
+      "suggested_clear_cases": 10,
+      "suggested_correct": 10,
+      "top1_attested_span_contains_or_is_in_gold": 15,
+      "top1_correct": 20,
+      "top1_exact_attested_span": 15,
+      "top3_contains_gold": 21,
+      "top3_exact_attested_span": 15
+    },
+    "evaluation_unit": "citation/page → source paragraph",
+    "not_measured": [
+      "human-verified lexical equivalence",
+      "exact scan glyph-box accuracy",
+      "corpus-wide accuracy"
+    ],
+    "offered_metric_scope": "Exact literal span among up to three paragraph candidates, including each paragraph's saved span_alternatives. Legacy top1/top3 measures use only each paragraph's best span.",
+    "reviewer": "assistant"
+  },
+  "reviewer_type": "assistant",
+  "schema_version": 1
+}

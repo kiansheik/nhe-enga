@@ -1,0 +1,41 @@
+{
+  "algorithm_sha256": {
+    "vlb/mine_alignment.py": "c4532d1ab255d1e6968edc19d90d6a913118cb5804e509b8989c1d040e1fd674",
+    "vlb/mining/form_index.py": "6222293c60f1dcfbedde2b678634f469f6aeda9ebdd63ad1a6f9dac73eb578f6",
+    "vlb/mining/orthography.py": "ed96dd603cb3d92fbf18e0f58b04a48bdf64cb872f8c24623d6a5620146d9ebc",
+    "vlb/mining/pipeline.py": "835dfa2dd1827cd6417c7ea21b6e4630284634f0b994d6c94a292f5337f9b459",
+    "vlb/mining/quotation.py": "90c82dd24add774b80a1681298b758d570769da65278e388b369687b8fde39c6",
+    "vlb/mining/seeds.py": "2b6df0633c0980dc901faab1ca48de77d8ff147d7c44a51f56294dd153e716d4"
+  },
+  "benchmark_sha256": "7930ae8c7e813593fab9003cd3eb482673c6b8e41d36e633e57e9f91afdf7058",
+  "config": {
+    "form_weight": 70.0,
+    "local_quotation_weight": 12.0,
+    "paragraph_span_shortlist": 6,
+    "portuguese_context_weight": 20.0,
+    "quotation_context_weight": 18.0,
+    "quoted_surface_weight": 8.0,
+    "scores_are_probabilities": false,
+    "short_form_min_context": 0.34,
+    "span_alternatives": 3,
+    "suggestion_min_margin": 5.0,
+    "suggestion_min_similarity": 0.84,
+    "surface_shortlist": 2,
+    "top_k": 3,
+    "version": "vlb-page-ranker-v3",
+    "whole_quotation_weight": 15.0
+  },
+  "config_sha256": "27f922ecdbc184d0d02ce3b1e138e90b9a0bc3fcd03cc092ab326eaa7f0dfc82",
+  "frozen_at_utc": "2026-11-03T15:14:03.997163+00:00",
+  "labels_supplied_to_run": false,
+  "model_kind": "prior",
+  "output_sha256": {
+    "candidates.json.gz": "98cde030318d3e2131b0c6df38f3aa77fd1b80444445d4bedc833843461e4928",
+    "headword-form-index.json.gz": "d74e17d84deee9ca7e5bcf5c073bb2ac919062b626ad9efafc12db57eb0f4f61",
+    "orthography-model.json": "a999beb9b043db8cf09bf56426639273209519004268781fd92154669a0a4601",
+    "seeds.json.gz": "fce8bd5d7f7e81961e6ca0c91749917b9f45814a61c1e48f5f71f517257c010f",
+    "summary.json": "3032d8d53302d104c84619e2322220e84e55d78718f5ae302b07981b05501ff7"
+  },
+  "protocol": "Immutable prediction/code snapshot. Independent label withholding and release are recorded separately by the reviewer.",
+  "schema_version": 1
+}

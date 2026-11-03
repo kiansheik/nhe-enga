@@ -1,0 +1,389 @@
+{
+  "schema_version": 1,
+  "packet_path": "review_material.json",
+  "packet_sha256": "a64adf5225b2477773089c4b9543c1c92b070475d44c341831e3e2cfc0ba1d31",
+  "source_sha256": "0be22fae2f181e344963590add1016670ba12706af675b51f21cf7571d974fb9",
+  "dictionary_sha256": "d235a7961961b58fcfbb93362bc3acb9b7f7b7e823196dca5763ef3e7fd16f53",
+  "reviewer_type": "assistant",
+  "human_verified": false,
+  "labels": [
+    {
+      "case_id": "v3-001205254cd2",
+      "status": "clear",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p01699",
+          "form_start0": 90615,
+          "form_end0": 90623,
+          "form_text": "Jgbigãma"
+        }
+      ],
+      "evidence_note": "The source entry glossed 'Chapada de terra' gives Jgbigãma, the historical orthographic counterpart of yby'ama, matching the cited chapada or high-plain sense.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-002693c648d6",
+      "status": "clear",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p05512",
+          "form_start0": 319125,
+          "form_end0": 319134,
+          "form_text": "Igbiraoba"
+        }
+      ],
+      "evidence_note": "The exact source gloss 'Pano de linho' gives Igbiraoba, corresponding to cited ybyraoba and supporting ybyra in the linho compound.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-00504394c4ec",
+      "status": "clear",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p00619",
+          "form_start0": 34372,
+          "form_end0": 34378,
+          "form_text": "Atujuc"
+        }
+      ],
+      "evidence_note": "The source entry 'Apodrecer a carne, peixe, fruita' gives Atujuc, directly matching the form and the cited class of things that rot.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-00ad3f004818",
+      "status": "clear",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p00260",
+          "form_start0": 14404,
+          "form_end0": 14414,
+          "form_text": "Aimoapîcic"
+        }
+      ],
+      "evidence_note": "The page gives Aimoapîcic under 'Agradar a outrem'. That form and gloss directly support moapysyk in the cited deleitar or agradar sense, although the dictionary example is not verbatim here.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-00b8a08135f7",
+      "status": "clear",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p02846",
+          "form_start0": 160902,
+          "form_end0": 160922,
+          "form_text": "Ara îbîçocime xeruri"
+        }
+      ],
+      "evidence_note": "The source's entry on the sun standing high contains Ara îbîçocime xeruri, the historical spelling of the cited 'Ara yby sokeme, xe ruri' sentence.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-00b9feb7c49a",
+      "status": "clear",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p04192",
+          "form_start0": 236454,
+          "form_end0": 236461,
+          "form_text": "Titinga"
+        },
+        {
+          "source_id": "vlb-emerson-r568-p04193",
+          "form_start0": 236502,
+          "form_end0": 236511,
+          "form_text": "Xetitinga"
+        }
+      ],
+      "evidence_note": "Adjacent entries give Titinga for impigem and Xetitinga for having impigem. Together they directly support the cited noun and predicative example; the source retains final -a in the predicate.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-00c3fc7f97d1",
+      "status": "clear",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p03640",
+          "form_start0": 205884,
+          "form_end0": 205893,
+          "form_text": "Mutugoâba"
+        }
+      ],
+      "evidence_note": "The source entry 'Festa ou dia santo' gives Mutugoâba, exactly matching the cited religious-feast or holy-day sense.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-00e05b569656",
+      "status": "clear",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p03910",
+          "form_start0": 219770,
+          "form_end0": 219778,
+          "form_text": "Ipataguî"
+        }
+      ],
+      "evidence_note": "The source entry 'Gauea do nauio' gives Ipataguî, the relational form corresponding to patagûy and the exact cited nautical sense.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-00e9315804ac",
+      "status": "clear",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p03118",
+          "form_start0": 176117,
+          "form_end0": 176125,
+          "form_text": "Aêcerãne"
+        }
+      ],
+      "evidence_note": "The source entry has the identical gloss 'E paresse segundo isso' and gives Aêcerãne plus the rae and ipôrae constructions cited in the dictionary.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-00ef0c7cb881",
+      "status": "clear",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p06272",
+          "form_start0": 373975,
+          "form_end0": 373985,
+          "form_text": "Ceicoaratĩ"
+        }
+      ],
+      "evidence_note": "The exact source gloss 'Rabo do tiro, como do berço' gives Ceicoaratĩ, directly supporting the cited firearm-tail sense and form.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-0106d0a865cb",
+      "status": "clear",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p06762",
+          "form_start0": 405804,
+          "form_end0": 405811,
+          "form_text": "Anheeng"
+        }
+      ],
+      "evidence_note": "The source says 'Saudar a alguem. — Anheeng. (çupe)', directly supporting the adapted dictionary example with a person and supé.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-010825f022c3",
+      "status": "clear",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p00675",
+          "form_start0": 37415,
+          "form_end0": 37422,
+          "form_text": "Urapara"
+        }
+      ],
+      "evidence_note": "The source entry 'Arco de tirar' explicitly gives Urapara as the customary form, exactly supporting the cited headword and sense.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-0144b11472cc",
+      "status": "ambiguous",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p03185",
+          "form_start0": 179798,
+          "form_end0": 179803,
+          "form_text": "Enẽma"
+        }
+      ],
+      "evidence_note": "'Escarauelho. — Enẽma. Enẽbui.' is a plausible source, but Enẽma conflicts with dictionary enena in the final consonant and the generic escaravelho gloss does not establish the claimed coprinid-family specificity.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-014fee07b366",
+      "status": "clear",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p06718",
+          "form_start0": 403601,
+          "form_end0": 403610,
+          "form_text": "Aporeroar"
+        }
+      ],
+      "evidence_note": "The source gives Aporeroar under 'Saltear assi com enganos', immediately after the sea-raider noun entry, directly supporting the cited verb and maritime-raiding context.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-0154aee6ddb7",
+      "status": "clear",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p07377",
+          "form_start0": 446791,
+          "form_end0": 446798,
+          "form_text": "Pitanga"
+        }
+      ],
+      "evidence_note": "The exact source gloss 'Trigeira cor' gives Pitanga, directly supporting the cited wheat-colored or trigueiro sense.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-017c12922a74",
+      "status": "clear",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p05272",
+          "form_start0": 302293,
+          "form_end0": 302303,
+          "form_text": "Daeijmuãnĩ"
+        }
+      ],
+      "evidence_note": "The source defines Daeijmuãnĩ with a supine as taking a long time and never finishing, then supplies both clothing and going examples reflected in the dictionary.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-017e7bbbc691",
+      "status": "clear",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p05544",
+          "form_start0": 321728,
+          "form_end0": 321734,
+          "form_text": "Aupaba"
+        }
+      ],
+      "evidence_note": "The exact source entry 'Pareas da parida. — Aupaba' directly supports the cited postpartum-membrane sense and distinguishes it from the following tribute homonym.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-0195b9a08ea9",
+      "status": "ambiguous",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p03258",
+          "form_start0": 183464,
+          "form_end0": 183473,
+          "form_text": "Aimoapigr"
+        }
+      ],
+      "evidence_note": "Aimoapigr is explicitly glossed as draining a cup or its wine by drinking, so sense 1 is clear. The supplied page does not tie this form to sense 2, lowering a liquid level or an object's height, so the combined citation remains ambiguous.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-01bcc1d47922",
+      "status": "clear",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p04809",
+          "form_start0": 273647,
+          "form_end0": 273667,
+          "form_text": "Ycuarupinhote aimoin"
+        },
+        {
+          "source_id": "vlb-emerson-r568-p04809",
+          "form_start0": 273703,
+          "form_end0": 273723,
+          "form_text": "Ycuarupinhote acejar"
+        }
+      ],
+      "evidence_note": "The source entry on filling or emptying a vessel to its middle supplies the aimoin and acejar constructions corresponding to both cited examples; the source explicitly includes optional nhote.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-01c77309fe30",
+      "status": "clear",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p02864",
+          "form_start0": 161962,
+          "form_end0": 161972,
+          "form_text": "Aiporûucar"
+        }
+      ],
+      "evidence_note": "The source says 'Emprestar a outrem. — Aiporûucar', directly supporting the adapted dictionary example and its recipient with supé.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-01d761877a82",
+      "status": "clear",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p06192",
+          "form_start0": 367736,
+          "form_end0": 367747,
+          "form_text": "Cetîmãbuera"
+        }
+      ],
+      "evidence_note": "The source entry 'Quarto trazeiro' gives Cetîmãbuera, the relational form corresponding to cited etymãmbûera and its animal hindquarter sense.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-02009c5f792d",
+      "status": "clear",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p02954",
+          "form_start0": 167090,
+          "form_end0": 167100,
+          "form_text": "Aipoigrung"
+        },
+        {
+          "source_id": "vlb-emerson-r568-p02955",
+          "form_start0": 167122,
+          "form_end0": 167133,
+          "form_text": "Aiepoigrûng"
+        }
+      ],
+      "evidence_note": "Two consecutive source entries give the non-reflexive and reflexive po'y-rung forms for adorning with beads or a necklace, matching the cited pair despite modernized segmentation and translation.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-0216e0269104",
+      "status": "ambiguous",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p02720",
+          "form_start0": 152261,
+          "form_end0": 152269,
+          "form_text": "Giboyuçû"
+        }
+      ],
+      "evidence_note": "Giboyuçû is a strong formal match, but the source gloss is only 'Drago, ou dragão' and also offers Boyuçû. The fragment does not establish the dictionary's specific large river-boa zoological sense.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    },
+    {
+      "case_id": "v3-0228f22422b8",
+      "status": "clear",
+      "targets": [
+        {
+          "source_id": "vlb-emerson-r568-p01330",
+          "form_start0": 72246,
+          "form_end0": 72262,
+          "form_text": "Guebirãyarinhote"
+        }
+      ],
+      "evidence_note": "The source explicitly labels Guebirãyarinhote an adverb meaning 'pollos cabelos' and gives the same aico example and about-to-leave situation. The broader coercive glosses are interpretive, but the association itself is clear.",
+      "reviewer_type": "assistant",
+      "human_verified": false
+    }
+  ]
+}

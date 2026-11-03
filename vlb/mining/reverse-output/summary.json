@@ -1,0 +1,64 @@
+{
+  "algorithm": {
+    "ambiguity_margin": 0.035,
+    "dictionary_scope": "headword search over rows marked t=1; frozen V2 evidence retained for cited rows in every dictionary section",
+    "generated_surface_penalty": 0.02,
+    "max_gram_candidates": 80,
+    "max_headword_only_candidates_per_source": 8,
+    "max_shortlist_per_span": 4,
+    "minimum_key_length": 3,
+    "minimum_similarity_long": 0.84,
+    "minimum_similarity_medium": 0.87,
+    "minimum_similarity_short": 0.91,
+    "no_semantic_evidence_penalty": 0.03,
+    "scores_are_probabilities": false,
+    "version": "vlb-source-reverse-v1"
+  },
+  "artifact": "source-dictionary-concordance.json.gz",
+  "artifact_sha256": "62ef0dccae2c70e61bc65b4af8b7ca9adc304e9058d35385106cd6edd9baed51",
+  "counts": {
+    "candidate_links_retained": 24111,
+    "candidate_review_status": {
+      "reviewed": 2,
+      "unreviewed": 24109
+    },
+    "dictionary_headword_search_rows": 8293,
+    "dictionary_rows": 13922,
+    "dictionary_search_forms": 16195,
+    "fully_covered_records": 0,
+    "partially_reviewed_records": 2,
+    "records_by_evidence_method": {
+      "dictionary_headword_form": 4720,
+      "v2_citation_candidate": 6199
+    },
+    "records_with_candidates": 6720,
+    "source_records": 7534,
+    "status": {
+      "ambiguous": 2949,
+      "candidate_linked": 3771,
+      "unmatched": 814
+    },
+    "unresolved_records": 3763
+  },
+  "default_browser_payload": false,
+  "frozen_v1_v2_modified": false,
+  "provenance": {
+    "citation_links_sha256": "a531ca21ef2bb8f2bbaa1257b882dbdc82b91894b9c823ba8710688bfdb5ff93",
+    "dictionary_sha256": "d235a7961961b58fcfbb93362bc3acb9b7f7b7e823196dca5763ef3e7fd16f53",
+    "document_revision": "568",
+    "ocr_layout_sha256": "0f8368047b4c297a771127a97c7be93f93cf9336fda532221f7b95956448fd35",
+    "offsets": "zero-based Unicode character offsets, half-open; in this snapshot characters are all BMP",
+    "orthography_code_sha256": "ed96dd603cb3d92fbf18e0f58b04a48bdf64cb872f8c24623d6a5620146d9ebc",
+    "page_alignment_sha256": "1fc799dc65f5506da10cc101fc1434ef859cb4a75ce3b0252f06a6f282395a02",
+    "reverse_concordance_code_sha256": "032159dd9f323485bc76171c0224269fe4ac8332e0d45bbb50d02e139a452c21",
+    "shared_pipeline_code_sha256": "835dfa2dd1827cd6417c7ea21b6e4630284634f0b994d6c94a292f5337f9b459",
+    "source_text_sha256": "0be22fae2f181e344963590add1016670ba12706af675b51f21cf7571d974fb9",
+    "v2_candidates_sha256": "84046e637fc7752f7866d4cbd75774516a3197972cc426af6d2ff71ddf3e8b8a",
+    "v2_model_sha256": "a999beb9b043db8cf09bf56426639273209519004268781fd92154669a0a4601",
+    "v2_prediction_model_kind": "prior",
+    "v2_prediction_model_sha256": "33c894b420ee8b8a4aa7332cd44d15fde3a1f79fe6e59607dbfb7aed828693f9",
+    "viewer_manifest_sha256": "269f75bffa9b98a446f9c02f0ee6b41db11b5d6ff14a87751b776e3d3db394ab"
+  },
+  "schema_version": 1,
+  "uncompressed_payload_sha256": "f769444e31a6bae93e299ce8f7b6fc4f5bcdf8768d7c39dbd32cb4e678278c4b"
+}

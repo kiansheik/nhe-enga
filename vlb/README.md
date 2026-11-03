@@ -22,7 +22,10 @@ a transcription paragraph. The reader also accepts `page=II-078`.
 the original single-page view. `focus=auto` asks for an evidence-supported OCR
 target. Selecting a proposed target does not accept the lexical association.
 Repeated references that cannot be distinguished safely show citation choices.
-There is no standalone VLB link in the homepage navigation.
+On narrow screens, `surface=text` and `surface=scan` preserve an explicitly
+chosen surface. A manual candidate alternative also records `target_start` and
+`target_end`, so reloading a shared link cannot silently replace it with the
+automatic top span. There is no standalone VLB link in the homepage navigation.
 
 ## Reading and reviewing
 
@@ -31,23 +34,40 @@ There is no standalone VLB link in the homepage navigation.
   Pages load as needed; prepending preserves the visible page, and distant scan
   images are released. The URL tracks the current page without filling browser
   history with scroll events. Switch back to **Página a página** at any point.
+- Phones and portrait tablets show one primary surface with a compact
+  **Transcrição / Fac-símile** switch. Dictionary links open the selected text
+  first and defer the scan image until requested. Each surface keeps its own
+  scroll position; landscape hides secondary chrome to maximize reading space.
 - Select a transcription paragraph to highlight its approximate OCR lines on
-  the scan. Open the OCR reading to compare the recognition with the image.
+  the scan. Exact supported expressions are marked in the source text and use
+  narrowed OCR lines where available; an accepted text span without a safe OCR
+  target remains navigable without fabricating a whole-paragraph scan box.
 - Open the Navarro tab to inspect citations to the current page. Proposed
-  source associations remain visibly labeled. The two assisted reviews name
-  the specific source form and do not claim that a whole paragraph is covered.
-- Dictionary links automatically select a line when the saved evidence supports
-  a unique target. The helper prefers reviewed associations, otherwise requires
-  distinct form/context or form/OCR evidence and aligned OCR on the cited page.
-  It narrows the highlight to form-bearing OCR runs where possible. Ambiguous,
-  weak, or missing matches retain manual choices and never choose the first
-  same-page citation silently.
+  associations appear when their paragraph is selected; candidate details
+  disclose exact alternatives, evidence, review reasons, and ranking scores as
+  non-probabilities. Six accepted correction decisions project seven exact
+  spans; ambiguous and not-found decisions retain their uncertainty.
+- Dictionary links automatically select a line only under the high-precision
+  V3 policy: a frozen `suggested` candidate needs an exact source span, narrowed
+  OCR lines, independent quotation or sense context, a stable page boundary,
+  and a non-common form. Inferred prefix hypotheses remain manual after the
+  fresh blind review exposed an ambiguous false positive.
+- **Corrigir correspondência** preserves existing spans or accepts a new exact
+  source selection. Saving is explicitly browser-local. Submission opens a
+  prefilled GitHub issue without frontend credentials; export/import remains a
+  fallback, and a manually dispatched workflow validates the untrusted payload
+  before opening a review PR. The append-only ledger keeps revision history and
+  multiple accepted spans.
+- Approved ledger revisions are also scored against the latest proposals and
+  production navigation policy by `node vlb/evaluate_corrections.cjs`. The
+  checked development report removes ledger overrides before scoring and fails
+  its high-precision gate on any false-positive automatic target.
 - Search across the transcription and cited dictionary headwords. For split
   paragraphs, a match within a continuation opens the page containing the words.
 - Record observations in the Anotações tab. Notes stay in browser localStorage;
-  export JSON to preserve or share them. Each note carries its own source and
-  dictionary hashes. There is no remote submission or modification of the
-  Google Doc or dictionary.
+  export JSON to preserve or share them. Notes are distinct from structured
+  corrections. Neither path modifies Emerson's transcription or Navarro's
+  dictionary snapshot.
 
 The 279 text pages yield 7,688 exact fragments, including 11 split paragraphs.
 The inventory contains 6,124 citation occurrences, 6,164 valid page memberships,
@@ -68,7 +88,10 @@ digitized by Renato Nicolai and hosted by the
 ## Data and deployment
 
 `python vlb/build_data.py` deterministically rebuilds the compressed page files
-and search indexes from `source/`, without network access or the full PDF.
+and search indexes from `source/`, the frozen V3 candidates, and the validated
+correction ledger, without network access or the full PDF. The 6,164 proposal
+records become compact page-scoped associations; the 8+ MiB audit output is not
+downloaded by the reader, and every compressed page remains under 20 KiB.
 See [the source documentation](source/README.md) for provenance, coordinate
 conventions and the separate pagination, OCR and lexical evidence layers.
 The reader loads only the current page; search indexes load on first search.
@@ -79,6 +102,11 @@ the reader honors the build's `image-formats.json` and defaults to PNG in a
 source checkout. Viewer assets belong to the offline core pack, and scans
 remain in the existing `source-vlb` pack.
 
+The separate reverse concordance covers all 7,534 lexicographic source records
+and stays outside browser/offline payloads. Rebuild it with
+`python3 vlb/build_reverse_concordance.py`; recomputed counts and limitations
+are in `mining/reverse-output/REPORT.md`.
+
 Changes to `docs/dict-conjugated.json.gz` must update this pinned concordance
 before its row deep links can be trusted; the data regression checks the hash.
 
@@ -88,6 +116,12 @@ before its row deep links can be trusted; the data regression checks the hash.
 node --test tests/vlb_dictionary_links.test.cjs tests/dictionary_formatting.test.cjs
 python tests/test_vlb_citation_inventory.py
 python tests/test_vlb_viewer_data.py
+python -m unittest discover -s tests -p 'test_vlb_mining*.py' -v
+python -m unittest tests.test_vlb_corrections tests.test_vlb_reverse_concordance -v
+python vlb/manage_corrections.py validate
+node vlb/evaluate_corrections.cjs --check
+python vlb/mining/benchmark-v3/validate_annotations.py
+python vlb/mining/evaluate_v3.py
 node --test tests/vlb_citation_targets.test.cjs
 node tests/vlb_viewer_browser.cjs
 ```
@@ -97,7 +131,9 @@ and `VLB_CHROMIUM_PATH` to use an existing installation. It serves the checkout
 locally, tests desktop and mobile layouts, source and citation navigation,
 OCR overlays, split-paragraph search, notes and exports, optimized image
 extensions, continuous append/prepend and synchronization, occurrence targeting,
-and ambiguity fallbacks. Scans 17, 18, 19, 25, 26, 161, 231, 232, 292 and 303
+exact-span marks, manual-alternative links, correction save/submit/export/import,
+strict correction dry runs, responsive correction geometry, and ambiguity
+fallbacks. Scans 17, 18, 19, 25, 26, 161, 231, 232, 292 and 303
 are used in a sparse checkout; other continuous neighbors use image-only test
 fixtures with real page data. `VLB_QA_DIR` optionally selects a folder for
 screenshots and results.

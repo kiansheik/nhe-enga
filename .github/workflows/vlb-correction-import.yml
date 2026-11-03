@@ -1,0 +1,91 @@
+name: VLB correction import
+
+on:
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: GitHub issue containing one fenced vlb-correction-submission-1 payload
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  issues: read
+  pull-requests: write
+
+concurrency:
+  group: vlb-correction-${{ inputs.issue_number }}
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate issue number
+        env:
+          ISSUE_NUMBER: ${{ inputs.issue_number }}
+        run: |
+          case "$ISSUE_NUMBER" in
+            ''|*[!0-9]*) echo "issue_number must contain digits only" >&2; exit 2 ;;
+          esac
+      - name: Read the untrusted issue body
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ inputs.issue_number }}
+        run: gh issue view "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --json body --jq .body > "$RUNNER_TEMP/vlb-correction-issue.md"
+      - name: Validate and import the structured payload
+        run: python3 vlb/manage_corrections.py import --input "$RUNNER_TEMP/vlb-correction-issue.md" --issue-body
+      - name: Run correction-ledger regressions
+        run: python3 -m unittest tests.test_vlb_corrections -v
+      - name: Check whether the event was already imported
+        id: change
+        run: |
+          if git diff --quiet -- vlb/corrections/ledger.jsonl; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Rebuild and test the reader projection
+        if: steps.change.outputs.changed == 'true'
+        run: |
+          python3 vlb/build_data.py
+          node vlb/evaluate_corrections.cjs --write
+          python3 tests/test_vlb_viewer_data.py
+          node --test tests/vlb_citation_targets.test.cjs
+          node --test tests/vlb_correction_regressions.test.cjs
+          node vlb/evaluate_corrections.cjs --check
+      - name: Create the review branch
+        if: steps.change.outputs.changed == 'true'
+        env:
+          ISSUE_NUMBER: ${{ inputs.issue_number }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          branch="corrections/vlb-issue-${ISSUE_NUMBER}-${RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add vlb/corrections/ledger.jsonl vlb/data vlb/mining/correction-regressions
+          git commit -m "Import VLB correction from issue #${ISSUE_NUMBER}"
+          git push --set-upstream origin "$branch"
+          echo "BRANCH=$branch" >> "$GITHUB_ENV"
+      - name: Open a reviewable pull request
+        if: steps.change.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ inputs.issue_number }}
+        run: |
+          gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --title "Import VLB correction from issue #${ISSUE_NUMBER}" \
+            --body "Validated ledger append from #${ISSUE_NUMBER}. Review is still required; this workflow does not merge or deploy."

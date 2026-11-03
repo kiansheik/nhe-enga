@@ -17,10 +17,15 @@ on:
       - 'tests/dictionary_formatting.test.cjs'
       - 'tests/vlb_dictionary_links.test.cjs'
       - 'tests/vlb_citation_targets.test.cjs'
+      - 'tests/vlb_correction_regressions.test.cjs'
       - 'tests/test_vlb_citation_inventory.py'
       - 'tests/test_vlb_viewer_data.py'
       - 'tests/test_vlb_orthography.py'
       - 'tests/test_vlb_mining_pipeline.py'
+      - 'tests/test_vlb_mining_v2.py'
+      - 'tests/test_vlb_mining_v3*.py'
+      - 'tests/test_vlb_corrections.py'
+      - 'tests/test_vlb_reverse_concordance.py'
       - 'tests/vlb_viewer_browser.cjs'
       - 'tests/dictionary_formatting_browser.py'
       - '.github/workflows/dictionary-formatting.yml'
@@ -64,10 +69,17 @@ jobs:
             /tests/dictionary_formatting.test.cjs
             /tests/vlb_dictionary_links.test.cjs
             /tests/vlb_citation_targets.test.cjs
+            /tests/vlb_correction_regressions.test.cjs
             /tests/test_vlb_citation_inventory.py
             /tests/test_vlb_viewer_data.py
             /tests/test_vlb_orthography.py
             /tests/test_vlb_mining_pipeline.py
+            /tests/test_vlb_mining_v2.py
+            /tests/test_vlb_mining_v3.py
+            /tests/test_vlb_mining_v3_evaluation.py
+            /tests/test_vlb_mining_v3_fixture.py
+            /tests/test_vlb_corrections.py
+            /tests/test_vlb_reverse_concordance.py
             /tests/vlb_viewer_browser.cjs
             /tests/dictionary_formatting_browser.py
             /vlb/
@@ -80,11 +92,26 @@ jobs:
       - run: node --test tests/dictionary_formatting.test.cjs
       - run: node --test tests/vlb_dictionary_links.test.cjs
       - run: node --test tests/vlb_citation_targets.test.cjs
+      - run: node --test tests/vlb_correction_regressions.test.cjs
       - run: python tests/test_vlb_citation_inventory.py
+      - name: Rebuild deterministic VLB reader data
+        run: |
+          python vlb/build_data.py
+          git diff --exit-code -- vlb/data
       - run: python tests/test_vlb_viewer_data.py
       - run: python -m unittest discover -s tests -p 'test_vlb_orthography.py' -v
-      - run: python -m unittest discover -s tests -p 'test_vlb_mining_pipeline.py' -v
+      - run: python -m unittest discover -s tests -p 'test_vlb_mining*.py' -v
+      - run: python -m unittest tests.test_vlb_reverse_concordance -v
+      - run: python -m unittest tests.test_vlb_corrections -v
+      - run: python vlb/manage_corrections.py validate
+      - run: node vlb/evaluate_corrections.cjs --check
       - run: python vlb/mining/benchmark/validate_fixture.py
+      - run: python vlb/mining/benchmark-v3/validate_fixture.py
+      - run: python vlb/mining/benchmark-v3/validate_annotations.py
+      - name: Reproduce frozen V3 evaluation
+        run: |
+          python vlb/mining/evaluate_v3.py
+          git diff --exit-code -- vlb/mining/output-v3/REPORT.md vlb/mining/output-v3/test_labels-evaluation.json
       - run: python -m pip install playwright==1.55.0
       - run: npm install --no-save --package-lock=false playwright@1.55.0
       - run: python -m playwright install --with-deps chromium

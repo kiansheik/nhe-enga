@@ -1,0 +1,94 @@
+{
+  "purpose": "Frozen pre-V3 live-reader paragraph ranking used only for comparison in the V3 evaluation. Captured from the verified recovery commit before V3 reader projection; it is not model training evidence.",
+  "rankings": {
+    "v3-001205254cd2": [
+      "vlb-emerson-r568-p01699"
+    ],
+    "v3-002693c648d6": [
+      "vlb-emerson-r568-p05512",
+      "vlb-emerson-r568-p05513",
+      "vlb-emerson-r568-p05510"
+    ],
+    "v3-00504394c4ec": [
+      "vlb-emerson-r568-p00619",
+      "vlb-emerson-r568-p00620"
+    ],
+    "v3-00ad3f004818": [],
+    "v3-00b8a08135f7": [
+      "vlb-emerson-r568-p02846",
+      "vlb-emerson-r568-p02841"
+    ],
+    "v3-00b9feb7c49a": [
+      "vlb-emerson-r568-p04192",
+      "vlb-emerson-r568-p04193"
+    ],
+    "v3-00c3fc7f97d1": [
+      "vlb-emerson-r568-p03640",
+      "vlb-emerson-r568-p03641"
+    ],
+    "v3-00e05b569656": [],
+    "v3-00e9315804ac": [
+      "vlb-emerson-r568-p03117"
+    ],
+    "v3-00ef0c7cb881": [
+      "vlb-emerson-r568-p06272",
+      "vlb-emerson-r568-p06271"
+    ],
+    "v3-0106d0a865cb": [
+      "vlb-emerson-r568-p06762",
+      "vlb-emerson-r568-p06758",
+      "vlb-emerson-r568-p06759"
+    ],
+    "v3-010825f022c3": [
+      "vlb-emerson-r568-p00675",
+      "vlb-emerson-r568-p00674",
+      "vlb-emerson-r568-p00676"
+    ],
+    "v3-0144b11472cc": [],
+    "v3-014fee07b366": [
+      "vlb-emerson-r568-p06718",
+      "vlb-emerson-r568-p06717",
+      "vlb-emerson-r568-p06707"
+    ],
+    "v3-0154aee6ddb7": [
+      "vlb-emerson-r568-p07376",
+      "vlb-emerson-r568-p07377"
+    ],
+    "v3-017c12922a74": [
+      "vlb-emerson-r568-p05272",
+      "vlb-emerson-r568-p05268",
+      "vlb-emerson-r568-p05269"
+    ],
+    "v3-017e7bbbc691": [
+      "vlb-emerson-r568-p05544",
+      "vlb-emerson-r568-p05545",
+      "vlb-emerson-r568-p05546"
+    ],
+    "v3-0195b9a08ea9": [
+      "vlb-emerson-r568-p03258",
+      "vlb-emerson-r568-p03257"
+    ],
+    "v3-01bcc1d47922": [
+      "vlb-emerson-r568-p04802",
+      "vlb-emerson-r568-p04809"
+    ],
+    "v3-01c77309fe30": [
+      "vlb-emerson-r568-p02864",
+      "vlb-emerson-r568-p02863"
+    ],
+    "v3-01d761877a82": [
+      "vlb-emerson-r568-p06191",
+      "vlb-emerson-r568-p06192",
+      "vlb-emerson-r568-p06176"
+    ],
+    "v3-02009c5f792d": [
+      "vlb-emerson-r568-p02954"
+    ],
+    "v3-0216e0269104": [],
+    "v3-0228f22422b8": [
+      "vlb-emerson-r568-p01330"
+    ]
+  },
+  "schema_version": 1,
+  "source_commit": "b5df369af6a7d2db72f933746ca6b5c13a44310d"
+}

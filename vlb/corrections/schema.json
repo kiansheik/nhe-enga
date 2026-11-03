@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/kiansheik/nhe-enga/blob/main/vlb/corrections/schema.json",
+  "title": "VLB correction ledger event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "event_id",
+    "correction_id",
+    "revision",
+    "supersedes_event_id",
+    "recorded_at",
+    "citation",
+    "page",
+    "selected_spans",
+    "disposition",
+    "previous_proposal",
+    "review",
+    "snapshots"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "event_id": {"type": "string", "pattern": "^vlb-correction-[0-9a-f]{20}-r[0-9]{4}$"},
+    "correction_id": {"type": "string", "pattern": "^vlb-correction-[0-9a-f]{20}$"},
+    "revision": {"type": "integer", "minimum": 1, "maximum": 9999},
+    "supersedes_event_id": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^vlb-correction-[0-9a-f]{20}-r[0-9]{4}$"}
+      ]
+    },
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "citation": {"$ref": "#/$defs/citation"},
+    "page": {"$ref": "#/$defs/page"},
+    "selected_spans": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/span"}
+    },
+    "disposition": {
+      "enum": ["accepted", "rejected", "ambiguous", "not_found", "unresolved"]
+    },
+    "previous_proposal": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/proposal"}
+      ]
+    },
+    "review": {"$ref": "#/$defs/review"},
+    "snapshots": {"$ref": "#/$defs/snapshots"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"revision": {"const": 1}}},
+      "then": {"properties": {"supersedes_event_id": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"disposition": {"const": "accepted"}}},
+      "then": {"properties": {"selected_spans": {"minItems": 1}}}
+    },
+    {
+      "if": {"properties": {"disposition": {"const": "ambiguous"}}},
+      "then": {"properties": {"selected_spans": {"minItems": 2}}}
+    },
+    {
+      "if": {"properties": {"disposition": {"enum": ["rejected", "not_found"]}}},
+      "then": {"properties": {"selected_spans": {"maxItems": 0}}}
+    }
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "box": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {"type": "number", "minimum": 0, "maximum": 1}
+    },
+    "citation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["citation_id", "entry_index", "legacy_id", "headword", "homonym", "definition_sha256", "citation_start0", "citation_end0"],
+      "properties": {
+        "citation_id": {"type": "string", "minLength": 1},
+        "entry_index": {"type": "integer", "minimum": 0},
+        "legacy_id": {"type": ["integer", "null"], "minimum": 0},
+        "headword": {"type": "string", "minLength": 1},
+        "homonym": {"type": "string"},
+        "definition_sha256": {"$ref": "#/$defs/sha256"},
+        "citation_start0": {"type": "integer", "minimum": 0},
+        "citation_end0": {"type": "integer", "minimum": 1}
+      }
+    },
+    "page": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["page_id", "volume", "printed_page"],
+      "properties": {
+        "page_id": {"type": "string", "pattern": "^(?:I|II)-[0-9]{3}$"},
+        "volume": {"enum": ["I", "II"]},
+        "printed_page": {"type": "integer", "minimum": 1}
+      }
+    },
+    "ocr_target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["line_id", "box", "box_source", "previous_box"],
+      "properties": {
+        "line_id": {"type": "string", "pattern": "^ocr-[0-9]{3}-[0-9]{3}$"},
+        "box": {"$ref": "#/$defs/box"},
+        "box_source": {"enum": ["pinned_ocr", "reviewer_correction"]},
+        "previous_box": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "#/$defs/box"}
+          ]
+        }
+      }
+    },
+    "span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "start0", "end0", "text", "ocr_targets"],
+      "properties": {
+        "source_id": {"type": "string", "pattern": "^vlb-emerson-r[0-9]+-p[0-9]{5}$"},
+        "start0": {"type": "integer", "minimum": 0},
+        "end0": {"type": "integer", "minimum": 1},
+        "text": {"type": "string", "minLength": 1},
+        "ocr_targets": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/ocr_target"}
+        }
+      }
+    },
+    "proposal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm_version", "output_sha256", "status", "source_id", "start0", "end0", "text"],
+      "properties": {
+        "algorithm_version": {"type": "string", "minLength": 1},
+        "output_sha256": {"$ref": "#/$defs/sha256"},
+        "status": {"enum": ["suggested", "needs_review", "weak_candidates", "no_candidate", "reviewed", "unavailable"]},
+        "source_id": {"type": ["string", "null"]},
+        "start0": {"type": ["integer", "null"], "minimum": 0},
+        "end0": {"type": ["integer", "null"], "minimum": 1},
+        "text": {"type": ["string", "null"]}
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reviewer_type", "reviewer", "provenance", "notes", "approved_for_regression", "approved_for_training"],
+      "properties": {
+        "reviewer_type": {"enum": ["human", "assistant", "automated"]},
+        "reviewer": {"type": "string", "minLength": 1},
+        "provenance": {"type": "string", "minLength": 1},
+        "notes": {"type": "string", "minLength": 1},
+        "approved_for_regression": {"type": "boolean"},
+        "approved_for_training": {"type": "boolean"}
+      }
+    },
+    "snapshots": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_text_sha256", "dictionary_snapshot_sha256", "citation_links_sha256", "page_alignment_sha256", "ocr_layout_sha256"],
+      "properties": {
+        "source_text_sha256": {"$ref": "#/$defs/sha256"},
+        "dictionary_snapshot_sha256": {"$ref": "#/$defs/sha256"},
+        "citation_links_sha256": {"$ref": "#/$defs/sha256"},
+        "page_alignment_sha256": {"$ref": "#/$defs/sha256"},
+        "ocr_layout_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}

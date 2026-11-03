@@ -16,17 +16,21 @@ import re
 import unicodedata
 
 from .orthography import align, compile_model, prior_model, score
+from .quotation import parse_quotations
 
 
 CONFIG = {
-    "version": "vlb-page-ranker-v1",
-    "paragraph_span_shortlist": 3,
+    "version": "vlb-page-ranker-v3",
+    "paragraph_span_shortlist": 6,
     "surface_shortlist": 2,
+    "span_alternatives": 3,
     "top_k": 3,
     "form_weight": 70.0,
     "portuguese_context_weight": 20.0,
     "quotation_context_weight": 18.0,
-    "quoted_surface_weight": 4.0,
+    "quoted_surface_weight": 8.0,
+    "whole_quotation_weight": 15.0,
+    "local_quotation_weight": 12.0,
     "suggestion_min_similarity": 0.84,
     "suggestion_min_margin": 5.0,
     "short_form_min_context": 0.34,
@@ -163,41 +167,18 @@ def headword_forms(headword):
 
 
 def quotation_spans(context):
-    """Conservative editorial example detection; these remain retrieval cues.
-
-    Recognize text immediately before the dictionary's ' - ' translation
-    separator. This is an explicitly recorded heuristic, not a language tag.
-    """
-    result = []
-    for match in re.finditer(r"\s[-–—]\s", context):
-        before = context[:match.start()]
-        start = max(before.rfind(":"), before.rfind(";"), before.rfind("●")) + 1
-        tail = before[start:].strip()
-        start += len(before[start:]) - len(before[start:].lstrip())
-        # Initial grammatical/etymological descriptions are not quotations.
-        if not tail or "(" in tail or ")" in tail or len(tail) > 240:
-            continue
-        chunks = list(re.finditer(r"(?<=[.!?])\s+(?=[A-ZÁÉÍÓÚÂÊÎÔÛÃẼĨÕŨ])", tail))
-        if chunks:
-            cut = chunks[-1].end()
-            start += cut
-            tail = tail[cut:]
-        tail = tail.rstrip(" .?!…")
-        if tail and len(list(word_spans(tail))) <= 20:
-            result.append({"text": tail, "context_start": start,
-                           "context_end": start + len(tail),
-                           "kind": "editorial_translation_separator_heuristic"})
-    return result
+    """Compatibility wrapper; callers needing uncertainty use parse_quotations."""
+    return parse_quotations(context)["quotes"]
 
 
-def make_surfaces(citation, definition):
+def make_surfaces(citation, definition, quotation_analysis=None):
     """Spelling and generated surface hypotheses have separate provenance."""
     bases = headword_forms(citation["headword"])
     surfaces = []
 
     def add(form, kind, penalty=0.0, **evidence):
         form = form.strip()
-        if not form or len(form) > 55:
+        if not form or len(form) > 80:
             return
         surfaces.append({"form": form, "kind": kind, "penalty": penalty,
                          **evidence})
@@ -229,31 +210,80 @@ def make_surfaces(citation, definition):
                 prefix=prefix, stem=base, linguistic_analysis="unreviewed",
                 license="grammatical label somewhere in the dictionary entry; sense-specific applicability unreviewed")
 
-    quotes = quotation_spans(citation["context"])
+    quotes = (quotation_analysis or parse_quotations(citation["context"]))["quotes"]
     base_keys = [retrieval_key(b) for b in bases]
-    for quote in quotes:
+    for quote_index, quote in enumerate(quotes):
         words = list(word_spans(quote["text"]))
+        required = [(word, start, end) for word, start, end in words
+                    if not any(a <= quote["context_start"] + start < b
+                               for a, b in quote.get("optional_intervals", []))]
         for i, (_, start, end) in enumerate(words):
-            for width in (1, 2):
+            for width in (1, 2, 3, 4):
                 if i + width > len(words):
                     continue
                 end = words[i + width - 1][2]
                 value = quote["text"][start:end]
+                # Do not invent a parenthesis-free or discontinuous surface.
+                if any(char in value for char in "()[]"):
+                    continue
+                if any(a <= quote["context_start"] + start < b
+                       for a, b in quote.get("optional_intervals", [])):
+                    continue
                 key = retrieval_key(value)
-                if any(key == b or len(b) >= 3 and
-                       (b in key and len(key) <= len(b) + 7 or
-                        cheap_similarity(key, b) >= .64) for b in base_keys):
+                whole = bool(required and start == required[0][1] and end == required[-1][2]
+                             and len(required) == width)
+                related = any(key == b or len(b) >= 3 and
+                              (b in key or cheap_similarity(key, b) >= .64) or
+                              bool(b) and len(b) < 3 and "-" in value and b in key
+                              for b in base_keys)
+                # A literal complete example is independent evidence even when
+                # its morphology makes it unlike the dictionary's bare lemma.
+                if whole or related:
                     add(value, "quoted_surface_hypothesis", .01,
                         context_start=quote["context_start"] + start,
                         context_end=quote["context_start"] + end,
-                        quotation_detection=quote["kind"])
+                        quotation_detection=quote["kind"], quote_index=quote_index,
+                        whole_quotation=whole)
+                # VLB questions can write a modern multiword interrogative as
+                # one historical construction and realize the question particle
+                # in the fused form. Keep this as an inspectable hypothesis,
+                # licensed only by a complete literal question; it is never a
+                # general spelling rewrite or an editorial acceptance.
+                if whole and citation["context"][quote["context_end"]:].lstrip().startswith("?"):
+                    fused = "".join(word for word, _, _ in required) + "pe"
+                    add(fused, "quoted_question_fusion_hypothesis", .035,
+                        context_start=quote["context_start"], context_end=quote["context_end"],
+                        quotation_detection=quote["kind"], quote_index=quote_index,
+                        whole_quotation=True, literal_quote=quote["text"],
+                        transformation="join literal words and append interrogative pe")
     # Keep the least speculative provenance when identical literal forms recur.
     unique = {}
     for surface in sorted(surfaces, key=lambda x: x["penalty"]):
         saved = unique.setdefault(canonical(surface["form"]), surface)
-        if surface["kind"] == "quoted_surface_hypothesis":
+        if surface["kind"] in ("quoted_surface_hypothesis", "quoted_question_fusion_hypothesis"):
             saved.setdefault("quotation_occurrences", []).append({
-                "text": surface["form"], "context_start": surface["context_start"], "context_end": surface["context_end"]})
+                "text": surface.get("literal_quote", surface["form"]), "context_start": surface["context_start"],
+                "context_end": surface["context_end"], "quote_index": surface["quote_index"],
+                "whole_quotation": surface["whole_quotation"]})
+    # Apply the already licensed, bounded prefix search to an explicitly cited
+    # compound as well as the bare headword. The prefixed form is a hypothesis,
+    # not a dictionary quotation or a morphological-engine analysis. Preserve
+    # the literal compound's separate offsets; do not remove its final vowel.
+    for surface in list(unique.values()):
+        if "-" not in surface["form"] or len(list(word_spans(surface["form"]))) != 1:
+            continue
+        if not surface.get("quotation_occurrences"):
+            continue
+        for prefix in dict.fromkeys(prefixes):
+            form = prefix + surface["form"]
+            if len(form) <= 80:
+                unique.setdefault(canonical(form), {
+                    "form": form, "kind": "quoted_compound_prefix_hypothesis", "penalty": .035,
+                    "prefix": prefix, "stem": surface["form"],
+                    "linguistic_analysis": "unreviewed",
+                    "license": "same bounded entry-label prefix hypothesis as bare lemma; compound applicability unreviewed",
+                    "quotation_occurrences": surface["quotation_occurrences"],
+                })
     return list(unique.values()), quotes
 
 
@@ -280,7 +310,7 @@ def fragment_features(fragment, unit):
         if absolute < body_start:
             continue
         body_words.append(word)
-        for width in (1, 2, 3):
+        for width in (1, 2, 3, 4):
             if i + width > len(words):
                 continue
             right = words[i + width - 1][2]
@@ -288,7 +318,7 @@ def fragment_features(fragment, unit):
                                  for j in range(i, i + width - 1)):
                 continue
             actual = text[start:right]
-            if len(actual) > 55:
+            if len(actual) > 80:
                 continue
             key = retrieval_key(actual)
             if not key:
@@ -355,7 +385,10 @@ def quote_support(quotes, feature, primary_keys, model):
     source_words = [(w, retrieval_key(w)) for w in feature.body_words]
     matched, total = [], 0
     for quote in quotes:
-        for word, _, _ in word_spans(quote["text"]):
+        for word, start, _ in word_spans(quote["text"]):
+            if any(a <= quote["context_start"] + start < b
+                   for a, b in quote.get("optional_intervals", [])):
+                continue
             key = retrieval_key(word)
             if len(key) < 3 or fold(word) in STOP or key in primary_keys:
                 continue
@@ -367,6 +400,64 @@ def quote_support(quotes, feature, primary_keys, model):
                 matched.append({"query": word, "historical_token": target,
                                 "weighted_similarity": round(best, 3), "role": "companion_word"})
     return len(matched) / max(1, total), matched
+
+
+def local_quote_support(quotes, surface, feature, span, model):
+    """Match ordered companion words near this exact occurrence, not its lemma.
+
+    Optional example arguments may be absent in the source. Required companions
+    are matched on the same side of the proposed span, without reusing a token.
+    All matches retain literal source offsets and editorial context offsets.
+    """
+    tokens = [s for s in feature.spans if s["word_count"] == 1]
+    best_score, best_matches, best_total = 0.0, [], 0
+    for occurrence in surface.get("quotation_occurrences", []):
+        quote = quotes[occurrence["quote_index"]]
+        companions = []
+        for word, left, right in word_spans(quote["text"]):
+            a, b = quote["context_start"] + left, quote["context_start"] + right
+            if a < occurrence["context_end"] and b > occurrence["context_start"]:
+                continue
+            if any(x <= a < y for x, y in quote.get("optional_intervals", [])):
+                continue
+            key = retrieval_key(word)
+            if len(key) < 2 or fold(word) in STOP:
+                continue
+            companions.append((word, key, a, b,
+                               "before" if b <= occurrence["context_start"] else "after"))
+        matched, used = [], set()
+        previous = {"before": -1, "after": -1}
+        for word, key, left, right, side in companions:
+            choices = [(i, token) for i, token in enumerate(tokens)
+                       if i not in used and i > previous[side] and
+                       ((side == "before" and token["end0"] <= span["start0"] and
+                         span["start0"] - token["end0"] < 90) or
+                        (side == "after" and token["start0"] >= span["end0"] and
+                         token["start0"] - span["end0"] < 90))]
+            # Restrict to the eight nearest tokens on the appropriate side.
+            choices = choices[-8:] if side == "before" else choices[:8]
+            cheap = sorted(((cheap_similarity(key, token["key"]), i, token)
+                            for i, token in choices), key=lambda p: (-p[0], p[1]))[:2]
+            found = []
+            for quick, i, token in cheap:
+                if quick >= .35:
+                    similarity = max(0.0, 1 - score(word, token["text"], model))
+                    if similarity >= (.84 if len(key) <= 3 else .78):
+                        found.append((similarity, -abs(token["start0"] - span["start0"]), i, token))
+            if found:
+                similarity, _, i, token = max(found, key=lambda x: x[:3])
+                used.add(i)
+                previous[side] = i
+                matched.append({"query": word, "context_start": left, "context_end": right,
+                                "historical_token": token["text"], "start0": token["start0"],
+                                "end0": token["end0"], "side": side,
+                                "weighted_similarity": round(similarity, 5)})
+        value = len(matched) / max(1, len(companions))
+        if value > best_score or value == best_score and len(matched) > len(best_matches):
+            best_score, best_matches, best_total = value, matched, len(companions)
+        elif not best_total:
+            best_total = len(companions)
+    return best_score, best_matches, best_total
 
 
 def ocr_target(page, fragment, actual):
@@ -414,65 +505,114 @@ def ocr_target(page, fragment, actual):
 
 
 def rank_citation(corpus, page, citation, model, config=None):
-    config = config or CONFIG
+    config = {**CONFIG, **(config or {})}
     definition = corpus.dictionary[citation["entry_index"]]["d"]
-    surfaces, quotes = make_surfaces(citation, definition)
+    quotation_analysis = parse_quotations(citation["context"])
+    surfaces, quotes = make_surfaces(citation, definition, quotation_analysis)
     variants = [(s, retrieval_key(s["form"])) for s in surfaces]
     primary_keys = {key for _, key in variants}
     query_words = content_words(citation["context"])
     primary_key = retrieval_key(citation["headword"])
     candidates = []
+
+    def scored_candidate(feature, span, surface, semantic, shared, quotation, quote_matches):
+        cost = score(surface["form"], span["text"], model)
+        similarity = max(0.0, 1 - cost - surface["penalty"] - .015 * (span["word_count"] - 1))
+        if span["common_portuguese_or_grammar_token"]:
+            similarity = max(0.0, similarity - (.30 if len(primary_key) <= 2 else .15))
+        quoted = bool(surface.get("quotation_occurrences")) and similarity >= .72
+        whole = quoted and any(o.get("whole_quotation") for o in surface["quotation_occurrences"])
+        local, matches, total = local_quote_support(quotes, surface, feature, span, model) if quoted else (0.0, [], 0)
+        value = (config["form_weight"] * similarity + config["portuguese_context_weight"] * semantic +
+                 config["quotation_context_weight"] * quotation + config["quoted_surface_weight"] * quoted +
+                 config["whole_quotation_weight"] * whole + config["local_quotation_weight"] * local)
+        fragment = feature.fragment
+        return {
+            "source_id": fragment["id"], "source_line": fragment["source_line"],
+            "ranking_score": round(value, 5), "score_is_probability": False,
+            "form_similarity": round(similarity, 5), "normalized_edit_cost": round(cost, 6),
+            "portuguese_context_score": round(semantic, 5), "portuguese_overlap": shared,
+            "quotation_context_score": round(quotation, 5), "quotation_matches": quote_matches,
+            "quoted_surface_evidence": quoted, "whole_quotation_evidence": whole,
+            "local_quotation_score": round(local, 5), "local_quotation_matches": matches,
+            "local_quotation_required_companions": total,
+            "attested_span": {k: span[k] for k in
+                ("text", "start0", "end0", "role", "word_count", "common_portuguese_or_grammar_token")},
+            "query_surface": surface,
+            "same_form_occurrences": [{"start0": item["start0"], "end0": item["end0"]}
+                                      for item in feature.spans
+                                      if canonical(item["text"]) == canonical(span["text"])],
+            "page_boundary_uncertain": fragment["boundary_uncertain"],
+            "fragment_continues_from_previous": fragment["continues_from_previous"],
+            "fragment_continues_on_next": fragment["continues_on_next"],
+            "review_status": "unreviewed",
+        }
+
     for feature in corpus.features[page["id"]]:
         semantic, shared = portuguese_context(corpus, query_words, feature)
         quotation, quote_matches = quote_support(quotes, feature, primary_keys, model)
         shortlist = []
         for span in feature.spans:
-            pairs = sorted(((cheap_similarity(key, span["key"], gb=span["grams"]) - s["penalty"], s)
-                            for s, key in variants), key=lambda p: (-p[0], p[1]["form"]))
+            pairs = []
+            for surface, key in variants:
+                quick = cheap_similarity(key, span["key"], gb=span["grams"]) - surface["penalty"]
+                whole = any(o.get("whole_quotation") for o in surface.get("quotation_occurrences", []))
+                priority = quick + (.12 if whole else .05 if surface.get("quotation_occurrences") else 0)
+                pairs.append((priority, quick, surface))
+            pairs.sort(key=lambda item: (-item[0], item[2]["form"]))
             if pairs:
                 shortlist.append((pairs[0][0], span, pairs[:config["surface_shortlist"]]))
-        shortlist.sort(key=lambda p: (-p[0], p[1]["word_count"], p[1]["start0"]))
-        best = None
-        for quick, span, pairs in shortlist[:config["paragraph_span_shortlist"]]:
-            if quick < .20:
+        shortlist.sort(key=lambda item: (-item[0], item[1]["word_count"], item[1]["start0"]))
+        # Distinct spelling shapes get a chance before duplicate occurrences
+        # consume the shortlist. Then score all occurrences of those shapes so
+        # local context can select a later repetition in a long paragraph.
+        selected_shapes = []
+        for _, span, _ in shortlist:
+            shape = canonical(span["text"])
+            if shape not in selected_shapes:
+                selected_shapes.append(shape)
+            if len(selected_shapes) >= config["paragraph_span_shortlist"]:
+                break
+        shape_set = set(selected_shapes)
+        span_options = {}
+        for _, span, pairs in shortlist:
+            if canonical(span["text"]) not in shape_set:
                 continue
-            for _, surface in pairs:
-                cost = score(surface["form"], span["text"], model)
-                similarity = max(0.0, 1 - cost - surface["penalty"] - .015 * (span["word_count"] - 1))
-                if span["common_portuguese_or_grammar_token"]:
-                    similarity = max(0, similarity - .15)
-                quote_bonus = config["quoted_surface_weight"] if surface.get("quotation_occurrences") and similarity >= .75 else 0
-                objective = similarity + quote_bonus / config["form_weight"]
-                if best is None or objective > best[4]:
-                    best = (similarity, cost, span, surface, objective)
-        if not best:
+            for _, quick, surface in pairs:
+                if quick < .20:
+                    continue
+                candidate = scored_candidate(feature, span, surface, semantic, shared, quotation, quote_matches)
+                key = (span["start0"], span["end0"])
+                previous = span_options.get(key)
+                if previous is None or candidate["ranking_score"] > previous["ranking_score"]:
+                    span_options[key] = candidate
+        ordered = sorted(span_options.values(), key=lambda item: (
+            -item["ranking_score"], -item["local_quotation_score"],
+            item["attested_span"]["word_count"], item["attested_span"]["start0"]))
+        if not ordered:
             if semantic == 0 and quotation == 0:
                 continue
-            similarity, cost, span, surface = 0.0, None, None, None
+            fragment = feature.fragment
+            candidate = {
+                "source_id": fragment["id"], "source_line": fragment["source_line"],
+                "ranking_score": round(config["portuguese_context_weight"] * semantic +
+                                       config["quotation_context_weight"] * quotation, 5),
+                "score_is_probability": False, "form_similarity": 0.0, "normalized_edit_cost": None,
+                "portuguese_context_score": round(semantic, 5), "portuguese_overlap": shared,
+                "quotation_context_score": round(quotation, 5), "quotation_matches": quote_matches,
+                "quoted_surface_evidence": False, "whole_quotation_evidence": False,
+                "local_quotation_score": 0.0, "local_quotation_matches": [],
+                "local_quotation_required_companions": 0,
+                "attested_span": None, "query_surface": None, "same_form_occurrences": [],
+                "page_boundary_uncertain": fragment["boundary_uncertain"],
+                "fragment_continues_from_previous": fragment["continues_from_previous"],
+                "fragment_continues_on_next": fragment["continues_on_next"], "review_status": "unreviewed",
+                "span_alternatives": [],
+            }
         else:
-            similarity, cost, span, surface, _ = best
-        quoted_surface = float(surface is not None and bool(surface.get("quotation_occurrences")) and similarity >= .75)
-        value = (config["form_weight"] * similarity + config["portuguese_context_weight"] * semantic +
-                 config["quotation_context_weight"] * quotation + config["quoted_surface_weight"] * quoted_surface)
-        fragment = feature.fragment
-        candidates.append({
-            "source_id": fragment["id"], "source_line": fragment["source_line"],
-            "ranking_score": round(value, 5), "score_is_probability": False,
-            "form_similarity": round(similarity, 5), "normalized_edit_cost": None if cost is None else round(cost, 6),
-            "portuguese_context_score": round(semantic, 5), "portuguese_overlap": shared,
-            "quotation_context_score": round(quotation, 5), "quotation_matches": quote_matches,
-            "quoted_surface_evidence": bool(quoted_surface),
-            "attested_span": None if not span else {k: span[k] for k in
-                ("text", "start0", "end0", "role", "word_count", "common_portuguese_or_grammar_token")},
-            "query_surface": surface,
-            "same_form_occurrences": [] if not span else [
-                {"start0": s["start0"], "end0": s["end0"]} for s in feature.spans
-                if canonical(s["text"]) == canonical(span["text"])],
-            "page_boundary_uncertain": fragment["boundary_uncertain"],
-            "fragment_continues_from_previous": fragment["continues_from_previous"],
-            "fragment_continues_on_next": fragment["continues_on_next"],
-            "review_status": "unreviewed",
-        })
+            candidate = ordered[0]
+            candidate["span_alternatives"] = ordered[1:1 + config["span_alternatives"]]
+        candidates.append(candidate)
     candidates.sort(key=lambda c: (-c["ranking_score"], c["source_line"]))
     candidates = candidates[:max(config["top_k"], 2)]
     margin = candidates[0]["ranking_score"] - candidates[1]["ranking_score"] if len(candidates) > 1 else None
@@ -484,7 +624,8 @@ def rank_citation(corpus, page, citation, model, config=None):
             reasons.append("weak_form_fit")
         if margin is None or margin < config["suggestion_min_margin"]:
             reasons.append("close_competing_passage")
-        if len(primary_key) <= 4 and max(top["portuguese_context_score"], top["quotation_context_score"]) < config["short_form_min_context"]:
+        if len(primary_key) <= 4 and max(top["portuguese_context_score"], top["quotation_context_score"],
+                                       top["local_quotation_score"]) < config["short_form_min_context"] and not top["whole_quotation_evidence"]:
             reasons.append("short_form_without_context")
         if top["page_boundary_uncertain"]:
             reasons.append("page_boundary_uncertain")
@@ -492,8 +633,19 @@ def rank_citation(corpus, page, citation, model, config=None):
             reasons.append("possible_portuguese_or_grammar_word")
         if top["attested_span"] and top["attested_span"]["role"] != "post_separator_text":
             reasons.append("source_zone_not_a_lexical_body")
-        if any(s.get("quotation_occurrences") for s in surfaces) and not top["quoted_surface_evidence"]:
+        if quotes and not top["quoted_surface_evidence"]:
             reasons.append("explicit_quoted_surface_not_matched")
+        if (not top["quoted_surface_evidence"] and top["portuguese_context_score"] == 0 and
+                top["quotation_context_score"] == 0):
+            reasons.append("form_only_without_independent_context")
+        if quotation_analysis["issues"]:
+            reasons.append("quotation_parse_requires_review")
+        if (top.get("query_surface") or {}).get("kind") == "quoted_compound_prefix_hypothesis":
+            reasons.append("compound_prefix_hypothesis_requires_review")
+        if (top.get("query_surface") or {}).get("kind") == "quoted_question_fusion_hypothesis":
+            reasons.append("question_fusion_hypothesis_requires_review")
+        if top["local_quotation_required_companions"] and top["local_quotation_score"] < 1:
+            reasons.append("local_quotation_context_incomplete")
         if len(top["same_form_occurrences"]) > 1:
             reasons.append("repeated_form_in_passage")
         if citation.get("adapted"):
@@ -503,21 +655,22 @@ def rank_citation(corpus, page, citation, model, config=None):
             status = "weak_candidates"
     for candidate in candidates:
         fragment = next(f for f in page["fragments"] if f["id"] == candidate["source_id"])
-        span = candidate["attested_span"]
-        if span:
-            assert corpus.text[span["start0"]:span["end0"]] == span["text"]
-            assert fragment["source_start0"] <= span["start0"] < span["end0"] <= fragment["source_end0"]
-            candidate["orthographic_alignment"] = align(candidate["query_surface"]["form"], span["text"], model)
-            candidate["ocr_target"] = ocr_target(page, fragment, span["text"])
-        else:
-            candidate["ocr_target"] = {"status": "unavailable", "line_ids": [], "boxes": []}
+        for option in [candidate, *candidate.get("span_alternatives", [])]:
+            span = option["attested_span"]
+            if span:
+                assert corpus.text[span["start0"]:span["end0"]] == span["text"]
+                assert fragment["source_start0"] <= span["start0"] < span["end0"] <= fragment["source_end0"]
+                option["orthographic_alignment"] = align(option["query_surface"]["form"], span["text"], model)
+                option["ocr_target"] = ocr_target(page, fragment, span["text"])
+            else:
+                option["ocr_target"] = {"status": "unavailable", "line_ids": [], "boxes": []}
     return {"citation_id": citation["id"], "page_id": page["id"],
             "entry_index": citation["entry_index"], "headword": citation["headword"],
             "homonym": citation["homonym"], "adapted": citation.get("adapted", False),
             "status": status, "status_is_editorial_verification": False,
             "margin": None if margin is None else round(margin, 5), "review_reasons": reasons,
             "candidates": candidates[:config["top_k"]],
-            "quotation_detection": quotes,
+            "quotation_detection": quotes, "quotation_parse": quotation_analysis,
             "existing_reviewed_source_ids": [a["source_id"] for a in citation["associations"] if a["status"] == "reviewed"]}
 
 
@@ -544,12 +697,23 @@ def evaluate(labels, predictions, baseline):
         containing_span = bool(span and any(
             span["start0"] <= t["form_start0"] < t["form_end0"] <= span["end0"] or
             t["form_start0"] <= span["start0"] < span["end0"] <= t["form_end0"] for t in targets))
+        def exact_option(option):
+            actual = option.get("attested_span")
+            return bool(actual and any(
+                option["source_id"] == t["source_id"] and
+                actual["start0"] == t["form_start0"] and actual["end0"] == t["form_end0"]
+                for t in case.get("targets", [])))
+        offered = [option for candidate in prediction["candidates"][:3]
+                   for option in [candidate, *candidate.get("span_alternatives", [])]]
         rows.append({"case_id": case["case_id"], "label_status": case["status"],
                      "headword": case["headword"], "page_id": case["page_id"],
                      "gold_source_ids": sorted(gold), "ranked_source_ids": ranked,
                      "top1_correct": bool(ranked and ranked[0] in gold) if case["status"] == "clear" else None,
                      "top3_contains_gold": bool(set(ranked[:3]) & gold) if case["status"] == "clear" else None,
                      "top1_exact_attested_span": exact_span if case["status"] == "clear" else None,
+                     "top3_exact_attested_span": any(exact_option(c) for c in prediction["candidates"][:3]) if case["status"] == "clear" else None,
+                     "offered_exact_attested_span": any(exact_option(c) for c in offered) if case["status"] == "clear" else None,
+                     "offered_span_count": sum(bool(c.get("attested_span")) for c in offered),
                      "top1_attested_span_contains_or_is_in_gold": containing_span if case["status"] == "clear" else None,
                      "existing_top1_correct": bool(old and old[0] in gold) if case["status"] == "clear" else None,
                      "existing_top3_contains_gold": bool(set(old[:3]) & gold) if case["status"] == "clear" else None,
@@ -564,10 +728,13 @@ def evaluate(labels, predictions, baseline):
                        "top1_correct": sum(r["top1_correct"] for r in clear),
                        "top3_contains_gold": sum(r["top3_contains_gold"] for r in clear),
                        "top1_exact_attested_span": sum(r["top1_exact_attested_span"] for r in clear),
+                       "top3_exact_attested_span": sum(r["top3_exact_attested_span"] for r in clear),
+                       "offered_exact_attested_span": sum(r["offered_exact_attested_span"] for r in clear),
                        "top1_attested_span_contains_or_is_in_gold": sum(r["top1_attested_span_contains_or_is_in_gold"] for r in clear),
                        "existing_top1_correct": sum(r["existing_top1_correct"] for r in clear),
                        "existing_top3_contains_gold": sum(r["existing_top3_contains_gold"] for r in clear),
                        "suggested_clear_cases": len(suggested),
                        "suggested_correct": sum(r["top1_correct"] for r in suggested),
                        "suggested_ambiguous_or_not_found": sum(r["proposal_status"] == "suggested" and r["label_status"] != "clear" for r in rows)},
+            "offered_metric_scope": "Exact literal span among up to three paragraph candidates, including each paragraph's saved span_alternatives. Legacy top1/top3 measures use only each paragraph's best span.",
             "cases": rows}

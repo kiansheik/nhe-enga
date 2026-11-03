@@ -1,5 +1,51 @@
 # Agent Log
 
+## 2026-11-03 — Integrated VLB V3 review and correction workflow
+
+Reconstructed the requested work after confirming that no unpublished
+interrupted implementation could be recovered. Added a frozen V3 ranker and
+24-case blind assistant evaluation, a complete 7,534-record reverse
+concordance, and an append-only correction ledger with exact provenance,
+revision history, idempotent validation, issue-form submission, and a
+review-PR import workflow. Projected only compact page-scoped candidates and
+reviewed decisions into the static reader; the full audit and reverse artifact
+stay out of browser/offline downloads. The eight initial correction decisions
+are assistant-reviewed rather than human-verified and are not training data.
+The import workflow now rebuilds and commits the reader projection and dynamic
+correction-regression report with each ledger append; untrusted issues cannot
+self-approve regression or training use.
+
+The live reader now marks exact source spans, preserves manual alternatives,
+supports structured local correction export/import, and uses a one-surface
+mobile text/scan design with deferred scans and preserved scroll state.
+Chromium covered desktop, responsive viewports, continuous reading, exact
+marks, alternative-route reloads, correction save/submission/export/import,
+strict dry-run validation, and mobile correction geometry with no JavaScript
+errors. Reload and page/continuous-mode regressions retain exact automatic and
+manual targets. The frozen ranker reached 20/21 clear-case top-one paragraphs
+and 19/21 offered exact spans; the release-time ambiguous false positive remains
+disclosed, and its post-release safety gate is development evidence only.
+Against the eight approved correction regressions, V3 retrieves the correct
+top paragraph and exact span for all six accepted records and offers all seven
+accepted spans; the production gate makes 2/2 exact automatic targets, zero
+false positives, and abstains on both uncertain decisions.
+Milestone commits `d1eea0c4` and `5ce484c3` were pushed to
+`feat/vlb-review-learning`; nothing was merged or deployed. See the
+[handoff](session-handoffs/2026-11-03-vlb-v3-corrections-mobile.md).
+
+## 2026-11-03 — Froze independent VLB benchmark V3 annotations
+
+Annotated the 24-case frozen review packet without reading mining outputs,
+rankings, pipeline/model/index/freeze material, or prior predictions and
+evaluations. Used only the packet's citation context and page fragments, the
+pinned Emerson text for exact Unicode code-point spans, and the pinned
+dictionary rows for sense context. Recorded 21 clear and three ambiguous
+cases, with zero not-found cases; every label is explicitly assistant-reviewed
+and not human-verified. Added a freeze manifest and a standalone validator that
+rechecks both file hashes, packet blindness, exact case coverage, fragment
+integrity, and all 27 source spans. Validation passes. See the
+[handoff](session-handoffs/2026-11-03-vlb-benchmark-v3-blind-annotation.md).
+
 ## 2026-11-02 — Scoped inline VLB links for continuous reading
 
 Branched from merged main `ef6a586c` for continuous reading. Removed the VLB
