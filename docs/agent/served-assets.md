@@ -18,6 +18,13 @@ These paths are referenced by source code or documented as public static pages. 
 
 ## Secondary Pages
 
+- `/nhe-enga/vlb/`: VLB scan/transcription reader, its CSS/JavaScript, and
+  generated `vlb/data/` JSON. `vlb/build_data.py` rebuilds the data from the
+  pinned compact inputs under `vlb/source/`.
+  Dictionary citations use `?volume=I&page=17&entry=<dictionary-row>`;
+  `entry` identifies a record in the pinned served dictionary, not an accepted
+  lexical association. The reader uses the existing primary-source scans and
+  their `/nhe-enga/docs/primary_sources/image-formats.json` manifest.
 - `/nhe-enga/quiz/`: `quiz/index.html`, `quiz/quiz.js`, `quiz/styles.css`, `docs/dict-conjugated.json.gz`
 - `/nhe-enga/katu/`: `katu/index.html`, `docs/extracted_entries_nheengatu.tar.gz`, shared root CSS/JS and `ical.png`
 - `/nhe-enga/mbya/`: `mbya/index.html`, `docs/dooley_2006_mbya_dic.json.gz`, shared root CSS/JS and `ical.png`
@@ -41,7 +48,10 @@ These paths are referenced by source code or documented as public static pages. 
 
 - `/nhe-enga/docs/primary_sources/`: `docs/primary_sources/index.html`
 - `/nhe-enga/docs/primary_sources/emerson_arte_anchieta.html`: standalone Anchieta transcription
-- `/nhe-enga/docs/primary_sources/vlb/*.png`
+- `/nhe-enga/docs/primary_sources/vlb/*.png` in the source checkout; the Pages
+  optimizer publishes JPEGs and declares `.jpg` in `image-formats.json`.
+  Readers use that manifest, including `.webp` when configured, and fall back
+  to source PNGs when the manifest is absent.
 - `/nhe-enga/docs/primary_sources/ancharte/*.png`
 - `/nhe-enga/docs/primary_sources/anchteatro1954/*.jpg`: 75 sparse Martins 1954 pages aligned to all current 1999/2006 `Anch., Teatro` locators
 - `/nhe-enga/docs/primary_sources/arcat1618/*.png`

@@ -243,7 +243,7 @@ def citation_candidate(raw):
 def link_targets(strings):
     """Execute only the production linkSources function, never the browser app."""
     source = LINKER.read_text(encoding="utf-8")
-    start = source.index("  function linkSources(definition) {")
+    start = source.index("  function linkSources(")
     end = source.index("\n  function splitByBullet(", start)
     function = source[start:end].strip()
     program = r"""
@@ -347,7 +347,7 @@ def inventory(data, bibliography):
                     if syntax:
                         previous = (author, work, lines)
                 elif previous and re.fullmatch(
-                    r"\s*(?:[IVXLCDM]+\s*,\s*)?\d+[\dv,\s–-]*\s*", raw
+                    r"\s*(?:[IVXLCDM]+\s*,\s*)?\d+[\dv,\s–-]*(?:\s*,?\s*adapt\.)?\s*", raw
                 ):
                     author, work, lines = previous
                     record.update(
@@ -426,6 +426,12 @@ def inventory(data, bibliography):
                         for r in citations
                         for url in r["actual_link_targets"]
                         if "book_name=" in url
+                    }
+                    | {
+                        "vlb"
+                        for r in citations
+                        for url in r["actual_link_targets"]
+                        if url.startswith("/nhe-enga/vlb/?")
                     }
                 ),
                 "examples": list(dict.fromkeys(r["raw"].strip() for r in citations))[
