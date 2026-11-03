@@ -42,14 +42,20 @@
         <button id="next-page" class="icon-button" type="button" title="Página seguinte" aria-label="Página seguinte">→</button>
         <span id="page-position" class="muted"></span>
       </div>
-      <label class="mode-control" for="mode-select">Leitura
-        <select id="mode-select"><option value="page">Página a página</option><option value="continuous">Rolagem contínua</option></select>
-      </label>
-      <form id="search-form" class="search-form" role="search">
-        <label class="sr-only" for="search-input">Buscar na transcrição ou nos verbetes citados</label>
-        <input id="search-input" type="search" placeholder="Buscar transcrição ou verbete…" autocomplete="off">
-        <button type="submit">Buscar</button>
-      </form>
+      <details id="reader-options" class="reader-options" open>
+        <summary>Busca e opções</summary>
+        <div class="reader-options-content">
+          <label class="mode-control" for="mode-select">Leitura
+            <select id="mode-select"><option value="page">Página a página</option><option value="continuous">Rolagem contínua</option></select>
+          </label>
+          <form id="search-form" class="search-form" role="search">
+            <label class="sr-only" for="search-input">Buscar na transcrição ou nos verbetes citados</label>
+            <input id="search-input" type="search" placeholder="Buscar transcrição ou verbete…" autocomplete="off">
+            <button type="submit">Buscar</button>
+          </form>
+          <button id="copy-link" type="button" class="quiet-button">Copiar link</button>
+        </div>
+      </details>
     </section>
     <section id="search-results" class="search-results" aria-label="Resultados da busca" hidden>
       <div class="section-heading"><h2 id="search-heading">Resultados</h2><button id="close-search" type="button" class="quiet-button">Fechar busca ×</button></div>
@@ -58,21 +64,30 @@
 
     <div class="reading-status">
       <p id="page-status" role="status" aria-live="polite">Carregando a concordância…</p>
-      <button id="copy-link" type="button" class="quiet-button">Copiar link</button>
     </div>
     <div id="load-error" class="notice error" role="alert" hidden></div>
 
+    <nav id="surface-switch" class="surface-switch" aria-label="Superfície de leitura">
+      <button id="surface-text" type="button" aria-pressed="false" aria-controls="transcription-panel">Transcrição</button>
+      <button id="surface-scan" type="button" aria-pressed="true" aria-controls="scan-panel">Fac-símile</button>
+    </nav>
+
     <div class="workspace">
-      <section class="pane scan-pane" aria-labelledby="scan-heading">
+      <section id="scan-panel" class="pane scan-pane" aria-labelledby="scan-heading">
         <header class="pane-heading"><div><p class="eyebrow">01 · Documento</p><h2 id="scan-heading">Fac-símile</h2></div><span id="scan-page-label" class="page-stamp"></span></header>
         <div class="scan-toolbar">
-          <div class="zoom-controls" aria-label="Ampliação do fac-símile">
-            <button id="zoom-out" type="button" aria-label="Diminuir imagem">−</button>
-            <button id="zoom-reset" type="button" title="Ajustar à largura">100%</button>
-            <button id="zoom-in" type="button" aria-label="Ampliar imagem">+</button>
-          </div>
-          <label class="checkbox-label"><input id="show-ocr" type="checkbox" checked> Realçar trecho</label>
-          <a id="open-scan" href="#" target="_blank" rel="noopener noreferrer">Abrir imagem ↗</a>
+          <details id="scan-options" class="scan-options" open>
+            <summary>Opções da imagem</summary>
+            <div class="scan-options-content">
+              <div class="zoom-controls" aria-label="Ampliação do fac-símile">
+                <button id="zoom-out" type="button" aria-label="Diminuir imagem">−</button>
+                <button id="zoom-reset" type="button" title="Ajustar à largura">100%</button>
+                <button id="zoom-in" type="button" aria-label="Ampliar imagem">+</button>
+              </div>
+              <label class="checkbox-label"><input id="show-ocr" type="checkbox" checked> Realçar trecho</label>
+              <a id="open-scan" href="#" target="_blank" rel="noopener noreferrer">Abrir imagem ↗</a>
+            </div>
+          </details>
         </div>
         <div id="scan-viewport" class="scan-viewport" tabindex="0" aria-label="Imagem da página; use os controles para ampliar">
           <div id="scan-stack" hidden></div>
@@ -93,6 +108,25 @@
           <button id="notes-tab" type="button" role="tab" aria-selected="false" aria-controls="notes-content" tabindex="-1">Anotações <span id="notes-count"></span></button>
         </div>
         <div id="citation-detail" class="citation-detail" hidden></div>
+        <section id="correction-panel" class="correction-panel" aria-labelledby="correction-heading" hidden>
+          <div class="section-heading"><h3 id="correction-heading">Corrigir correspondência</h3><button id="close-correction" type="button" class="quiet-button">Fechar ×</button></div>
+          <p id="correction-target" class="correction-target"></p>
+          <p class="muted">Selecione as palavras exatas na transcrição e adicione cada passagem. A cópia local não altera o repositório; o envio abre uma issue que ainda será validada e revisada.</p>
+          <div id="correction-spans" class="correction-spans"></div>
+          <div class="correction-controls">
+            <button id="add-correction-span" type="button">Adicionar seleção atual</button>
+            <label>Decisão <select id="correction-disposition"><option value="accepted">Aceita</option><option value="rejected">Proposta rejeitada</option><option value="ambiguous">Ambígua</option><option value="not_found">Não encontrada</option><option value="unresolved">Não resolvida</option></select></label>
+            <label>Revisor <input id="correction-reviewer" type="text" value="Leitor do VLB" autocomplete="name"></label>
+            <label class="correction-notes">Nota para revisão <textarea id="correction-notes" rows="2" required placeholder="O que foi conferido no texto e no fac-símile?"></textarea></label>
+          </div>
+          <div class="correction-actions">
+            <button id="save-correction" type="button">Salvar cópia local</button>
+            <button id="submit-correction" type="button">Enviar para revisão no GitHub ↗</button>
+            <button id="export-corrections" type="button" class="quiet-button">Exportar correções ↓</button>
+            <label class="quiet-button import-corrections">Importar arquivo <input id="import-corrections" class="sr-only" type="file" accept="application/json,.json"></label>
+          </div>
+          <p id="correction-feedback" class="muted" role="status"></p>
+        </section>
         <div class="text-viewport" id="text-viewport">
           <div id="text-content" role="tabpanel" aria-labelledby="text-tab" tabindex="0">
             <p class="panel-guide">Selecione um trecho para realçá-lo na imagem. Os números identificam os parágrafos da transcrição digital.</p>
