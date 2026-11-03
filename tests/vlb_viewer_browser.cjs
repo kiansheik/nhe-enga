@@ -681,8 +681,12 @@ const server = http.createServer((req, res) => {
     await page.screenshot({path:path.join(out, "vlb-mobile-transcription-minimized.png"), fullPage:false});
     await page.locator("#toggle-transcription").click();
     await assertMobileUnifiedReader("390px restored transcription");
-    assert.ok(Math.abs(await page.locator("#text-viewport").evaluate(viewport => viewport.scrollTop) - textPosition) < 3,
-      "transcription reading position survives minimizing and restoring the tray");
+    await settlePaint();
+    assert.ok(await page.locator("#source-13").evaluate(node => {
+      const viewport = document.getElementById("text-viewport").getBoundingClientRect();
+      const box = node.getBoundingClientRect();
+      return Math.abs((box.top + box.bottom) / 2 - (viewport.top + viewport.bottom) / 2) <= viewport.height * .18;
+    }), "restoring transcription recenters the active selected line");
     assert.ok(Math.abs(await page.locator("#scan-viewport").evaluate(viewport => viewport.scrollTop) - scanPosition) < 3,
       "facsimile reading position survives restoring the transcription tray");
 

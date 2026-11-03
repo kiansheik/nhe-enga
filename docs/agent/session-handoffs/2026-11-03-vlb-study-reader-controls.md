@@ -122,6 +122,10 @@ must require an explicit request.
   its assertion inspected the search disclosure before the mobile state event
   ran. The regression now waits for the mobile search ARIA state rather than an
   already-true desktop transcription attribute; the complete local rerun passes.
+- The next hosted run reached an older scroll-position assertion that conflicted
+  with the new selected-line restore behavior. The regression now verifies that
+  the active line recenters after transcription restore while the independent
+  facsimile position remains stable.
 - Adding the model pointer changed the whole-manifest checksum and initially
   made the checked correction evaluation stale. Regeneration changed only its
   `viewer_manifest_sha256`; no correction metric or policy outcome moved.
