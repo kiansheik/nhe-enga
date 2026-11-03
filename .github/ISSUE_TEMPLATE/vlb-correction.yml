@@ -1,0 +1,38 @@
+name: Correção de correspondência VLB
+description: Envie uma correção estruturada exportada pelo leitor do VLB.
+title: "[VLB] Correção de correspondência"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use **Corrigir correspondência → Exportar/Enviar correção** no leitor.
+        Cole abaixo o bloco JSON completo, sem editar IDs, posições ou hashes.
+        A abertura desta issue não altera o site: um mantenedor ainda precisa
+        validar o conteúdo e abrir/revisar o pull request de importação.
+  - type: textarea
+    id: payload
+    attributes:
+      label: Correção estruturada
+      description: Cole o envelope `vlb-correction-submission-1` entre as cercas JSON.
+      render: json
+      placeholder: |
+        {
+          "schema_version": "vlb-correction-submission-1",
+          "events": []
+        }
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Observações para a revisão
+      description: Explique o que foi conferido no fac-símile e na transcrição, se necessário.
+    validations:
+      required: false
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmação
+      options:
+        - label: Conferi a passagem indicada e entendo que a issue ainda precisa de revisão antes de alterar o repositório.
+          required: true
