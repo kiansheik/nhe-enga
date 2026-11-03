@@ -9,7 +9,7 @@
     "proposal_output_sha256": "98cde030318d3e2131b0c6df38f3aa77fd1b80444445d4bedc833843461e4928",
     "correction_ledger_sha256": "00f640fccc830bee301b023cd3dee0915679b9a945846466d3f2951b39d23866",
     "citation_target_policy_sha256": "f9b86b24fe0c397dd10eb66fb47aba3656536bf8ecd93490da8219134a1bb438",
-    "viewer_manifest_sha256": "269f75bffa9b98a446f9c02f0ee6b41db11b5d6ff14a87751b776e3d3db394ab",
+    "viewer_manifest_sha256": "aac58658e7e8b14f1c601365cc94505bd80865d1ddad434911c64f0fed8568da",
     "selection": "Latest correction revision with review.approved_for_regression=true"
   },
   "reviewer_types": {

@@ -72,9 +72,15 @@ units_by_id={u['id']:u for u in units}
 # page-scoped projection; it never downloads the multi-megabyte candidate file.
 proposal_output=read_path(MINING/'candidates.json.gz')
 proposal_freeze=read_path(MINING/'model-freeze.json')
+orthography_model_path=MINING/'orthography-model.json'
+orthography_model=read_path(orthography_model_path)
 assert proposal_output['schema_version']==1
 assert proposal_output['scores_are_probabilities'] is False
 assert hashlib.sha256((MINING/'candidates.json.gz').read_bytes()).hexdigest()==proposal_freeze['output_sha256']['candidates.json.gz']
+assert orthography_model['schema_version']==1
+assert orthography_model['direction']=='Navarro modern surface -> Emerson historical surface'
+assert orthography_model['weights_are_probabilities'] is False
+assert orthography_model.get('limitations')
 proposal_by={(r['citation_id'],r['page_id']):r for r in proposal_output['records']}
 assert len(proposal_by)==len(proposal_output['records'])==6164
 proposal_seen=set()
@@ -274,6 +280,11 @@ for entry in source_index:
 write('source-index.json.gz',source_index,True)
 write('citation-index.json.gz',citation_index,True)
 write('unresolved-citations.json',unresolved)
+orthography_model_bytes=orthography_model_path.read_bytes()
+orthography_model_output=OUT/'orthography-model.json'
+orthography_model_temp=orthography_model_output.with_name(orthography_model_output.name+'.tmp')
+orthography_model_temp.write_bytes(orthography_model_bytes)
+orthography_model_temp.replace(orthography_model_output)
 page_by_pdf={p['pdf_page']:p for p in manifest_pages}
 scan_slots=[]
 for m in page_map:
@@ -303,6 +314,9 @@ provenance={
  'proposal_algorithm_version':proposal_freeze['config']['version'],
  'navigation_policy_version':'vlb-navigation-policy-v3.1',
  'proposal_output_sha256':proposal_freeze['output_sha256']['candidates.json.gz'],
+ 'orthography_model_sha256':hashlib.sha256(orthography_model_bytes).hexdigest(),
+ 'orthography_model_direction':orthography_model['direction'],
+ 'orthography_weights_are_probabilities':orthography_model['weights_are_probabilities'],
  'proposal_projection':'Compact page-scoped V3 candidates with exact Emerson spans and OCR line IDs; full audit data remains outside the browser build.',
  'correction_ledger':'../corrections/ledger.jsonl',
  'correction_ledger_sha256':hashlib.sha256(correction_path.read_bytes()).hexdigest(),
@@ -311,6 +325,6 @@ provenance={
  'pdf_source_metadata_file':'../source/pdf_source_metadata.json'
 }
 counts={'text_pages':len(manifest_pages),'scan_slots':len(scan_slots),'source_paragraphs':len(units),'lexicographic_records':sum(u['kind']=='entry' for u in units),'source_fragments':total_fragments,'citation_occurrences':len(citations),'unresolved_citations':len(unresolved),'page_citation_memberships':sum(len(v) for v in citations_by_page.values()),'proposed_associations':total_associations-reviewed_count,'reviewed_associations':reviewed_count,'correction_events':correction_summary['events'],'correction_decisions':correction_summary['corrections'],'correction_dispositions':correction_summary['current_dispositions'],'ocr_fragment_status':dict(fragment_status)}
-manifest={'schema_version':1,'provenance':provenance,'counts':counts,'page_order':[p['id'] for p in manifest_pages],'pages':manifest_pages,'scan_slots':scan_slots,'source_index_file':'source-index.json.gz','citation_index_file':'citation-index.json.gz','unresolved_citations_file':'unresolved-citations.json'}
+manifest={'schema_version':1,'provenance':provenance,'counts':counts,'page_order':[p['id'] for p in manifest_pages],'pages':manifest_pages,'scan_slots':scan_slots,'source_index_file':'source-index.json.gz','citation_index_file':'citation-index.json.gz','orthography_model_file':'orthography-model.json','unresolved_citations_file':'unresolved-citations.json'}
 write('manifest.json',manifest)
 print(json.dumps({'counts':counts,'data_bytes':sum(p.stat().st_size for p in OUT.rglob('*') if p.is_file()),'source_bytes':sum(p.stat().st_size for p in SOURCE.rglob('*') if p.is_file())},ensure_ascii=False,indent=2))

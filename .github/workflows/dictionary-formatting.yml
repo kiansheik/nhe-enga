@@ -18,6 +18,7 @@ on:
       - 'tests/vlb_dictionary_links.test.cjs'
       - 'tests/vlb_citation_targets.test.cjs'
       - 'tests/vlb_correction_regressions.test.cjs'
+      - 'tests/vlb_search.test.cjs'
       - 'tests/test_vlb_citation_inventory.py'
       - 'tests/test_vlb_viewer_data.py'
       - 'tests/test_vlb_orthography.py'
@@ -70,6 +71,7 @@ jobs:
             /tests/vlb_dictionary_links.test.cjs
             /tests/vlb_citation_targets.test.cjs
             /tests/vlb_correction_regressions.test.cjs
+            /tests/vlb_search.test.cjs
             /tests/test_vlb_citation_inventory.py
             /tests/test_vlb_viewer_data.py
             /tests/test_vlb_orthography.py
@@ -93,6 +95,7 @@ jobs:
       - run: node --test tests/vlb_dictionary_links.test.cjs
       - run: node --test tests/vlb_citation_targets.test.cjs
       - run: node --test tests/vlb_correction_regressions.test.cjs
+      - run: node --test tests/vlb_search.test.cjs
       - run: python tests/test_vlb_citation_inventory.py
       - name: Rebuild deterministic VLB reader data
         run: |

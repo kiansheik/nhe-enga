@@ -15,6 +15,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "vlb/data"
 SOURCE = ROOT / "vlb/source"
+MINING = ROOT / "vlb/mining/output-v3"
 
 
 def read(path):
@@ -70,6 +71,23 @@ class VLBViewerDataTests(unittest.TestCase):
                         "The reader must keep candidates page-scoped for mobile loading.")
         self.assertLess(sum(path.stat().st_size for path in DATA.rglob("*") if path.is_file()),
                         4_000_000, "The full mining audit must stay outside browser data.")
+
+    def test_frozen_orthography_model_is_served_with_its_limits(self):
+        frozen_path = MINING / "orthography-model.json"
+        served_path = DATA / self.manifest["orthography_model_file"]
+        self.assertEqual(served_path.read_bytes(), frozen_path.read_bytes(),
+                         "The browser must use the exact frozen retrieval model.")
+        model = read(served_path)
+        self.assertEqual(model, read(frozen_path))
+        self.assertEqual(model["direction"],
+                         "Navarro modern surface -> Emerson historical surface")
+        self.assertIs(model["weights_are_probabilities"], False)
+        self.assertTrue(model["limitations"])
+        provenance = self.manifest["provenance"]
+        self.assertEqual(provenance["orthography_model_sha256"],
+                         hashlib.sha256(frozen_path.read_bytes()).hexdigest())
+        self.assertEqual(provenance["orthography_model_direction"], model["direction"])
+        self.assertIs(provenance["orthography_weights_are_probabilities"], False)
 
     def test_split_search_can_open_the_actual_matching_continuation(self):
         # Both boundaries were independently checked against the printed pages.

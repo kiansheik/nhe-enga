@@ -63,6 +63,7 @@ for path in \
   vlb/index.html \
   vlb/app.js \
   vlb/citation-targets.js \
+  vlb/search.js \
   vlb/styles.css \
   vlb/data \
   vlb/source/pdf_source_metadata.json
