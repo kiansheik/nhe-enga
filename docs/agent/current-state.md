@@ -1,5 +1,47 @@
 # Current State
 
+## 2026-11-03 — Unified mobile VLB reader follow-up
+
+- Started `fix/vlb-mobile-unified-reader` from merged `main` at `a65dbb8e`
+  after the user reported deploying PR #38. This change does not publish a new
+  Pages artifact.
+- Replaced the narrow-screen single-surface switch with one bounded reader:
+  the facsimile remains visible as the larger upper pane and a compact
+  transcription tray occupies about the lower third. The tray can collapse to
+  its 41 px tab bar and restore without losing either pane's scroll position,
+  selected source, or OCR highlight.
+- Search is always visible above the mobile reader. Reading mode and copy-link
+  controls remain in a separate disclosure. Ordinary transcription lines use
+  15 px type with denser spacing (14 px on short landscape screens); desktop
+  remains the existing side-by-side layout.
+- Legacy `surface=text|scan` links remain compatible as focus hints, but no
+  longer hide a pane or defer the facsimile. Both continuous stacks synchronize
+  while visible. Correction editing automatically restores and temporarily
+  enlarges the lower tray while retaining a substantial facsimile area.
+- Plain transcription clicks now only select the line, update the URL, and
+  center its OCR boxes in the facsimile. Tapping an aligned facsimile line
+  performs the reverse navigation and restores the mobile tray. Neither path
+  opens Navarro detail; background resize no longer reuses the broad selection
+  path.
+- Navarro is contextual to the selected line. The tab is empty before a line
+  selection, old ambiguous-entry filters are cleared by direct line navigation,
+  and selecting an unrelated line clears stale citation/detail identity before
+  updating URLs or notes. Opening a headword detail requires a separate explicit
+  click. Page and dictionary routes may still select a high-precision target but
+  do not open the detail panel automatically.
+- Selected lines expose **Citar verbete** and **Compartilhar**. Copy produces
+  the exact transcription, a minimal VLB volume/page/paragraph locator, and a
+  compact `page=I-017&line=13` link. Native Web Share receives the same content;
+  unsupported sharing falls back to the clipboard, and clipboard denial opens
+  the complete block for manual copy. Compact links reopen with the line
+  selected and both surfaces centered.
+- Fresh Chrome QA passes every desktop/mobile/continuous/correction/share flag
+  with zero JavaScript errors at 360×800, 390×844, 844×390, 768×1024, and
+  desktop sizes. The VLB Python, citation-inventory, and focused Node suites
+  also pass. A complete local Pages artifact builds successfully; no deploy
+  target was invoked. See the
+  [handoff](session-handoffs/2026-11-03-vlb-unified-mobile-reader.md).
+
 ## 2026-11-03 — VLB V3 alignment, durable corrections, and mobile review
 
 - Continued `feat/vlb-review-learning` from frozen V2 commit `b5df369a`.

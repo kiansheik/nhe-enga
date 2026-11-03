@@ -16,16 +16,20 @@ locators and the original citation occurrence, for example:
 identify an exact citation occurrence. `citation_pos` is the clicked page
 token's Unicode code-point offset in the untouched dictionary definition;
 the reader resolves it within the saved citation interval. `source` selects
-a transcription paragraph. The reader also accepts `page=II-078`.
+a transcription paragraph. Compact citation links use `page=II-078&line=5859`
+to select the same paragraph without exposing its internal source ID.
 
 `mode=continuous` enables the two synchronized page stacks; `mode=page` retains
 the original single-page view. `focus=auto` asks for an evidence-supported OCR
 target. Selecting a proposed target does not accept the lexical association.
-Repeated references that cannot be distinguished safely show citation choices.
-On narrow screens, `surface=text` and `surface=scan` preserve an explicitly
-chosen surface. A manual candidate alternative also records `target_start` and
-`target_end`, so reloading a shared link cannot silently replace it with the
-automatic top span. There is no standalone VLB link in the homepage navigation.
+Routes may select and align a supported target, but they do not open the
+Navarro entry detail. Repeated references that cannot be distinguished safely
+prepare citation choices behind the explicit Navarro tab.
+Older narrow-screen links with `surface=text` or `surface=scan` remain valid as
+focus hints, but both surfaces are now visible in one mobile reader. A manual
+candidate alternative also records `target_start` and `target_end`, so reloading
+a shared link cannot silently replace it with the automatic top span. There is
+no standalone VLB link in the homepage navigation.
 
 ## Reading and reviewing
 
@@ -34,19 +38,34 @@ automatic top span. There is no standalone VLB link in the homepage navigation.
   Pages load as needed; prepending preserves the visible page, and distant scan
   images are released. The URL tracks the current page without filling browser
   history with scroll events. Switch back to **Página a página** at any point.
-- Phones and portrait tablets show one primary surface with a compact
-  **Transcrição / Fac-símile** switch. Dictionary links open the selected text
-  first and defer the scan image until requested. Each surface keeps its own
-  scroll position; landscape hides secondary chrome to maximize reading space.
+- Phones and portrait tablets keep the search bar above one unified reader.
+  The facsimile is the primary upper surface and the compact transcription tray
+  occupies roughly the lower third. The tray can be minimized to its tab bar
+  without losing either pane's scroll position; restoring it keeps the selected
+  source and OCR highlight. Landscape retains the same relationship with less
+  secondary chrome, and legacy `surface` links no longer defer the scan.
 - Select a transcription paragraph to highlight its approximate OCR lines on
-  the scan. Exact supported expressions are marked in the source text and use
-  narrowed OCR lines where available; an accepted text span without a safe OCR
-  target remains navigable without fabricating a whole-paragraph scan box.
-- Open the Navarro tab to inspect citations to the current page. Proposed
-  associations appear when their paragraph is selected; candidate details
-  disclose exact alternatives, evidence, review reasons, and ranking scores as
-  non-probabilities. Six accepted correction decisions project seven exact
-  spans; ambiguous and not-found decisions retain their uncertainty.
+  the scan and center the union of those OCR boxes. Tapping an aligned line in
+  the facsimile performs the reverse navigation, restoring the mobile tray when
+  needed and centering its transcription paragraph. Neither direction opens a
+  Navarro entry. Exact supported expressions are marked in the source text and
+  use narrowed OCR lines where available; an accepted text span without a safe
+  OCR target remains navigable without fabricating a whole-paragraph scan box.
+- A selected line exposes **Citar verbete**, which copies the exact transcription
+  text, a compact VLB volume/page/paragraph citation, and a direct link. The
+  neighboring **Compartilhar** action uses the platform share sheet for apps
+  such as WhatsApp or email and falls back to the same clipboard block when
+  native sharing is unavailable. If clipboard access is denied, the complete
+  block opens for manual copy. Opening that compact link restores the line
+  selection and centers both reading surfaces without opening Navarro.
+- Navarro is contextual rather than page-wide: before a transcription line is
+  selected, its tab contains no headword list. Select a line, then use **Ver no
+  Navarro** (or open the Navarro tab) to see only that line's associated
+  citations. Opening the larger entry detail requires a separate click on a
+  headword. Candidate details disclose exact alternatives, evidence, review
+  reasons, and ranking scores as non-probabilities. Six accepted correction
+  decisions project seven exact spans; ambiguous and not-found decisions retain
+  their uncertainty.
 - Dictionary links automatically select a line only under the high-precision
   V3 policy: a frozen `suggested` candidate needs an exact source span, narrowed
   OCR lines, independent quotation or sense context, a stable page boundary,
