@@ -31,7 +31,7 @@ class VLBCitationInventoryTests(unittest.TestCase):
 
     def test_audit_executes_linker_with_optional_dictionary_row_argument(self):
         targets, _ = AUDIT.link_targets(["VLB, I, 17", "VLB, II, 7"])
-        self.assertEqual(targets, [["/nhe-enga/vlb/?volume=I&page=17"], ["/nhe-enga/vlb/?volume=II&page=7"]])
+        self.assertEqual(targets, [["/nhe-enga/vlb/?volume=I&page=17&mode=continuous&focus=auto"], ["/nhe-enga/vlb/?volume=II&page=7&mode=continuous&focus=auto"]])
 
 
 if __name__ == "__main__":

@@ -21,9 +21,12 @@ These paths are referenced by source code or documented as public static pages. 
 - `/nhe-enga/vlb/`: VLB scan/transcription reader, its CSS/JavaScript, and
   generated `vlb/data/` JSON. `vlb/build_data.py` rebuilds the data from the
   pinned compact inputs under `vlb/source/`.
-  Dictionary citations use `?volume=I&page=17&entry=<dictionary-row>`;
-  `entry` identifies a record in the pinned served dictionary, not an accepted
-  lexical association. The reader uses the existing primary-source scans and
+  Its `vlb/citation-targets.js` helper must also be published. Dictionary
+  citations use `?volume=I&page=17&mode=continuous&focus=auto&entry=<dictionary-row>&citation_pos=<offset>`;
+  `entry` identifies a record in the pinned served dictionary, and the optional
+  code-point position identifies a numeric locator inside the original citation
+  span. Neither implies an accepted lexical association. The homepage has no
+  standalone VLB navigation item. The reader uses the existing primary-source scans and
   their `/nhe-enga/docs/primary_sources/image-formats.json` manifest.
 - `/nhe-enga/quiz/`: `quiz/index.html`, `quiz/quiz.js`, `quiz/styles.css`, `docs/dict-conjugated.json.gz`
 - `/nhe-enga/katu/`: `katu/index.html`, `docs/extracted_entries_nheengatu.tar.gz`, shared root CSS/JS and `ical.png`

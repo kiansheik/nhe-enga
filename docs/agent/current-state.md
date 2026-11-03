@@ -1,5 +1,22 @@
 # Current State
 
+## 2026-11-02 — VLB continuous reader and inline entry points
+
+- Started `feat/vlb-continuous-reader` from current `main`
+  `ef6a586c5d13733537480048924de1776662c70c`, after PR #35 merged.
+- Removed the standalone VLB homepage navigation item. Dictionary inline
+  references open the reader with `mode=continuous&focus=auto`, preserving
+  printed volume/page and the originating dictionary row.
+- `citation_pos` identifies the clicked page token in the original dictionary
+  definition, in Unicode code points. It resolves the exact citation span
+  independently of formatter-inserted HTML or inherited-reference whitespace.
+- Every one of the 6,164 raw page links has an exact occurrence position.
+  Existing formatting produces 6,323 displayed copies; 6,225 retain an exact
+  position, while 98 ambiguous copies deliberately require a citation choice.
+  No source association is approved by this routing step.
+- The Pages allowlist and CI include `vlb/citation-targets.js` and its focused
+  tests. See the [routing handoff](session-handoffs/2026-11-02-vlb-continuous-reader.md).
+
 ## 2026-11-02 — VLB transcription reader branch
 
 - Prepared `/nhe-enga/vlb/` for the main navigation, with Navarro VLB citations

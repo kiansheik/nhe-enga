@@ -4,25 +4,44 @@ The public route is `/nhe-enga/vlb/`. It compares the existing facsimile images
 with Emerson José Silveira da Costa's unchanged transcription and the VLB
 citation occurrences in Nhe'enga's pinned Navarro dictionary snapshot.
 
-The main dictionary links here with printed locators, for example:
+Inline VLB citations in the dictionary open continuous mode with printed
+locators and the original citation occurrence, for example:
 
 ```text
-/nhe-enga/vlb/?volume=I&page=17&entry=7210
+/nhe-enga/vlb/?volume=I&page=17&mode=continuous&focus=auto&entry=7210&citation_pos=86
 /nhe-enga/vlb/?volume=II&page=78&source=vlb-emerson-r568-p05859
 ```
 
 `entry` is a dictionary array row in the recorded snapshot. `citation` can
-identify an exact citation occurrence. `source` selects a transcription
-paragraph. The reader also accepts `page=II-078`. An entry link selects its
-citation; it does not silently accept any suggested source association.
+identify an exact citation occurrence. `citation_pos` is the clicked page
+token's Unicode code-point offset in the untouched dictionary definition;
+the reader resolves it within the saved citation interval. `source` selects
+a transcription paragraph. The reader also accepts `page=II-078`.
+
+`mode=continuous` enables the two synchronized page stacks; `mode=page` retains
+the original single-page view. `focus=auto` asks for an evidence-supported OCR
+target. Selecting a proposed target does not accept the lexical association.
+Repeated references that cannot be distinguished safely show citation choices.
+There is no standalone VLB link in the homepage navigation.
 
 ## Reading and reviewing
 
+- Choose **Rolagem contínua** to scroll through adjacent pages in either pane.
+  The other pane follows the same page and approximate relative reading position.
+  Pages load as needed; prepending preserves the visible page, and distant scan
+  images are released. The URL tracks the current page without filling browser
+  history with scroll events. Switch back to **Página a página** at any point.
 - Select a transcription paragraph to highlight its approximate OCR lines on
   the scan. Open the OCR reading to compare the recognition with the image.
 - Open the Navarro tab to inspect citations to the current page. Proposed
   source associations remain visibly labeled. The two assisted reviews name
   the specific source form and do not claim that a whole paragraph is covered.
+- Dictionary links automatically select a line when the saved evidence supports
+  a unique target. The helper prefers reviewed associations, otherwise requires
+  distinct form/context or form/OCR evidence and aligned OCR on the cited page.
+  It narrows the highlight to form-bearing OCR runs where possible. Ambiguous,
+  weak, or missing matches retain manual choices and never choose the first
+  same-page citation silently.
 - Search across the transcription and cited dictionary headwords. For split
   paragraphs, a match within a continuation opens the page containing the words.
 - Record observations in the Anotações tab. Notes stay in browser localStorage;
@@ -69,15 +88,19 @@ before its row deep links can be trusted; the data regression checks the hash.
 node --test tests/vlb_dictionary_links.test.cjs tests/dictionary_formatting.test.cjs
 python tests/test_vlb_citation_inventory.py
 python tests/test_vlb_viewer_data.py
+node --test tests/vlb_citation_targets.test.cjs
 node tests/vlb_viewer_browser.cjs
 ```
 
 The browser test requires Playwright plus Chromium. Set `VLB_PLAYWRIGHT_MODULE`
 and `VLB_CHROMIUM_PATH` to use an existing installation. It serves the checkout
 locally, tests desktop and mobile layouts, source and citation navigation,
-OCR overlays, split-paragraph search, notes and exports, and optimized image
-extensions. Only scans 17, 25, 26, 161, 232, 292 and 303 are needed in a sparse
-checkout. `VLB_QA_DIR` optionally selects a folder for screenshots and results.
+OCR overlays, split-paragraph search, notes and exports, optimized image
+extensions, continuous append/prepend and synchronization, occurrence targeting,
+and ambiguity fallbacks. Scans 17, 18, 19, 25, 26, 161, 231, 232, 292 and 303
+are used in a sparse checkout; other continuous neighbors use image-only test
+fixtures with real page data. `VLB_QA_DIR` optionally selects a folder for
+screenshots and results.
 
 The dictionary-formatting workflow runs the data, link and browser regressions.
 This branch does not merge or deploy itself.

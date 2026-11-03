@@ -62,6 +62,7 @@ copy_path "translate/index.html"
 for path in \
   vlb/index.html \
   vlb/app.js \
+  vlb/citation-targets.js \
   vlb/styles.css \
   vlb/data \
   vlb/source/pdf_source_metadata.json

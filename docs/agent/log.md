@@ -1,5 +1,20 @@
 # Agent Log
 
+## 2026-11-02 — Scoped inline VLB links for continuous reading
+
+Branched from merged main `ef6a586c` for continuous reading. Removed the VLB
+homepage item and made inline citations request continuous mode and automatic
+source focus. Preserved original page-token positions separately from formatted
+HTML, including true Unicode code-point accounting and inherited references.
+The formatter intentionally repeats some examples/citations: uniquely sourced
+copies keep their original occurrence, equal counts preserve source order, and
+98 ambiguous displayed copies omit a position instead of choosing the first
+same-page occurrence. All 6,164 raw links remain exact; 6,225 of 6,323 displayed
+copies are precise. Added corpus and repeated-occurrence regressions and wired
+the OCR target helper into Pages and CI. The focused 11 linker tests and two
+inventory tests passed. See the
+[handoff](session-handoffs/2026-11-02-vlb-continuous-reader.md).
+
 ## 2026-11-02 — Added VLB reader navigation and source integration
 
 Prepared the main VLB navigation link, Pages allowlist, offline asset grouping,
