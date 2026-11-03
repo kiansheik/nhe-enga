@@ -83,6 +83,14 @@ class VLBViewerDataTests(unittest.TestCase):
             self.assertEqual(matches, [expected_page])
             self.assertNotEqual(expected_page, entry["page_ids"][0])
 
+    def test_compact_page_line_links_are_unambiguous(self):
+        for page in self.pages:
+            source_lines = [fragment["source_line"] for fragment in page["fragments"]]
+            self.assertEqual(
+                len(source_lines), len(set(source_lines)),
+                f"page={page['id']}&line=... must select exactly one fragment",
+            )
+
     def test_every_citation_keeps_its_identity_and_original_dictionary_span(self):
         expected = {c["citation_id"]: c for c in self.citations}
         self.assertEqual(len(expected), len(self.citations))

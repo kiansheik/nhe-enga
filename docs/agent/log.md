@@ -1,5 +1,35 @@
 # Agent Log
 
+## 2026-11-03 — Unified the VLB mobile reader around the facsimile
+
+Followed merged PR #38 with a narrow mobile-layout correction on
+`fix/vlb-mobile-unified-reader`. Search now stays above one viewport-filling
+reader; the facsimile is the larger upper pane and a denser 15 px transcription
+tray uses roughly the lower third. The tray minimizes to its tab bar and restores
+without losing scroll, source selection, or OCR highlighting. Old `surface`
+URLs remain safe but no longer hide a pane or defer scans. Correction editing
+restores and temporarily enlarges the tray, and continuous mode synchronizes
+both visible panes. Desktop remains side by side.
+
+Separated source navigation from Navarro review. Transcript clicks only select
+and center OCR evidence, while facsimile-line taps perform the reverse jump.
+Navarro is empty before selection, contextual afterward, and its entry detail
+requires a separate explicit headword action. Direct line navigation clears
+stale ambiguous-entry filters and unrelated citation/detail identity before
+URLs or notes update. A selected line also exposes citation-copy and native-share
+actions with exact text, a minimal VLB locator, and a compact page-plus-line deep
+link; unsupported Web Share falls back to the clipboard, with a manual-copy
+prompt if clipboard access is denied.
+
+The browser regression now asserts actual geometry, search placement, compact
+type, minimization, bidirectional navigation, explicit Navarro behavior,
+copy/share payloads and fallback, compact-link restoration, correction
+reachability, and portrait/landscape/tablet behavior. Fresh Chrome QA passed
+every result flag with zero JavaScript errors; the VLB Python, inventory, and
+focused Node suites also passed. A complete local Pages artifact built
+successfully, and no deployment was run. See the
+[handoff](session-handoffs/2026-11-03-vlb-unified-mobile-reader.md).
+
 ## 2026-11-03 — Integrated VLB V3 review and correction workflow
 
 Reconstructed the requested work after confirming that no unpublished

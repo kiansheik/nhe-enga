@@ -56,9 +56,19 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator("#load-error").isVisible(), false);
   }
   async function source(number) {
-    await page.locator(`#source-${number} .source-main`).click();
+    const button = page.locator(`#source-${number} .source-main`);
+    await button.scrollIntoViewIfNeeded();
+    const before = await page.locator("#text-viewport").evaluate(viewport => viewport.scrollTop);
+    const tab = await page.locator('[role="tab"][aria-selected="true"]').getAttribute("id");
+    await button.click();
     assert.ok(await page.locator(`#source-${number}`).evaluate(node => node.classList.contains("selected")));
     assert.ok(await page.locator("#ocr-overlay rect").count() > 0, "selected source has OCR highlight");
+    assert.equal(await page.locator("#citation-detail").isHidden(), true,
+      "a transcript line does not open Navarro detail");
+    assert.equal(await page.locator('[role="tab"][aria-selected="true"]').getAttribute("id"), tab,
+      "a transcript line does not switch tabs");
+    assert.ok(Math.abs(await page.locator("#text-viewport").evaluate(viewport => viewport.scrollTop) - before) < 2,
+      "a transcript line does not reposition its own viewport");
   }
   const textSection = id => `#fragment-list .continuous-text-page[data-page-id="${id}"]`;
   const scanSection = id => `#scan-stack .continuous-scan-page[data-page-id="${id}"]`;
@@ -102,23 +112,79 @@ const server = http.createServer((req, res) => {
       return painted?.closest(".continuous-scan-page,.continuous-text-page")?.dataset.pageId === pageId;
     }, {viewportId,pageId});
   }
-  async function assertResponsiveSurface(surface, label) {
-    const active = surface === "text" ? "#transcription-panel" : "#scan-panel";
-    const inactive = surface === "text" ? "#scan-panel" : "#transcription-panel";
-    assert.equal(await page.locator(active).isVisible(), true, `${label}: ${surface} surface is visible`);
-    assert.equal(await page.locator(inactive).isVisible(), false, `${label}: inactive surface is hidden`);
-    assert.equal(await page.locator(`#surface-${surface}`).getAttribute("aria-pressed"), "true");
-    const geometry = await page.evaluate(activeSelector => {
-      const pane = document.querySelector(activeSelector).getBoundingClientRect();
-      const chooser = document.getElementById("surface-switch").getBoundingClientRect();
-      return {overflow:document.documentElement.scrollWidth > innerWidth, paneLeft:pane.left, paneRight:pane.right,
-        paneTop:pane.top, chooserBottom:chooser.bottom, viewportWidth:innerWidth, paneHeight:pane.height};
-    }, active);
+  async function openSelectedNavarroDetail(scope = "") {
+    const selected = page.locator(`${scope} .fragment.selected`).first();
+    await selected.locator(".fragment-actions button").filter({hasText:"Ver no Navarro"}).click();
+    assert.equal(await page.locator("#citations-tab").getAttribute("aria-selected"), "true",
+      "the dedicated line action opens contextual Navarro results");
+    assert.equal(await page.locator("#citation-detail").isHidden(), true,
+      "opening contextual Navarro results does not open an entry detail");
+    const card = page.locator("#citation-list .citation-card.selected").first();
+    const target = await card.count() ? card : page.locator("#citation-list .citation-card").first();
+    await target.locator(".citation-title button").click();
+    await page.locator("#citation-detail").waitFor({state:"visible"});
+  }
+  async function openCurrentNavarroDetail() {
+    await page.locator("#citations-tab").click();
+    assert.equal(await page.locator("#citation-detail").isHidden(), true,
+      "opening the Navarro tab alone does not open an entry detail");
+    const card = page.locator("#citation-list .citation-card.selected").first();
+    const target = await card.count() ? card : page.locator("#citation-list .citation-card").first();
+    await target.locator(".citation-title button").click();
+    await page.locator("#citation-detail").waitFor({state:"visible"});
+  }
+  async function settlePaint() {
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    await page.waitForTimeout(50);
+  }
+  async function assertMobileUnifiedReader(label, {expanded = true} = {}) {
+    assert.equal(await page.locator("#scan-panel").isVisible(), true, `${label}: facsimile remains visible`);
+    assert.equal(await page.locator("#transcription-panel").isVisible(), true, `${label}: transcription tray remains visible`);
+    assert.equal(await page.locator("#search-form").isVisible(), true, `${label}: search remains visible above the reader`);
+    assert.equal(await page.locator("#surface-switch").isVisible(), false, `${label}: obsolete surface switch stays hidden`);
+    assert.equal(await page.locator("#toggle-transcription").getAttribute("aria-expanded"), String(expanded));
+    assert.equal(await page.locator("#toggle-transcription").getAttribute("aria-controls"), "transcription-body");
+    assert.equal(await page.locator("#transcription-body").isVisible(), expanded,
+      `${label}: transcription body matches its disclosure state`);
+    const geometry = await page.evaluate(() => {
+      const rect = id => document.getElementById(id).getBoundingClientRect();
+      const search = rect("search-form");
+      const workspace = document.querySelector(".workspace").getBoundingClientRect();
+      const scan = rect("scan-panel");
+      const text = rect("transcription-panel");
+      const source = document.querySelector("#transcription-body .fragment:not(.heading) .source-text");
+      const sourceStyle = source && getComputedStyle(source);
+      const fontSize = sourceStyle ? parseFloat(sourceStyle.fontSize) : null;
+      const lineHeight = sourceStyle ? parseFloat(sourceStyle.lineHeight) : null;
+      return {overflow:document.documentElement.scrollWidth > innerWidth, viewportWidth:innerWidth,
+        viewportHeight:innerHeight, searchTop:search.top, searchBottom:search.bottom, workspaceTop:workspace.top,
+        workspaceBottom:workspace.bottom, scanLeft:scan.left, scanRight:scan.right, scanTop:scan.top,
+        scanBottom:scan.bottom, scanHeight:scan.height, textLeft:text.left, textRight:text.right,
+        textTop:text.top, textBottom:text.bottom, textHeight:text.height, fontSize, lineHeight};
+    });
     assert.equal(geometry.overflow, false, `${label}: no horizontal overflow`);
-    assert.ok(geometry.paneLeft >= -1 && geometry.paneRight <= geometry.viewportWidth + 1,
-      `${label}: reading surface stays within the viewport`);
-    assert.ok(geometry.paneTop >= geometry.chooserBottom - 1, `${label}: surface switch does not obstruct reading`);
-    assert.ok(geometry.paneHeight >= 250, `${label}: primary reading surface remains substantial`);
+    assert.ok(geometry.searchTop >= -1, `${label}: search stays within the viewport`);
+    assert.ok(geometry.searchBottom <= geometry.workspaceTop + 1, `${label}: search stays above the reader`);
+    assert.ok(geometry.scanLeft >= -1 && geometry.scanRight <= geometry.viewportWidth + 1,
+      `${label}: facsimile stays within the viewport`);
+    assert.ok(geometry.textLeft >= -1 && geometry.textRight <= geometry.viewportWidth + 1,
+      `${label}: transcription stays within the viewport`);
+    assert.ok(geometry.scanTop >= geometry.workspaceTop - 1 && geometry.scanBottom <= geometry.textTop + 1,
+      `${label}: facsimile is the upper reading surface`);
+    assert.ok(geometry.textBottom <= geometry.workspaceBottom + 1 && geometry.workspaceBottom <= geometry.viewportHeight + 1,
+      `${label}: transcription tray remains at the bottom of the screen`);
+    if (expanded) {
+      assert.ok(geometry.textHeight >= geometry.viewportHeight * .26 && geometry.textHeight <= geometry.viewportHeight * .37,
+        `${label}: transcription occupies about the lower third`);
+      assert.ok(geometry.scanHeight > geometry.textHeight, `${label}: facsimile remains the primary view`);
+      assert.ok(geometry.fontSize >= 14 && geometry.fontSize <= 16,
+        `${label}: transcription uses compact readable type`);
+      assert.ok(geometry.lineHeight / geometry.fontSize <= 1.55,
+        `${label}: transcription line spacing remains compact`);
+    } else {
+      assert.ok(geometry.textHeight >= 35 && geometry.textHeight <= 55,
+        `${label}: minimized tray leaves a reachable handle`);
+    }
     return geometry;
   }
   async function savedCorrectionFromFeedback() {
@@ -138,10 +204,111 @@ const server = http.createServer((req, res) => {
   try {
     await open("?volume=I&page=17");
     assert.equal(await page.locator("#text-count").innerText(), "29");
+    assert.equal(await page.locator("#citation-count").innerText(), "0",
+      "Navarro stays empty until a transcript line supplies context");
+    await page.locator("#citations-tab").click();
+    assert.ok((await page.locator("#citation-list .empty-state").innerText()).includes("Selecione um trecho"));
+    assert.equal(await page.locator("#citation-detail").isHidden(), true);
+    await page.locator("#text-tab").click();
     assert.equal(await page.locator('a[href="https://abanheenga.blogspot.com/p/como-aprender-tupi.html"]').count(), 2);
     await page.screenshot({path:path.join(out, "vlb-desktop.png"), fullPage:false});
     await source(13);
     assert.ok(page.url().includes("source=vlb-emerson-r568-p00013"));
+    assert.ok(Number(await page.locator("#citation-count").innerText()) > 0,
+      "selecting a line prepares only its contextual Navarro results");
+    assert.equal(await page.locator(".source-meta").count(), 0,
+      "Navarro headwords are not injected into the transcript rows");
+    const centered = await page.evaluate(() => {
+      const viewport = document.getElementById("scan-viewport").getBoundingClientRect();
+      const highlight = document.querySelector("#ocr-overlay rect").getBoundingClientRect();
+      return {deltaX:Math.abs((highlight.left + highlight.right) / 2 - (viewport.left + viewport.right) / 2),
+        deltaY:Math.abs((highlight.top + highlight.bottom) / 2 - (viewport.top + viewport.bottom) / 2),
+        width:viewport.width,height:viewport.height};
+    });
+    assert.ok(centered.deltaY <= centered.height * .12,
+      "transcript selection vertically centers the OCR highlight in the facsimile viewer");
+
+    // The facsimile is bidirectional: tapping an aligned line reveals and
+    // centers its transcript row, without opening Navarro detail.
+    await page.locator("#text-viewport").evaluate(viewport => { viewport.scrollTop = viewport.scrollHeight; });
+    const scanLine = await page.locator("#ocr-overlay rect").first().boundingBox();
+    assert.ok(scanLine, "selected OCR line has a clickable on-screen box");
+    await page.mouse.click(scanLine.x + scanLine.width / 2, scanLine.y + scanLine.height / 2);
+    assert.equal(await page.locator("#source-13").evaluate(node => node.classList.contains("selected")), true);
+    assert.equal(await page.locator("#citation-detail").isHidden(), true);
+    assert.ok(await page.locator("#source-13").evaluate(node => {
+      const viewport = document.getElementById("text-viewport").getBoundingClientRect();
+      const box = node.getBoundingClientRect();
+      return box.top >= viewport.top && box.bottom <= viewport.bottom;
+    }), "facsimile line tap centers its transcript row");
+
+    // A selected line can be cited or handed to the native share sheet without
+    // requiring the reader to reconstruct its locator or deep link.
+    await page.evaluate(() => {
+      Object.defineProperty(navigator, "clipboard", {configurable:true, value:{
+        writeText: async value => { window.__vlbCopiedCitation = value; }
+      }});
+      Object.defineProperty(navigator, "share", {configurable:true, value:async value => {
+        window.__vlbSharedCitation = value;
+      }});
+    });
+    await page.locator("#source-13 .fragment-actions button").filter({hasText:"Citar verbete"}).click();
+    await page.waitForFunction(() => Boolean(window.__vlbCopiedCitation));
+    const copiedCitation = await page.evaluate(() => window.__vlbCopiedCitation);
+    const copiedLines = copiedCitation.split("\n");
+    const compactSourceURL = new URL(copiedLines.at(-1));
+    assert.equal(copiedLines[0], await page.locator("#source-13 .source-text").innerText());
+    assert.ok(copiedCitation.includes("\n\nVocabulário na Língua Brasílica (VLB), v. I, p. 17, § 13.\n"));
+    assert.equal(compactSourceURL.searchParams.get("page"), "I-017");
+    assert.equal(compactSourceURL.searchParams.get("line"), "13");
+    assert.equal(compactSourceURL.searchParams.has("source"), false,
+      "copied line link uses the compact page-plus-line route");
+    await page.locator("#source-13 .fragment-actions button").filter({hasText:"Compartilhar"}).click();
+    await page.waitForFunction(() => Boolean(window.__vlbSharedCitation));
+    const sharedCitation = await page.evaluate(() => window.__vlbSharedCitation);
+    assert.equal(sharedCitation.url, compactSourceURL.href);
+    assert.ok(sharedCitation.text.includes("VLB), v. I, p. 17, § 13."));
+    assert.equal(sharedCitation.title, "VLB I, p. 17, § 13");
+    await page.evaluate(() => {
+      Object.defineProperty(navigator, "share", {configurable:true, value:undefined});
+      window.__vlbCopiedCitation = null;
+    });
+    await page.locator("#source-13 .fragment-actions button").filter({hasText:"Compartilhar"}).click();
+    await page.waitForFunction(() => Boolean(window.__vlbCopiedCitation));
+    assert.equal(await page.evaluate(() => window.__vlbCopiedCitation), copiedCitation,
+      "share falls back to the complete clipboard block when Web Share is unavailable");
+    await page.evaluate(() => {
+      Object.defineProperty(navigator, "clipboard", {configurable:true, value:{
+        writeText: async () => { throw new DOMException("denied", "NotAllowedError"); }
+      }});
+      window.__vlbManualCitation = null;
+      window.prompt = (label, value) => { window.__vlbManualCitation = {label, value}; return null; };
+    });
+    await page.locator("#source-13 .fragment-actions button").filter({hasText:"Citar verbete"}).click();
+    await page.waitForFunction(() => Boolean(window.__vlbManualCitation));
+    const manualCitation = await page.evaluate(() => window.__vlbManualCitation);
+    assert.ok(manualCitation.label.includes("Copie a citação"));
+    assert.equal(manualCitation.value, copiedCitation,
+      "clipboard denial exposes the complete citation block for manual copy");
+    await page.goto(compactSourceURL.href);
+    await page.locator("#source-13.selected").waitFor();
+    await page.waitForFunction(() => {
+      const image = document.getElementById("page-image");
+      return image.complete && image.naturalWidth > 0;
+    });
+    assert.equal(await page.locator("#citation-detail").isHidden(), true);
+    assert.ok(await page.locator("#ocr-overlay rect").count() > 0,
+      "compact citation link restores the selected facsimile line");
+    assert.ok(await page.locator("#ocr-overlay rect").first().evaluate(node => {
+      const viewport = document.getElementById("scan-viewport").getBoundingClientRect();
+      const box = node.getBoundingClientRect();
+      return Math.abs((box.top + box.bottom) / 2 - (viewport.top + viewport.bottom) / 2) <= viewport.height * .12;
+    }), "compact citation link centers the selected facsimile line");
+    assert.ok(await page.locator("#source-13").evaluate(node => {
+      const viewport = document.getElementById("text-viewport").getBoundingClientRect();
+      const box = node.getBoundingClientRect();
+      return box.top >= viewport.top && box.bottom <= viewport.bottom;
+    }), "compact citation link centers the selected transcript line");
     await page.locator("#zoom-in").click();
     assert.equal(await page.locator("#zoom-reset").innerText(), "125%");
     await page.locator("#show-ocr").uncheck();
@@ -150,10 +317,13 @@ const server = http.createServer((req, res) => {
     await page.locator("#zoom-reset").click();
 
     // An entry deep link identifies its citation, without accepting a proposed
-    // source association. The user explicitly chooses the source paragraph.
+    // source association or opening its detail. The user explicitly opens the
+    // contextual Navarro entry and then chooses the source paragraph.
     await open("?volume=I&page=17&entry=7210");
-    assert.equal(await page.locator("#citations-tab").getAttribute("aria-selected"), "true");
+    assert.equal(await page.locator("#text-tab").getAttribute("aria-selected"), "true");
     assert.equal(await page.locator(".fragment.selected").count(), 0);
+    assert.equal(await page.locator("#citation-detail").isHidden(), true);
+    await openCurrentNavarroDetail();
     assert.ok((await page.locator("#citation-detail h3").innerText()).includes("mokanãî"));
     assert.ok((await page.locator("#citation-detail h3 a").getAttribute("href")).includes("query="));
     await page.locator("#citation-detail .associations button").filter({hasText:"§ 13"}).click();
@@ -164,6 +334,11 @@ const server = http.createServer((req, res) => {
     await page.locator("#correction-panel").waitFor({state:"visible"});
     assert.equal(await page.evaluate(() => document.activeElement?.id), "correction-heading",
       "opening a correction moves keyboard focus into the editor");
+    await page.locator("#source-13 .source-main").click();
+    assert.equal(await page.locator("#correction-panel").isVisible(), true,
+      "a transcript line click leaves the active correction open");
+    assert.equal(await page.locator("#citation-detail").isHidden(), true,
+      "a transcript line click cannot reopen Navarro detail over a correction");
     assert.equal(await page.locator("#correction-spans .correction-span").count(), 1,
       "editing a reviewed match preserves its existing exact span");
     await page.locator("#correction-reviewer").fill("VLB browser regression");
@@ -174,6 +349,20 @@ const server = http.createServer((req, res) => {
       "editing a checked decision appends a chained revision");
     assert.ok((await page.locator("#correction-feedback").innerText()).includes("somente neste navegador"));
     await page.locator("#close-correction").click();
+    assert.equal(await page.locator("#citation-detail").isVisible(), true,
+      "closing a correction restores its explicitly opened detail");
+    await page.locator("#source-14 .source-main").click();
+    assert.equal(await page.locator("#citation-detail").isHidden(), true,
+      "selecting an unrelated line closes the stale Navarro detail");
+    assert.equal(new URL(page.url()).searchParams.has("citation"), false);
+    assert.equal(new URL(page.url()).searchParams.has("entry"), false);
+    assert.equal((await page.locator("#note-target").innerText()).includes("mokanãî"), false,
+      "line navigation cannot attach the old Navarro entry to a new note");
+
+    // Restore the explicit citation context for the note-persistence check.
+    await open("?volume=I&page=17&entry=7210");
+    await openCurrentNavarroDetail();
+    await page.locator("#citation-detail .associations button").filter({hasText:"§ 13"}).click();
     await page.screenshot({path:path.join(out, "vlb-citation.png"), fullPage:false});
 
     // Review notes keep source and citation IDs and survive a page reload.
@@ -234,9 +423,9 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator("#unresolved-list p").count(), 2);
     await page.locator("#close-about").click();
     await page.setViewportSize({width:390,height:844});
-    await page.locator('#surface-scan[aria-pressed="true"]').waitFor();
-    await assertResponsiveSurface("scan", "390px direct facsimile route");
-    await page.screenshot({path:path.join(out, "vlb-mobile-390-scan.png"), fullPage:false});
+    await page.locator('#toggle-transcription[aria-expanded="true"]').waitFor();
+    const expanded390 = await assertMobileUnifiedReader("390px unified reader");
+    await page.screenshot({path:path.join(out, "vlb-mobile-390-unified.png"), fullPage:false});
     await page.locator("#scan-options summary").click();
     await page.locator("#zoom-in").click();
     await page.locator("#zoom-in").click();
@@ -245,40 +434,67 @@ const server = http.createServer((req, res) => {
       return viewport.scrollTop;
     });
     assert.ok(scanPosition > 0, "zoomed facsimile has a meaningful saved reading position");
-    await page.screenshot({path:path.join(out, "vlb-mobile-390-scan-zoomed.png"), fullPage:false});
-    await page.locator("#surface-text").click();
-    await assertResponsiveSurface("text", "390px transcription switch");
-    assert.equal(new URL(page.url()).searchParams.get("surface"), "text");
+    await page.screenshot({path:path.join(out, "vlb-mobile-390-unified-zoomed.png"), fullPage:false});
     const textPosition = await page.locator("#text-viewport").evaluate(viewport => {
       viewport.scrollTop = Math.min(210, viewport.scrollHeight - viewport.clientHeight);
       return viewport.scrollTop;
     });
     assert.ok(textPosition > 0, "transcription has a meaningful saved reading position");
-    await page.screenshot({path:path.join(out, "vlb-mobile-390-text.png"), fullPage:false});
-    await page.locator("#surface-scan").click();
-    await assertResponsiveSurface("scan", "390px facsimile return");
+    await page.locator("#toggle-transcription").click();
+    await page.locator("body.transcription-minimized").waitFor({state:"attached"});
+    const minimized390 = await assertMobileUnifiedReader("390px minimized transcription", {expanded:false});
+    assert.ok(minimized390.scanHeight > expanded390.scanHeight,
+      "minimizing the transcription gives the facsimile more room");
     assert.ok(Math.abs(await page.locator("#scan-viewport").evaluate(viewport => viewport.scrollTop) - scanPosition) < 3,
-      "facsimile reading position survives a surface round trip");
-    await page.locator("#surface-text").click();
+      "facsimile reading position survives minimizing the transcription");
+    await page.screenshot({path:path.join(out, "vlb-mobile-transcription-minimized.png"), fullPage:false});
+    await page.locator("#toggle-transcription").click();
+    await assertMobileUnifiedReader("390px restored transcription");
     assert.ok(Math.abs(await page.locator("#text-viewport").evaluate(viewport => viewport.scrollTop) - textPosition) < 3,
-      "transcription reading position survives a surface round trip");
+      "transcription reading position survives minimizing and restoring the tray");
+    assert.ok(Math.abs(await page.locator("#scan-viewport").evaluate(viewport => viewport.scrollTop) - scanPosition) < 3,
+      "facsimile reading position survives restoring the transcription tray");
+
+    await source(13);
+    await page.locator("#toggle-transcription").click();
+    await assertMobileUnifiedReader("mobile facsimile reverse navigation", {expanded:false});
+    const mobileScanLine = page.locator("#ocr-overlay rect").first();
+    await mobileScanLine.scrollIntoViewIfNeeded();
+    const mobileScanBox = await mobileScanLine.boundingBox();
+    assert.ok(mobileScanBox);
+    await page.mouse.click(mobileScanBox.x + mobileScanBox.width / 2,
+      mobileScanBox.y + mobileScanBox.height / 2);
+    await assertMobileUnifiedReader("facsimile line restores transcription");
+    assert.equal(await page.locator("#source-13").evaluate(node => node.classList.contains("selected")), true);
+    assert.equal(await page.locator("#citation-detail").isHidden(), true,
+      "facsimile line navigation does not open Navarro detail");
 
     await page.setViewportSize({width:360,height:800});
     await page.reload();
-    await page.locator('#surface-text[aria-pressed="true"]').waitFor();
-    await assertResponsiveSurface("text", "360px portrait");
+    await page.locator('#toggle-transcription[aria-expanded="true"]').waitFor();
+    await assertMobileUnifiedReader("360px portrait unified reader");
     await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-    await page.screenshot({path:path.join(out, "vlb-mobile-360-text.png"), fullPage:false});
+    await page.screenshot({path:path.join(out, "vlb-mobile-360-unified.png"), fullPage:false});
     await page.setViewportSize({width:844,height:390});
-    await assertResponsiveSurface("text", "phone landscape");
-    await page.screenshot({path:path.join(out, "vlb-mobile-landscape.png"), fullPage:false});
+    await assertMobileUnifiedReader("phone landscape unified reader");
+    await settlePaint();
+    await page.waitForFunction(() => {
+      const node = document.querySelector("#ocr-overlay rect");
+      if (!node) return false;
+      const viewport = document.getElementById("scan-viewport").getBoundingClientRect();
+      const box = node.getBoundingClientRect();
+      return box.bottom > viewport.top && box.top < viewport.bottom;
+    });
+    await page.screenshot({path:path.join(out, "vlb-mobile-landscape-unified.png"), fullPage:false});
     await page.setViewportSize({width:768,height:1024});
-    await assertResponsiveSurface("text", "portrait tablet");
-    await page.screenshot({path:path.join(out, "vlb-tablet-text.png"), fullPage:false});
+    await assertMobileUnifiedReader("portrait tablet unified reader");
+    await settlePaint();
+    await page.screenshot({path:path.join(out, "vlb-tablet-unified.png"), fullPage:false});
     await page.setViewportSize({width:1440,height:1080});
     assert.equal(await page.locator("#scan-panel").isVisible(), true, "desktop restores the facsimile pane");
     assert.equal(await page.locator("#transcription-panel").isVisible(), true, "desktop restores the transcription pane");
-    assert.equal(await page.locator("#surface-switch").isVisible(), false, "desktop does not duplicate pane controls");
+    assert.equal(await page.locator("#surface-switch").isVisible(), false, "desktop does not expose obsolete pane controls");
+    assert.equal(await page.locator("#toggle-transcription").isVisible(), false, "desktop keeps both panes fully open");
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, "desktop has no horizontal overflow");
 
     // Only unhydrated neighboring scans are fixture-backed in sparse checkouts.
@@ -309,7 +525,8 @@ const server = http.createServer((req, res) => {
     const selectedReviewed = page.locator(`${textSection("I-017")} .fragment.selected`);
     await selectedReviewed.waitFor();
     assert.equal(await selectedReviewed.getAttribute("data-source-id"), "vlb-emerson-r568-p00013");
-    assert.ok((await page.locator("#citation-detail").innerText()).includes("Aimocanãy"));
+    assert.equal(await page.locator("#citation-detail").isHidden(), true,
+      "dictionary navigation selects and aligns without opening Navarro detail");
     assert.equal(await selectedReviewed.locator("mark.match-span").innerText(), "Aimocanãy",
       "the reviewed exact source span is visibly marked");
     const reviewedRects = page.locator(`${scanSection("I-017")} svg rect`);
@@ -341,6 +558,8 @@ const server = http.createServer((req, res) => {
     assert.equal(new URL(page.url()).searchParams.get("focus"),"auto");
     await page.reload();
     await page.locator(`${textSection("I-017")} .fragment.selected mark.match-span`).waitFor();
+    assert.equal(await page.locator("#citation-detail").isHidden(), true,
+      "reloading a shared alignment link does not open Navarro detail");
     assert.equal(await page.locator(`${textSection("I-017")} .fragment.selected mark.match-span`).innerText(),"Aimocanãy");
     assert.equal(await page.locator(`${scanSection("I-017")} svg rect`).count(),1);
     await page.locator("#mode-select").selectOption("page");
@@ -353,59 +572,75 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator(`${textSection("I-017")} .fragment.selected mark.match-span`).innerText(),"Aimocanãy");
     assert.equal(await page.locator(`${scanSection("I-017")} svg rect`).count(),1);
 
-    // A dictionary deep link is text-first on a narrow screen. Its scan is
-    // deferred until requested, then opens at the same selected expression.
+    // A dictionary deep link opens a single mobile reader: the facsimile is
+    // primary and the selected transcription remains available below it.
     await page.setViewportSize({width:390,height:844});
     await page.goto(base + inlineURL.search);
     const mobileReviewed = page.locator(`${textSection("I-017")} .fragment.selected`);
     await mobileReviewed.waitFor();
-    await page.locator('#surface-text[aria-pressed="true"]').waitFor();
-    await assertResponsiveSurface("text", "mobile dictionary deep link");
+    await page.locator('#toggle-transcription[aria-expanded="true"]').waitFor();
+    await assertMobileUnifiedReader("mobile dictionary deep link");
     assert.equal(await mobileReviewed.getAttribute("data-source-id"), "vlb-emerson-r568-p00013");
-    assert.equal(await page.locator(`${scanSection("I-017")} img`).getAttribute("src"), null,
-      "text-first deep link defers the facsimile image");
-    const mobileTextPosition = await page.locator("#text-viewport").evaluate(viewport => viewport.scrollTop);
-    await page.locator("#citation-detail .detail-actions button").filter({hasText:"Corrigir"}).click();
-    const correctionGeometry = await page.evaluate(() => {
-      const panel = document.getElementById("correction-panel").getBoundingClientRect();
-      const pane = document.getElementById("transcription-panel").getBoundingClientRect();
-      const viewport = document.getElementById("text-viewport").getBoundingClientRect();
-      return {panelTop:panel.top,panelBottom:panel.bottom,paneTop:pane.top,paneBottom:pane.bottom,
-        panelHeight:panel.height,paneHeight:pane.height,textHeight:viewport.height,overflow:document.documentElement.scrollWidth > innerWidth};
-    });
-    assert.equal(correctionGeometry.overflow,false,"mobile correction editor does not create horizontal overflow");
-    assert.ok(correctionGeometry.panelTop >= correctionGeometry.paneTop && correctionGeometry.panelBottom <= correctionGeometry.paneBottom,
-      "mobile correction editor stays inside the reading pane");
-    assert.ok(correctionGeometry.panelHeight <= correctionGeometry.paneHeight * .5,
-      "mobile correction editor leaves at least half the pane available");
-    assert.ok(correctionGeometry.textHeight >= 180,"mobile correction editor leaves a usable text surface");
-    await page.screenshot({path:path.join(out,"vlb-mobile-correction.png"),fullPage:false});
-    await page.locator("#close-correction").click();
-    await page.screenshot({path:path.join(out,"vlb-mobile-citation-text.png"),fullPage:false});
-    await page.locator("#surface-scan").click();
-    await assertResponsiveSurface("scan", "mobile citation facsimile reveal");
     await page.waitForFunction(selector => {
       const image = document.querySelector(selector);
       return image?.complete && image.naturalWidth > 0;
     }, `${scanSection("I-017")} img`);
     assert.equal(await page.locator(`${scanSection("I-017")} svg rect`).count(), 1,
-      "revealed facsimile retains the form-level OCR target");
+      "unified deep link immediately exposes the form-level OCR target");
+    await assertPaintedPage("#scan-viewport","I-017");
+    const mobileTextPosition = await page.locator("#text-viewport").evaluate(viewport => viewport.scrollTop);
+    assert.equal(await page.locator("#citation-detail").isHidden(), true);
+    await settlePaint();
+    await page.screenshot({path:path.join(out,"vlb-mobile-selected-actions.png"),fullPage:false});
+    await openSelectedNavarroDetail(textSection("I-017"));
+    await page.locator("#citation-detail .detail-actions button").filter({hasText:"Corrigir"}).click();
+    await page.locator("body.correction-open").waitFor({state:"attached"});
+    const correctionGeometry = await page.evaluate(() => {
+      const panel = document.getElementById("correction-panel").getBoundingClientRect();
+      const pane = document.getElementById("transcription-panel").getBoundingClientRect();
+      const scan = document.getElementById("scan-panel").getBoundingClientRect();
+      return {panelTop:panel.top,panelBottom:panel.bottom,paneTop:pane.top,paneBottom:pane.bottom,
+        panelHeight:panel.height,paneHeight:pane.height,scanHeight:scan.height,overflow:document.documentElement.scrollWidth > innerWidth};
+    });
+    assert.equal(correctionGeometry.overflow,false,"mobile correction editor does not create horizontal overflow");
+    assert.ok(correctionGeometry.panelTop >= correctionGeometry.paneTop && correctionGeometry.panelBottom <= correctionGeometry.paneBottom,
+      "mobile correction editor stays inside the transcription tray");
+    assert.ok(correctionGeometry.scanHeight >= 135,"mobile correction editor keeps a substantial facsimile visible");
+    await page.locator("#save-correction").scrollIntoViewIfNeeded();
+    assert.equal(await page.locator("#save-correction").isVisible(),true,"mobile correction actions remain reachable");
+    await page.screenshot({path:path.join(out,"vlb-mobile-correction.png"),fullPage:false});
+    await page.locator("#close-correction").click();
+    await assertMobileUnifiedReader("mobile citation unified reader");
+    assert.equal(await page.locator(`${scanSection("I-017")} svg rect`).count(), 1,
+      "visible facsimile retains the form-level OCR target");
     await assertPaintedPage("#scan-viewport","I-017");
     await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
-    await page.screenshot({path:path.join(out,"vlb-mobile-citation-scan.png"),fullPage:false});
-    await page.locator("#surface-text").click();
-    await assertResponsiveSurface("text", "mobile citation transcription return");
-    assert.ok(Math.abs(await page.locator("#text-viewport").evaluate(viewport => viewport.scrollTop) - mobileTextPosition) < 3,
-      "selected transcription position survives viewing the facsimile");
-    await page.locator("#surface-scan").click();
-    assert.equal(new URL(page.url()).searchParams.get("surface"), "scan");
-    await page.reload();
+    await page.screenshot({path:path.join(out,"vlb-mobile-citation-unified.png"),fullPage:false});
+    await page.locator("#toggle-transcription").click();
+    await assertMobileUnifiedReader("mobile citation minimized tray", {expanded:false});
+    assert.equal(await page.locator(`${scanSection("I-017")} svg rect`).count(), 1,
+      "minimizing the transcription retains the OCR target");
+    await page.locator("#toggle-transcription").click();
+    await assertMobileUnifiedReader("mobile citation restored tray");
+    assert.ok(await mobileReviewed.evaluate(node => {
+      const viewport = document.getElementById("text-viewport").getBoundingClientRect();
+      const box = node.getBoundingClientRect();
+      return box.bottom > viewport.top && box.top < viewport.bottom;
+    }), "selected transcription remains visible after minimizing and restoring the tray");
+    assert.ok(await page.locator("#text-viewport").evaluate(viewport => viewport.scrollTop) >= mobileTextPosition - 3,
+      "restoring the tray does not jump above the selected transcription position");
+    const legacySurfaceURL = new URL(page.url());
+    legacySurfaceURL.searchParams.set("surface", "scan");
+    await page.goto(legacySurfaceURL.href);
     await page.locator(`${scanSection("I-017")} .scan-stage img`).waitFor({state:"attached"});
-    await page.locator('#surface-scan[aria-pressed="true"]').waitFor();
-    await assertResponsiveSurface("scan", "explicit mobile facsimile route");
-    await page.locator("#surface-text").click();
-    await assertResponsiveSurface("text", "reloaded citation transcription return");
+    await page.waitForFunction(selector => {
+      const image = document.querySelector(selector);
+      return image?.complete && image.naturalWidth > 0;
+    }, `${scanSection("I-017")} img`);
+    await assertMobileUnifiedReader("legacy mobile surface route");
     assert.equal(await mobileReviewed.getAttribute("data-source-id"), "vlb-emerson-r568-p00013");
+    assert.equal(await page.locator(`${scanSection("I-017")} svg rect`).count(),1,
+      "legacy surface routes retain the unified source highlight");
     await page.setViewportSize({width:1440,height:1080});
     await page.locator("#scan-panel").waitFor({state:"visible"});
 
@@ -423,6 +658,8 @@ const server = http.createServer((req, res) => {
     const selectedProposed = page.locator(`${textSection("I-017")} .fragment.selected`);
     await selectedProposed.waitFor();
     assert.equal(await selectedProposed.getAttribute("data-source-id"), "vlb-emerson-r568-p00025");
+    assert.equal(await page.locator("#citation-detail").isHidden(), true);
+    await openSelectedNavarroDetail(textSection("I-017"));
     assert.ok((await page.locator("#citation-detail").innerText()).includes("proposta"));
     assert.ok(await page.locator(`${scanSection("I-017")} svg rect`).count() > 0);
     assert.equal(await selectedProposed.locator("mark.match-span").innerText(), "Aguaça pupe aico");
@@ -447,10 +684,13 @@ const server = http.createServer((req, res) => {
     await page.locator("#mode-select").selectOption("continuous");
     await page.locator(`${textSection("I-017")} .fragment.selected mark.match-span`).waitFor();
     assert.equal(await page.locator(`${textSection("I-017")} .fragment.selected mark.match-span`).innerText(),"Aguaça");
+    assert.equal(await page.locator("#citation-detail").isHidden(), true,
+      "mode changes preserve alignment without reopening Navarro detail");
 
     // A new correction can be built from the selected exact text, saved
     // locally, submitted as structured issue data, exported, and strictly
     // validated without exposing a GitHub credential in the reader.
+    await openSelectedNavarroDetail(textSection("I-017"));
     await page.locator("#citation-detail .detail-actions button").filter({hasText:"Corrigir"}).click();
     assert.equal(await page.locator("#correction-spans .correction-span").count(), 0);
     await page.locator(`${textSection("I-017")} .fragment.selected mark.match-span`).evaluate(mark => {
@@ -494,6 +734,8 @@ const server = http.createServer((req, res) => {
     await page.locator("#close-correction").click();
     await page.evaluate(() => localStorage.removeItem("nhe-enga-vlb-corrections-v1"));
     await page.reload();
+    await page.locator(`${textSection("I-017")} .fragment.selected`).waitFor();
+    await openSelectedNavarroDetail(textSection("I-017"));
     await page.locator("#citation-detail .detail-actions button").filter({hasText:"Corrigir"}).click();
     await page.locator("#import-corrections").setInputFiles(correctionPath);
     await page.waitForFunction(() => document.getElementById("correction-feedback").textContent.includes("2 correção"));
@@ -514,6 +756,8 @@ const server = http.createServer((req, res) => {
     assert.equal(await page.locator(".continuous-text-page .fragment.selected").count(),0,
       "a reviewed ambiguous correction never invents an automatic destination");
     assert.equal(await page.locator(".continuous-scan-page svg rect").count(),0);
+    assert.equal(await page.locator("#citation-detail").isHidden(),true);
+    await openCurrentNavarroDetail();
     assert.ok((await page.locator("#citation-detail").innerText()).includes("Correção ambígua"));
 
     // This definition has two original II64 occurrences but three formatted
@@ -525,10 +769,30 @@ const server = http.createServer((req, res) => {
     const ambiguousURL = new URL(await ambiguousInline.getAttribute("href"), base);
     assert.equal(ambiguousURL.searchParams.has("citation_pos"), false);
     await openContinuous(ambiguousURL.search);
+    assert.equal(await page.locator("#text-tab").getAttribute("aria-selected"), "true",
+      "ambiguous navigation does not open the Navarro tray");
+    assert.equal(await page.locator("#citation-choice-notice").isVisible(), false,
+      "ambiguous choices stay behind the explicit Navarro action");
+    await page.locator("#citations-tab").click();
     assert.equal(await page.locator("#citation-choice-notice").isVisible(), true,
       "duplicate citation occurrences require an explicit choice");
     assert.equal(await page.locator(".continuous-text-page .fragment.selected").count(), 0);
     assert.equal(await page.locator(".continuous-scan-page svg rect").count(), 0);
+    await page.locator("#text-tab").click();
+    const contextualFragment = page.locator(`${textSection("II-064")} .fragment`).filter({
+      has:page.locator(".fragment-actions button").filter({hasText:"Ver no Navarro"})
+    }).first();
+    await contextualFragment.locator(".source-main").click();
+    assert.equal(await page.locator("#citation-choice-notice").evaluate(node => node.hidden), true,
+      "selecting a source clears a stale ambiguous-entry choice notice");
+    assert.equal(new URL(page.url()).searchParams.has("entry"), false,
+      "selecting a source clears the stale ambiguous dictionary entry from the URL");
+    const contextualAction = contextualFragment.locator(".fragment-actions button").filter({hasText:"Ver no Navarro"});
+    const contextualCount = Number((await contextualAction.innerText()).match(/\d+/)[0]);
+    assert.equal(Number(await page.locator("#citation-count").innerText()), contextualCount,
+      "source selection replaces entry-wide candidates with line-specific Navarro results");
+    await contextualAction.click();
+    assert.equal(await page.locator("#citation-list .citation-card").count(), contextualCount);
 
     // Scrolling, rather than clicking a page button, loads the next page and
     // updates the active URL without adding one history entry per scroll.
@@ -594,6 +858,9 @@ const server = http.createServer((req, res) => {
     const continuation = page.locator(`${textSection("II-078")} [data-source-id="vlb-emerson-r568-p05859"]`);
     await continuation.locator(".source-main").click();
     assert.ok((await continuation.locator(".source-text").innerText()).includes("Mũdês grandes"));
+    assert.equal(await page.locator("#citation-detail").isHidden(), true,
+      "continuous transcript selection does not open Navarro detail");
+    assert.equal(await page.locator("#text-tab").getAttribute("aria-selected"), "true");
     assert.equal(new URL(page.url()).searchParams.get("page"), "78");
     assert.ok(await page.locator(`${scanSection("II-078")} svg rect`).count() > 0);
     assert.equal(await page.locator(`${scanSection("II-077")} svg rect`).count(), 0);
@@ -612,30 +879,39 @@ const server = http.createServer((req, res) => {
     await page.locator("#mode-select").selectOption("continuous");
     await page.locator(`${textSection("II-078")} .fragment.selected`).waitFor();
     await page.setViewportSize({width:390,height:844});
-    await assertResponsiveSurface("text", "continuous selected-source route");
-    await assertPaintedPage("#text-viewport","II-078");
-    await page.screenshot({path:path.join(out,"vlb-continuous-mobile-text.png"),fullPage:false});
-    await page.locator("#surface-scan").click();
-    await assertResponsiveSurface("scan", "continuous facsimile switch");
+    await assertMobileUnifiedReader("continuous selected-source route");
     await page.waitForFunction(selector => {
       const image = document.querySelector(selector);
       return image?.complete && image.naturalWidth > 0;
     }, `${scanSection("II-078")} img`);
+    await assertPaintedPage("#text-viewport","II-078");
     await assertPaintedPage("#scan-viewport","II-078");
     assert.ok(await page.locator(`${scanSection("II-078")} svg rect`).count() > 0,
-      "continuous mobile switch preserves the selected source highlight");
-    await page.screenshot({path:path.join(out,"vlb-continuous-mobile-scan.png"),fullPage:false});
-    await page.locator("#surface-text").click();
-    await assertResponsiveSurface("text", "continuous transcription return");
+      "continuous unified reader preserves the selected source highlight");
+    await page.screenshot({path:path.join(out,"vlb-continuous-mobile-unified.png"),fullPage:false});
+    await page.locator("#toggle-transcription").click();
+    await assertMobileUnifiedReader("continuous minimized transcription", {expanded:false});
+    await assertPaintedPage("#scan-viewport","II-078");
+    assert.ok(await page.locator(`${scanSection("II-078")} svg rect`).count() > 0,
+      "continuous minimized tray retains the selected source highlight");
+    await page.screenshot({path:path.join(out,"vlb-continuous-mobile-minimized.png"),fullPage:false});
+    await page.locator("#toggle-transcription").click();
+    await assertMobileUnifiedReader("continuous restored transcription");
     assert.equal(await page.locator(`${textSection("II-078")} .fragment.selected`).getAttribute("data-source-id"),
       "vlb-emerson-r568-p05859");
     await assertPaintedPage("#text-viewport","II-078");
+    assert.ok(await page.locator(`${scanSection("II-078")} svg rect`).first().evaluate(node => {
+      const viewport = document.getElementById("scan-viewport").getBoundingClientRect();
+      const box = node.getBoundingClientRect();
+      return box.bottom > viewport.top && box.top < viewport.bottom;
+    }), "restoring the tray keeps the selected facsimile line visible");
     await page.setViewportSize({width:1440,height:1080});
 
     // Long correction histories cannot safely fit in every browser/proxy URL.
     // The reader must download the complete envelope and open an unprefilled
     // token-free issue form instead of truncating structured evidence.
     await openContinuous("?volume=I&page=17&entry=7210&citation_pos=86&focus=auto");
+    await openSelectedNavarroDetail(textSection("I-017"));
     await page.locator("#citation-detail .detail-actions button").filter({hasText:"Corrigir"}).click();
     await page.locator("#correction-reviewer").fill("VLB browser regression");
     await page.locator("#correction-notes").fill("Long prefill fallback. " + "evidence ".repeat(900));
@@ -667,7 +943,13 @@ const server = http.createServer((req, res) => {
       continuous_scroll_sync:true,continuous_mode_toggle:true,inline_citation_occurrence:true,reviewed_form_line_jump:true,
       proposed_jump_stays_proposed:true,ambiguous_jump_fallback:true,ambiguous_occurrence_choice:true,no_homepage_vlb_navigation:true,
       explicit_navigation_clears_selection:true,logical_volume_neighbors:true,source_below_sticky_heading:true,
-      mobile_single_surface:true,mobile_surface_position_preserved:true,mobile_scan_deferred:true,responsive_viewport_matrix:true,
+      mobile_unified_reader:true,mobile_facsimile_primary:true,mobile_transcription_tray:true,mobile_transcription_minimize:true,
+      mobile_search_above_reader:true,mobile_compact_transcription_type:true,responsive_viewport_matrix:true,
+      contextual_navarro_only:true,citation_detail_requires_explicit_action:true,
+      transcript_click_is_navigation_only:true,facsimile_line_reverse_navigation:true,scan_highlight_centered:true,
+      contextual_navarro_resets_on_line_selection:true,line_navigation_clears_stale_citation:true,
+      selected_line_citation_copy:true,native_line_share:true,
+      share_fallback_to_clipboard:true,clipboard_failure_manual_prompt:true,compact_line_deep_link:true,
       exact_source_span_mark:true,manual_alternative_route_persists:true,correction_local_save:true,
       auto_focus_route_persists:true,manual_alternative_mode_switch_persists:true,
       correction_issue_payload:true,correction_issue_oversize_fallback:true,correction_export_import:true,
