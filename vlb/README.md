@@ -38,12 +38,17 @@ no standalone VLB link in the homepage navigation.
   Pages load as needed; prepending preserves the visible page, and distant scan
   images are released. The URL tracks the current page without filling browser
   history with scroll events. Switch back to **Página a página** at any point.
-- Phones and portrait tablets keep the search bar above one unified reader.
-  The facsimile is the primary upper surface and the compact transcription tray
-  occupies roughly the lower third. The tray can be minimized to its tab bar
-  without losing either pane's scroll position; restoring it keeps the selected
-  source and OCR highlight. Landscape retains the same relationship with less
-  secondary chrome, and legacy `surface` links no longer defer the scan.
+- Phones and portrait tablets keep one unified reader with the facsimile as the
+  primary upper surface and the compact transcription tray at roughly the lower
+  third. Search collapses to a small magnifier until requested, and the compact
+  page controls leave the reading surfaces most of the viewport. Either pane can
+  be minimized without losing its scroll position or selection. Drag the divider
+  to change their proportions; the same separator is keyboard adjustable.
+  Pinching inside the facsimile changes its zoom, and selecting a line recenters
+  the current zoom on its OCR boxes. Zoom, pane proportions, minimized panes,
+  OCR visibility, and reading mode are restored from localStorage. Landscape
+  retains the same relationship with less secondary chrome, and legacy
+  `surface` links no longer defer the scan.
 - Select a transcription paragraph to highlight its approximate OCR lines on
   the scan and center the union of those OCR boxes. Tapping an aligned line in
   the facsimile performs the reverse navigation, restoring the mobile tray when
@@ -51,13 +56,13 @@ no standalone VLB link in the homepage navigation.
   Navarro entry. Exact supported expressions are marked in the source text and
   use narrowed OCR lines where available; an accepted text span without a safe
   OCR target remains navigable without fabricating a whole-paragraph scan box.
-- A selected line exposes **Citar verbete**, which copies the exact transcription
-  text, a compact VLB volume/page/paragraph citation, and a direct link. The
-  neighboring **Compartilhar** action uses the platform share sheet for apps
-  such as WhatsApp or email and falls back to the same clipboard block when
-  native sharing is unavailable. If clipboard access is denied, the complete
-  block opens for manual copy. Opening that compact link restores the line
-  selection and centers both reading surfaces without opening Navarro.
+- A selected line exposes a single **Compartilhar** action. It sends the exact
+  transcription text, a compact VLB volume/page/paragraph citation, and a direct
+  selection link to the platform share sheet for apps such as WhatsApp or email.
+  When native sharing is unavailable it copies the same block; if clipboard
+  access is denied, the complete block opens for manual copy. Opening that link
+  restores the line selection and centers both reading surfaces without opening
+  Navarro.
 - Navarro is contextual rather than page-wide: before a transcription line is
   selected, its tab contains no headword list. Select a line, then use **Ver no
   Navarro** (or open the Navarro tab) to see only that line's associated
@@ -81,8 +86,14 @@ no standalone VLB link in the homepage navigation.
   production navigation policy by `node vlb/evaluate_corrections.cjs`. The
   checked development report removes ledger overrides before scoring and fails
   its high-precision gate on any false-positive automatic target.
-- Search across the transcription and cited dictionary headwords. For split
-  paragraphs, a match within a continuation opens the page containing the words.
+- Search returns VLB transcription records only, never Navarro dictionary rows.
+  It preserves diacritics and nasalization, ranks an exact whole word or phrase
+  before the same exact spelling inside a longer word, and labels direct VLB and
+  Portuguese-side matches. A bounded frozen directional model can map a Navarro
+  spelling to likely VLB spellings; these are visibly labeled as probable
+  orthographic retrieval matches. Model costs are not probabilities or evidence
+  that two forms are the same lexeme. For split paragraphs, a match within a
+  continuation opens the page containing the words.
 - Record observations in the Anotações tab. Notes stay in browser localStorage;
   export JSON to preserve or share them. Notes are distinct from structured
   corrections. Neither path modifies Emerson's transcription or Navarro's
@@ -106,14 +117,18 @@ digitized by Renato Nicolai and hosted by the
 
 ## Data and deployment
 
-`python vlb/build_data.py` deterministically rebuilds the compressed page files
-and search indexes from `source/`, the frozen V3 candidates, and the validated
-correction ledger, without network access or the full PDF. The 6,164 proposal
-records become compact page-scoped associations; the 8+ MiB audit output is not
-downloaded by the reader, and every compressed page remains under 20 KiB.
+`python vlb/build_data.py` deterministically rebuilds the compressed page files,
+source/citation indexes, and `data/orthography-model.json` from `source/`, the
+frozen V3 candidates, the frozen Navarro→VLB model, and the validated correction
+ledger, without network access or the full PDF. The served model is an exact
+projection of its pinned mining artifact. The 6,164 proposal records become
+compact page-scoped associations; the 8+ MiB audit output is not downloaded by
+the reader, and every compressed page remains under 20 KiB.
 See [the source documentation](source/README.md) for provenance, coordinate
 conventions and the separate pagination, OCR and lexical evidence layers.
-The reader loads only the current page; search indexes load on first search.
+The reader loads only the current page. `search.js`, the source index, and the
+orthography model provide source-only search; the data files load on first
+search.
 
 The Pages allowlist publishes the HTML, CSS, JavaScript, `data/`, and referenced
 PDF metadata. Original image assets remain under `docs/primary_sources/vlb/`;
@@ -133,6 +148,7 @@ before its row deep links can be trusted; the data regression checks the hash.
 
 ```sh
 node --test tests/vlb_dictionary_links.test.cjs tests/dictionary_formatting.test.cjs
+node --test tests/vlb_search.test.cjs
 python tests/test_vlb_citation_inventory.py
 python tests/test_vlb_viewer_data.py
 python -m unittest discover -s tests -p 'test_vlb_mining*.py' -v
@@ -147,8 +163,9 @@ node tests/vlb_viewer_browser.cjs
 
 The browser test requires Playwright plus Chromium. Set `VLB_PLAYWRIGHT_MODULE`
 and `VLB_CHROMIUM_PATH` to use an existing installation. It serves the checkout
-locally, tests desktop and mobile layouts, source and citation navigation,
-OCR overlays, split-paragraph search, notes and exports, optimized image
+locally, tests desktop and mobile layouts, compact search, adjustable and
+minimizable panes, persisted view preferences, source and citation navigation,
+OCR overlays, source-only search, notes and exports, optimized image
 extensions, continuous append/prepend and synchronization, occurrence targeting,
 exact-span marks, manual-alternative links, correction save/submit/export/import,
 strict correction dry runs, responsive correction geometry, and ambiguity

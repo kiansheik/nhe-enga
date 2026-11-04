@@ -1,5 +1,73 @@
 # Current State
 
+## 2026-11-04 — VLB entry point and semantic continuous reading
+
+- The root navigation now has the short label **VLB**. The unfinished direct
+  **Gramática** item is hidden from that navigation, while the grammar build
+  and the separate **Playground** link remain available.
+- A reader without a saved reading-mode preference starts in **Rolagem
+  contínua**. A valid saved `page` or `continuous` choice is still honored, and
+  an explicit `mode=` URL remains authoritative without overwriting that saved
+  choice.
+- Search selections retain their query and results on desktop and mobile, mark
+  the open source, and remain available until the explicit close action.
+- With no line selected, continuous panes map visible transcript boundaries to
+  OCR-box unions and interpolate between those landmarks, falling back to page
+  fractions only without usable OCR. This replaces equal percentage scrolling
+  between differently spaced scan and transcription pages.
+- Selecting one line temporarily unlocks the facsimile and transcription so
+  either can be explored independently without losing the selected line or its
+  URL. Tapping that same transcript or facsimile line again clears the line
+  focus and immediately relocks the panes from the surface the reader tapped.
+  Correction drafts stay open across this visual deselection.
+- The complete Chrome regression passes with persistent-search, fresh-default,
+  selected-pane independence, same-line toggle, bidirectional OCR-boundary
+  synchronization, responsive geometry, correction, and sharing checks all
+  true and `javascript_errors: []`. Screenshots and `result.json` are under
+  `/tmp/vlb-followup-qa.bTDUph`. A fresh 813 MiB Pages artifact at
+  `/tmp/nhe-pages-vlb-followup.DRGw6a` contains 2,787 files; its homepage and
+  VLB JavaScript/CSS are byte-identical to source. This is source-branch work;
+  no deploy command was run. Repository-wide `make lint` still reports 24
+  pre-existing Black formatting failures outside this diff. See the
+  [handoff](session-handoffs/2026-11-04-vlb-continuous-search-navigation.md).
+
+## 2026-11-03 — VLB study-reader controls and source-only search
+
+- Started `fix/vlb-study-reader-controls` from merged `main` at `976ed343`
+  after the unified reader was deployed. This follow-up remains source-branch
+  work: it builds locally but does not deploy a Pages artifact.
+- Search now reads only Emerson VLB source records. Literal VLB and Portuguese
+  forms preserve diacritics and nasalization, with whole-word/phrase matches
+  before the same spelling inside a larger word. A checked exact copy of the
+  frozen Navarro-to-Emerson orthography model adds bounded, explicitly
+  probable retrieval matches; its costs are not probabilities or evidence of
+  lexical identity. `biã` now returns §4770 first, followed by its three exact
+  inside-word occurrences, without Navarro dictionary result rows.
+- Mobile navigation is one low-profile row: search stays behind a magnifier
+  until requested, the facsimile remains the primary surface, and either the
+  facsimile or transcription can minimize. A pointer- and keyboard-adjustable
+  separator changes pane proportions on mobile and desktop. Pinch gestures
+  zoom inside the facsimile, selected lines recenter at the active zoom, and
+  zoom, split, pane, OCR, and reading-mode preferences persist in localStorage.
+- Plain line selection remains bidirectional navigation only. Restoring a
+  minimized pane recenters the active line, including in continuous mode.
+  Navarro stays contextual and requires explicit actions. The per-line UI now
+  exposes one **Compartilhar** action; Web Share falls back to copying the line,
+  citation, and compact deep link, then to a manual-copy prompt if necessary.
+  The obsolete per-line **Ver leitura OCR** disclosure is gone.
+- The data projection, Pages allowlist, and CI now include `vlb/search.js`, the
+  served orthography-model copy, and focused source-only search tests. The
+  correction evaluation changed only its viewer-manifest checksum after that
+  manifest gained the new model pointer; its counts, rates, and zero-false-
+  positive gate are unchanged.
+- Validation passes 60 VLB Python tests, five search tests, the correction
+  evaluation gate, and the complete Chrome reader regression with every flag
+  true and zero JavaScript errors. A full Pages build at
+  `/tmp/nhe-pages-vlb-study-reader` succeeds; emitted VLB JavaScript, CSS,
+  manifest, and orthography model match source bytes. Actual two-finger use on
+  physical touch hardware remains unverified. See the
+  [handoff](session-handoffs/2026-11-03-vlb-study-reader-controls.md).
+
 ## 2026-11-03 — Unified mobile VLB reader follow-up
 
 - Started `fix/vlb-mobile-unified-reader` from merged `main` at `a65dbb8e`

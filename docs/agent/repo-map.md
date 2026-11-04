@@ -5,10 +5,24 @@
 - Root dictionary: `index.html`, `styles.css`, `manifest.json`, `favicon.ico`, `js/index.js`, `js/pako.min.js`, `js/papaparse.min.js`.
 - Dictionary data: `docs/dict-conjugated.json.gz`; legacy `sentence-builder.html` also reads `docs/dict-conjugated.json`.
 - Neologisms: `neologisms.csv` and `neologisms/index.html`.
-- VLB reader: `vlb/`, opened through inline VLB dictionary citations, with no
-  standalone root navigation item. `vlb/data/` contains generated page and citation indexes;
+- VLB reader: `vlb/`, opened through a short root **VLB** navigation item or
+  inline VLB dictionary citations. The unfinished direct **Gramática** root
+  item is hidden without removing its build; **Playground** remains linked.
+  `vlb/data/` contains generated page and citation indexes
+  plus the exact served copy of the frozen Navarro→VLB orthography model;
   `vlb/source/` pins the compact transcription/alignment inputs and
   `vlb/build_data.py` regenerates the projection without network access.
+  `vlb/search.js` searches only source transcription records, ranking whole
+  literal forms before inside-word forms and appending explicitly probable
+  orthographic retrieval matches; model costs are not probabilities or lexical
+  identity claims. Search results persist after selection until explicitly
+  closed and mark the source currently open in the reader.
+  Fresh readers default to continuous mode while valid saved modes and explicit
+  URL modes remain authoritative. With no line selected, continuous panes map
+  visible transcript boundaries to OCR-box unions and interpolate between
+  those landmarks, falling back to page fractions only without usable OCR.
+  A selected line pauses joined scrolling; tapping the same transcript or scan
+  line clears it and relocks both panes from the tapped surface.
   `?volume=I&page=17&mode=continuous&focus=auto&entry=<row>&citation_pos=<offset>`
   opens the printed page and resolves the original citation occurrence.
   `citation_pos` is a Unicode code-point position within its untouched
@@ -59,8 +73,12 @@
   holds focused semantic and layout regressions against the real
   search/render/highlight path in Chromium.
 - `tests/test_vlb_viewer_data.py`: offline VLB projection and source-accounting
-  checks. `tests/vlb_viewer_browser.cjs` exercises the reader's responsive panes,
-  citation/source navigation, OCR overlays, search, and exported review notes.
+  checks. `tests/vlb_search.test.cjs` covers source-only literal ranking and the
+  bounded Navarro→VLB search path. `tests/vlb_viewer_browser.cjs` exercises the
+  reader's responsive panes, citation/source navigation, OCR overlays,
+  persistent source search, continuous-mode defaults, OCR-boundary scroll
+  synchronization, selected-line unlock/relock, persisted view preferences,
+  and exported review notes.
 - `.github/workflows/dictionary-formatting.yml`: path-filtered pull-request CI
   for the dictionary and VLB regressions, with Python and Node Playwright both
   pinned to 1.55.0 and sharing one Chromium installation. Its sparse checkout

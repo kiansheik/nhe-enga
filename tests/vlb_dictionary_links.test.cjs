@@ -172,9 +172,10 @@ test('ambiguous duplicate examples fall back to a page without selecting the fir
   assert.ok(rendered.every(link => !link.url.searchParams.has('citation_pos')));
 });
 
-test('the homepage does not expose a standalone VLB navigation link', () => {
+test('the homepage exposes VLB without linking the unfinished grammar page', () => {
   const home = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-  assert.doesNotMatch(home, /<a\b[^>]*href=["'](?:\/nhe-enga\/)?vlb\/?(?:[?"'])/i);
+  assert.match(home, /<a\b[^>]*href=["']\/nhe-enga\/vlb\/["'][^>]*>VLB<\/a>/i);
+  assert.doesNotMatch(home, /<a\b[^>]*href=["']\/nhe-enga\/gramatica\/?["']/i);
 });
 
 test('all served dictionary text survives linking and valid VLB locators reach the reader', () => {

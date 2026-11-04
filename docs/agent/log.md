@@ -1,5 +1,61 @@
 # Agent Log
 
+## 2026-11-04 — Kept VLB search open and made continuous reading semantic
+
+Added the short root **VLB** link and removed only the unfinished direct
+**Gramática** navigation item; the grammar build and **Playground** remain.
+Fresh readers now start in continuous mode unless a valid mode was already
+saved, and explicit URL modes still win for that visit.
+
+Search selections retain their query and results on desktop and mobile, mark
+the open source, and remain available until the explicit close action. In
+continuous mode the two panes now synchronize through paired transcript and
+OCR-box boundaries instead of applying one page percentage to both layouts.
+A selected line suspends joined scrolling while preserving the selection and
+URL; tapping that same transcript or facsimile line clears it and relocks from
+the tapped surface. Independent scan hydration follows the scan being viewed,
+and correction drafts survive visual deselection.
+
+The full Chrome regression passes every desktop/mobile/search/continuous/
+correction/share flag with zero JavaScript errors. Static VLB navigation tests
+and JavaScript syntax checks also pass. A fresh Pages artifact builds at
+`/tmp/nhe-pages-vlb-followup.DRGw6a`, and its homepage plus VLB application
+assets match source bytes. No deploy ran. See the
+[handoff](session-handoffs/2026-11-04-vlb-continuous-search-navigation.md).
+
+## 2026-11-03 — Refined the VLB study reader and replaced mixed search
+
+Followed the deployed unified-reader work on `fix/vlb-study-reader-controls`.
+The search path no longer loads or renders Navarro dictionary rows: it searches
+Emerson source records only, preserves orthographic marks, ranks exact whole
+forms before exact substrings inside larger words, and labels Portuguese versus
+VLB-side matches. A byte-identical served copy of the frozen directional
+orthography model supplies bounded Navarro-to-VLB retrieval candidates with
+explicit probable/non-identity wording. The reported `biã` query now produces
+the expected exact §4770 line first and only the three exact compounds after it.
+
+Condensed phone navigation to one row with a collapsed search magnifier, made
+both study panes minimizable, and added a drag/keyboard separator on mobile and
+desktop. Two-touch gestures zoom the facsimile while preserving the gesture
+centroid; selecting or restoring a line recenters both surfaces at the current
+zoom. View zoom, split, minimized panes, OCR visibility, and mode survive reload
+through guarded localStorage. Per-line OCR-reading disclosures and the duplicate
+**Citar verbete** action are gone. The remaining **Compartilhar** action uses
+Web Share and retains clipboard/manual-copy fallbacks for the exact line,
+citation, and compact deep link. Navarro remains contextual and explicitly
+opened; raw transcript/facsimile clicks remain navigation-only.
+
+Added search/data/browser regressions, Pages/CI inclusion, and documentation.
+All 60 VLB Python tests, five source-search tests, the correction gate, and the
+full headless Chrome reader suite pass with zero JavaScript errors. The manifest
+change required only a correction-evaluation provenance-hash refresh; all
+metrics remain unchanged. The complete local Pages artifact at
+`/tmp/nhe-pages-vlb-study-reader` built successfully, and the emitted VLB
+JavaScript, CSS, manifest, and model are byte-identical to source. Synthetic
+TouchEvents cover pinch behavior, but physical touch hardware was not tested.
+No deploy ran. See the
+[handoff](session-handoffs/2026-11-03-vlb-study-reader-controls.md).
+
 ## 2026-11-03 — Unified the VLB mobile reader around the facsimile
 
 Followed merged PR #38 with a narrow mobile-layout correction on
