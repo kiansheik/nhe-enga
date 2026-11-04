@@ -376,6 +376,53 @@ const server = http.createServer((req, res) => {
       const box = node.getBoundingClientRect();
       return box.top >= viewport.top && box.bottom <= viewport.bottom;
     }), "compact citation link centers the selected transcript line");
+
+    // The reported shared link must finish the same selection and centering
+    // work under ordinary smooth scrolling, after continuous mode prepends its
+    // neighboring page. The suite normally reduces motion, which used to hide
+    // this race by making the initial scroll instantaneous.
+    await page.setViewportSize({width:390,height:844});
+    await page.emulateMedia({reducedMotion:"no-preference"});
+    await clearViewPreferences();
+    const reportedLineSelector = '[data-source-id="vlb-emerson-r568-p01131"]';
+    const assertReportedLineFocus = async label => {
+      const selected = page.locator(`.fragment.selected${reportedLineSelector}`);
+      await selected.waitFor();
+      await page.waitForFunction(() => {
+        const image = document.querySelector('.continuous-scan-page.current-page img[src], #page-image[src]');
+        return image?.complete && image.naturalWidth > 0;
+      });
+      await page.waitForTimeout(900);
+      assert.equal(await selected.locator(".source-text").innerText(),
+        "Bica como quer daguoa. — Jgtororõma.", `${label}: exact shared line is selected`);
+      assert.equal(await selected.locator(".source-main").getAttribute("aria-pressed"), "true");
+      assert.equal(await selected.locator(".fragment-actions").isVisible(), true,
+        `${label}: the selection exposes the same explicit actions as a line click`);
+      assert.equal(new URL(page.url()).searchParams.get("source"), "vlb-emerson-r568-p01131");
+      assert.ok(await selected.evaluate(node => {
+        const viewport = document.getElementById("text-viewport").getBoundingClientRect();
+        const box = node.getBoundingClientRect();
+        return Math.abs((box.top + box.bottom) / 2 - (viewport.top + viewport.bottom) / 2) <= viewport.height * .18;
+      }), `${label}: selected transcript line is centered after layout settles`);
+      const highlight = page.locator('.continuous-scan-page.current-page svg rect, #ocr-overlay rect').first();
+      assert.ok(await highlight.count() > 0, `${label}: selected OCR line is highlighted`);
+      assert.ok(await highlight.evaluate(node => {
+        const viewport = document.getElementById("scan-viewport").getBoundingClientRect();
+        const box = node.getBoundingClientRect();
+        return Math.abs((box.top + box.bottom) / 2 - (viewport.top + viewport.bottom) / 2) <= viewport.height * .14;
+      }), `${label}: facsimile focus is centered after layout settles`);
+    };
+    await page.goto(base + "?page=I-055&line=1131");
+    await page.locator(textSection("I-054")).waitFor({state:"attached"});
+    await assertReportedLineFocus("continuous shared-line route");
+    assert.equal(await page.locator("#mode-select").inputValue(), "continuous");
+    await page.screenshot({path:path.join(out,"vlb-shared-line-focus.png"),fullPage:false});
+
+    await page.goto(base + "?page=I-055&line=1131&mode=page");
+    await assertReportedLineFocus("page-mode shared-line route");
+    assert.equal(await page.locator("#mode-select").inputValue(), "page");
+    await page.emulateMedia({reducedMotion:"reduce"});
+    await page.setViewportSize({width:1440,height:1080});
     await page.locator("#zoom-in").click();
     assert.equal(await page.locator("#zoom-reset").innerText(), "125%");
     assert.equal(await page.evaluate(key => JSON.parse(localStorage.getItem(key)).zoom, viewerPreferenceKey), 125,
@@ -1391,6 +1438,7 @@ const server = http.createServer((req, res) => {
       contextual_navarro_resets_on_line_selection:true,line_navigation_clears_stale_citation:true,
       selected_line_share_only:true,native_line_share:true,
       share_fallback_to_clipboard:true,clipboard_failure_manual_prompt:true,compact_line_deep_link:true,
+      shared_line_normal_motion_focus:true,
       exact_source_span_mark:true,manual_alternative_route_persists:true,correction_local_save:true,
       auto_focus_route_persists:true,manual_alternative_mode_switch_persists:true,
       correction_issue_payload:true,correction_issue_oversize_fallback:true,correction_export_import:true,

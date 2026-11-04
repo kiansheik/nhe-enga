@@ -23,6 +23,9 @@
   those landmarks, falling back to page fractions only without usable OCR.
   A selected line pauses joined scrolling; tapping the same transcript or scan
   line clears it and relocks both panes from the tapped surface.
+  Compact `?page=I-055&line=1131`-style routes select by source line and use
+  deterministic instant centering while continuous neighbors and image
+  dimensions settle; ordinary in-reader line clicks retain smooth scrolling.
   `?volume=I&page=17&mode=continuous&focus=auto&entry=<row>&citation_pos=<offset>`
   opens the printed page and resolves the original citation occurrence.
   `citation_pos` is a Unicode code-point position within its untouched
@@ -77,8 +80,9 @@
   bounded Navarro→VLB search path. `tests/vlb_viewer_browser.cjs` exercises the
   reader's responsive panes, citation/source navigation, OCR overlays,
   persistent source search, continuous-mode defaults, OCR-boundary scroll
-  synchronization, selected-line unlock/relock, persisted view preferences,
-  and exported review notes.
+  synchronization, selected-line unlock/relock, normal-motion compact-link
+  focus in continuous and page modes, persisted view preferences, and exported
+  review notes.
 - `.github/workflows/dictionary-formatting.yml`: path-filtered pull-request CI
   for the dictionary and VLB regressions, with Python and Node Playwright both
   pinned to 1.55.0 and sharing one Chromium installation. Its sparse checkout
