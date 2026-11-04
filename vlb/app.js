@@ -445,7 +445,7 @@
       if (state.mode === "continuous" && state.pageId === page.id) {
         drawOverlay();
         const selected = page.fragments.find(f => f.id === state.selectedSource);
-        if (selected && state.imageFocus === selected.id) scrollToHighlight(selected);
+        if (selected && state.imageFocus === selected.id) scrollToHighlight(selected, "instant");
       }
     };
     img.onerror = () => {
@@ -811,13 +811,15 @@
       const showCitationDetail = options.showCitationDetail === true;
       if (options.citation) selectCitation(options.citation, {update: false,
         showTab: showCitationDetail && !routedSource, showDetail: showCitationDetail, autoFocus: options.focus,
-        source: routedSource, targetStart: options.targetStart, targetEnd: options.targetEnd});
+        source: routedSource, targetStart: options.targetStart, targetEnd: options.targetEnd,
+        behavior: "instant"});
       else if (state.entry !== null) {
         const candidates = state.page.citations.filter(c => c.entry_index === state.entry);
         const exact = options.citationPos !== null && options.citationPos !== undefined ?
           candidates.filter(c => c.citation_start <= options.citationPos && options.citationPos < c.citation_end) : candidates;
         if (exact.length === 1) selectCitation(exact[0].id, {update: false,
-          showTab: showCitationDetail && !routedSource, showDetail: showCitationDetail, autoFocus: options.focus});
+          showTab: showCitationDetail && !routedSource, showDetail: showCitationDetail, autoFocus: options.focus,
+          behavior: "instant"});
         else if (candidates.length) {
           state.citationEntryFilter = state.entry;
           $("citation-choice-notice").hidden = false;
@@ -828,7 +830,8 @@
       }
       if (routedSource) selectSource(routedSource, {update: false, scroll: true, revealText: true,
         preserveCitation: Boolean(state.selectedCitation),
-        target: state.autoTarget?.source_id === routedSource ? state.autoTarget : null});
+        target: state.autoTarget?.source_id === routedSource ? state.autoTarget : null,
+        behavior: "instant"});
       else if (Number.isInteger(options.sourceLine)) announce("Esta linha não foi encontrada na página indicada.");
       else if (!state.selectedCitation && state.citationEntryFilter === null) setTab("text");
       if (state.mode === "continuous") {
@@ -918,7 +921,7 @@
       $("image-message").hidden = true;
       drawOverlay();
       const selected = state.page.fragments.find(f => f.id === state.selectedSource);
-      if (selected && state.imageFocus === selected.id) scrollToHighlight(selected);
+      if (selected && state.imageFocus === selected.id) scrollToHighlight(selected, "instant");
     };
     let fallback = false;
     img.onerror = () => {
@@ -1149,7 +1152,7 @@
     }
   }
 
-  function scrollTextToSource(id) {
+  function scrollTextToSource(id, behavior = scrollBehavior()) {
     if (!paneVisible("text")) return;
     const article = fragmentContainer()?.querySelector(`[data-source-id="${CSS.escape(id)}"]`);
     if (!article) return;
@@ -1162,7 +1165,7 @@
     const availableHeight = Math.max(0, viewport.clientHeight - headingHeight);
     const centeredOffset = Math.max(12, (availableHeight - Math.min(articleBox.height, availableHeight)) / 2);
     viewport.scrollTo({top: articleBox.top - viewportBox.top + viewport.scrollTop - headingHeight - centeredOffset,
-      behavior: scrollBehavior()});
+      behavior});
     state.surfaceScroll.text = viewport.scrollTop;
   }
 
@@ -1206,8 +1209,9 @@
     syncSearchResultSelection();
     if (options.update !== false) updateURL();
     if (options.scroll !== false) {
-      if (options.revealText) scrollTextToSource(id);
-      scrollToHighlight(source);
+      const behavior = options.behavior || scrollBehavior();
+      if (options.revealText) scrollTextToSource(id, behavior);
+      scrollToHighlight(source, behavior);
     }
   }
 
@@ -1289,7 +1293,7 @@
     }
   }
 
-  function scrollToHighlight(source) {
+  function scrollToHighlight(source, behavior = scrollBehavior()) {
     const boxes = sourceBoxes(source);
     const viewport = $("scan-viewport");
     const scan = activeScan();
@@ -1308,7 +1312,7 @@
     const right = stageLeft + Math.max(...boxes.map(b => b[2])) * scan.stage.clientWidth;
     if (state.mode === "continuous") lockFlow("scan", 700);
     viewport.scrollTo({top: Math.max(0, (top + bottom) / 2 - viewport.clientHeight / 2),
-      left: Math.max(0, (left + right) / 2 - viewport.clientWidth / 2), behavior: scrollBehavior()});
+      left: Math.max(0, (left + right) / 2 - viewport.clientWidth / 2), behavior});
     state.surfaceScroll.scan = viewport.scrollTop;
     state.imageFocus = null;
   }
@@ -1579,8 +1583,10 @@
     // its exact span/OCR evidence to a different routed paragraph.
     const compatibleAuto = !options.source || resolvedAuto?.source_id === options.source ? resolvedAuto : null;
     const target = options.target || routedTarget || compatibleAuto;
-    if (options.source) selectSource(options.source, {update: false, target, revealText: true, preserveCitation: true});
-    else if (target?.source_id) selectSource(target.source_id, {update: false, target, revealText: true, preserveCitation: true});
+    if (options.source) selectSource(options.source, {update: false, target, revealText: true,
+      preserveCitation: true, behavior: options.behavior});
+    else if (target?.source_id) selectSource(target.source_id, {update: false, target, revealText: true,
+      preserveCitation: true, behavior: options.behavior});
     else {
       state.selectedSource = null;
       state.autoTarget = null;

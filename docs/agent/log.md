@@ -1,5 +1,24 @@
 # Agent Log
 
+## 2026-11-04 — Repaired normal-motion focus for shared VLB lines
+
+Reproduced the reported live I-055 §1131 link in fresh Chrome. The route and
+source ID were correct, but the selected transcript stayed offscreen under
+normal motion because continuous-mode neighbor insertion interrupted its smooth
+scroll. The prior full-browser suite globally reduced motion and therefore
+masked the race.
+
+Routed/programmatic selections now use deterministic instant centering while
+ordinary line clicks remain smooth. Pending scan-image focus also completes
+instantly after the image supplies its final geometry. Added an exact
+normal-motion regression for the reported line in continuous and page modes,
+plus the page-55 scan in CI's sparse checkout.
+
+The exact link passes locally on desktop and mobile with both saved modes; the
+complete Chrome reader suite has zero JavaScript errors and all 31 focused VLB
+Node tests pass. No deployment ran. See the
+[handoff](session-handoffs/2026-11-04-vlb-shared-line-focus.md).
+
 ## 2026-11-04 — Kept VLB search open and made continuous reading semantic
 
 Added the short root **VLB** link and removed only the unfinished direct

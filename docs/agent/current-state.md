@@ -1,5 +1,33 @@
 # Current State
 
+## 2026-11-04 — Shared VLB line links focus under normal motion
+
+- The deployed `?page=I-055&line=1131` route correctly resolved and selected
+  §1131, but normal smooth scrolling was interrupted when continuous mode
+  prepended its neighboring page. The selected transcription could remain
+  completely offscreen and the facsimile highlight could remain below center.
+  The deployed and local `vlb/app.js` bytes matched; this was not stale data or
+  an invalid line locator.
+- URL-routed and other `loadPage`-driven selections now center instantly, so
+  continuous page insertion and image geometry preservation retain the final
+  position. Ordinary transcript/facsimile clicks still use the reader's smooth
+  behavior. A pending image load also completes its requested focus instantly
+  once the real dimensions are available.
+- The browser regression now exercises the exact I-055 §1131 link with normal
+  motion in continuous and page modes, after the previous page is inserted.
+  It checks the exact text, selected/pressed state, explicit line actions, URL
+  conversion, centered transcription, and centered OCR highlight. CI includes
+  the page-55 scan fixture.
+- Local Chrome verification passes at 1440×1080 and 390×844 in fresh continuous
+  and saved page modes. The complete browser suite passes every result flag
+  with `javascript_errors: []`; its result data and corrected-link screenshot
+  are under `/tmp/vlb-shared-focus-final.TA4Srq`. All 31 focused VLB Node tests
+  pass. A fresh 813 MiB Pages artifact at
+  `/tmp/nhe-pages-shared-focus.OhvyoL` contains 2,787 files and byte-identical
+  application/page data. Work is on `fix/vlb-shared-line-focus`; no deployment
+  was run. See the
+  [handoff](session-handoffs/2026-11-04-vlb-shared-line-focus.md).
+
 ## 2026-11-04 — VLB entry point and semantic continuous reading
 
 - The root navigation now has the short label **VLB**. The unfinished direct
