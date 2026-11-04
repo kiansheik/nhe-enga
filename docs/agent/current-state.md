@@ -1,5 +1,36 @@
 # Current State
 
+## 2026-11-04 — VLB entry point and semantic continuous reading
+
+- The root navigation now has the short label **VLB**. The unfinished direct
+  **Gramática** item is hidden from that navigation, while the grammar build
+  and the separate **Playground** link remain available.
+- A reader without a saved reading-mode preference starts in **Rolagem
+  contínua**. A valid saved `page` or `continuous` choice is still honored, and
+  an explicit `mode=` URL remains authoritative without overwriting that saved
+  choice.
+- Search selections retain their query and results on desktop and mobile, mark
+  the open source, and remain available until the explicit close action.
+- With no line selected, continuous panes map visible transcript boundaries to
+  OCR-box unions and interpolate between those landmarks, falling back to page
+  fractions only without usable OCR. This replaces equal percentage scrolling
+  between differently spaced scan and transcription pages.
+- Selecting one line temporarily unlocks the facsimile and transcription so
+  either can be explored independently without losing the selected line or its
+  URL. Tapping that same transcript or facsimile line again clears the line
+  focus and immediately relocks the panes from the surface the reader tapped.
+  Correction drafts stay open across this visual deselection.
+- The complete Chrome regression passes with persistent-search, fresh-default,
+  selected-pane independence, same-line toggle, bidirectional OCR-boundary
+  synchronization, responsive geometry, correction, and sharing checks all
+  true and `javascript_errors: []`. Screenshots and `result.json` are under
+  `/tmp/vlb-followup-qa.bTDUph`. A fresh 813 MiB Pages artifact at
+  `/tmp/nhe-pages-vlb-followup.DRGw6a` contains 2,787 files; its homepage and
+  VLB JavaScript/CSS are byte-identical to source. This is source-branch work;
+  no deploy command was run. Repository-wide `make lint` still reports 24
+  pre-existing Black formatting failures outside this diff. See the
+  [handoff](session-handoffs/2026-11-04-vlb-continuous-search-navigation.md).
+
 ## 2026-11-03 — VLB study-reader controls and source-only search
 
 - Started `fix/vlb-study-reader-controls` from merged `main` at `976ed343`

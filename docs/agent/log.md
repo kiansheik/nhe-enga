@@ -1,5 +1,28 @@
 # Agent Log
 
+## 2026-11-04 — Kept VLB search open and made continuous reading semantic
+
+Added the short root **VLB** link and removed only the unfinished direct
+**Gramática** navigation item; the grammar build and **Playground** remain.
+Fresh readers now start in continuous mode unless a valid mode was already
+saved, and explicit URL modes still win for that visit.
+
+Search selections retain their query and results on desktop and mobile, mark
+the open source, and remain available until the explicit close action. In
+continuous mode the two panes now synchronize through paired transcript and
+OCR-box boundaries instead of applying one page percentage to both layouts.
+A selected line suspends joined scrolling while preserving the selection and
+URL; tapping that same transcript or facsimile line clears it and relocks from
+the tapped surface. Independent scan hydration follows the scan being viewed,
+and correction drafts survive visual deselection.
+
+The full Chrome regression passes every desktop/mobile/search/continuous/
+correction/share flag with zero JavaScript errors. Static VLB navigation tests
+and JavaScript syntax checks also pass. A fresh Pages artifact builds at
+`/tmp/nhe-pages-vlb-followup.DRGw6a`, and its homepage plus VLB application
+assets match source bytes. No deploy ran. See the
+[handoff](session-handoffs/2026-11-04-vlb-continuous-search-navigation.md).
+
 ## 2026-11-03 — Refined the VLB study reader and replaced mixed search
 
 Followed the deployed unified-reader work on `fix/vlb-study-reader-controls`.
